@@ -1,0 +1,8 @@
+## imode/SH-01A
+
+http:
+    'User-Agent' : 'DoCoMo/2.0 SH01A(c100;TB;W24H16)'
+    'X-Dcmguid'  : 'SH01A1234567890123456'
+
+uid_section : 'X-Dcmguid'
+

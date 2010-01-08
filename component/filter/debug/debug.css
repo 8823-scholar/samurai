@@ -1,0 +1,94 @@
+
+#samurai_debug_console {
+    filter : alpha(opacity=80);
+    -moz-opacity : 0.8;
+    border : 1px solid #666666;
+    font-size : 14px;
+    width : 160px;
+    background-color : #CCCCCC;
+    position : absolute;
+    top : 10px;
+    right : 10px;
+}
+
+#samurai_debug_console_title {
+    padding : 3px 3px 3px 5px;
+    font-weight : bold;
+    color : #336699;
+    background-color : #EEEEEE ;
+}
+#samurai_debug_console_title.error {
+    background-color : #FF0000 ;
+}
+#samurai_debug_console_title IMG.icon {
+    vertical-align:middle;
+    cursor:pointer;
+}
+
+#samurai_debug_console_menu {
+    padding : 2px;
+}
+#samurai_debug_console_menu #samurai_debug_console_menu_item {
+    padding : 2px;
+    color : #333333;
+    cursor : pointer;
+    text-align : right;
+}
+#samurai_debug_console_menu #samurai_debug_console_menu_item.error {
+    background-color : #FF0000;
+}
+
+#samurai_debug_console_footer {
+    text-align:right;
+    background-color:#8C8C8C;
+    color:#FFFFFF;
+    padding:2px;
+    font-size:12px;
+}
+DIV.samurai_debug_console_footer_item {
+    padding : 2px;
+    font-size : 12px;
+    text-align : right;
+    color : #FFFFFF;
+    background-color : #A5A5A5;
+}
+
+
+DIV.samurai_debug_console_window {
+    filter : alpha(opacity=90);
+    -moz-opacity : 0.9;
+    display : none;
+    width   : 750px;
+    border : 1px solid #666666;
+}
+DIV.samurai_debug_console_window .header {
+    padding:5px;
+    width : 100%;
+    font-weight:bold;
+    color:#FFFFFF;
+    background-color:#336699;
+}
+DIV.samurai_debug_console_window .content {
+    padding : 5px;
+    width   : 100%;
+    height  : 450px;
+    overflow:auto;
+    background-color:#EEEEEE;
+}
+
+
+DIV.samurai_debug_console_window .content TABLE.list {
+    width : 97%;
+}
+DIV.samurai_debug_console_window .content TABLE.list TH {
+    color : #FFFFFF;
+    background-color : #666666;
+}
+DIV.samurai_debug_console_window .content TABLE.list TR TD {
+    padding : 3px;
+    font-size : 12px;
+    background-color : #DDDDDD;
+}
+DIV.samurai_debug_console_window .content TABLE.list TR.error TD {
+    background-color : #FF8080;
+}

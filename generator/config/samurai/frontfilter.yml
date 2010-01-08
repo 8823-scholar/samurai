@@ -1,0 +1,13 @@
+###
+ # generator/config/samurai/frontfilter.yml
+ # 
+ # Generator用のFrontFilter設定ファイル。
+ # Routingが不必要なので、default設定を無視するように設置。
+ # 
+ # @package    Samurai
+ # @subpackage Config.Samurai
+ # @copyright  Befool, Inc
+ # @author     Satoshi Kiuchi <satoshi.kiuchi@befool.co.jp>
+ # @license    http://opensource.org/licenses/bsd-license.php  The modified BSD License
+ #/
+Front_Device:

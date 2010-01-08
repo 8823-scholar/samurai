@@ -1,0 +1,33 @@
+#
+# *
+#
+Renderer4Generator:
+    class : Samurai_Renderer_Smarty
+    initMethod:
+        name : import
+        args : ["config/renderer/smarty4generator.yml"]
+    
+GeneratorAction:
+    class : Generator_Generator_Action
+    setter:
+        Renderer : $Renderer4Generator
+    
+GeneratorComponent:
+    class : Generator_Generator_Component
+    setter:
+        Renderer : $Renderer4Generator
+    
+GeneratorFilter:
+    class : Generator_Generator_Filter
+    setter:
+        Renderer : $Renderer4Generator
+    
+GeneratorTemplate:
+    class : Generator_Generator_Template
+    setter:
+        Renderer : $Renderer4Generator
+    
+GeneratorProject:
+    class : Generator_Generator_Project
+    setter:
+        Renderer : $Renderer4Generator

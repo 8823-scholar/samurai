@@ -1,0 +1,8 @@
+#
+# add - project
+#
+
+View:
+    usage : 'add/project_usage.php'
+    aborted : 'add/project_aborted.php'
+

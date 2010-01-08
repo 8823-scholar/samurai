@@ -1,0 +1,10 @@
+#
+# utility - locate
+#
+
+View:
+    usage   : 'Action: utility_usage'
+    version : 'Action: utility_version'
+    info    : 'Action: samurai_info'
+    success : 'Action: <locate_action>'
+

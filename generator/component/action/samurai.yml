@@ -1,0 +1,10 @@
+#
+# *
+#
+Device:
+    required : 'cli'
+    
+DIContainer:
+    
+View:
+    invalidInput : 'error/input.php'

@@ -1,0 +1,10 @@
+#
+# add - filter
+#
+
+Action:
+    Generator : $GeneratorFilter
+    
+View:
+    usage : 'add/filter_usage.php'
+

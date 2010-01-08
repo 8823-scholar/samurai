@@ -1,0 +1,10 @@
+#
+# add - component
+#
+
+Action:
+    Generator : $GeneratorComponent
+    
+View:
+    usage : 'add/component_usage.php'
+

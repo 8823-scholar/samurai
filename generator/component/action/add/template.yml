@@ -1,0 +1,10 @@
+#
+# add - template
+#
+
+Action:
+    Generator : $GeneratorTemplate
+    
+View:
+    usage : 'add/template_usage.php'
+

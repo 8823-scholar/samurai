@@ -1,0 +1,7 @@
+#
+# error - command
+#
+
+View:
+    success : 'error/command.php'
+

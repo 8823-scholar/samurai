@@ -1,0 +1,18 @@
+## softbank/941SH
+
+http:
+    'X-S-Display-Info'    : '480*824/40*34/TB'
+    'Accept'              : '*/*'
+    'Accept-Charset'      : 'utf-8,euc-jp,iso-10646-ucs-2,iso-2022-jp,iso-8859-1,shift_jis,us-ascii,utf-16'
+    'Accept-Encoding'     : 'identity'
+    'Accept-Language'     : 'ja-JP;q=1.0'
+    'User-Agent'          : 'SoftBank/1.0/941SH/SHJ001/SN123456789012345 Browser/NetFront/3.5 Profile/MIDP-2.0 Configration/CLDC-1.1'
+    'X-Jphone-Color'      : 'C262144'
+    'X-Jphone-Display'    : '480*1024'
+    'X-Jphone-Msname'     : '941SH'
+    'X-Jphone-Region'     : '44020'
+    'X-Jphone-Smaf'       : '64/pcm/grf/rs'
+    'X-Jphone-Uid'        : '941SH1234567890123456'
+
+uid_section : 'X-Jphone-Uid'
+

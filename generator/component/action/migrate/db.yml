@@ -1,0 +1,10 @@
+#
+# migrate - db
+#
+
+Validate:
+    env.required : '環境変数を設定してください'
+    
+View:
+    usage : 'migrate/db_usage.php'
+

@@ -1,0 +1,168 @@
+<?php
+/**
+ * PHP version 5.
+ *
+ * Copyright (c) 2007-2010, Samurai Framework Project, All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ *     * Redistributions of source code must retain the above copyright notice,
+ *       this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright notice,
+ *       this list of conditions and the following disclaimer in the documentation
+ *       and/or other materials provided with the distribution.
+ *     * Neither the name of the Samurai Framework Project nor the names of its
+ *       contributors may be used to endorse or promote products derived from this
+ *       software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+ * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+ * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @package    Samurai
+ * @copyright  2007-2010 Samurai Framework Project
+ * @link       http://samurai-fw.org/
+ * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @version    SVN: $Id$
+ */
+
+defined('PS') ? NULL : define('PS', PATH_SEPARATOR) ;
+defined('DS') ? NULL : define('DS', DIRECTORY_SEPARATOR) ;
+defined('SAMURAI_DIR') ? NULL : define('SAMURAI_DIR', dirname(__FILE__));
+
+/**
+ * Samurai Frameworkのメインクラス
+ * 
+ * @package    Samurai
+ * @version    2.0.0
+ * @copyright  2007-2010 Samurai Framework Project
+ * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
+ * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ */
+class Samurai
+{
+    /**
+     * バージョン
+     *
+     * @const   string
+     */
+    const VERSION = '2.0.0';
+
+    /**
+     * Samuraiディレクトリの候補
+     * Samurai_Loaderクラスでロードする際の検索対象になる
+     *
+     * @var     array
+     */
+    private static $_samurai_dirs = array( SAMURAI_DIR );
+
+
+
+
+
+    /**
+     * コンストラクタ
+     *
+     * @access     private
+     */
+    private function __construct()
+    {
+    }
+    
+    
+    /**
+     * Samuraiの初期化を行う
+     *
+     * @access     public
+     */
+    public static function init()
+    {
+        //スタート
+        define('SAMURAI_START', microtime(true));
+        if(defined('SAMURAI_MODE') && !defined('SAMURAI_ENVIRONMENT')) define('SAMURAI_ENVIRONMENT', SAMURAI_MODE);
+        if(!defined('SAMURAI_ENVIRONMENT')) define('SAMURAI_ENVIRONMENT', 'production');
+
+        //主要クラスのロード
+        self::_load();
+
+        //設定情報の取得
+        Samurai_Config::import('config/samurai/config.yml');
+
+        //DIContainerの初期化
+        $Container = self::getContainer();
+        $Container->import(Samurai_Config::get('container.dicon'));
+
+        //Loggerの初期化
+        $loggers = Samurai_Config::get('loggers');
+        foreach((array)$loggers as $alias => $define){
+            Samurai_Logger::addClient($alias, $define);
+        }
+
+        //環境用設定ファイルの読込
+        Samurai_Loader::includes('config/environment/production.php');
+        if(SAMURAI_ENVIRONMENT != 'production') Samurai_Loader::includes('config/environment/' . SAMURAI_ENVIRONMENT . '.php');
+    }
+
+
+    /**
+     * 主要クラスをロードする
+     *
+     * @access     private
+     */
+    private static function _load()
+    {
+        include_once(SAMURAI_DIR . '/component/samurai/Loader.class.php');
+        Samurai_Loader::load('component/samurai/Config.class.php');
+        Samurai_Loader::load('component/samurai/Exception.class.php');
+        Samurai_Loader::load('component/samurai/Yaml.class.php');
+        Samurai_Loader::load('component/samurai/container/Factory.class.php');
+        Samurai_Loader::load('component/samurai/Logger.class.php');
+        spl_autoload_register(array('Samurai_Loader', 'autoload'));
+    }
+
+
+    /**
+     * DIContainerの取得
+     *
+     * @access     public
+     * @return     object  Samurai_Container
+     */
+    public static function getContainer($namespace=NULL)
+    {
+        if($namespace === NULL) $namespace = Samurai_Config::get('container.name');
+        return Samurai_Container_Factory::create($namespace);
+    }
+
+
+
+    /**
+     * samurai_dirを取得する
+     *
+     * @access     public
+     * @return     array
+     */
+    public static function getSamuraiDirs()
+    {
+        return self::$_samurai_dirs;
+    }
+
+
+    /**
+     * samurai_dirを追加する
+     *
+     * @param      string  $dir   ディレクトリ
+     */
+    public static function unshiftSamuraiDir($dir)
+    {
+        array_unshift(self::$_samurai_dirs, $dir);
+    }
+}
+

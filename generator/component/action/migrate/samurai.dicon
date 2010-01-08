@@ -1,0 +1,7 @@
+#
+# migrate - *.dicon
+#
+
+FileScanner:
+    class : Etc_File_Scanner
+

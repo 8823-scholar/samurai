@@ -1,0 +1,22 @@
+#
+# .htaccess
+#
+
+## URL書き換え
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteRule ^$ /index.php [L]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ /index.php/$1 [L]
+</IfModule>
+
+## PHP
+<IfModule mod_php5.c>
+    php_flag  magic_quotes_gpc 'OFF'
+    php_flag  register_globals 'OFF'
+    php_flag  output_buffering 'ON'
+    php_flag  mbstring.encoding_translation 'OFF'
+    php_value mbstring.http_input 'pass'
+    php_value mbstring.http_output 'pass'
+</IfModule>
+

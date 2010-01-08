@@ -1,0 +1,37 @@
+#
+# SamuraiFW用のメインコンテナ設定ファイル
+#
+
+## FWを構成するメインインスタンスの設定
+Controller:
+    class : Samurai_Controller
+ActionChain:
+    class : Samurai_ActionChain
+ConfigStack:
+    class : Samurai_ConfigStack
+FilterChain:
+    class : Samurai_FilterChain
+Request:
+    class : Samurai_Request_Http
+Cookie:
+    class : Samurai_Request_Cookie
+Session:
+    class : Samurai_Request_Session
+Response:
+    class : Samurai_Response_Http
+ErrorList:
+    class : Samurai_ErrorList
+    instance : prototype
+Renderer:
+    class : Samurai_Renderer_Smarty
+    initMethod:
+        name : init
+        args : ['config/renderer/smarty.php']
+
+## FWで使用される雑多な関数クラスの設定
+Date:
+    class : Etc_Misc_Date
+Hash:
+    class : Etc_Misc_Hash
+Utility:
+    class : Etc_Misc_Utility
