@@ -433,7 +433,7 @@ class ActiveGateway
         
         $condition = ActiveGateway::getCondition();
         $condition->where->$primary_key = $id;
-        return $this->updateDetail($alias, $attributes, $condition);
+        return $this->updateDetail($alias, $condition, $attributes);
     }
 
 
@@ -451,7 +451,7 @@ class ActiveGateway
     {
         $condition = ActiveGateway::getCondition();
         $condition->where->$column = $value;
-        return $this->updateDetail($alias, $attributes, $condition);
+        return $this->updateDetail($alias, $condition, $attributes);
     }
 
 
@@ -460,14 +460,14 @@ class ActiveGateway
      *
      * @access     public
      * @param      string  $alias        テーブル名
-     * @param      array   $attributes   設定値
      * @param      object  $condition    ActiveGatewayCondition
+     * @param      array   $attributes   設定値
      * @return     boolean 
      */
-    public function updateDetail($alias, $attributes, ActiveGatewayCondition $condition)
+    public function updateDetail($alias, ActiveGatewayCondition $condition, $attributes = array())
     {
         $condition->setLimit(1);
-        return $this->updateAllDetail($alias, $attributes, $condition);
+        return $this->updateAllDetail($alias, $condition, $attributes);
     }
 
 
