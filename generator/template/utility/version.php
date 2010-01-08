@@ -8,8 +8,7 @@
 PHP Framework Samurai extends Maple3.
 Version: <?=$version?>
 
-Copyright (C) BEFOOL,Inc. All Rights Reserved.
-  Satoshi Kiuchi <satoshi.kiuchi@befool.co.jp>
-  Yuki Kuwabara <yuki.kuwabara@befool.co.jp>
+Copyright (C) 2007-2010 Samurai Framework Project. All Rights Reserved.
+  KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
 
 

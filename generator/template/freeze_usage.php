@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * freeze_usage.php
  * 

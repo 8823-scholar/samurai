@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * migrate_db_usage.php
  * 

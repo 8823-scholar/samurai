@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * add - component_usage
  * 

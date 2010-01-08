@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * error/command.tpl
  * 

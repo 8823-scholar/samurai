@@ -203,7 +203,7 @@ class Action_Make_Package extends Generator_Action
         $this->Packager->setAPIStability($this->state);
         $this->Packager->setReleaseVersion($this->_getVersion());
         $this->Packager->setReleaseStability($this->state);
-        $this->Packager->setNotes(file_get_contents($this->_src_dir.'/CHANGES'));
+        $this->Packager->setNotes(file_get_contents($this->_src_dir . '/CHANGES'));
         $this->Packager->setLicense('The BSD License', 'http://www.opensource.org/licenses/bsd-license.php');
         
         $this->Packager->setPackageType('php');
@@ -213,10 +213,7 @@ class Action_Make_Package extends Generator_Action
         $this->Packager->addReplacement('bin/samurai.bat', 'pear-config', '@PEAR-DIR@', 'php_dir');
         $this->Packager->addReplacement('bin/samurai.bat', 'pear-config', '@PHP-BIN@',  'php_bin');
         
-        $this->Packager->addMaintainer('lead', 'satoshi.kiuchi', 'Satoshi Kiuchi', 'satoshi.kiuchi@befool.co.jp');
-        $this->Packager->addMaintainer('developer', 'yuki.kuwabara', 'Yuki Kuwabara', 'yuki.kuwabara@befool.co.jp');
-        $this->Packager->addMaintainer('developer', 'hisayuki.mashimo', 'Hisayuki Mashimo', 'hisayuki.mashimo@befool.co.jp');
-        $this->Packager->addMaintainer('developer', 'yorimichi.ebina', 'Yorimichi Ebina', 'yorimichi.ebina@befool.co.jp');
+        $this->Packager->addMaintainer('lead', 'hayabusa', 'KIUCHI Satoshinosuke', 'scholar@hayabusa-lab.jp');
         
         $this->Packager->addRelease();
         $this->Packager->setOSInstallCondition('windows');

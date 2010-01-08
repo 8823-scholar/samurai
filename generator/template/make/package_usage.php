@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * make/package_usage.php
  * 

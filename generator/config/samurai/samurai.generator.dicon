@@ -1,14 +1,7 @@
-###
- # generator/config/samurai/samurai.generator.dicon
- # 
- # SamuraiFW用のメインコンテナ設定ファイル。
- # 
- # @package    Samurai
- # @subpackage Config.Samurai
- # @copyright  Befool,Inc.
- # @author     Satoshi Kiuchi <satoshi.kiuchi@befool.co.jp>
- # @license    http://opensource.org/licenses/bsd-license.php  The modified BSD License
- #/
+#
+# SamuraiFW用のメインコンテナ設定ファイル
+# 
+
 ## FWを構成するメインインスタンスの設定
 Request:
     class : Samurai_Request_Cli
@@ -24,3 +17,4 @@ Renderer4Generator:
     initMethod:
         name : init
         args : ['config/renderer/simple4generator.php']
+

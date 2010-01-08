@@ -41,8 +41,9 @@
  * 特に理由がない限り、Samurai_Modelを使用してください
  * 
  * @package    Samurai
- * @copyright  Befool,Inc.
- * @author     Satoshi Kiuchi <satoshi.kiuchi@befool.co.jp>
+ * @copyright  2007-2010 Samurai Framework Project
+ * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
+ * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 abstract class Samurai_Logic
 {

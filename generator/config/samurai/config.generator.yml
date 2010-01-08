@@ -1,16 +1,7 @@
-###
- # generator/config/samurai/config.generator.yml
- # 
- # SamuraiFW用の設定ファイル。
- # generator用。
- # 
- # @package    Samurai
- # @subpackage Config.Samurai
- # @copyright  Befool, Inc
- # @author     Satoshi Kiuchi <satoshi.kiuchi@befool.co.jp>
- # @license    http://opensource.org/licenses/bsd-license.php  The modified BSD License
- #/
- 
+#
+# SamuraiFW用の設定ファイル
+#
+
 ## actionディレクティブ
 action:
     default : utility_locate
@@ -21,7 +12,7 @@ generator:
         package   : 'Package'
         author    : 'Foo Bar <foo@bar.jp>'
         copyright : 'Foo Project'
-        licence   : 'http://www.php.net/license/3_01.txt The PHP License, version 3.01'
+        license   : ''
     encoding:
         config   : UTF-8
         script   : UTF-8
@@ -42,3 +33,4 @@ generator:
 enable:
     request_injection : true
     yaml_cache : false
+

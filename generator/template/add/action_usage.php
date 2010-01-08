@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * add/action_usage.php
  * 

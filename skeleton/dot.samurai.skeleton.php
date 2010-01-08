@@ -14,7 +14,7 @@ generator:
 #        package   : 'Package'
 #        author    : 'Foo Bar <foo@bar.jp>'
 #        copyright : 'Foo Project'
-#        licence   : 'http://www.php.net/license/3_01.txt The PHP License, version 3.01'
+#        license   : 'http://www.php.net/license/3_01.txt The PHP License, version 3.01'
 #    encoding:
 #        config   : UTF-8
 #        script   : UTF-8

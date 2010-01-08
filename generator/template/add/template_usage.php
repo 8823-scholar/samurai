@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * add/template_usage.tpl
  * 
