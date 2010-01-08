@@ -59,7 +59,7 @@ class Filter_Device extends Samurai_Filter
      * @access   public
      * @var      object
      */
-    $ActionChain;
+    public $ActionChain;
 
 
     /**

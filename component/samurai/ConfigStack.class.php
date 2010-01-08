@@ -68,7 +68,7 @@ class Samurai_ConfigStack
      * @access   public
      * @var      object
      */
-    public function $Utility;
+    public $Utility;
 
     /**
      * Requestコンポーネント
@@ -76,7 +76,7 @@ class Samurai_ConfigStack
      * @access   public
      * @var      object
      */
-    public function $Request;
+    public $Request;
 
 
     /**

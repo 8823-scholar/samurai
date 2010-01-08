@@ -51,7 +51,7 @@ class Filter_View extends Filter_ViewSimple
      * @access   public
      * @var      object
      */
-    $Renderer;
+    public $Renderer;
 
 
     /**

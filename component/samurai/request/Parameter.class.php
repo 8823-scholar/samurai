@@ -102,7 +102,8 @@ abstract class Samurai_Request_Parameter
      */
     public function get()
     {
-        return call_user_func_array(array($this, 'getParameter'), func_get_args());
+        $args = func_get_args();
+        return call_user_func_array(array($this, 'getParameter'), $args);
     }
 
 
@@ -145,7 +146,8 @@ abstract class Samurai_Request_Parameter
      */
     public function set()
     {
-        return call_user_func_array(array($this, 'setParameter'), func_get_args());
+        $args = func_get_args();
+        return call_user_func_array(array($this, 'setParameter'), $args);
     }
 
 
@@ -175,7 +177,8 @@ abstract class Samurai_Request_Parameter
      */
     public function del()
     {
-        return call_user_func_array(array($this, 'delParameter'), func_get_args());
+        $args = func_get_args();
+        return call_user_func_array(array($this, 'delParameter'), $args);
     }
 }
 
