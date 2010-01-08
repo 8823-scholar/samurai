@@ -1,6 +1,7 @@
 #
 # <?=join(' - ', $action_names)?>.yml
 #
+
 <? if($global){ ?>
 #Convert:
 #    * : 'trim'
