@@ -105,11 +105,13 @@ class Etc_File_Scanner
                     $condition = Etc_File_Scanner_Condition();
                     $condition->reflexive = $reflexive;
                 }
-                if($this->_match($File, $condition)){
+                if($matched = $this->_match($File, $condition)){
                     $Iterator->addElement($File);
                     
                 }
-                if($condition->reflexive && $File->isDirectory()){
+                if($condition->reflexive && $File->isDirectory()
+                    && ($matched || !$condition->reflexive_matched_only))
+                {
                     $this->_scan($Iterator, $File, $condition);
                 }
             }

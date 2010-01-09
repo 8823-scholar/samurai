@@ -1,6 +1,0 @@
-#
-# freeze
-#
-
-FileScanner:
-    class : Etc_File_Scanner

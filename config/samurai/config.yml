@@ -40,6 +40,7 @@ directory:
     skeleton  : skeleton
     temp      : temp
     resource  : resource
+    migrate   : migrate
     spec      : spec
     
 ## 文字コード

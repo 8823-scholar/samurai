@@ -85,6 +85,15 @@ class Etc_File_Scanner_Condition
      */
     public $reflexive = false;
 
+    /**
+     * 再帰的に走査する場合でも、そのディレクトリ自体が条件にマッチしている場合
+     * のみに限定する場合
+     *
+     * @access   public
+     * @var      boolean
+     */
+    public $reflexive_matched_only = false;
+
 
     /**
      * コンストラクタ

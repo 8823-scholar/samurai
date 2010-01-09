@@ -31,3 +31,7 @@ GeneratorProject:
     class : Generator_Generator_Project
     setter:
         Renderer : $Renderer4Generator
+
+FileScanner:
+    class : Etc_File_Scanner
+

@@ -181,6 +181,14 @@ class Action_Add_Project extends Generator_Action
      */
     public $GeneratorProject;
 
+    /**
+     * FileScannerコンポーネント
+     *
+     * @access   public
+     * @var      object
+     */
+    public $FileScanner;
+
 
     /**
      * 実行トリガー
@@ -297,6 +305,7 @@ class Action_Add_Project extends Generator_Action
         $this->_generateTemplates();
         $this->_generateConfigs();
         $this->_generateWwws();
+        $this->_copySkeltons();
         $this->_sendMessage('Finished default file.');
     }
 
@@ -415,8 +424,34 @@ class Action_Add_Project extends Generator_Action
                                                 $this->GeneratorProject->getSkeleton($this->GeneratorProject->SKELETON_WWW_SAMURAI_IMAGE_WARNING),
                                                 array(), $this->GeneratorProject->WWW_SAMURAI_IMAGE_WARNING);
     }
-    
-    
+
+
+    /**
+     * skeltonファイルをプロジェクト直下にコピー
+     *
+     * @access     private
+     */
+    private function _copySkeltons()
+    {
+        $to = sprintf('%s/%s', $this->dir_samurai, Samurai_Config::get('directory.skeleton'));
+        $from = SAMURAI_DIR . DS . Samurai_Config::get('directory.skeleton');
+        $condition = $this->FileScanner->getCondition();
+        $condition->reflexive = true;
+        $condition->reflexive_matched_only = true;
+        $condition->setRegexp('/^[^\.]/');
+        foreach($this->FileScanner->scan($from, $condition) as $file){
+            $to = substr_replace($file->path, $this->dir_samurai, 0, strlen(SAMURAI_DIR));
+            if($file->isDirectory()){
+                if(!file_exists($to)){
+                    mkdir($to, 0755);
+                }
+            } else {
+                $this->_copy($file->path, $to);
+            }
+        }
+    }
+
+
     /**
      * www以下に作成されたファイルを、コピーするドキュメントルートにコピーする
      *

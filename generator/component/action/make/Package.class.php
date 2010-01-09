@@ -227,7 +227,8 @@ class Action_Make_Package extends Generator_Action
         $this->Packager->setPhpDep('5.1.0');
         $this->Packager->setPearinstallerDep('1.4.11');
         $this->Packager->addPackageDepWithChannel('required', 'Crypt_Blowfish', 'pear.php.net');
-        $this->Packager->addPackageDepWithChannel('required', 'PHPSpec', 'pear.befool.co.jp');
+        $this->Packager->addPackageDepWithChannel('required', 'Smarty', 'pear.samurai-fw.org');
+        $this->Packager->addPackageDepWithChannel('required', 'PHPSpec', 'pear.samurai-fw.org');
     }
 
 
