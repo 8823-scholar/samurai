@@ -278,6 +278,8 @@ class Action_Add_Project extends Generator_Action
             array($samurai_dir . DS . Samurai_Config::get('directory.action'), 0755),
             array($samurai_dir . DS . Samurai_Config::get('directory.template'), 0755),
             array($samurai_dir . DS . Samurai_Config::get('directory.skeleton'), 0755),
+            array($samurai_dir . DS . Samurai_Config::get('directory.migrate'), 0755),
+            array($samurai_dir . DS . Samurai_Config::get('directory.migrate') . '/db', 0755),
             array($samurai_dir . DS . Samurai_Config::get('directory.locale'), 0755),
             array($samurai_dir . DS . Samurai_Config::get('directory.spec'), 0755),
         );
