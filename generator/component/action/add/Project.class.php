@@ -174,6 +174,14 @@ class Action_Add_Project extends Generator_Action
     public $GeneratorComponent;
 
     /**
+     * GeneratorSpecコンポーネント
+     *
+     * @access   public
+     * @var      object
+     */
+    public $GeneratorSpec;
+
+    /**
      * GeneratorProjectコンポーネント
      *
      * @access   public
@@ -305,6 +313,7 @@ class Action_Add_Project extends Generator_Action
         $this->_generateTemplates();
         $this->_generateConfigs();
         $this->_generateWwws();
+        $this->_generateOthers();
         $this->_copySkeltons();
         $this->_sendMessage('Finished default file.');
     }
@@ -423,6 +432,20 @@ class Action_Add_Project extends Generator_Action
         list($result, $this->www_samurai_image_warning) = $this->GeneratorProject->generate4Www($this->project_name,
                                                 $this->GeneratorProject->getSkeleton($this->GeneratorProject->SKELETON_WWW_SAMURAI_IMAGE_WARNING),
                                                 array(), $this->GeneratorProject->WWW_SAMURAI_IMAGE_WARNING);
+    }
+
+
+    /**
+     * その他のファイル群を作成する
+     *
+     * @access     private
+     */
+    private function _generateOthers()
+    {
+        //spec/Initialization.phpファイルの作成
+        $init_file = $this->dir_samurai . DS . Samurai_Config::get('directory.spec') . DS . 'Initialization.php';
+        $this->GeneratorSpec->generate4Init($init_file, $this->GeneratorSpec->getSkeleton($this->GeneratorSpec->SKELETON_INIT),
+                                                array('project_name' => $this->project_name));
     }
 
 

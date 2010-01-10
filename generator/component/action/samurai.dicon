@@ -5,7 +5,7 @@ Renderer4Generator:
     class : Samurai_Renderer_Smarty
     initMethod:
         name : import
-        args : ["config/renderer/smarty4generator.yml"]
+        args : ['config/renderer/smarty4generator.yml']
     
 GeneratorAction:
     class : Generator_Generator_Action
@@ -27,6 +27,11 @@ GeneratorTemplate:
     setter:
         Renderer : $Renderer4Generator
     
+GeneratorSpec:
+    class : Generator_Generator_Spec
+    setter:
+        Renderer : $Renderer4Generator
+
 GeneratorProject:
     class : Generator_Generator_Project
     setter:

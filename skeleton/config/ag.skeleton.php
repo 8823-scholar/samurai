@@ -10,6 +10,11 @@
 #         conf : '/path/to/samurai/config/activegateway/conf/alias.yml'
 # </code>
 
-base :
+base:
+    dsn : 'mysql://user:password@localhost/dbname'
+
+## specなどで使用します
+## specを利用する場合は必ず設定してください
+sandbox:
     dsn : 'mysql://user:password@localhost/dbname'
 
