@@ -64,16 +64,19 @@ class ActiveGatewayUtils
     public static function loadYaml($yaml_file)
     {
         //Samurai_Yamlの検索
+        /*
         if(class_exists('Samurai_Yaml')){
             $config = Samurai_Yaml::load($yaml_file);
-        } elseif(file_exists($yaml_file)){
+        } else
+        */
+        if(file_exists($yaml_file)){
             //syckエクステンションの検索
             if(function_exists('syck_load')){
                 $config = syck_load(file_get_contents($yaml_file));
             }
             //Spycの検索
             else {
-                require_once 'Spyc/spyc.php';
+                if(!class_exists('Spyc')) require_once 'Spyc/spyc.php';
                 $config = Spyc::YAMLLoad($yaml_file);
             }
         } else {

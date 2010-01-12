@@ -278,28 +278,28 @@ class Generator_Generator_Project extends Generator
         $config_dir = Samurai_Config::get('generator.directory.samurai') . DS . Samurai_Config::get('directory.config');
         switch($scope){
             case $this->CONFIG_SAMURAI_YAML:
-                $config_file = "{$config_dir}/samurai/config.{$project_name}.yml";
+                $config_file = "{$config_dir}/samurai/config.production.yml";
                 break;
             case $this->CONFIG_SAMURAI_DICON:
-                $config_file = "{$config_dir}/samurai/samurai.{$project_name}.dicon";
+                $config_file = "{$config_dir}/samurai/samurai.production.dicon";
                 break;
             case $this->CONFIG_SAMURAI_FRONTFILTER:
-                $config_file = "{$config_dir}/samurai/frontfilter.{$project_name}.yml";
+                $config_file = "{$config_dir}/samurai/frontfilter.production.yml";
                 break;
             case $this->CONFIG_RENDERER_SMARTY:
-                $config_file = "{$config_dir}/renderer/smarty.{$project_name}.php";
+                $config_file = "{$config_dir}/renderer/smarty.production.php";
                 break;
             case $this->CONFIG_RENDERER_PHPTAL:
-                $config_file = "{$config_dir}/renderer/phptal.{$project_name}.php";
+                $config_file = "{$config_dir}/renderer/phptal.production.php";
                 break;
             case $this->CONFIG_RENDERER_SIMPLE:
-                $config_file = "{$config_dir}/renderer/simple.{$project_name}.php";
+                $config_file = "{$config_dir}/renderer/simple.production.php";
                 break;
             case $this->CONFIG_AG:
-                $config_file = "{$config_dir}/activegateway/activegateway.{$project_name}.yml";
+                $config_file = "{$config_dir}/activegateway/activegateway.production.yml";
                 break;
             case $this->CONFIG_ROUTING:
-                $config_file = "{$config_dir}/routing/routing.{$project_name}.yml";
+                $config_file = "{$config_dir}/routing/routing.production.yml";
                 break;
         }
         //generate

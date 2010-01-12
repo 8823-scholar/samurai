@@ -58,6 +58,8 @@ class Filter_ActiveGateway extends Samurai_Filter
         Samurai_Loader::load(Samurai_Config::get('directory.library') . '/ActiveGateway/ActiveGatewayManager.class.php');
         //設定ファイルの読み込み
         $this->_importConfig('activegateway.yml');
+        $this->_importConfig('activegateway.' . SAMURAI_APPLICATION_NAME . '.yml');
+        $this->_importConfig('activegateway.' . SAMURAI_ENVIRONMENT . '.yml');
         foreach($this->getAttributes() as $conf_file){
             $this->_importConfig($conf_file);
         }
@@ -72,7 +74,7 @@ class Filter_ActiveGateway extends Samurai_Filter
     private function _importConfig($conf_file)
     {
         $conf_file = sprintf('%s/activegateway/%s', Samurai_Config::get('directory.config'), $conf_file);
-        ActiveGatewayManager::singleton()->import($conf_file);
+        ActiveGatewayManager::singleton()->import(Samurai_Loader::getPath($conf_file));
     }
 }
 

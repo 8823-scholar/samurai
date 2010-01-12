@@ -49,9 +49,7 @@ $application_override = Samurai_Loader::getPath($application_override);
 if(Samurai_Loader::isReadable($application_override)) include($application_override);
 
 //環境による上書用ファイルのインクルード
-if(defined('SAMURAI_ENVIRONMENT')){
-    $environment_override = sprintf('config/renderer/phptal.%s.php', SAMURAI_ENVIRONMENT);
-    $environment_override = Samurai_Loader::getPath($environment_override);
-    if(Samurai_Loader::isReadable($environment_override)) include($environment_override);
-}
+$environment_override = sprintf('config/renderer/phptal.%s.php', SAMURAI_ENVIRONMENT);
+$environment_override = Samurai_Loader::getPath($environment_override);
+if(Samurai_Loader::isReadable($environment_override)) include($environment_override);
 

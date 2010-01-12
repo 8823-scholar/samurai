@@ -228,12 +228,12 @@ class Samurai_Yaml
     {
         $spyc = Samurai_Loader::getPath('library/Spyc/spyc.php');
         if(Samurai_Loader::isReadable($spyc)){
-            include_once($spyc);
+            require_once $spyc;
             return true;
         }
         $spyc = Samurai_Loader::getPath('spyc/spyc.php', false, explode(PS, get_include_path()));
         if(Samurai_Loader::isReadable($spyc)){
-            include_once($spyc);
+            require_once $spyc;
             return true;
         }
     }
