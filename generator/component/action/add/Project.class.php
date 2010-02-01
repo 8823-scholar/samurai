@@ -257,7 +257,7 @@ class Action_Add_Project extends Generator_Action
     private function _generateDirectories()
     {
         //基本Samurai_Dirの作成
-        $this->dir_samurai = $this->dir_home . DS . $this->project_name;
+        $this->dir_samurai = getcwd() . DS . $this->project_name;
         Samurai_Config::set('generator.directory.samurai', $this->dir_samurai);
         if(!is_dir($this->dir_samurai)){
             if(!$this->_confirm("May I create the directory ? ({$this->dir_samurai})")) return false;

@@ -8,7 +8,7 @@
 <html xmlns='http://www.w3.org/1999/xhtml' xml:lang='ja' dir='ltr'>
     <head>
         <meta http-equiv='Content-Type' content='text/html; charset=<?php echo $output_code ?>' />
-        <link rel='stylesheet' type='text/css' href='/samurai/samurai.css' />
+        <link rel='stylesheet' type='text/css' href='<?php echo "<?php echo BASE_URI ?>"?>/samurai/samurai.css' />
         <title>無題ドキュメント - [Samurai Framework]</title>
     </head>
     <body>
