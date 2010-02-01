@@ -4,8 +4,8 @@
 
 ## FWを構成するメインインスタンスの設定
 Renderer:
-    class : Samurai_Renderer_<?=ucfirst($renderer_name)."\n"?>
+    class : Samurai_Renderer_<?php echo ucfirst($renderer_name) . "\n" ?>
     initMethod:
         name : init
-        args : ['config/renderer/<?=$renderer_name?>.php']
+        args : ['config/renderer/<?php echo $renderer_name ?>.php']
 

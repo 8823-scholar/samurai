@@ -31,8 +31,6 @@
  * @version    SVN: $Id$
  */
 
-@charset 'UTF-8';
-
 h1
 {
     padding : 5px;

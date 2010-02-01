@@ -1,5 +1,5 @@
 #
-# <?=join(' - ', $action_names)?>.dicon
+# <?php echo join(' - ', $action_names) ?>.dicon
 #
 
 

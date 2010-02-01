@@ -1,16 +1,16 @@
 #
-# <?=join(' - ', $action_names)?>.yml
+# <?php echo join(' - ', $action_names) ?>.yml
 #
 
-<? if($global){ ?>
+<?php if($global){ ?>
 #Convert:
 #    * : 'trim'
 #    
 #Validate:
 #    
-<? } ?>
-<? if($action){ ?>
+<?php } ?>
+<?php if($action){ ?>
 View:
-    success : '<?=$template?>'
-<? } ?>
+    success : '<?php echo $template ?>'
+<?php } ?>
 

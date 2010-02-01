@@ -12,7 +12,7 @@ loggers:
         enable : true
         client : SimpleFile
         log_level : debug
-        logfile : 'log/<?=$project_name?>.log'
+        logfile : 'log/<?php echo $project_name ?>.log'
     mail:
         enable : false
         client : Mail

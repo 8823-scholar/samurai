@@ -116,13 +116,11 @@ class Action_Add_Action extends Generator_Action
     /**
      * テンプレートオプションの調節
      *
-     * -t オプションで自動でテンプレートファイルを命名
-     *
      * @access     private
      */
     private function _adjustTemplateOption()
     {
-        if(!$this->Request->get('notemplate')){
+        if(!$this->Request->get('no-template') && !$this->Request->get('template')){
             foreach($this->args as $action){
                 $template = sprintf('%s.%s', strtolower(join('/', explode('_', $action))),
                                         Samurai_Config::get('generator.renderer.suffix', 'tpl'));

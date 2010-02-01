@@ -1,13 +1,13 @@
-<?="<?php\n"?>
+<?php echo "<?php\n" ?>
 /**
  * SPEC用の初期化ファイル
  *
  * すべてのSPECで必要な前提処理をここに記述してください。
  * beforeSuperAllみたいなものです。
  * 
- * @package    <?=$package != '' ? $package."\n" : "[[パッケージ名]]\n"?>
+ * @package    <?php echo $package != '' ? $package . "\n" : "[[パッケージ名]]\n" ?>
  * @subpackage Action
-<?include(dirname(dirname(__FILE__)) . '/_doc_comment.skeleton.php');?>
+<?php include(dirname(dirname(__FILE__)) . '/_doc_comment.skeleton.php'); ?>
  */
 
 //AG設定

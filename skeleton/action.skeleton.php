@@ -1,12 +1,12 @@
-<?="<?php\n"?>
+<?php echo "<?php\n" ?>
 /**
  * [[機能説明]]
  * 
- * @package    <?=$package != '' ? $package."\n" : "[[パッケージ名]]\n"?>
+ * @package    <?php echo $package != '' ? $package . "\n" : "[[パッケージ名]]\n" ?>
  * @subpackage Action
-<?include('_doc_comment.skeleton.php');?>
+<?php include('_doc_comment.skeleton.php'); ?>
  */
-class <?=$class_name?> extends Samurai_Action
+class <?php echo $class_name ?> extends Samurai_Action
 {
     /**
      * 実行トリガー

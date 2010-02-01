@@ -1,5 +1,5 @@
 {**
- * <?=join(' - ', $template_names)."\n"?>
+ * <?php echo join(' - ', $template_names)."\n" ?>
  *}
 Usage:
     

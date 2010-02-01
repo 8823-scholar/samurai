@@ -8,8 +8,8 @@
 
 generator:
     renderer:
-        name : '<?=$renderer_name?>'
-        suffix : '<?=$renderer_suffix?>'
+        name : '<?php echo $renderer_name ?>'
+        suffix : '<?php echo $renderer_suffix ?>'
 #    generator:
 #        package   : 'Package'
 #        author    : 'Foo Bar <foo@bar.jp>'
