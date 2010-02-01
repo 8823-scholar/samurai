@@ -203,7 +203,7 @@ class Action_Make_Package extends Generator_Action
         $this->Packager->setAPIStability($this->state);
         $this->Packager->setReleaseVersion($this->_getVersion());
         $this->Packager->setReleaseStability($this->state);
-        $this->Packager->setNotes(file_get_contents($this->_src_dir . '/CHANGES'));
+        $this->Packager->setNotes(file_get_contents($this->_src_dir . '/CHANGELOG'));
         $this->Packager->setLicense('The BSD License', 'http://www.opensource.org/licenses/bsd-license.php');
         
         $this->Packager->setPackageType('php');
