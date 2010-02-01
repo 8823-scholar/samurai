@@ -105,7 +105,7 @@ class Action_Utility_Locate extends Generator_Action
             Samurai_Config::set('generator.directory.samurai', $this->dir_samurai);
         }
         //設定の読み込み
-        $conf_file = $this->dir_samurai.DS.'.samurai';
+        $conf_file = $this->dir_samurai . DS . '.samurai';
         if(Samurai_Loader::isReadable($conf_file)){
             Samurai_Config::import($conf_file);
         }

@@ -257,31 +257,32 @@ class Action_Add_Project extends Generator_Action
     private function _generateDirectories()
     {
         //基本Samurai_Dirの作成
-        $samurai_dir = Samurai_Config::get('generator.directory.samurai');
-        if(!is_dir($samurai_dir)){
-            if(!$this->_confirm("May I create the directory ? ({$samurai_dir})")) return false;
-            if(!mkdir($samurai_dir, 0755)) Samurai_Logger::fatal('%s -> Failed creating.', $samurai_dir);
+        $this->dir_samurai = $this->dir_home . DS . $this->project_name;
+        Samurai_Config::set('generator.directory.samurai', $this->dir_samurai);
+        if(!is_dir($this->dir_samurai)){
+            if(!$this->_confirm("May I create the directory ? ({$this->dir_samurai})")) return false;
+            if(!mkdir($this->dir_samurai, 0755)) Samurai_Logger::fatal('%s -> Failed creating.', $this->dir_samurai);
         }
         //サブディレクトリ群の作成
         $dirs = array(
-            array($samurai_dir . DS . 'www', 0755),
-            array($samurai_dir . DS . 'www/samurai', 0755),
-            array($samurai_dir . DS . Samurai_Config::get('directory.bin'), 0755),
-            array($samurai_dir . DS . Samurai_Config::get('directory.log'), 0777),
-            array($samurai_dir . DS . Samurai_Config::get('directory.temp'), 0777),
-            array($samurai_dir . DS . Samurai_Config::get('directory.config'), 0755),
-            array($samurai_dir . DS . Samurai_Config::get('directory.config') . '/samurai', 0755),
-            array($samurai_dir . DS . Samurai_Config::get('directory.config') . '/renderer', 0755),
-            array($samurai_dir . DS . Samurai_Config::get('directory.config') . '/activegateway', 0755),
-            array($samurai_dir . DS . Samurai_Config::get('directory.config') . '/routing', 0755),
-            array($samurai_dir . DS . Samurai_Config::get('directory.component'), 0755),
-            array($samurai_dir . DS . Samurai_Config::get('directory.action'), 0755),
-            array($samurai_dir . DS . Samurai_Config::get('directory.template'), 0755),
-            array($samurai_dir . DS . Samurai_Config::get('directory.skeleton'), 0755),
-            array($samurai_dir . DS . Samurai_Config::get('directory.migrate'), 0755),
-            array($samurai_dir . DS . Samurai_Config::get('directory.migrate') . '/db', 0755),
-            array($samurai_dir . DS . Samurai_Config::get('directory.locale'), 0755),
-            array($samurai_dir . DS . Samurai_Config::get('directory.spec'), 0755),
+            array($this->dir_samurai . DS . 'www', 0755),
+            array($this->dir_samurai . DS . 'www/samurai', 0755),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.bin'), 0755),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.log'), 0777),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.temp'), 0777),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.config'), 0755),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.config') . '/samurai', 0755),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.config') . '/renderer', 0755),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.config') . '/activegateway', 0755),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.config') . '/routing', 0755),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.component'), 0755),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.action'), 0755),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.template'), 0755),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.skeleton'), 0755),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.migrate'), 0755),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.migrate') . '/db', 0755),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.locale'), 0755),
+            array($this->dir_samurai . DS . Samurai_Config::get('directory.spec'), 0755),
         );
         foreach($dirs as $dir_info){
             $dir  = $dir_info[0];
