@@ -86,9 +86,7 @@ class Samurai
     public static function init()
     {
         //スタート
-        define('SAMURAI_START', microtime(true));
-        if(defined('SAMURAI_MODE') && !defined('SAMURAI_ENVIRONMENT')) define('SAMURAI_ENVIRONMENT', SAMURAI_MODE);
-        if(!defined('SAMURAI_ENVIRONMENT')) define('SAMURAI_ENVIRONMENT', 'production');
+        self::_setEnvironment();
 
         //主要クラスのロード
         self::_load();
@@ -109,6 +107,23 @@ class Samurai
         //環境用設定ファイルの読込
         Samurai_Loader::includes('config/environment/production.php');
         if(SAMURAI_ENVIRONMENT != 'production') Samurai_Loader::includes('config/environment/' . SAMURAI_ENVIRONMENT . '.php');
+    }
+
+
+    /**
+     * 環境定数を設定する
+     *
+     * @access   private
+     */
+    private static function _setEnvironment()
+    {
+        define('SAMURAI_START', microtime(true));
+        if($env = getenv('SAMURAI_ENVIRONMENT')){
+            defined('SAMURAI_ENVIRONMENT') ? NULL : define('SAMURAI_ENVIRONMENT', $env);
+        } else {
+            if(defined('SAMURAI_MODE') && !defined('SAMURAI_ENVIRONMENT')) define('SAMURAI_ENVIRONMENT', SAMURAI_MODE);
+            defined('SAMURAI_ENVIRONMENT') ? NULL : define('SAMURAI_ENVIRONMENT', 'production');
+        }
     }
 
 
