@@ -196,7 +196,9 @@ class Filter_ViewSimple extends Samurai_Filter
             //表示
             $Body = $this->Response->setBody($contents);
             if(is_object($Body) && !$this->Response->hasHeader('content-type')){
-                $Body->setHeader('content-type', sprintf('text/html; charset=%s', Samurai_Config::get('encoding.output')));
+                $encoding = Samurai_Config::get('encoding.output');
+                $encoding = $encoding == 'SJIS-WIN' ? 'Shift_JIS' : $encoding;
+                $Body->setHeader('content-type', sprintf('text/html; charset=%s', $encoding));
             }
             $this->Response->execute();
         }
