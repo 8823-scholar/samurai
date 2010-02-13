@@ -83,7 +83,9 @@ class Filter_View extends Filter_ViewSimple
             }
             $Body = $this->Response->setBody($body);
             if(is_object($Body) && !$this->Response->hasHeader('content-type')){
-                $Body->setHeader('content-type', sprintf('text/html; charset=%s', Samurai_Config::get('encoding.output')));
+                $encoding = Samurai_Config::get('encoding.output');
+                $encoding = $encoding == 'SJIS-WIN' ? 'Shift_JIS' : $encoding;
+                $Body->setHeader('content-type', sprintf('text/html; charset=%s', $encoding));
             }
             $this->Response->execute();
         }
