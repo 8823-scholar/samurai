@@ -42,7 +42,6 @@ defined('SAMURAI_DIR') ? NULL : define('SAMURAI_DIR', dirname(__FILE__));
  * Samurai Frameworkのメインクラス
  * 
  * @package    Samurai
- * @version    2.0.0
  * @copyright  2007-2010 Samurai Framework Project
  * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
@@ -105,8 +104,8 @@ class Samurai
         }
 
         //環境用設定ファイルの読込
-        Samurai_Loader::includes('config/environment/production.php');
         if(SAMURAI_ENVIRONMENT != 'production') Samurai_Loader::includes('config/environment/' . SAMURAI_ENVIRONMENT . '.php');
+        Samurai_Loader::includes('config/environment/production.php');
     }
 
 

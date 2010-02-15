@@ -633,7 +633,7 @@ class ActiveGateway
             if($record->hasField('deleted_at')){
                 $attributes['deleted_at'] = time();
             }
-            return $this->updateAllDetail($alias, $attributes, $condition);
+            return $this->updateAllDetail($alias, $condition, $attributes);
         }
         //物理消去
         else {
