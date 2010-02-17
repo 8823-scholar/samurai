@@ -244,5 +244,18 @@ class Samurai_Loader
             return preg_match('|^/|', $path);
         }
     }
+
+
+    /**
+     * include_pathにsamurai_dirのlibraryを追加する
+     *
+     * @access     public
+     */
+    public function appendIncludePath()
+    {
+        foreach(Samurai::getSamuraiDirs() as $dir){
+            set_include_path(get_include_path() . PS . $dir . DS . 'library');
+        }
+    }
 }
 

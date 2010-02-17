@@ -139,6 +139,7 @@ class Samurai
         Samurai_Loader::load('component/samurai/Yaml.class.php');
         Samurai_Loader::load('component/samurai/container/Factory.class.php');
         Samurai_Loader::load('component/samurai/Logger.class.php');
+        Samurai_Loader::appendIncludePath();
         spl_autoload_register(array('Samurai_Loader', 'autoload'));
     }
 
