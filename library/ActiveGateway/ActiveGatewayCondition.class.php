@@ -255,6 +255,7 @@ class ActiveGatewayCondition
     {
         $obj = new ActiveGatewayCondition_Value($value);
         $obj->operator = '&';
+        return $obj;
     }
 }
 
