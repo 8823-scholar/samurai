@@ -201,7 +201,7 @@ class Samurai_Request_Session extends Samurai_Request_Parameter
      */
     public function id($id = NULL)
     {
-        return $id === NULL ? session_id() : session_id($id) ;
+        return $id === NULL ? session_id() : session_id(preg_replace('/[^a-z0-9]/i', '', $id)) ;
     }
 
 
