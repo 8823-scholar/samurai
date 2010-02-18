@@ -53,6 +53,14 @@ class Filter_View extends Filter_ViewSimple
      */
     public $Renderer;
 
+    /**
+     * Deviceコンポーネント
+     *
+     * @access   public
+     * @var      object
+     */
+    public $Device;
+
 
     /**
      * Template:
@@ -85,7 +93,8 @@ class Filter_View extends Filter_ViewSimple
             if(is_object($Body) && !$this->Response->hasHeader('content-type')){
                 $encoding = Samurai_Config::get('encoding.output');
                 $encoding = $encoding == 'SJIS-WIN' ? 'Shift_JIS' : $encoding;
-                $Body->setHeader('content-type', sprintf('text/html; charset=%s', $encoding));
+                $mime_type = $this->Device->isMobile() && $this->Device->isDocomo() ? 'application/xhml+xml' : 'text/html' ;
+                $Body->setHeader('content-type', sprintf('%s; charset=%s', $mime_type, $encoding));
             }
             $this->Response->execute();
         }
