@@ -251,7 +251,7 @@ class ActiveGatewayCondition
      * @param      mixed    $value
      * @return     object   ActiveGatewayCondition_Value
      */
-    public function isBitAnd()
+    public function isBitAnd($value)
     {
         $obj = new ActiveGatewayCondition_Value($value);
         $obj->operator = '&';
