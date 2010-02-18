@@ -243,6 +243,19 @@ class ActiveGatewayCondition
         $obj->operator = 'LIKE';
         return $obj;
     }
+
+    /**
+     * BIT演算 AND
+     *
+     * @access     public
+     * @param      mixed    $value
+     * @return     object   ActiveGatewayCondition_Value
+     */
+    public function isBitAnd()
+    {
+        $obj = new ActiveGatewayCondition_Value($value);
+        $obj->operator = '&';
+    }
 }
 
 
