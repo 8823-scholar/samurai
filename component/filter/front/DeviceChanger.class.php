@@ -118,6 +118,7 @@ class Filter_Front_DeviceChanger extends Samurai_Filter
                 $this->Cookie->set('SAMURAI.Filter.Front.DeviceChanger.seed', $random, NULL, '/');
             }
             //headerにdebugの目印
+            define('SAMURAI_DEVICE_IS_CAMOUFLAGE', true);
             $this->Request->setHeader('x-debug', '1');
         } catch(Samurai_Exception $E){}
     }

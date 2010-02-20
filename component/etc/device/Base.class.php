@@ -317,5 +317,17 @@ class Etc_Device_Base
     {
         return $this->client === 'cli';
     }
+
+
+    /**
+     * 偽装かどうか
+     *
+     * @access     public
+     * @return     boolean
+     */
+    public function isCamouflage()
+    {
+        return defined('SAMURAI_DEVICE_IS_CAMOUFLAGE') && SAMURAI_DEVICE_IS_CAMOUFLAGE;
+    }
 }
 
