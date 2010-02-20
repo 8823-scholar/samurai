@@ -93,7 +93,10 @@ class Filter_View extends Filter_ViewSimple
             if(is_object($Body) && !$this->Response->hasHeader('content-type')){
                 $encoding = Samurai_Config::get('encoding.output');
                 $encoding = $encoding == 'SJIS-WIN' ? 'Shift_JIS' : $encoding;
-                $mime_type = $this->Device->isMobile() && $this->Device->isDocomo() ? 'application/xhml+xml' : 'text/html' ;
+                $mime_type = 'text/html';
+                if($this->Device->isMobile() && $this->Device->isDocomo() && !$this->Device->isCamouflage()){
+                    $mime_type = 'application/xhtml+xml';
+                }
                 $Body->setHeader('content-type', sprintf('%s; charset=%s', $mime_type, $encoding));
             }
             $this->Response->execute();
