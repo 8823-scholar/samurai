@@ -284,17 +284,6 @@ class Samurai_Response_Http
             if($this->Device->isImode()){
                 $this->setStatus('302');
             }
-            if($this->Session){
-                if($this->Request->getParameter('guid')){
-                    if(!preg_match('/(\?|&)guid=ON/i', $url)){
-                        $url .= sprintf('%sguid=ON', strpos($url, '?') !== false ? '&' : '?');
-                    }
-                } else {
-                    if(!preg_match('/(\?|&)'.preg_quote($this->Session->name()).'=/', $url)){
-                        $url .= sprintf('%s%s=%s', strpos($url, '?') ? '&' : '?', $this->Session->name(), $this->Session->id());
-                    }
-                }
-            }
         }
         $this->setHeader('location', $url);
     }
