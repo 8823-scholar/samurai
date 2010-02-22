@@ -132,13 +132,24 @@ class Samurai_Request_Session extends Samurai_Request_Parameter
      * 値の取得と削除を同時に行う
      *
      * @access     public
-     * @param      string  $key
+     * @param      string   $key
      */
     public function getAndDel($key)
     {
         $value = $this->getParameter($key);
         $this->delParameter($key);
         return $value;
+    }
+
+    /**
+     * getAndDelのシノニム
+     *
+     * @access     public
+     * @param      string   $key
+     */
+    public function getAndRemove($key)
+    {
+        return $this->getAndDel($key);
     }
 
 
