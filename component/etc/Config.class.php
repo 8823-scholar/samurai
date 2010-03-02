@@ -197,6 +197,20 @@ class Etc_Config
 
 
     /**
+     * 指定した値が配列の場合、その内容をランダムに返却する
+     *
+     * @access     public
+     * @param      string   $key
+     * @return     mixed
+     */
+    public function getRandom($key)
+    {
+        $value = $this->get($key);
+        return is_array($value) ? $value[array_rand($value)] : $value ;
+    }
+
+
+    /**
      * 初期化
      *
      * @access     public
