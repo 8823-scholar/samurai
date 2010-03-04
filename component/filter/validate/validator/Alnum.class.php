@@ -50,7 +50,7 @@ class Filter_Validate_Validator_Alnum extends Filter_Validate_Validator
      */
     public function validate($value, $params = array())
     {
-        return preg_match('/^[:alnum:]+$/i', $value);
+        return preg_match('/^[[:alnum:]]+$/i', $value);
     }
 }
 
