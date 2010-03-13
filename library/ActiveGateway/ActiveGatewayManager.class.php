@@ -360,5 +360,17 @@ class ActiveGatewayManager
             $AG->connect(true);
         }
     }
+
+    /**
+     * すべての接続を切断する
+     *
+     * @access     public
+     */
+    public function disconnectAll()
+    {
+        foreach($this->_active_gateways as $AG){
+            $AG->disconnect();
+        }
+    }
 }
 
