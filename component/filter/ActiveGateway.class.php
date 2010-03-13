@@ -63,6 +63,12 @@ class Filter_ActiveGateway extends Samurai_Filter
         foreach($this->getAttributes() as $conf_file){
             $this->_importConfig($conf_file);
         }
+        //Sessionがらみで、ActiveGateway関連がserializeされると、エラーで困る場合がある。それを解消
+        if($uses = $this->getAttribute('use')){
+            foreach(explode(',', $uses) as $use){
+                $this->_loadDriver($use);
+            }
+        }
     }
 
 
@@ -75,6 +81,18 @@ class Filter_ActiveGateway extends Samurai_Filter
     {
         $conf_file = sprintf('%s/activegateway/%s', Samurai_Config::get('directory.config'), $conf_file);
         ActiveGatewayManager::singleton()->import(Samurai_Loader::getPath($conf_file));
+    }
+
+
+    /**
+     * 使用するDriverを先読み
+     *
+     * @access     private
+     * @param      string   $use
+     */
+    private function _loadDriver($use)
+    {
+        Samurai_Loader::load(Samurai_Config::get('directory.library') . '/ActiveGateway/Driver/' . ucfirst($use) . '.class.php');
     }
 }
 
