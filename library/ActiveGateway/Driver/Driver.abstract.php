@@ -116,6 +116,18 @@ abstract class ActiveGateway_Driver
 
 
     /**
+     * 切断
+     *
+     * @access     public
+     */
+    public function disconnect()
+    {
+        $this->connection = NULL;
+        $this->connection_master = NULL;
+    }
+
+
+    /**
      * コネクションが確立されているのかどうか
      *
      * @access     public

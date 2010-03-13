@@ -163,6 +163,19 @@ class ActiveGateway
     }
 
 
+    /**
+     * 切断
+     *
+     * @access     public
+     */
+    public function disconnect()
+    {
+        if($this->hasConnection()){
+            $this->Driver->disconnect();
+        }
+    }
+
+
 
 
 
