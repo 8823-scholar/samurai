@@ -121,9 +121,13 @@ class Samurai_Renderer_Simple extends Samurai_Renderer
      */
     public function addHelper($alias, $define)
     {
-        $Container = Samurai::getContainer();
-        $Container->registerComponent('Renderer_Simple_' . $alias, new Samurai_Container_Def($define));
-        $this->$alias = $Container->getComponent('Renderer_Simple_' . $alias);
+        if(is_array($define)){
+            $Container = Samurai::getContainer();
+            $Container->registerComponent('Renderer_Simple_' . $alias, new Samurai_Container_Def($define));
+            $this->$alias = $Container->getComponent('Renderer_Simple_' . $alias);
+        } else {
+            $this->$alias = $define;
+        }
         return $this->$alias;
     }
 }

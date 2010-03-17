@@ -130,6 +130,7 @@ abstract class Samurai_Renderer
     {
         $Action->beforeRenderer();
         $this->assign('Action', $Action);
+        $this->addHelper('Action', $Action);
         foreach(get_object_vars($Action) as $_key => $_val){
             if(!preg_match('/^_/', $_key)){
                 $this->assign($_key, $_val);

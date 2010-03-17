@@ -102,10 +102,15 @@ class Samurai_Renderer_Smarty extends Samurai_Renderer
      */
     public function addHelper($alias, $define)
     {
-        $Container = Samurai::getContainer();
-        $Container->registerComponent('Renderer_Smarty_' . $alias, new Samurai_Container_Def($define));
-        $Helper = $Container->getComponent('Renderer_Smarty_' . $alias);
-        $this->Engine->register_object($alias, $Helper);
+        if(is_array($define)){
+            $Container = Samurai::getContainer();
+            $Container->registerComponent('Renderer_Smarty_' . $alias, new Samurai_Container_Def($define));
+            $Helper = $Container->getComponent('Renderer_Smarty_' . $alias);
+            $this->Engine->register_object($alias, $Helper);
+        } else {
+            $Helper = $define;
+            $this->Engine->register_object($alias, $Helper);
+        }
         return $Helper;
     }
 }
