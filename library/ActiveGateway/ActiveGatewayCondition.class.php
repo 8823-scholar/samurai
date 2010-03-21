@@ -257,6 +257,41 @@ class ActiveGatewayCondition
         $obj->operator = '&';
         return $obj;
     }
+
+
+    /**
+     * AND連結
+     *
+     * @access     public
+     * @param      mixed     $value   ...
+     * @return     object   ActiveGatewayCondition_Values
+     */
+    public function isAnd()
+    {
+        $obj = new ActiveGatewayCondition_Values();
+        $obj->operator = 'AND';
+        foreach(func_get_args() as $arg){
+            $obj->append($arg);
+        }
+        return $obj;
+    }
+
+    /**
+     * OR連結
+     *
+     * @access     public
+     * @param      mixed     $value   ...
+     * @return     object   ActiveGatewayCondition_Values
+     */
+    public function isOr()
+    {
+        $obj = new ActiveGatewayCondition_Values();
+        $obj->operator = 'OR';
+        foreach(func_get_args() as $arg){
+            $obj->append($arg);
+        }
+        return $obj;
+    }
 }
 
 
@@ -305,3 +340,56 @@ class ActiveGatewayCondition_Value
     }
 }
 
+
+
+
+
+/**
+ * ActiveGatewayの条件の値の集合を体現するクラス
+ * 
+ * @package    ActiveGateway
+ * @copyright  2007-2010 Samurai Framework Project
+ * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
+ * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ */
+class ActiveGatewayCondition_Values
+{
+    /**
+     * 値
+     *
+     * @access   public
+     * @var      array
+     */
+    public $values = array();
+
+    /**
+     * 連結演算子
+     *
+     * @access   public
+     * @var      string
+     */
+    public $operator = 'AND';
+
+
+    /**
+     * コンストラクタ
+     *
+     * @access     public
+     */
+    public function __construct()
+    {
+    }
+
+
+    /**
+     * 値を追加
+     *
+     * @access     public
+     * @param      mixed
+     * @return     object   ActiveGatewayCondition_Value
+     */
+    public function append($value)
+    {
+        $this->values[] = $value;
+    }
+}

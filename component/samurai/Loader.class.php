@@ -253,8 +253,8 @@ class Samurai_Loader
      */
     public function appendIncludePath()
     {
-        foreach(Samurai::getSamuraiDirs() as $dir){
-            set_include_path(get_include_path() . PS . $dir . DS . 'library');
+        foreach(array_reverse(Samurai::getSamuraiDirs()) as $dir){
+            set_include_path($dir . DS . 'library' . PS . get_include_path());
         }
     }
 }

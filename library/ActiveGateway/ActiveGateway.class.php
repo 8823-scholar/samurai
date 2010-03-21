@@ -1084,31 +1084,36 @@ class ActiveGateway
             foreach($where as $_key => $_val){
                 $column_key = $original_key === NULL ? $_key : $original_key;
                 switch((string)$_key){
-                    case 'range':
-                        $place_holder1 = ":range_{$column_key}_1";
-                        $place_holder2 = ":range_{$column_key}_2";
-                        $return[] = sprintf('%s >= %s AND %s <= %s', $column_key, $place_holder1, $column_key, $place_holder2);
-                        $params[$place_holder1] = array_shift($_val);
-                        $params[$place_holder2] = array_shift($_val);
-                        break;
-                    default:
-                        if(is_array($_val)){
-                            $sub_wheres = $this->_chain_where($_val, $params, $prefix.$_key.'_', $column_key);
-                            $return[] = sprintf('( %s )', join(' OR ', $sub_wheres));
+                case 'range':
+                    $place_holder1 = ":range_{$column_key}_1";
+                    $place_holder2 = ":range_{$column_key}_2";
+                    $return[] = sprintf('%s >= %s AND %s <= %s', $column_key, $place_holder1, $column_key, $place_holder2);
+                    $params[$place_holder1] = array_shift($_val);
+                    $params[$place_holder2] = array_shift($_val);
+                    break;
+                default:
+                    if(is_array($_val)){
+                        $condition = ActiveGateway::getCondition();
+                        $_values = $_val;
+                        $_val = $condition->isOr();
+                        $_val->values = $_values;
+                    } elseif(!is_object($_val)){
+                        $condition = ActiveGateway::getCondition();
+                        $_val = $condition->isEqual($_val);
+                    }
+                    if($_val instanceof ActiveGatewayCondition_Value){
+                        if($_val->override){
+                            $return[] = sprintf('%s %s', $column_key, $_val->override);
                         } else {
-                            $condition = ActiveGateway::getCondition();
-                            if(!is_object($_val) || ! $_val instanceof ActiveGatewayCondition_Value){
-                                $_val = $condition->isEqual($_val);
-                            }
-                            $place_holder = ':'.$prefix.$_key;
-                            if($_val->override){
-                                $return[] = sprintf('%s %s', $column_key, $_val->override);
-                            } else {
-                                $params[$place_holder] = $_val->value;
-                                $return[] = sprintf('%s %s %s', $this->Driver->escapeColumn($column_key), $_val->operator, $place_holder);
-                            }
+                            $place_holder = ':' . $prefix . $_key;
+                            $params[$place_holder] = $_val->value;
+                            $return[] = sprintf('%s %s %s', $this->Driver->escapeColumn($column_key), $_val->operator, $place_holder);
                         }
-                        break;
+                    } elseif($_val instanceof ActiveGatewayCondition_Values){
+                        $sub_wheres = $this->_chain_where($_val->values, $params, $prefix . $_key . '_', $column_key);
+                        $return[] = sprintf('( %s )', join(sprintf(' %s ', $_val->operator), $sub_wheres));
+                    }
+                    break;
                 }
             }
         }

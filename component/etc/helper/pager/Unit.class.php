@@ -208,6 +208,17 @@ class Etc_Helper_Pager_Unit
     }
 
 
+    /**
+     * 総ページ数を取得する
+     *
+     * @access     public
+     * @return     int
+     */
+    public function getTotalPage()
+    {
+        return ceil($this->getTotal() / $this->per_page);
+    }
+
 
     /**
      * Pear::Pagerのslidingモードのようにページを取得できる。
