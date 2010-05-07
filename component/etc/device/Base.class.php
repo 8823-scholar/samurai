@@ -295,6 +295,17 @@ class Etc_Device_Base
 
 
     /**
+     * PCかどうかの判断
+     *
+     * @access     public
+     * @return     boolean
+     */
+    public function isPC()
+    {
+        return $this->client == 'pc';
+    }
+
+    /**
      * 携帯かどうかの判断
      *
      * @access     public
