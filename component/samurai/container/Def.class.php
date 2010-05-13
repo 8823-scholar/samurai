@@ -38,7 +38,7 @@
  *  インスタンスの初期化方法を宣言するクラス
  * 
  * @package    Samurai
- * @copyright  2007-2009 Samurai Framework Project
+ * @copyright  2007-2010 Samurai Framework Project
  * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
  */

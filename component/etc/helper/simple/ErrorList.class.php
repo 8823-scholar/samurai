@@ -39,7 +39,7 @@
  * 
  * @package    Samurai
  * @subpackage Etc.Helper.Simple
- * @copyright  2009-2010 Samurai Framework Project
+ * @copyright  2007-2010 Samurai Framework Project
  * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
