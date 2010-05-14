@@ -148,12 +148,16 @@ class Action_Make_Package extends Generator_Action
             $result = $this->Packager->writePackageFile();
             if(PEAR::isError($result)) exit($result->getMessage());
             $package = $this->_getPackageName() . '-' . $this->_getVersion();
-            $archive = $package.'.tgz';
+            $archive = $package . '.tgz';
             chdir($this->_work_dir);
+            /*
             shell_exec(sprintf('mv -f %s/package.xml ./', $this->_src_dir));
             shell_exec(sprintf('tar cvfz %s package.xml %s', $archive, $package));
             shell_exec(sprintf('cp -f %s %s/%s', $archive, $this->_release_dir, $archive));
-            echo 'Successfuly generated ! -> '.$this->_release_dir.DS.$archive;
+            */
+            shell_exec(sprintf('pear package %s/package.xml', $this->_src_dir));
+            shell_exec(sprintf('cp -f %s %s/%s', $archive, $this->_release_dir, $archive));
+            echo 'Successfuly generated ! -> '.$this->_release_dir . DS . $archive;
             echo "\n";
         } else {
             $result = $this->Packager->debugPackageFile();
@@ -198,7 +202,7 @@ class Action_Make_Package extends Generator_Action
         $this->Packager->setPackage('Samurai');
         $this->Packager->setSummary('Samurai PHP Framework Package');
         $this->Packager->setDescription('Samurai is PHP Web Application Framework extends Maple3.');
-        $this->Packager->setChannel('pear.befool.co.jp');
+        $this->Packager->setChannel('pear.samurai-fw.org');
         $this->Packager->setAPIVersion($this->_getVersion());
         $this->Packager->setAPIStability($this->state);
         $this->Packager->setReleaseVersion($this->_getVersion());
