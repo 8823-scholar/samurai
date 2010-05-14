@@ -167,7 +167,7 @@ class Samurai_Yaml
      */
     public static function hasCache($yaml_file)
     {
-        $cache_file = Samurai_Loader::getPath(sprintf('temp/yaml/%s', urlencode($yaml_file)));
+        $cache_file = Samurai_Loader::getPath(sprintf('temp/yaml/%s', urlencode($yaml_file)), true);
         $yaml_file = Samurai_Loader::getPath($yaml_file);
         if(Samurai_Loader::isReadable($cache_file) && Samurai_Loader::isReadable($yaml_file)){
             return filemtime($cache_file) > filemtime($yaml_file) ? $cache_file : false ;
