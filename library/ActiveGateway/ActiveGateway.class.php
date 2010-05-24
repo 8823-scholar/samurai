@@ -257,8 +257,9 @@ class ActiveGateway
      * @param      object  $condition    ActiveGatewayCondition
      * @return     object  ActiveGatewayRecords
      */
-    public function findAll($alias, ActiveGatewayCondition $condition)
+    public function findAll($alias, ActiveGatewayCondition $condition = NULL)
     {
+        if(!$condition) $condition = ActiveGateway::getCondition();
         return $this->findAllDetail($alias, $condition);
     }
 
