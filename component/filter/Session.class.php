@@ -122,10 +122,6 @@ class Filter_Session extends Samurai_Filter
                     break;
             }
         }
-        //携帯ではUIDを取得できる限り、UIDをSESSIONIDとする
-        if($this->Device->isMobile() && $uid = $this->Device->getUid()){
-            $this->Session->id($uid);
-        }
         //Session開始
         $this->Session->start();
     }
