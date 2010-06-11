@@ -72,7 +72,7 @@ class Samurai_Loader
             include_once($file);
             return true;
         } else {
-            return false;
+            return (boolean)@include_once($path);
         }
     }
 

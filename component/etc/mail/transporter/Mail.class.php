@@ -59,9 +59,24 @@ class Etc_Mail_Transporter_Mail extends Etc_Mail_Transporter
      */
     protected function _send()
     {
+        //準備
         $headers = $this->_adjustHeaders();
-        $headers = join(Etc_Mail_Mime_Part::LINEEND, $headers);
-        mail($this->_recipients, $this->Mail->getSubject(true), $this->_body, $headers, $this->parameters);
+        $headers = join($this->Mail->lineend, $headers);
+        $from   = escapeshellcmd($this->Mail->getFrom()->mail);
+        $recipients = array();
+        foreach($this->Mail->getRecipients() as $Recipient){
+            $recipients[] = $Recipient->mail;
+        }
+        $mailtext = $headers . $this->Mail->lineend . $this->Mail->lineend . $this->Part->getContent();
+        //Windowsでない場合は、改行コードを\nに統一してあげる必要がある
+        if(strpos(PHP_OS, 'WIN') !== 0){
+            $mailtext = preg_replace("/\r\n/", "\n", $mailtext);
+        }
+        
+        //送信
+        foreach($recipients as $recipient){
+            mail($recipient, $this->Mail->getSubject(true), $mailtext, $headers, $this->parameters);
+        }
     }
     
     
@@ -74,14 +89,13 @@ class Etc_Mail_Transporter_Mail extends Etc_Mail_Transporter
     private function _adjustHeaders()
     {
         $headers = array();
-        foreach($this->_headers as $key => $value){
-            switch($key){
-                case 'to':
+        foreach($this->Part->getHeaders() as $key => $value){
+            switch(strtolower($key)){
                 case 'subject':
                     break;
                 default:
                     $key = join('-', array_map('ucfirst', explode('-', $key)));
-                    $headers[] = "{$key}: {$value}";
+                    $headers[] = sprintf('%s: %s', $key, $value);
                     break;
             }
         }

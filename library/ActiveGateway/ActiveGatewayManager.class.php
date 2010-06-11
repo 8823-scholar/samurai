@@ -327,6 +327,16 @@ class ActiveGatewayManager
         return self::$_querys;
     }
 
+    /**
+     * プールされたクエリーを解放
+     *
+     * @access     public
+     */
+    public function clearPoolQuery()
+    {
+        self::$_querys = array();
+    }
+
 
     /**
      * 配列からランダムにピック

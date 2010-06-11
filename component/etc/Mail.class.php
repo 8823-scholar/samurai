@@ -430,7 +430,7 @@ class Etc_Mail
      * @param      string  $encoding
      * @param      string  $filename       添付ファイル名
      */
-    public function createAttachment($string, $type, $disposition = Etc_Mail_Mime::DISPOSITION_INLINE,
+    public function createAttachment($string, $type, $disposition = Etc_Mail_Mime::DISPOSITION_ATTACHMENT,
                                         $encoding = Etc_Mail_Mime::ENCODING_BASE64, $filename = 'attachment')
     {
         $attach = new Etc_Mail_Mime_Part($string);
@@ -611,7 +611,7 @@ class Etc_Mail
      *
      * @access     public
      */
-    public function getTransporter($transporter = 'sendmail')
+    public function getTransporter($transporter = 'mail')
     {
         try{
             $class = 'Etc_Mail_Transporter_' . ucfirst($transporter);
