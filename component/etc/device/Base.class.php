@@ -72,6 +72,14 @@ class Etc_Device_Base
     public $client = 'pc';
 
     /**
+     * 機種名
+     *
+     * @access   public
+     * @var      string
+     */
+    public $name = '';
+
+    /**
      * ブラウザ名
      *
      * @access   public

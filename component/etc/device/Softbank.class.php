@@ -55,6 +55,7 @@ class Etc_Device_Softbank extends Etc_Device_Mobile
     {
         parent::__construct($user_agent);
         $this->carrier = 'softbank';
+        $this->name = $this->user_agents[2];
         
         $Request = Samurai::getContainer()->getComponent('Request');
         //画面

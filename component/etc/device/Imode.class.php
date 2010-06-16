@@ -55,6 +55,7 @@ class Etc_Device_Imode extends Etc_Device_Mobile
     {
         parent::__construct($user_agent);
         $this->carrier = 'imode';
+        $this->name = $this->user_agents[2];
         
         $Request = Samurai::getContainer()->getComponent('Request');
         //シリアル

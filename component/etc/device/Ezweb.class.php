@@ -55,6 +55,7 @@ class Etc_Device_Ezweb extends Etc_Device_Mobile
     {
         parent::__construct($user_agent);
         $this->carrier = 'ezweb';
+        $this->name = $this->user_agents[0] == 'KDDI' ? $this->user_agents[1] : $this->user_agents[2];
         
         $Request = Samurai::getContainer()->getComponent('Request');
         //シリアル
