@@ -100,7 +100,7 @@ class Action_Freeze extends Generator_Action
     private function _backup()
     {
         $source_dir = Samurai_Config::get('generator.directory.samurai');
-        $dest_dir   = dirname($source_dir) . DS . 'Samurai.' . date('Ymd');
+        $dest_dir   = dirname($source_dir) . DS . basename($source_dir) . '.' . date('Ymd');
         $files = $this->FileScanner->scan($source_dir);
         if(!is_dir($dest_dir)) mkdir($dest_dir);
         foreach($files as $File){
@@ -120,7 +120,12 @@ class Action_Freeze extends Generator_Action
      */
     private function _freeze()
     {
-        $files = $this->FileScanner->scan(SAMURAI_DIR);
+        $cond = $this->FileScanner->getCondition();
+        $cond->reflexive = true;
+        $cond->reflexive_matched_only = true;
+        $cond->setRegexp('/^(\.svn|package\.xml)$/');
+        $cond->negative = true;
+        $files = $this->FileScanner->scan(SAMURAI_DIR, $cond);
         foreach($files as $File){
             $dest = Samurai_Config::get('generator.directory.samurai') . str_replace(SAMURAI_DIR, '', $File->path);
             if(file_exists($dest)){
