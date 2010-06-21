@@ -61,7 +61,7 @@ class Action_Make_Package extends Generator_Action
      * @access   public
      * @var      string
      */
-    public $state = 'stable';
+    public $state = Samurai::STATE;
 
     /**
      * 付加
@@ -260,7 +260,7 @@ class Action_Make_Package extends Generator_Action
     private function _getVersion()
     {
         $version = $this->Request->get('version', Samurai::VERSION);
-        return $version . $this->postfix;
+        return $version . $this->state . $this->postfix;
     }
 
 
