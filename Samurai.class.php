@@ -53,7 +53,14 @@ class Samurai
      *
      * @const   string
      */
-    const VERSION = '2.0.0';
+    const VERSION = '2.0.7';
+
+    /**
+     * 状態
+     *
+     * @const   string
+     */
+    const STATE = 'beta';
 
     /**
      * Samuraiディレクトリの候補
