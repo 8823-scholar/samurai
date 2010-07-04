@@ -5,15 +5,14 @@
  * add-project::usage
  */
 ?>
-<? $errors = $this->Error->getMessages(); ?>
-<? if($errors){ ?>
+<?php $errors = $this->Error->getMessages(); ?>
+<?php if($errors){ ?>
 Error:
-<? foreach($errors as $error){ ?>
- <?=$error?>
-<? } ?>
+<?php foreach($errors as $error){ ?>
+ <?php echo $error; ?>
+<?php } ?>
 
-
-<? } ?>
+<?php } ?>
 Usage:
     samurai add-project [project_name] [options]
 Options:

@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * utility/version.php
  * 
@@ -6,7 +6,7 @@
  */
 ?>
 PHP Framework Samurai extends Maple3.
-Version: <?=$version?>
+Version: <?php echo $version; ?>
 
 Copyright (C) 2007-2010 Samurai Framework Project. All Rights Reserved.
   KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
