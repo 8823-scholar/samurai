@@ -1,0 +1,3 @@
+[submodule "library/ActiveGateway"]
+	path = library/ActiveGateway
+	url = git@github.com:8823-scholar/ActiveGateway.git
