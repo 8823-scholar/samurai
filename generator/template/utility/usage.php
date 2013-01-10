@@ -14,6 +14,8 @@ Commands:
     add-project      Add Project.
     add-application  Add Application.
     add-action       Add Action.
+    add-component    Add Component.
+    add-filter       Add Filter
     add-template     Add Template.
 
 
