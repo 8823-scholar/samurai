@@ -8,8 +8,8 @@
 
 generator:
     renderer:
-        name : 'simple'
-        suffix : 'php'
+        name : 'smarty'
+        suffix : 'tpl'
     generator:
         package   : 'Samurai'
 #        author    : 'Name <name@example.jp>'

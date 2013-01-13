@@ -23,6 +23,7 @@ generator:
         component : 'component'
         action    : 'component/action'
         template  : 'template'
+        spec      : 'spec'
         skeleton  : 'skeleton'
         www       : 'public_html'
     action:

@@ -89,8 +89,8 @@ class Filter_Generator extends Samurai_Filter
             $samurai_dir = $now_dir . DS . 'Samurai';
         }
         
-        if ( $this->Request->get('samurai_dir') ) {
-            $samurai_dir = $this->Request->get('samurai_dir');
+        if ( $this->Request->get('samurai-dir') ) {
+            $samurai_dir = $this->Request->get('samurai-dir');
         }
         
         Samurai_Config::set('generator.directory.samurai', $samurai_dir);

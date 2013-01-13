@@ -2,6 +2,10 @@
 # add - spec.yml
 #
 
+Validate:
+    runner.whitelist: 'invalid runner. (--runner=[phpspec|phpunit]),phpspec,phpunit'
+
 View:
     usage: 'add/spec_usage.php'
+    invalidInput: 'add/spec_usage.php'
 

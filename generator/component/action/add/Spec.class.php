@@ -34,7 +34,7 @@
  */
 
 /**
- * SPECを追加する
+ * Add a SPEC files.
  * 
  * @package    Samurai
  * @subpackage Action
@@ -45,14 +45,80 @@
 class Action_Add_Spec extends Generator_Action
 {
     /**
-     * 実行トリガー
+     * @dependencies
+     */
+    public $GeneratorSpec;
+
+
+    /**
+     * execute.
      *
      * @access     public
      */
     public function execute()
     {
         parent::execute();
-        if ( $this->_isUsage() ) return 'usage';
+        if ( $this->_isUsage() || ! $this->args ) return 'usage';
+        if ( ! $this->_validate() ) return 'usage';
+
+        $params = array();
+        $params['package'] = Samurai_Config::get('generator.generator.package');
+        $params['description'] = $this->Request->get('description');
+        
+        // enable multiple.
+        while ( $name = array_shift($this->args) ) {
+            $this->_addSpec($name, $params);
+        }
+    }
+    
+
+    /**
+     * validate.
+     *
+     * @access  private
+     */
+    private function _validate()
+    {
+        // check name.
+        foreach ( $this->args as $name ) {
+            if ( ! preg_match('/^[a-zA-Z][a-zA-Z0-9_]+?$/', $name) ) {
+                $this->ErrorList->add('name', "{$name} -> Spec name is invalid. ([a-zA-Z0-9_])");
+            }
+        }
+        return !$this->ErrorList->isExists();
+    }
+    
+
+    /**
+     * add spec file.
+     *
+     * @access  private
+     * @param   string  $name
+     * @param   array   $params
+     */
+    private function _addSpec($name, array $params = array())
+    {
+        switch ( $this->Request->get('runner') ) {
+        case 'phpunit':
+            $skeleton = $this->GeneratorSpec->SKELETON_SPEC_PHPUNIT;
+            $params['runner'] = 'phpunit';
+            break;
+        default:
+            $skeleton = $this->GeneratorSpec->SKELETON_SPEC_PHPSPEC;
+            $params['runner'] = 'phpspec';
+            break;
+        }
+        $skeleton = $this->GeneratorSpec->getSkeleton($skeleton);
+        list($result, $file) = $this->GeneratorSpec->generate($name, $skeleton, $params);
+
+        if($result == $this->GeneratorSpec->RESULT_SUCCESS){
+            $this->_sendMessage("{$name} -> Successfully generated. [{$file}]");
+        } elseif($result == $this->GeneratorSpec->RESULT_ALREADY){
+            $this->_sendMessage("{$name} -> Already exists. [{$file}] -> skip");
+        } else {
+            $this->_sendMessage("{$name} -> Failed.");
+        }
+        return $file;
     }
 }
 

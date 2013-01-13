@@ -34,68 +34,29 @@
  */
 
 /**
- * ComponentGenerator
+ * Spec context for PHPSpec.
  * 
- * @package    Samurai
- * @subpackage Generator
- * @copyright  Samurai Framework Project
- * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @package     Samurai
+ * @subpackage  Spec
+ * @copyright   Samurai Framework Project
+ * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
-class Generator_Generator_Component extends Generator
+class Samurai_Spec_Context_PHPSpec extends \PHPSpec\Context
 {
     /**
-     * スケルトン名
-     *
-     * @access   public
-     * @var      string
+     * @dependencies
      */
-    public $SKELETON = 'component.skeleton.php';
-
 
 
     /**
-     * @implements
-     */
-    public function generate($component_name, $skeleton, $params = array())
-    {
-        //ローカライズ
-        list($class_name, $file_name) = $this->_makeNames($component_name);
-        $component_dir = sprintf('%s/%s', Samurai_Config::get('generator.directory.samurai'), Samurai_Config::get('generator.directory.component'));
-        $component_file = sprintf('%s/%s', $component_dir, $file_name);
-        //ジェネレイト
-        $params['class_name'] = $class_name;
-        $result = $this->_generate($component_file, $skeleton, $params);
-        return array($result, $component_file);
-    }
-
-
-    /**
-     * 「_」つながりで記述されたコンポーネント名を、実際のクラス名とファイル名に変換する。
-     *
-     * @access     protected
-     * @param      string  $component_name   コンポーネント名
-     * @return     array   ファイル名など
-     */
-    protected function _makeNames($component_name)
-    {
-        $name = join('_', array_map('ucfirst', explode('_', $component_name)));
-        $path = Samurai_Loader::getPathByClass($name);
-        return array($name, $path);
-    }
-
-
-
-    /**
-     * スケルトンの取得
+     * constructor.
      *
      * @access     public
-     * @return     string
      */
-    public function getSkeleton($filename = NULL)
+    public function __construct()
     {
-        $filename = $this->SKELETON;
-        return parent::getSkeleton($filename);
+        parent::__construct();
     }
 }
 

@@ -160,11 +160,12 @@ class Samurai_Loader
      * ファイルパスをクラス名から取得する
      * ここが規約となる
      *
-     * @access     public
-     * @param      string  $class_name
-     * @return     string
+     * @access  public
+     * @param   string  $class_name
+     * @param   string  $suffix
+     * @return  string
      */
-    public static function getPathByClass($class_name)
+    public static function getPathByClass($class_name, $suffix = 'class')
     {
         $names = explode('_', $class_name);
         $main_name = ucfirst(array_pop($names));
@@ -172,7 +173,7 @@ class Samurai_Loader
             $name = strtolower($name);
         }
         array_push($names, $main_name);
-        return join(DS, $names) . '.class.php';
+        return join(DS, $names) . '.' . $suffix . '.php';
     }
 
 

@@ -2,7 +2,7 @@
 /**
  * PHP version 5.
  *
- * Copyright (c) 2007-2010, Samurai Framework Project, All rights reserved.
+ * Copyright (c) Samurai Framework Project, All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -28,10 +28,9 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Samurai
- * @copyright  2007-2010 Samurai Framework Project
+ * @copyright  Samurai Framework Project
  * @link       http://samurai-fw.org/
  * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version    SVN: $Id$
  */
 
 /**
@@ -39,7 +38,7 @@
  * 
  * @package    Samurai
  * @subpackage Generator
- * @copyright  2007-2010 Samurai Framework Project
+ * @copyright  Samurai Framework Project
  * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
@@ -141,19 +140,21 @@ abstract class Generator
 
 
     /**
-     * スケルトンの取得
+     * get skeleton.
      *
      * @access     public
-     * @param      string  $filename   スケルトン名
+     * @param      string  $filename
      * @return     string
      */
     public function getSkeleton($filename)
     {
         $filename = sprintf('%s/%s', Samurai_Config::get('directory.skeleton'), $filename);
-        //ローカル検索
+
+        // search local.
         $skeleton = sprintf('%s/%s', Samurai_Config::get('generator.directory.samurai'), $filename);
-        //グローバル検索
-        if(!Samurai_Loader::isReadable($skeleton)){
+
+        // search global.
+        if ( ! Samurai_Loader::isReadable($skeleton) ) {
             $skeleton = Samurai_Loader::getPath($filename);
         }
         return $skeleton;

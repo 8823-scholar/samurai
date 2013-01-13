@@ -1,20 +1,25 @@
 <?php echo "<?php\n" ?>
 /**
- * [[機能説明]]
+ * <?php echo ( $description ? $description : '[[description]]' ) . "\n" ?>
  * 
- * @package    <?php echo $package != '' ? $package . "\n" : "[[パッケージ名]]\n" ?>
-<?php include('_doc_comment.skeleton.php'); ?>
+ * @package     <?php echo $package != '' ? $package . "\n" : "[[package]]\n" ?>
+<?php include(dirname(__FILE__) . '/_doc_comment.skeleton.php'); ?>
  */
 class <?php echo $class_name ?><?php echo $is_model ? " extends Samurai_Model\n" : "\n" ?>
 {
     /**
-     * コンストラクタ
+     * @dependencies
+     */
+
+
+    /**
+     * constructor.
      *
      * @access     public
      */
     public function __construct()
     {
-        
+        parent::__construct();
     }
 }
 
