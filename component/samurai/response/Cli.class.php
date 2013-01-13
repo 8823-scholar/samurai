@@ -2,7 +2,7 @@
 /**
  * PHP version 5.
  *
- * Copyright (c) 2007-2010, Samurai Framework Project, All rights reserved.
+ * Copyright (c) Samurai Framework Project, All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -28,19 +28,16 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Samurai
- * @copyright  2007-2010 Samurai Framework Project
+ * @copyright  Samurai Framework Project
  * @link       http://samurai-fw.org/
  * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version    SVN: $Id$
  */
-
-Samurai_Loader::loadByClass('Samurai_Response_Http');
 
 /**
  * Client用の出力を担当するクラス
  * 
  * @package    Samurai
- * @copyright  2007-2010 Samurai Framework Project
+ * @copyright  Samurai Framework Project
  * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
@@ -93,7 +90,7 @@ class Samurai_Response_Cli extends Samurai_Response_Http
      * @override
      * @see       Samurai_Response_Http::setBody
      */
-    public function setBody($body)
+    public function setBody($body = NULL)
     {
         $this->_body = $body;
     }

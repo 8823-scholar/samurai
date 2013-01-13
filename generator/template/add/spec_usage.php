@@ -1,8 +1,6 @@
 <?php
 /**
- * add/action_usage.php
- * 
- * add-actionの説明
+ * add - spec.php
  */
 ?>
 
@@ -14,15 +12,16 @@ Error:
 <?php } ?>
 
 <?php } ?>
-This command is make action files.
+This command is make spec files.
 
 Usage:
-    $ samurai add-action [action_name] [options]
+    $ samurai add-spec [spec_name]
 
+Example:
+    $ samurai add-spec foo_bar_zoo
+        -> spec/foo/bar/Zoo.class.php is created.
+    
 Options:
     --usage, -[uU]              Show Usage.
     --samurai_dir               Set Samurai_Dir.
-    --no-template               Not add template.
-    --cli                       For cli action.
-
-
+    

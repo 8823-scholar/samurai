@@ -1,0 +1,32 @@
+#
+# .samurai
+# 
+# generator用設定ファイル。
+# generatorを利用する際に、各プロジェクトディレクトリごとに設定を変えたい場合に
+# このファイルを利用してください。
+#
+
+generator:
+    renderer:
+        name : 'simple'
+        suffix : 'php'
+    generator:
+        package   : 'Samurai'
+#        author    : 'Name <name@example.jp>'
+        copyright : 'Samurai Framework Project'
+        license   : 'http://www.opensource.org/licenses/bsd-license.php The BSD License'
+#    encoding:
+#        config   : UTF-8
+#        script   : UTF-8
+#        template : UTF-8
+#        skeleton : UTF-8
+#        output   : UTF-8
+#    directory:
+#        template  : 'template'
+#        component : 'component'
+#        action    : 'component/action'
+#        skeleton  : 'skeleton'
+#        www       : 'public_html'
+#    action:
+#        config_file : samurai.yml
+#        dicon_file  : samurai.dicon

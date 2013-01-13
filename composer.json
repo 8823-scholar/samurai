@@ -1,0 +1,64 @@
+{
+    "name": "samurai/samurai",
+    "description": "PHP Fullstacked Framework Samurai extends Maple3.",
+    "version": "3.0.0-dev",
+    "type": "library",
+    "keywords":["framework", "DI Container", "Maple"],
+    "license": "http://www.opensource.org/licenses/bsd-license.php The BSD License",
+    "authors": [
+        {
+            "name": "KIUCHI Satoshinosuke",
+            "email": "scholar@hayabusa-lab.jp",
+            "homepage": "https://github.com/8823-scholar",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "spyc/spyc": "dev-master",
+        "samurai/activegateway": "dev-master",
+        "smarty/smarty": "v3.1.12",
+        "phpspec/phpspec": "*",
+        "phpunit/phpunit": "3.7.*",
+        "phpunit/phpunit-story": "*"
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "spyc/spyc",
+                "version": "dev-master",
+                "dist": {
+                    "url": "https://github.com/mustangostang/spyc/archive/master.zip",
+                    "type": "zip"
+                },
+                "source": {
+                    "url": "https://github.com/mustangostang/spyc.git",
+                    "type": "git",
+                    "reference": "master"
+                },
+                "autoload": {
+                    "classmap": ["Spyc.php"]
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "samurai/activegateway",
+                "version": "dev-master",
+                "dist": {
+                    "url": "https://github.com/8823-scholar/ActiveGateway/archive/master.zip",
+                    "type": "zip"
+                },
+                "source": {
+                    "url": "https://github.com/8823-scholar/ActiveGateway.git",
+                    "type": "git",
+                    "reference": "master"
+                },
+                "autoload": {
+                    "classmap": ["ActiveGatewayManager.class.php"]
+                }
+            }
+        }
+    ]
+}

@@ -2,6 +2,9 @@
 # utility - locate
 #
 
+Generator:
+    init: true
+
 View:
     usage   : 'Action: utility_usage'
     version : 'Action: utility_version'

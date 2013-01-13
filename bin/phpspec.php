@@ -1,0 +1,1 @@
+../vendor/phpspec/phpspec/scripts/phpspec.php

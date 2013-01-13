@@ -1,0 +1,7 @@
+#
+# add - spec.yml
+#
+
+View:
+    usage: 'add/spec_usage.php'
+

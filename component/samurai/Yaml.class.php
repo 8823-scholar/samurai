@@ -2,7 +2,7 @@
 /**
  * PHP version 5.
  *
- * Copyright (c) 2007-2010, Samurai Framework Project, All rights reserved.
+ * Copyright (c) Samurai Framework Project, All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -28,10 +28,9 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Samurai
- * @copyright  2007-2010 Samurai Framework Project
+ * @copyright  Samurai Framework Project
  * @link       http://samurai-fw.org/
  * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version    SVN: $Id$
  */
 
 /**
@@ -40,7 +39,7 @@
  * 独自実装部分は極わずかで、基本的にはsyckやSpycのような外部ライブラリに依存している
  * 
  * @package    Samurai
- * @copyright  2007-2010 Samurai Framework Project
+ * @copyright  Samurai Framework Project
  * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
@@ -145,11 +144,10 @@ class Samurai_Yaml
      */
     public static function loadBySpyc($yaml_file)
     {
-        self::_loadSpyc();
         $Spyc = new Spyc();
         $contents = self::_includeYaml($yaml_file);
         $result = $Spyc->load($contents);
-        if(!$result) $result = array();
+        if ( ! $result ) $result = array();
         self::_saveCache($yaml_file, $result);
         return $result;
     }
@@ -181,9 +179,9 @@ class Samurai_Yaml
      *
      * @access     private
      */
-    private function _saveCache($yaml_file, $data = array())
+    private static function _saveCache($yaml_file, $data = array())
     {
-        if(!Samurai_Config::get('enable.yaml_cache')) return false;
+        if ( ! Samurai_Config::get('enable.yaml_cache') ) return false;
         $cache_dir = Samurai_Loader::getPath('temp' . '/yaml', true);
         if(!file_exists($cache_dir)) mkdir($cache_dir) && @chmod($cache_dir, 0777) ;
         $cache_file = sprintf('%s/%s', $cache_dir, urlencode($yaml_file));
@@ -213,8 +211,7 @@ class Samurai_Yaml
      */
     public static function enableSpyc()
     {
-        return Samurai_Loader::isReadable(Samurai_Loader::getPath('library/Spyc/spyc.php'))
-                    || Samurai_Loader::isReadable(Samurai_Loader::getPath('spyc/spyc.php', false, explode(PS, get_include_path())));
+        return class_exists('Spyc');
     }
 
 
@@ -251,15 +248,15 @@ class Samurai_Yaml
     private static function _includeYaml($yaml_file)
     {
         $yaml_file = Samurai_Loader::getPath($yaml_file);
-        if(Samurai_Loader::isReadable($yaml_file)){
-            if(class_exists('Samurai_Logger', false)) Samurai_Logger::debug('YAML loaded. -> %s', $yaml_file);
+        if ( Samurai_Loader::isReadable($yaml_file) ) {
+            if ( class_exists('Samurai_Logger', false) ) Samurai_Logger::debug('YAML loaded. -> %s', $yaml_file);
             ob_start();
             include($yaml_file);
             $contents = ob_get_clean();
             $contents = $contents === NULL ? '' : preg_replace_callback('/%([a-z0-9\._]*?)%/i', 'Samurai_Yaml::_tag2Entity', $contents) ;
             return $contents;
         }
-        return '[]';
+        return "---\n";
     }
 
 

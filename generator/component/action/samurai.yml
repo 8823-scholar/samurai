@@ -5,6 +5,9 @@ Device:
     required : 'cli'
     
 DIContainer:
-    
+
+Generator:
+
 View:
     invalidInput : 'error/input.php'
+

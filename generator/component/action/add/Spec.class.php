@@ -34,58 +34,25 @@
  */
 
 /**
- * Commandから指定アクションへのロケートをおこなうためのAction
- *
- * このアクションが実際の処理を行うことはない
- *
+ * SPECを追加する
+ * 
  * @package    Samurai
- * @subpackage Generator
+ * @subpackage Action
  * @copyright  Samurai Framework Project
  * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
-class Action_Utility_Locate extends Generator_Action
+class Action_Add_Spec extends Generator_Action
 {
     /**
-     * Actionのロケート
+     * 実行トリガー
      *
      * @access     public
      */
     public function execute()
     {
         parent::execute();
-        
-        //Action
-        if($action = $this->_getLocateAction()) return array('success', 'locate_action' => $action);
-
-        //Usage
-        if($this->_isUsage()) return 'usage';
-
-        //Version
-        if($this->_isVersion()) return 'version';
-
-        //Info
-        if($this->Request->get('info')) return 'info';
-
-        return 'usage';
-    }
-
-
-    /**
-     * ロケート先のアクションを返却
-     *
-     * @access     public
-     */
-    private function _getLocateAction()
-    {
-        $action = array_shift($this->args);
-        $this->Request->set('args', $this->args);
-        if($action){
-            $action = str_replace('-', '_', $action);
-            if($action == 'spec') $action = 'samurai_spec';
-            Samurai_Config::set('action.default', 'error_command');
-        }
-        return $action;
+        if ( $this->_isUsage() ) return 'usage';
     }
 }
 

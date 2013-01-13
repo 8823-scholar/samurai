@@ -54,7 +54,7 @@ encoding:
     internal : UTF-8
     
 ## ログ
-loggers:
+loggers: []
     
 ## エラー
 error:

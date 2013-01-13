@@ -1,0 +1,6 @@
+.svn
+log/*
+temp/*
+composer.lock
+composer.phar
+vendor

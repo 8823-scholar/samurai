@@ -2,7 +2,7 @@
 /**
  * PHP version 5.
  *
- * Copyright (c) 2007-2010, Samurai Framework Project, All rights reserved.
+ * Copyright (c) Samurai Framework Project, All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -28,10 +28,9 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Samurai
- * @copyright  2007-2010 Samurai Framework Project
+ * @copyright  Samurai Framework Project
  * @link       http://samurai-fw.org/
  * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version    SVN: $Id$
  */
 
 /**
@@ -39,7 +38,7 @@
  * 
  * @package    Samurai
  * @subpackage Generator
- * @copyright  2007-2010 Samurai Framework Project
+ * @copyright  Samurai Framework Project
  * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
@@ -113,39 +112,8 @@ abstract class Generator_Action extends Samurai_Action
      */
     protected function _init()
     {
-        $now_dir = getcwd();
-        $samurai_dir = $this->_searchSamuraiDir($now_dir);
-        if($samurai_dir && is_dir($samurai_dir)){
-            $this->dir_samurai = $samurai_dir;
-            $this->dir_home = dirname($samurai_dir);
-        } else {
-            $this->dir_samurai = $now_dir . DS . 'Samurai';
-            $this->dir_home = $now_dir;
-        }
-    }
-
-
-    /**
-     * samurai_dirの検索
-     *
-     * 現在のディレクトリから遡って、.samuraiファイルのあるディレクトリをsamurai_dirとする。
-     *
-     * @access     protected
-     * @param      string  $dir_now   現在のディレクトリ
-     * @return     string
-     */
-    protected function _searchSamuraiDir($dir_now)
-    {
-        $dirs = explode(DS, $dir_now);
-        $samurai_dir = array_shift($dirs);
-        foreach($dirs as $dir){
-            $samurai_dir .= DS . $dir;
-            $dot_samurai = $samurai_dir . DS . '.samurai';
-            if(file_exists($dot_samurai)){
-                return $samurai_dir;
-            }
-        }
-        return false;
+        $this->dir_samurai = Samurai_Config::get('generator.directory.samurai');
+        $this->dir_home = Samurai_Config::get('directory.home');
     }
 
 

@@ -2,7 +2,7 @@
 /**
  * PHP version 5.
  *
- * Copyright (c) 2007-2010, Samurai Framework Project, All rights reserved.
+ * Copyright (c) Samurai Framework Project, All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -28,10 +28,9 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    Samurai
- * @copyright  2007-2010 Samurai Framework Project
+ * @copyright  Samurai Framework Project
  * @link       http://samurai-fw.org/
  * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version    SVN: $Id$
  */
 
 defined('PS') ? NULL : define('PS', PATH_SEPARATOR) ;
@@ -42,7 +41,7 @@ defined('SAMURAI_DIR') ? NULL : define('SAMURAI_DIR', dirname(__FILE__));
  * Samurai Frameworkのメインクラス
  * 
  * @package    Samurai
- * @copyright  2007-2010 Samurai Framework Project
+ * @copyright  Samurai Framework Project
  * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
@@ -140,7 +139,7 @@ class Samurai
      */
     private static function _load()
     {
-        include_once(SAMURAI_DIR . '/component/samurai/Loader.class.php');
+        require_once SAMURAI_DIR . '/component/samurai/Loader.class.php';
         Samurai_Loader::load('component/samurai/Config.class.php');
         Samurai_Loader::load('component/samurai/Exception.class.php');
         Samurai_Loader::load('component/samurai/Yaml.class.php');
@@ -148,6 +147,9 @@ class Samurai
         Samurai_Loader::load('component/samurai/Logger.class.php');
         Samurai_Loader::appendIncludePath();
         spl_autoload_register(array('Samurai_Loader', 'autoload'));
+
+        // composer auto load
+        require_once SAMURAI_DIR . '/vendor/autoload.php';
     }
 
 
