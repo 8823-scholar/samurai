@@ -71,8 +71,10 @@ class Etc_File_Scanner
                 $condition = $this->getCondition();
             }
             $this->_scan($Iterator, $Entity, $condition);
+        } elseif ( $Entity->isExists() ) {
+            $Iterator->addElement($Entity);
         } else {
-            throw new Samurai_Exception('No directory. -> '.$directory);
+            throw new Samurai_Exception('No such file or directory. -> '.$directory);
         }
         return $Iterator;
     }

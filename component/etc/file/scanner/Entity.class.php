@@ -2,7 +2,7 @@
 /**
  * PHP version 5.
  *
- * Copyright (c) 2007-2010, Samurai Framework Project, All rights reserved.
+ * Copyright (c) Samurai Framework Project, All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -27,11 +27,10 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Samurai
- * @copyright  2007-2010 Samurai Framework Project
- * @link       http://samurai-fw.org/
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version    SVN: $Id$
+ * @package     Samurai
+ * @copyright   Samurai Framework Project
+ * @link        http://samurai-fw.org/
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 
 /**
@@ -39,11 +38,11 @@
  *
  * ファイルやディレクトリを体現する。
  * 
- * @package    Samurai
- * @subpackage Etc.File
- * @copyright  2007-2010 Samurai Framework Project
- * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @package     Samurai
+ * @subpackage  Etc.File
+ * @copyright   Samurai Framework Project
+ * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 class Etc_File_Scanner_Entity
 {
@@ -125,13 +124,13 @@ class Etc_File_Scanner_Entity
     public function init($path)
     {
         $info = pathinfo($path);
-        $this->path = $path;
         $this->dirname = $info['dirname'];
         $this->basename = $info['basename'];
         $this->filename = isset($info['filename']) ? $info['filename'] : '' ;
         $this->extension = isset($info['extension']) ? $info['extension'] : '' ;
+        $this->path = $this->dirname . DS . $this->basename;
         $this->matches = array();
-        if($this->isExists()){
+        if ( $this->isExists() ) {
             $this->permission = fileperms($this->path);
         }
     }

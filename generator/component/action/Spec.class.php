@@ -105,27 +105,6 @@ class Action_Spec extends Generator_Action
         // target dir.
         $workspace = Samurai_Loader::getPath($this->_workspace, true);
         $this->runner->setWorkspace($workspace);
-
-        /*
-        $this->_options = new stdClass();
-        $this->_options->recursive = true;
-        $this->_options->specdoc = true;
-        $this->_options->reporter = $this->Device->isCli() ? 'console' : 'html' ;
-        if(Samurai_Config::get('generator.directory.samurai')){
-            Samurai::unshiftSamuraiDir(Samurai_Config::get('generator.directory.samurai'));
-            if($this->Request->get('directory')){
-                chdir(Samurai_Config::get('generator.directory.samurai') . DS . $this->Request->get('directory'));
-            } else {
-                chdir(Samurai_Config::get('generator.directory.samurai') . DS . Samurai_Config::get('directory.spec'));
-            }
-        } else {
-            chdir(Samurai_Loader::getPath(Samurai_Config::get('directory.spec')));
-        }
-        //もしファイルの指定があれば
-        if($args = $this->Request->get('args')){
-            $this->_options->specFile = array_shift($args);
-        }
-         */
     }
 
 
