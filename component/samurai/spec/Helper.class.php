@@ -34,12 +34,80 @@
  */
 
 /**
- * 開発環境用の設定ファイル
+ * helper of spec.
  * 
  * @package     Samurai
- * @subpackage  Config.Environment
+ * @subpackage  Spec
  * @copyright   Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
+class Samurai_Spec_Helper
+{
+    /**
+     * @dependencies
+     */
+
+
+    /**
+     * constructor.
+     *
+     * @access     public
+     */
+    public function __construct()
+    {
+    }
+
+
+
+    /**
+     * get runner.
+     *
+     * @access  public
+     * @param   string  $name
+     * @return  Samurai_Spec_Runner
+     */
+    public function getRunner($name)
+    {
+        switch ( $name ) {
+        case 'phpspec':
+            $name = 'PHPSpec';
+            break;
+        case 'phpunit':
+            $name = 'PHPUnit';
+            break;
+        }
+        $class = 'Samurai_Spec_Runner_' . ucfirst($name);
+        $runner = new $class();
+        Samurai::getContainer()->injectDependency($runner);
+        return $runner;
+    }
+
+
+
+    /**
+     * get source class name by spec source file.
+     *
+     * @access  public
+     * @param   string  $source
+     * @return  string
+     */
+    public function getSourceClassName($source)
+    {
+        // remove top directory. ("spec")
+        $names = explode(DS, $source);
+        array_shift($names);
+
+        // remove suffix. (".spec.php")
+        $basename = array_pop($names);
+        $temp = explode('.', $basename);
+        array_push($names, array_shift($temp));
+
+        // convert class name
+        $names[] = 'Spec_Context';
+        $class_name = join('_', array_map('ucfirst', $names));
+
+        return $class_name;
+    }
+}
 

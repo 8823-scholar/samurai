@@ -34,12 +34,129 @@
  */
 
 /**
- * 開発環境用の設定ファイル
+ * spec runner abstract class.
  * 
  * @package     Samurai
- * @subpackage  Config.Environment
+ * @subpackage  Spec
  * @copyright   Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
+abstract class Samurai_Spec_Runner
+{
+    /**
+     * target spec.
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $_target;
+
+    /**
+     * workspace.
+     *
+     * @access  protected
+     * @var     string
+     */
+    protected $_workspace;
+
+
+    /**
+     * @dependencies
+     */
+    public $FileScanner;
+
+
+    /**
+     * constructor.
+     *
+     * @access     public
+     */
+    public function __construct()
+    {
+    }
+
+
+    /**
+     * set a target.
+     * enable file and directory.
+     *
+     * @access  public
+     * @param   string  $path
+     */
+    public function setTarget($path)
+    {
+        $this->_target = $path;
+    }
+
+    /**
+     * get target.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getTarget()
+    {
+        return $this->_target;
+    }
+
+
+    /**
+     * set workspace.
+     *
+     * @access  public
+     * @param   string  $path
+     */
+    public function setWorkspace($path)
+    {
+        $this->_workspace = $path;
+    }
+
+    /**
+     * get workspace.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getWorkspace()
+    {
+        return $this->_workspace;
+    }
+
+
+
+
+    /**
+     * search target spec files.
+     *
+     * @access  public
+     */
+    abstract public function searchSpecFiles();
+
+
+    /**
+     * validate spec class name.
+     *
+     * @access  public
+     * @param   string  $class
+     * @return  string
+     */
+    abstract public function validateClassName($class);
+
+    /**
+     * validate spec class file.
+     *
+     * @access  public
+     * @param   string  $class
+     * @return  string
+     */
+    abstract public function validateClassFile($class);
+
+    /**
+     * run spec.
+     *
+     * @access  public
+     */
+    abstract public function run();
+}
 

@@ -8,6 +8,15 @@
  */
 class <?php echo $class_name ?> extends Samurai_Spec_Context_PHPSpec
 {
+    // @dependencies
+
+
+    // add spec method.
+    // method name is need to start "it".
+
+    
+
+
     /**
      * before case.
      *

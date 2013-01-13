@@ -3,10 +3,8 @@
 # 
 
 ## FWを構成するメインインスタンスの設定
-Request:
-    class : Samurai_Request_Cli
-Response:
-    class : Samurai_Response_Cli
+Request: Samurai_Request_Cli
+Response: Samurai_Response_Cli
 Renderer:
     class : Samurai_Renderer_Simple
     initMethod:
@@ -17,4 +15,8 @@ Renderer4Generator:
     initMethod:
         name : init
         args : ['config/renderer/simple4generator.php']
+
+# spec.
+SpecHelper: Samurai_Spec_Helper
+FileScanner: Etc_File_Scanner
 

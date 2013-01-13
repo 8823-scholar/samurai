@@ -19,7 +19,9 @@ class <?php echo $class_name ?><?php echo $is_model ? " extends Samurai_Model\n"
      */
     public function __construct()
     {
+<?php if ( $is_model ) { ?>
         parent::__construct();
+<?php } ?>
     }
 }
 

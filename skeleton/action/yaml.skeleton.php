@@ -4,13 +4,13 @@
 
 <?php if($global){ ?>
 #Convert:
-#    * : 'trim'
+#    *: 'trim'
 #    
 #Validate:
 #    
 <?php } ?>
 <?php if($action){ ?>
 View:
-    success : '<?php echo $template ?>'
+    success: '<?php echo $template ?>'
 <?php } ?>
 

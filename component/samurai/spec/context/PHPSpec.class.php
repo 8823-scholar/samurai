@@ -27,10 +27,10 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Samurai
- * @copyright  Samurai Framework Project
- * @link       http://samurai-fw.org/
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @package     Samurai
+ * @copyright   Samurai Framework Project
+ * @link        http://samurai-fw.org/
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 
 /**
@@ -56,7 +56,37 @@ class Samurai_Spec_Context_PHPSpec extends \PHPSpec\Context
      */
     public function __construct()
     {
-        parent::__construct();
+    }
+
+
+    /**
+     * Dependency injection.
+     *
+     * @access  protected
+     */
+    protected function _injectDependencies()
+    {
+        $DI = Samurai::getContainer();
+        $DI->injectDependency($this);
+    }
+
+
+    /**
+     * Setup fixtures.
+     *
+     * @access  protected
+     */
+    protected function _setupFixtures()
+    {
+    }
+
+    /**
+     * clear fixtures.
+     *
+     * @access  protected
+     */
+    protected function _clearFixtures()
+    {
     }
 }
 

@@ -34,12 +34,94 @@
  */
 
 /**
- * 開発環境用の設定ファイル
+ * spec runner for PHPSpec.
  * 
  * @package     Samurai
- * @subpackage  Config.Environment
+ * @subpackage  Spec
  * @copyright   Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
+class Samurai_Spec_Runner_PHPSpec extends Samurai_Spec_Runner
+{
+    /**
+     * @dependencies
+     */
+
+
+    /**
+     * constructor.
+     *
+     * @access     public
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+
+    /**
+     * @implements
+     */
+    public function searchSpecFiles()
+    {
+        $cond = $this->FileScanner->getCondition();
+        $cond->setExtension('spec.php');
+        $cond->reflexive = true;
+        $files = $this->FileScanner->scan($this->getTarget(), $cond);
+        return $files;
+    }
+
+
+    /**
+     * @implements
+     */
+    public function validateClassName($class)
+    {
+        // Ex. Describe_Foo_Bar_Zoo
+        return 'Describe_' . $class;
+    }
+
+    /**
+     * @implements
+     */
+    public function validateClassFile($class)
+    {
+        // Ex. Describe_Foo_Bar_Zoo.php
+        return $class . '.php';
+    }
+
+
+    /**
+     * @implements
+     */
+    public function run()
+    {
+        $argv = $this->_makeArgv();
+        $phpspec = new \PHPSpec\PHPSpec($argv);
+        $phpspec->execute();
+    }
+
+
+    /**
+     * argvを生成
+     *
+     * @access  private
+     * @return  array
+     */
+    private function _makeArgv()
+    {
+        $argv = array();
+
+        // specFile.
+        if ( $workspace = $this->getWorkspace() ) {
+            $argv[] = $workspace;
+        }
+
+        // color
+        $argv[] = '--color';
+
+        return $argv;
+    }
+}
 

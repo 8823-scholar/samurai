@@ -3,22 +3,14 @@
 #
 
 ## FWを構成するメインインスタンスの設定
-Controller:
-    class : Samurai_Controller
-ActionChain:
-    class : Samurai_ActionChain
-ConfigStack:
-    class : Samurai_ConfigStack
-FilterChain:
-    class : Samurai_FilterChain
-Request:
-    class : Samurai_Request_Http
-Cookie:
-    class : Samurai_Request_Cookie
-Session:
-    class : Samurai_Request_Session
-Response:
-    class : Samurai_Response_Http
+Controller: Samurai_Controller
+ActionChain: Samurai_ActionChain
+ConfigStack: Samurai_ConfigStack
+FilterChain: Samurai_FilterChain
+Request: Samurai_Request_Http
+Cookie: Samurai_Request_Cookie
+Session: Samurai_Request_Session
+Response: Samurai_Response_Http
 ErrorList:
     class : Samurai_ErrorList
     instance : prototype
@@ -29,9 +21,7 @@ Renderer:
         args : ['config/renderer/smarty.php']
 
 ## FWで使用される雑多な関数クラスの設定
-Date:
-    class : Etc_Misc_Date
-Hash:
-    class : Etc_Misc_Hash
-Utility:
-    class : Etc_Misc_Utility
+Date: Etc_Misc_Date
+Hash: Etc_Misc_Hash
+Utility: Etc_Misc_Utility
+

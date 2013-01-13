@@ -27,10 +27,10 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Samurai
- * @copyright  Samurai Framework Project
- * @link       http://samurai-fw.org/
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @package     Samurai
+ * @copyright   Samurai Framework Project
+ * @link        http://samurai-fw.org/
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 
 defined('PS') ? NULL : define('PS', PATH_SEPARATOR) ;
@@ -38,12 +38,12 @@ defined('DS') ? NULL : define('DS', DIRECTORY_SEPARATOR) ;
 defined('SAMURAI_DIR') ? NULL : define('SAMURAI_DIR', dirname(__FILE__));
 
 /**
- * Samurai Frameworkのメインクラス
+ * Main class of Samurai Framework.
  * 
- * @package    Samurai
- * @copyright  Samurai Framework Project
- * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @package     Samurai
+ * @copyright   Samurai Framework Project
+ * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 class Samurai
 {

@@ -27,25 +27,25 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Samurai
- * @copyright  Samurai Framework Project
- * @link       http://samurai-fw.org/
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @package     Samurai
+ * @copyright   Samurai Framework Project
+ * @link        http://samurai-fw.org/
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 
 /**
  * ActionGenerator
  * 
- * @package    Samurai
- * @subpackage Generator
- * @copyright  Samurai Framework Project
- * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @package     Samurai
+ * @subpackage  Generator
+ * @copyright   Samurai Framework Project
+ * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 class Generator_Generator_Action extends Generator
 {
     /**
-     * actionスケルトン名
+     * name of skeleton for action.
      *
      * @access   public
      * @var      string
@@ -53,7 +53,7 @@ class Generator_Generator_Action extends Generator
     public $SKELETON_ACTION = 'action.skeleton.php';
 
     /**
-     * yamlスケルトン名
+     * name of skeleton for yaml.
      *
      * @access   public
      * @var      string
@@ -61,7 +61,7 @@ class Generator_Generator_Action extends Generator
     public $SKELETON_YAML = 'action/yaml.skeleton.php';
 
     /**
-     * diconスケルトン名
+     * name of skeleton for dicon.
      *
      * @access   public
      * @var      string
@@ -145,20 +145,22 @@ class Generator_Generator_Action extends Generator
 
 
     /**
-     * Yamlファイルパスを取得する
+     * get YAML file path.
      *
      * @access     private
-     * @param      string  $action_file   Action名
-     * @param      int     $scope         空間値
+     * @param      string  $action_file
+     * @param      int     $scope
      * @return     string
      */
     private function _getYamlFile($action_file, $scope)
     {
         //global
         $yaml_file = sprintf('%s/%s', dirname($action_file), Samurai_Config::get('generator.action.config_file'));
+
         //local
-        if($scope === $this->YAML_ACTION){
-            $basename = strtolower(array_shift(explode('.', basename($action_file))));
+        if ( $scope === $this->YAML_ACTION ) {
+            $temp = explode('.', basename($action_file));
+            $basename = strtolower(array_shift($temp));
             return sprintf('%s/%s.yml', dirname($action_file), $basename);
         }
         return $yaml_file;

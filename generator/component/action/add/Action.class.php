@@ -34,7 +34,7 @@
  */
 
 /**
- * Actionを生成する
+ * add action command.
  * 
  * @package    Samurai
  * @subpackage Generator
@@ -54,31 +54,34 @@ class Action_Add_Action extends Generator_Action
 
 
     /**
-     * 実行
+     * execute.
      *
      * @access     public
      */
     public function execute()
     {
         parent::execute();
-        //Usage
-        if($this->_isUsage() || !$this->args) return 'usage';
-        //入力チェック
-        if(!$this->_checkInput()) return 'usage';
+        if ( $this->_isUsage() || ! $this->args ) return 'usage';
+        if ( ! $this->_validate() ) return 'usage';
+
         //テンプレートオプションの調節
         $this->_adjustTemplateOption();
-        //ループ(アクションを複数指定する事が可能)
+
+        $params = array();
+        $params['description'] = $this->Request->get('description');
+
+        // enable multipule.
         $templates = explode(',', $this->template);
-        while($action_name = array_shift($this->args)){
-            //Actionの追加
-            $action_name = strtolower($action_name);
-            $action_file = $this->_addAction($action_name);
-            //yamlの追加
-            if($action_file){
-                //Template
+        while ( $name = array_shift($this->args) ) {
+            // add action.
+            $action_name = strtolower($name);
+            $action_file = $this->_addAction($action_name, $params);
+
+            // add yaml.
+            if ( $action_file ) {
                 $template = array_shift($templates);
                 $this->_addYaml($action_name, $action_file, $this->Generator->YAML_GLOBAL);
-                $this->_addYaml($action_name, $action_file, $this->Generator->YAML_ACTION, array('template'=>$template));
+                $this->_addYaml($action_name, $action_file, $this->Generator->YAML_ACTION, array('template' => $template));
                 if($this->Request->get('options.d') || $this->Request->get('dicon')){
                     $this->_addDicon($action_name, $action_file, $this->Generator->DICON_GLOBAL);
                     $this->_addDicon($action_name, $action_file, $this->Generator->DICON_ACTION);
@@ -93,19 +96,19 @@ class Action_Add_Action extends Generator_Action
 
 
     /**
-     * 入力チェック
+     * validate.
      *
      * @access     private
      * @return     boolean
      */
-    private function _checkInput()
+    private function _validate()
     {
-        //アクション名のチェック
-        foreach($this->args as $action_name){
-            if(!preg_match('/^[a-z][a-z0-9_]*?$/', $action_name)){
-                $this->ErrorList->add('action_name', "{$action_name} -> Action's name is Invalid. ([a-z0-9_])");
-            } elseif(preg_match('/[_]{2,}/', $action_name)){
-                $this->ErrorList->add("action_name", "{$action_name} -> Action's name is Invalid. (Don't use \"_(under bar)\" continously)");
+        // check name.
+        foreach ( $this->args as $name ) {
+            if ( ! preg_match('/^[a-z][a-z0-9_]*?$/', $name) ) {
+                $this->ErrorList->add('action_name', "{$name} -> Action's name is Invalid. ([a-z0-9_])");
+            } elseif ( preg_match('/[_]{2,}/', $name) ) {
+                $this->ErrorList->add("action_name", "{$name} -> Action's name is Invalid. (Don't use \"_(under bar)\" continously)");
             }
         }
         return !$this->ErrorList->isExists();

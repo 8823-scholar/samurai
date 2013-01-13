@@ -34,55 +34,118 @@
  */
 
 /**
- * Samurai command action locator.
- *
+ * spec of PHPSpec.
+ * 
  * @package     Samurai
- * @subpackage  Generator
+ * @subpackage  Spec
  * @copyright   Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
-class Action_Utility_Locate extends Generator_Action
+class Spec_Runner_PHPSpec_Spec_Context extends Samurai_Spec_Context_PHPSpec
 {
-    /**
-     * execute.
-     *
-     * @access     public
-     */
-    public function execute()
+    // @dependencies
+
+    
+    // add spec method.
+    // method name is need to start "it".
+    
+    public function itBeEqual()
     {
-        parent::execute();
-        
-        //Action
-        if($action = $this->_getLocateAction()) return array('success', 'locate_action' => $action);
-
-        //Usage
-        if($this->_isUsage()) return 'usage';
-
-        //Version
-        if($this->_isVersion()) return 'version';
-
-        //Info
-        if($this->Request->get('info')) return 'info';
-
-        return 'usage';
+        $this->spec(1)->should->be(1);
     }
 
+    public function itBeArray()
+    {
+        $this->spec(array())->should->beArray();
+    }
+
+    public function itBeInteger()
+    {
+        $this->spec(10)->should->beInteger();
+    }
+
+    public function itBeBoolean()
+    {
+        $this->spec(true)->should->beTrue();
+        $this->spec(false)->should->beFalse();
+    }
+
+    public function itCompareThan()
+    {
+        $this->spec(10)->should->beLessThan(20);
+        $this->spec(10)->should->beLessThanOrEqualTo(10);
+        $this->spec(10)->should->beGreaterThan(5);
+        $this->spec(10)->should->beGreaterThanOrEqualTo(10);
+    }
+
+    public function itBeNull()
+    {
+        $this->spec(NULL)->should->beNull();
+    }
+
+    public function itContainText()
+    {
+        $this->spec('Yes, I am.')->should->containText('am.');
+    }
+
+    public function itMatch()
+    {
+        $this->spec('foobarzoo')->should->match('/^foo/');
+        $this->spec('foobarzoo')->should->match('/zoo$/');
+    }
+
+    public function itHasKey()
+    {
+        $map = array('key1' => 'value1', 'key2' => 'value2');
+        $this->spec($map)->should->haveKey('key2');
+    }
+
+    public function itBeAnInstanceof()
+    {
+        $obj = new Exception();
+        $this->spec($obj)->should->beAnInstanceOf('Exception');
+    }
+    
+    
+    
+    /**
+     * before case.
+     *
+     * @access  public
+     */
+    public function before()
+    {
+    }
 
     /**
-     * return target action for locate.
+     * after case.
      *
-     * @access     public
+     * @access  public
      */
-    private function _getLocateAction()
+    public function after()
     {
-        $action = array_shift($this->args);
-        $this->Request->set('args', $this->args);
-        if ( $action ) {
-            $action = str_replace('-', '_', $action);
-            Samurai_Config::set('action.default', 'error_command');
-        }
-        return $action;
+    }
+
+    /**
+     * before all cases.
+     *
+     * @access  public
+     */
+    public function beforeAll()
+    {
+        $this->_injectDependencies();
+        $this->_setupFixtures();
+    }
+
+    /**
+     * after all cases.
+     *
+     * @access  public
+     */
+    public function afterAll()
+    {
+        $this->_clearFixtures();
     }
 }
 

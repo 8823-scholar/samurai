@@ -2,7 +2,7 @@
 /**
  * PHP version 5.
  *
- * Copyright (c) 2007-2010, Samurai Framework Project, All rights reserved.
+ * Copyright (c) Samurai Framework Project, All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -27,24 +27,20 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Samurai
- * @copyright  2007-2010 Samurai Framework Project
- * @link       http://samurai-fw.org/
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version    SVN: $Id$
+ * @package     Samurai
+ * @copyright   Samurai Framework Project
+ * @link        http://samurai-fw.org/
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
-
-Samurai_Loader::loadByClass('Etc_File_Scanner_Entity');
-Samurai_Loader::loadByClass('Etc_File_Scanner_Condition');
 
 /**
  * ファイルの走査をするクラス
  * 
- * @package    Samurai
- * @subpackage Etc.File
- * @copyright  2007-2010 Samurai Framework Project
- * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @package     Samurai
+ * @subpackage  Etc.File
+ * @copyright   Samurai Framework Project
+ * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 class Etc_File_Scanner
 {
@@ -64,18 +60,14 @@ class Etc_File_Scanner
      *
      * @access     public
      * @param      string  $directory   ディレクトリパス
-     * @return     object  Etc_File_Scanner_Entity
+     * @return     Etc_File_Scanner_Entity
      */
-    public function scan($directory, $condition = NULL, $tmp = NULL)
+    public function scan($directory, $condition = NULL)
     {
         $Iterator = new Samurai_Iterator();
         $Entity = new Etc_File_Scanner_Entity($directory);
-        if($Entity->isDirectory()){
-            //昔との互換性を一応保っておく
-            if($tmp !== NULL){
-                $tmp->reflexive = $condition;
-                $condition = $tmp;
-            } elseif(!$condition){
+        if ( $Entity->isDirectory() ) {
+            if ( ! $condition ) {
                 $condition = $this->getCondition();
             }
             $this->_scan($Iterator, $Entity, $condition);
@@ -90,28 +82,27 @@ class Etc_File_Scanner
      * 最もスタンダードな走査
      *
      * @access     private
-     * @param      object  $Iterator    Samurai_Iterator
-     * @param      object  $DirEntity   Etc_File_Scanner_Entity
-     * @param      object  $condition   Etc_File_Scanner_Condition
+     * @param      Samurai_Iterator             $Iterator
+     * @param      Etc_File_Scanner_Entity      $DirEntity
+     * @param      Etc_File_Scanner_Condition   $condition
      */
-    private function _scan($Iterator, $DirEntity, $condition=NULL)
+    private function _scan($Iterator, $DirEntity, $condition = NULL)
     {
         $files = scandir($DirEntity->path);
-        foreach($files as $file){
-            if($file != '.' && $file != '..'){
+        foreach ( $files as $file ) {
+            if ( $file != '.' && $file != '..' ) {
                 $File = new Etc_File_Scanner_Entity($DirEntity->path . DS . $file);
-                if(is_bool($condition)){
+                if ( is_bool($condition) ) {
                     $reflexive = $condition;
                     $condition = Etc_File_Scanner_Condition();
                     $condition->reflexive = $reflexive;
                 }
-                if($matched = $this->_match($File, $condition)){
+                if ( $matched = $this->_match($File, $condition) ) {
                     $Iterator->addElement($File);
                     
                 }
-                if($condition->reflexive && $File->isDirectory()
-                    && ($matched || !$condition->reflexive_matched_only))
-                {
+                if ( $condition->reflexive && $File->isDirectory()
+                    && ( $matched || !$condition->reflexive_matched_only ) ) {
                     $this->_scan($Iterator, $File, $condition);
                 }
             }

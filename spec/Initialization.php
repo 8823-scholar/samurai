@@ -34,12 +34,24 @@
  */
 
 /**
- * 開発環境用の設定ファイル
+ * Initialization for SPEC.
+ *
+ * bootstrap script.
+ * for database settings, and etc...
  * 
  * @package     Samurai
- * @subpackage  Config.Environment
+ * @subpackage  Spec
  * @copyright   Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
+
+//AG設定
+Samurai_Loader::load('library/ActiveGateway/ActiveGatewayManager.class.php');
+$AGManager = ActiveGatewayManager::singleton();
+$AGManager->import(Samurai_Loader::getPath('config/activegateway/activegateway.yml'));
+$AGManager->import(Samurai_Loader::getPath('config/activegateway/activegateway.production.yml'));
+//$AGManager->import(Samurai_Loader::getPath('config/activegateway/activegateway.development.yml'));
+//$AGManager->import(Samurai_Loader::getPath('config/activegateway/activegateway.sandbox.yml'));
+$AG = $AGManager->getActiveGateway('sandbox');
 

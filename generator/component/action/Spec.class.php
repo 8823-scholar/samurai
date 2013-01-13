@@ -34,55 +34,79 @@
  */
 
 /**
- * Execute specs.
+ * Execute specs for cli.
  *
  * For TDD(Test Driven Development) tool.
  * You can choice test runner "PHPSpec" or "PHPUnit" or others (default is "PHPSpec").
- * 
+ *
  * @package     Samurai
- * @subpackage  Spec
+ * @subpackage  Action.Spec
  * @copyright   Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
-class Action_Samurai_Spec extends Samurai_Action
+class Action_Spec extends Generator_Action
 {
     /**
-     * 設定情報
+     * runner
      *
-     * @access   private
-     * @var      array
+     * @access  public
+     * @var     Samurai_Spec_Runner_PHPSpec | Samurai_Spec_Runner_PHPUnit
      */
-    private $_options = NULL;
+    public $runner;
+
+    /**
+     * workspace
+     *
+     * @access  private
+     * @var     string
+     */
+    private $_workspace = 'temp/spec';
+
+    /**
+     * @dependencies
+     */
+    public $SpecHelper;
+    public $Utility;
 
 
     /**
-     * 実行トリガー
+     * execute.
      *
      * @access     public
      */
     public function execute()
     {
         parent::execute();
-        $this->_init();
+        if ( $this->_isUsage() ) return 'usage';
 
-        //SPECのための初期化スクリプトを実行する
-        $this->_doInitialization();
+        // init.
+        $this->_setup();
 
-        //実行
-        PHPSpec_Runner::run($this->_options);
-        if($this->Device->isCli()) echo "\n";
+        // search target specs and copy for runner.
+        $this->_searchSpecsAndCopy();
+
+        // execute
+        $this->runner->run();
     }
 
 
     /**
-     * 初期化
+     * init.
      *
-     * @access     private
+     * @access  private
      */
-    private function _init()
+    private function _setup()
     {
-        require_once 'PHPSpec.php';
+        // set runner.
+        $this->runner = $this->SpecHelper->getRunner($this->Request->get('runner', 'phpspec'));
+        $this->runner->setTarget($this->Request->get('args.0', $this->_getSpecDir()));
+
+        // target dir.
+        $workspace = Samurai_Loader::getPath($this->_workspace, true);
+        $this->runner->setWorkspace($workspace);
+
+        /*
         $this->_options = new stdClass();
         $this->_options->recursive = true;
         $this->_options->specdoc = true;
@@ -101,25 +125,73 @@ class Action_Samurai_Spec extends Samurai_Action
         if($args = $this->Request->get('args')){
             $this->_options->specFile = array_shift($args);
         }
+         */
     }
 
 
     /**
-     * SPECがSPECのために初期化が必要な場合、
-     * Initialization.phpをSPEC直下に配置することで初期化を行うことが出来る
+     * get spec directory.
      *
-     * @access     private
+     * @access  private
+     * @return  string
      */
-    private function _doInitialization()
+    private function _getSpecDir()
     {
-        if($init_file = $this->Request->get('initfile')){
-            $init_file = Samurai_Config::get('generator.directory.samurai') . DS . $init_file;
-        } else {
-            $init_file = getcwd() . '/Initialization.php';
+        return Samurai_Config::get('directory.spec');
+    }
+
+
+
+    /**
+     * search target spec files that copy for runner.
+     *
+     * @access  private
+     */
+    private function _searchSpecsAndCopy()
+    {
+        // clear.
+        $this->_truncateWorkspace();
+
+        $spec_files = $this->runner->searchSpecFiles();
+        foreach ( $spec_files as $file ) {
+            $this->_generateSpecFile($file->path);
         }
-        if(file_exists($init_file)){
-            include_once($init_file);
+    }
+
+
+    /**
+     * clear files in workspace.
+     * workspace is temp/spec/*
+     *
+     * @access  private
+     */
+    private function _truncateWorkspace()
+    {
+        $workspace = Samurai_Loader::getPath($this->_workspace, true);
+        if ( is_dir($workspace) ) {
+            $this->Utility->rmdir($workspace);
         }
+        $this->Utility->fillupDirectory($workspace, 0755);
+    }
+
+
+    /**
+     * generate spec file for runner in workspace.
+     *
+     * @access  private
+     * @param   string  $source
+     */
+    private function _generateSpecFile($source)
+    {
+        require_once $source;
+        $src_class_name = $this->SpecHelper->getSourceClassName($source);
+        $dst_class_name = $this->runner->validateClassName($src_class_name);
+        $dst_class_file = $this->runner->validateClassFile($dst_class_name);
+
+        // generate.
+        $workspace = Samurai_Loader::getPath($this->_workspace, true);
+        $class_text = "<?php class {$dst_class_name} extends {$src_class_name} {}";
+        file_put_contents($workspace . DS . $dst_class_file, $class_text);
     }
 }
 

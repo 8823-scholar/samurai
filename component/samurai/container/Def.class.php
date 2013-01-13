@@ -2,7 +2,7 @@
 /**
  * PHP version 5.
  *
- * Copyright (c) 2007-2010, Samurai Framework Project, All rights reserved.
+ * Copyright (c) Samurai Framework Project, All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -27,20 +27,19 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Samurai
- * @copyright  2007-2010 Samurai Framework Project
- * @link       http://samurai-fw.org/
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version    SVN: $Id$
+ * @package     Samurai
+ * @copyright   Samurai Framework Project
+ * @link        http://samurai-fw.org/
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 
 /**
  *  インスタンスの初期化方法を宣言するクラス
  * 
- * @package    Samurai
- * @copyright  2007-2010 Samurai Framework Project
- * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @package     Samurai
+ * @copyright   Samurai Framework Project
+ * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 class Samurai_Container_Def
 {
@@ -139,9 +138,14 @@ class Samurai_Container_Def
      * @access     public
      * @param      array    $define   初期化情報
      */
-    public function __construct(array $define = array())
+    public function __construct($define = array())
     {
-        //割り当て
+        // if string is class name.
+        if ( is_string($define) ) {
+            $define = array('class' => $define);
+        }
+
+        // parse.
         foreach($define as $_key => $_val){
             switch($_key){
                 case 'alias':
@@ -160,7 +164,8 @@ class Samurai_Container_Def
                     break;
             }
         }
-        //情報の正規化
+
+        // validate.
         $this->validate();
     }
 
