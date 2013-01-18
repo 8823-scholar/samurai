@@ -34,51 +34,32 @@
  */
 
 /**
- * SamuraiFWとActiveGatewayの橋渡しを行うフィルター
- *
- * 設定ファイルの読み込み、およびAGの生成、
- * およびDIContainerへの登録をおこなう
- *
+ * task action.
+ * 
  * @package     Samurai
- * @subpackage  Filter
+ * @subpackage  Action.Task
  * @copyright   Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
- * @see         ActiveGateway
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
-class Filter_ActiveGateway extends Samurai_Filter
+class Generator_Action_Task extends Generator_Action
 {
     /**
-     * @override
+     * @dependencies
      */
-    protected function _prefilter()
-    {
-        parent::_prefilter();
-        $this->_importConfig(SAMURAI_ENVIRONMENT . '.yml');
-    }
+    public $TaskManager;
 
 
     /**
-     * import config.
+     * flush task message.
      *
-     * @access     private
+     * @access  public
+     * @param   string          $message
+     * @param   Samurai_Task    $task
      */
-    private function _importConfig($conf_file)
+    public function flushTaskMessage($message, Samurai_Task $task)
     {
-        $conf_file = sprintf('%s/database/%s', Samurai_Config::get('directory.config'), $conf_file);
-        ActiveGateway_Manager::singleton()->import(Samurai_Loader::getPath($conf_file));
-    }
-
-
-
-
-
-    /**
-     * @override
-     */
-    protected function _postfilter()
-    {
-        parent::_postfilter();
-        ActiveGateway_Manager::singleton()->disconnectAll();
+        $this->_sendMessage($message);
     }
 }
 

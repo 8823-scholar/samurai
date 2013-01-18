@@ -1,8 +1,8 @@
 #
-# SamuraiFW用のメインコンテナ設定ファイル
+# main container.
 #
 
-## FWを構成するメインインスタンスの設定
+# for framework
 Controller: Samurai_Controller
 ActionChain: Samurai_ActionChain
 ConfigStack: Samurai_ConfigStack
@@ -15,12 +15,16 @@ ErrorList:
     class : Samurai_ErrorList
     instance : prototype
 Renderer:
-    class : Samurai_Renderer_Smarty
+    class: Samurai_Renderer_Smarty
     initMethod:
-        name : init
-        args : ['config/renderer/smarty.php']
+        name: init
+        args: ['config/renderer/smarty.php']
 
-## FWで使用される雑多な関数クラスの設定
+# for db tools.
+DatabaseHelper: Samurai_Database_Helper
+TaskManager: Samurai_Task_Manager
+
+# for utility.
 Date: Etc_Misc_Date
 Hash: Etc_Misc_Hash
 Utility: Etc_Misc_Utility

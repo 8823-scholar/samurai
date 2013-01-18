@@ -5,9 +5,9 @@
 ## URL書き換え
 <IfModule mod_rewrite.c>
     RewriteEngine on
-    RewriteRule ^$ /index.php [L]
+    RewriteRule ^$ index.php [L]
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^(.*)$ /index.php/$1 [L]
+    RewriteRule ^(.*)$ index.php/$1 [L]
 </IfModule>
 
 ## PHP

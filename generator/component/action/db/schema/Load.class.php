@@ -34,51 +34,34 @@
  */
 
 /**
- * SamuraiFWとActiveGatewayの橋渡しを行うフィルター
- *
- * 設定ファイルの読み込み、およびAGの生成、
- * およびDIContainerへの登録をおこなう
- *
+ * load schema from "db/schema/*.php"
+ * 
  * @package     Samurai
- * @subpackage  Filter
+ * @subpackage  Action.DB
  * @copyright   Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
- * @see         ActiveGateway
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
-class Filter_ActiveGateway extends Samurai_Filter
+class Action_Db_Schema_Load extends Generator_Action_Task
 {
     /**
-     * @override
+     * @dependencies
      */
-    protected function _prefilter()
-    {
-        parent::_prefilter();
-        $this->_importConfig(SAMURAI_ENVIRONMENT . '.yml');
-    }
 
 
     /**
-     * import config.
+     * execute.
      *
-     * @access     private
+     * @access     public
      */
-    private function _importConfig($conf_file)
+    public function execute()
     {
-        $conf_file = sprintf('%s/database/%s', Samurai_Config::get('directory.config'), $conf_file);
-        ActiveGateway_Manager::singleton()->import(Samurai_Loader::getPath($conf_file));
-    }
+        parent::execute();
+        if ( $this->_isUsage() ) return 'usage';
 
-
-
-
-
-    /**
-     * @override
-     */
-    protected function _postfilter()
-    {
-        parent::_postfilter();
-        ActiveGateway_Manager::singleton()->disconnectAll();
+        $this->TaskManager->setReporter($this);
+        $this->TaskManager->add('database:schema:load');
+        $this->TaskManager->execute();
     }
 }
 

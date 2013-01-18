@@ -6,15 +6,15 @@
 Request: Samurai_Request_Cli
 Response: Samurai_Response_Cli
 Renderer:
-    class : Samurai_Renderer_Simple
+    class: Samurai_Renderer_Simple
     initMethod:
-        name : init
-        args : ['config/renderer/simple.php']
+        name: init
+        args: ['config/renderer/simple.php']
 Renderer4Generator:
-    class : Samurai_Renderer_Simple
+    class: Samurai_Renderer_Simple
     initMethod:
-        name : init
-        args : ['config/renderer/simple4generator.php']
+        name: init
+        args: ['config/renderer/simple4generator.php']
 
 # spec.
 SpecHelper: Samurai_Spec_Helper

@@ -47,13 +47,13 @@
                 "name": "samurai/activegateway",
                 "version": "dev-master",
                 "dist": {
-                    "url": "https://github.com/8823-scholar/ActiveGateway/archive/master.zip",
+                    "url": "https://github.com/8823-scholar/ActiveGateway/archive/2.0.zip",
                     "type": "zip"
                 },
                 "source": {
                     "url": "https://github.com/8823-scholar/ActiveGateway.git",
                     "type": "git",
-                    "reference": "master"
+                    "reference": "2.0"
                 },
                 "autoload": {
                     "classmap": ["ActiveGatewayManager.class.php"]

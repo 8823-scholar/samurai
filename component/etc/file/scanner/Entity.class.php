@@ -125,6 +125,9 @@ class Etc_File_Scanner_Entity
     {
         $info = pathinfo($path);
         $this->dirname = $info['dirname'];
+        if ( strpos($this->dirname, './') === 0 ) {
+            $this->dirname = substr($this->dirname, 2);
+        }
         $this->basename = $info['basename'];
         $this->filename = isset($info['filename']) ? $info['filename'] : '' ;
         $this->extension = isset($info['extension']) ? $info['extension'] : '' ;

@@ -34,51 +34,104 @@
  */
 
 /**
- * SamuraiFWとActiveGatewayの橋渡しを行うフィルター
- *
- * 設定ファイルの読み込み、およびAGの生成、
- * およびDIContainerへの登録をおこなう
- *
+ * task: database: schema: migrations: build
+ * 
  * @package     Samurai
- * @subpackage  Filter
+ * @subpackage  Task.Database
  * @copyright   Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
- * @see         ActiveGateway
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
-class Filter_ActiveGateway extends Samurai_Filter
+class Samurai_Task_Database_Schema_Migrations_Build extends Samurai_Task
 {
     /**
-     * @override
-     */
-    protected function _prefilter()
-    {
-        parent::_prefilter();
-        $this->_importConfig(SAMURAI_ENVIRONMENT . '.yml');
-    }
-
-
-    /**
-     * import config.
+     * schema.
      *
-     * @access     private
+     * @access  private
+     * @var     ActiveGateway_Schema
      */
-    private function _importConfig($conf_file)
+    private $_schema;
+
+    /**
+     * migration files dir.
+     *
+     * @access  private
+     * @var     string
+     */
+    private $_migrate_file_dir;
+
+
+    /**
+     * @dependencies
+     */
+
+
+    /**
+     * constructor.
+     *
+     * @access     public
+     */
+    public function __construct()
     {
-        $conf_file = sprintf('%s/database/%s', Samurai_Config::get('directory.config'), $conf_file);
-        ActiveGateway_Manager::singleton()->import(Samurai_Loader::getPath($conf_file));
+        parent::__construct();
+    }
+
+
+    /**
+     * set schema
+     *
+     * @access  public
+     * @param   ActiveGateway_Schema    $schema
+     */
+    public function setSchema(ActiveGateway_Schema $schema)
+    {
+        $this->_schema = $schema;
     }
 
 
 
 
+    /**
+     * @implements
+     */
+    public function execute()
+    {
+        $schema = $this->_schema;
+        $Manager = ActiveGateway::getManager();
+        $AG = $Manager->getActiveGateway($schema->getAlias());
+
+        // get migration file.
+        $helper = $AG->getHelper();
+        $files = $helper->getMigrationFiles($this->_migrate_file_dir, 0, $this->_schema->getVersion());
+        foreach ( $files as $file ) {
+            $AG->create(ActiveGateway_Schema::TABLE_SCHEMA_MIGRATIONS, array('version' => $file['version']));
+        }
+    }
+    
+    
+    
+    /**
+     * @override
+     */
+    public function onStart()
+    {
+        parent::onStart();
+
+        $version = $this->_schema->getVersion();
+        $this->_migrate_file_dir = Samurai_Loader::getPath('db/migrate', true);
+        $this->reporter->flushTaskMessage('-- database schema migrations build.', $this);
+        $this->reporter->flushTaskMessage(sprintf('   upto version %d. [%s]', $version, $this->_migrate_file_dir), $this);
+    }
+
 
     /**
      * @override
      */
-    protected function _postfilter()
+    public function onFinish()
     {
-        parent::_postfilter();
-        ActiveGateway_Manager::singleton()->disconnectAll();
+        parent::onFinish();
+
+        $this->reporter->flushTaskMessage(sprintf('   -> %0.5f sec.', $this->getPastSec()), $this);
     }
 }
 

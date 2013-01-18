@@ -94,7 +94,12 @@ class Samurai_Spec_Helper
      */
     public function getSourceClassName($source)
     {
-        // remove top directory. ("spec")
+        // remove unrelated directory. ("spec")
+        if ( $source[0] === '/' ) {
+            $source = str_replace(Samurai_Config::get('generator.directory.samurai') . DS, '', $source);
+        } else {
+            $source = str_replace(array('../', './'), '', $source);
+        }
         $names = explode(DS, $source);
         array_shift($names);
 

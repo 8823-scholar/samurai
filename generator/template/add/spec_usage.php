@@ -5,7 +5,6 @@
 ?>
 
 For add spec files.
-
 Default runner is "PHPSpc".
 <?php $errors = $this->Error->getMessages(); ?>
 <?php if($errors){ ?>

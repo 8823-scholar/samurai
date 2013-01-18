@@ -34,51 +34,102 @@
  */
 
 /**
- * SamuraiFWとActiveGatewayの橋渡しを行うフィルター
- *
- * 設定ファイルの読み込み、およびAGの生成、
- * およびDIContainerへの登録をおこなう
- *
+ * task: database: load: define
+ * 
  * @package     Samurai
- * @subpackage  Filter
+ * @subpackage  Task.Database
  * @copyright   Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
- * @see         ActiveGateway
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
-class Filter_ActiveGateway extends Samurai_Filter
+class Samurai_Task_Database_Schema_Load_Define extends Samurai_Task
 {
     /**
-     * @override
-     */
-    protected function _prefilter()
-    {
-        parent::_prefilter();
-        $this->_importConfig(SAMURAI_ENVIRONMENT . '.yml');
-    }
-
-
-    /**
-     * import config.
+     * schema define.
      *
-     * @access     private
+     * @access  private
+     * @var     ActiveGateway_Schema_Table
      */
-    private function _importConfig($conf_file)
+    private $_define;
+
+
+    /**
+     * @dependencies
+     */
+
+
+    /**
+     * constructor.
+     *
+     * @access     public
+     */
+    public function __construct()
     {
-        $conf_file = sprintf('%s/database/%s', Samurai_Config::get('directory.config'), $conf_file);
-        ActiveGateway_Manager::singleton()->import(Samurai_Loader::getPath($conf_file));
+        parent::__construct();
     }
 
 
 
+    /**
+     * set define.
+     *
+     * @access  public
+     * @param   ActiveGateway_Schema_Table
+     */
+    public function setDefine($define)
+    {
+        $this->_define = $define;
+    }
+
+
+
+    /**
+     * execute.
+     *
+     * @implements
+     */
+    public function execute()
+    {
+        $define = $this->_define;
+        $alias = $define->getSchema()->getAlias();
+        $AGManager = ActiveGateway::getManager();
+        $AG = $AGManager->getActiveGateway($alias);
+
+        // drop if exists.
+        if ( $define instanceof ActiveGateway_Schema_Table ) {
+            $exists = clone $define;
+            $exists->drop();
+            $params = array();
+            $sql = $exists->toSQL($params);
+            $AG->query($sql, $params);
+        }
+
+        $params = array();
+        $sql = $define->toSQL($params);
+        $AG->query($sql, $params);
+    }
 
 
     /**
      * @override
      */
-    protected function _postfilter()
+    public function onStart()
     {
-        parent::_postfilter();
-        ActiveGateway_Manager::singleton()->disconnectAll();
+        parent::onStart();
+
+        $define = $this->_define;
+        $this->reporter->flushTaskMessage('-- ' . $define->toString(), $this);
+    }
+
+
+    /**
+     * @override
+     */
+    public function onFinish()
+    {
+        parent::onFinish();
+
+        $this->reporter->flushTaskMessage(sprintf('   -> %0.5f sec.', $this->getPastSec()), $this);
     }
 }
 

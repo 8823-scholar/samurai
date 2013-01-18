@@ -1,2 +1,4 @@
 log/*
 temp/*
+config/database/sandbox.yml
+config/database/development.yml

@@ -48,14 +48,14 @@ defined('SAMURAI_DIR') ? NULL : define('SAMURAI_DIR', dirname(__FILE__));
 class Samurai
 {
     /**
-     * バージョン
+     * version
      *
      * @const   string
      */
-    const VERSION = '2.0.7';
+    const VERSION = '3.0.0';
 
     /**
-     * 状態
+     * state
      *
      * @const   string
      */
@@ -126,8 +126,7 @@ class Samurai
         if($env = getenv('SAMURAI_ENVIRONMENT')){
             defined('SAMURAI_ENVIRONMENT') ? NULL : define('SAMURAI_ENVIRONMENT', $env);
         } else {
-            if(defined('SAMURAI_MODE') && !defined('SAMURAI_ENVIRONMENT')) define('SAMURAI_ENVIRONMENT', SAMURAI_MODE);
-            defined('SAMURAI_ENVIRONMENT') ? NULL : define('SAMURAI_ENVIRONMENT', 'production');
+            defined('SAMURAI_ENVIRONMENT') ? NULL : define('SAMURAI_ENVIRONMENT', 'development');
         }
     }
 
@@ -187,6 +186,21 @@ class Samurai
     public static function unshiftSamuraiDir($dir)
     {
         array_unshift(self::$_samurai_dirs, $dir);
+    }
+
+
+
+
+
+    /**
+     * is production environment
+     *
+     * @access  public
+     * @return  boolean
+     */
+    public static function isProduction()
+    {
+        return defined('SAMURAI_ENVIRONMENT') && SAMURAI_ENVIRONMENT === 'production';
     }
 }
 

@@ -2,7 +2,7 @@
 /**
  * PHP version 5.
  *
- * Copyright (c) 2007-2010, Samurai Framework Project, All rights reserved.
+ * Copyright (c) Samurai Framework Project, All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -27,21 +27,20 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Samurai
- * @copyright  2007-2010 Samurai Framework Project
- * @link       http://samurai-fw.org/
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version    SVN: $Id$
+ * @package     Samurai
+ * @copyright   Samurai Framework Project
+ * @link        http://samurai-fw.org/
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 
 /**
  * ProjectGenerator
  * 
- * @package    Samurai
- * @subpackage Generator
- * @copyright  2007-2010 Samurai Framework Project
- * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @package     Samurai
+ * @subpackage  Generator
+ * @copyright   Samurai Framework Project
+ * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 class Generator_Generator_Project extends Generator
 {
@@ -296,7 +295,8 @@ class Generator_Generator_Project extends Generator
                 $config_file = "{$config_dir}/renderer/simple.{$project_name}.php";
                 break;
             case $this->CONFIG_AG:
-                $config_file = "{$config_dir}/activegateway/activegateway.production.yml";
+                $env = $params['env'];
+                $config_file = "{$config_dir}/database/{$env}.yml";
                 break;
             case $this->CONFIG_ROUTING:
                 $config_file = "{$config_dir}/routing/routing.{$project_name}.yml";

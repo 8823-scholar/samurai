@@ -1,21 +1,20 @@
 <?php echo "<?php\n" ?>
 /**
- * SPEC用の初期化ファイル
+ * Initialization for SPEC.
  *
- * すべてのSPECで必要な前提処理をここに記述してください。
- * beforeSuperAllみたいなものです。
+ * bootstrap script.
+ * for database settings, and etc...
  * 
- * @package    <?php echo $package != '' ? $package . "\n" : "[[パッケージ名]]\n" ?>
- * @subpackage Action
+ * @package     <?php echo $package != '' ? $package . "\n" : "[[package]]\n" ?>
+ * @subpackage  Spec
 <?php include(dirname(dirname(__FILE__)) . '/_doc_comment.skeleton.php'); ?>
  */
 
-//AG設定
-Samurai_Loader::load('library/ActiveGateway/ActiveGatewayManager.class.php');
+// DI
+$DI = Samurai::getContainer();
+
+// ActiveGateway
 $AGManager = ActiveGatewayManager::singleton();
-$AGManager->import(Samurai_Loader::getPath('config/activegateway/activegateway.yml'));
-$AGManager->import(Samurai_Loader::getPath('config/activegateway/activegateway.production.yml'));
-//$AGManager->import(Samurai_Loader::getPath('config/activegateway/activegateway.development.yml'));
-//$AGManager->import(Samurai_Loader::getPath('config/activegateway/activegateway.sandbox.yml'));
-$AG = $AGManager->getActiveGateway('sandbox');
+$AGManager->import(Samurai_Loader::getPath('config/database/sandbox.yml'));
+$DI->registerComponent('AG', $AG);
 

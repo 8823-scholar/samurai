@@ -34,142 +34,106 @@
  */
 
 /**
- * Samurai用走査クラスの実装
+ * task: database: schema: migrations: initialize
  * 
  * @package     Samurai
+ * @subpackage  Task.Database
  * @copyright   Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
-class Samurai_Iterator implements Iterator
+class Samurai_Task_Database_Schema_Migrations_Initialize extends Samurai_Task
 {
     /**
-     * 要素
+     * schema.
      *
-     * @access   protected
-     * @var      array
+     * @access  private
+     * @var     ActiveGateway_Schema
      */
-    protected $_elements = array();
-
-    /**
-     * index
-     *
-     * @access   protected
-     * @var      int
-     */
-    protected $_index = 0;
+    private $_schema;
 
 
     /**
-     * コンストラクタ
+     * @dependencies
+     */
+
+
+    /**
+     * constructor.
      *
      * @access     public
      */
     public function __construct()
     {
-        
+        parent::__construct();
     }
 
 
-
-
-
     /**
-     * 要素の追加
+     * set schema
      *
-     * @access     public
-     * @param      mixed   $element   要素
-     * @param      mixed   $key       キー
+     * @access  public
+     * @param   ActiveGateway_Schema    $schema
      */
-    public function addElement($element, $key=NULL)
+    public function setSchema(ActiveGateway_Schema $schema)
     {
-        if($key === NULL){
-            $this->_elements[] = $element;
-        } else {
-            $this->_elements[$key] = $element;
-        }
+        $this->_schema = $schema;
     }
-
-
-    /**
-     * 空にする
-     *
-     * @access     public
-     */
-    public function clear()
-    {
-        $this->_elements = array();
-    }
-
-
-    /**
-     * 逆にする
-     *
-     * @access     public
-     */
-    public function reverse()
-    {
-        $this->_elements = array_reverse($this->_elements);
-    }
-
-
-    /**
-     * 要素を削除する
-     *
-     * @access     public
-     * @param      int     $key
-     */
-    public function remove($_key)
-    {
-        if(isset($this->_elements[$_key])){
-            unset($this->_elements[$_key]);
-            $this->_elements = array_values($this->_elements);
-            if($_key <= $this->_index){
-                $this->_index--;
-            }
-        }
-    }
-
-
-    /**
-     * 要素数を取得
-     *
-     * @access     public
-     * @return     int     要素数
-     */
-    public function getSize()
-    {
-        return count($this->_elements);
-    }
-
 
 
 
 
     /**
-     * implements.
+     * @implements
      */
-    public function rewind()
+    public function execute()
     {
-        $this->_index = 0;
+        $schema = $this->_schema;
+        $AG = ActiveGateway::getManager()->getActiveGateway($schema->getAlias());
+        $helper = $AG->getHelper();
+
+        // drop if exists.
+        $params = array();
+        $define = $schema->dropTable(ActiveGateway_Schema::TABLE_SCHEMA_MIGRATIONS);
+        $sql = $define->toSQL($params);
+        $AG->query($sql);
+
+        // create table.
+        $params = array();
+        $define = $schema->createTable(ActiveGateway_Schema::TABLE_SCHEMA_MIGRATIONS);
+        $define->column('version')->type('string', 255)->collate('utf8_unicode_ci')->notNull()->comment('version')
+            ->engine('InnoDB')->charset('utf8')->collate('utf8_unicode_ci')->comment('migration version.');
+        $sql = $define->toSQL($params);
+        $AG->query($sql, $params);
+
+        // unique index to version.
+        $params = array();
+        $define = $schema->createUnique(ActiveGateway_Schema::TABLE_SCHEMA_MIGRATIONS, 'version');
+        $sql = $define->toSQL($params);
+        $AG->query($sql, $params);
     }
-    public function key()
+    
+    
+    
+    /**
+     * @override
+     */
+    public function onStart()
     {
-        return $this->_index;
+        parent::onStart();
+
+        $this->reporter->flushTaskMessage('-- database schema migrations initialize.', $this);
     }
-    public function current()
+
+
+    /**
+     * @override
+     */
+    public function onFinish()
     {
-        return isset($this->_elements[$this->_index]) ? $this->_elements[$this->_index] : false;
-    }
-    public function next()
-    {
-        $this->_index++;
-    }
-    public function valid()
-    {
-        $current = $this->current();
-        if($current === false) $this->rewind();
-        return $current !== false;
+        parent::onFinish();
+
+        $this->reporter->flushTaskMessage(sprintf('   -> %0.5f sec.', $this->getPastSec()), $this);
     }
 }
 

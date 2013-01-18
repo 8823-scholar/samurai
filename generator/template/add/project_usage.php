@@ -5,18 +5,22 @@
  * add-project::usage
  */
 ?>
+
+add project.
 <?php $errors = $this->Error->getMessages(); ?>
 <?php if($errors){ ?>
+
 Error:
 <?php foreach($errors as $error){ ?>
- <?php echo $error; ?>
+ - <?php echo $error . "\n"; ?>
+<?php } ?>
 <?php } ?>
 
-<?php } ?>
 Usage:
-    samurai add-project [project_name] [options]
+    $ samurai add-project [project_name] [options]
+
 Options:
-    --usage  -[uU]                Show usage.
-    --samurai_dir=[samurai_dir]   Set samurai dir.
-    --renderer=[renderer]         Set main renderer
+    --renderer=[smarty|simple|phptal]       Set main renderer. (default: smarty)
+    --usage, -[uU]                          Show usage.
+    --samurai-dir=[path/to/dir]             Set samurai dir.
 

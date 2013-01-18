@@ -86,6 +86,9 @@ class Action_Spec extends Generator_Action
         // search target specs and copy for runner.
         $this->_searchSpecsAndCopy();
 
+        // spec init.
+        $this->_initialization();
+
         // execute
         $this->runner->run();
     }
@@ -116,7 +119,7 @@ class Action_Spec extends Generator_Action
      */
     private function _getSpecDir()
     {
-        return Samurai_Config::get('directory.spec');
+        return Samurai_Config::get('generator.directory.samurai') . DS . Samurai_Config::get('directory.spec');
     }
 
 
@@ -171,6 +174,22 @@ class Action_Spec extends Generator_Action
         $workspace = Samurai_Loader::getPath($this->_workspace, true);
         $class_text = "<?php class {$dst_class_name} extends {$src_class_name} {}";
         file_put_contents($workspace . DS . $dst_class_file, $class_text);
+    }
+
+
+
+    /**
+     * execute initialization.
+     *
+     * @access  private
+     */
+    private function _initialization()
+    {
+        $init_file = Samurai_Config::get('generator.directory.samurai')
+                        . DS . Samurai_Config::get('generator.directory.spec') . DS . 'Initialization.php';
+        if ( file_exists($init_file) ) {
+            include_once($init_file);
+        }
     }
 }
 

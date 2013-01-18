@@ -83,9 +83,7 @@ class Samurai_Container
      */
     public function registerComponent($name, $Def)
     {
-        if(!isset($this->_components[$name])){
-            $this->_components[$name] = $Def;
-        }
+        $this->_components[$name] = $Def;
     }
 
 

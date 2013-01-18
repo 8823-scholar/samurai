@@ -34,112 +34,110 @@
  */
 
 /**
- * Samurai用走査クラスの実装
+ * task: database: schema: load
  * 
  * @package     Samurai
+ * @subpackage  Task.Database
  * @copyright   Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
-class Samurai_Iterator implements Iterator
+class Samurai_Task_Database_Schema_Load extends Samurai_Task
 {
     /**
-     * 要素
+     * schemas
      *
-     * @access   protected
-     * @var      array
+     * @access  private
+     * @var     array
      */
-    protected $_elements = array();
-
-    /**
-     * index
-     *
-     * @access   protected
-     * @var      int
-     */
-    protected $_index = 0;
+    private $_schemas = array();
 
 
     /**
-     * コンストラクタ
+     * @dependencies
+     */
+    public $FileScanner;
+
+
+    /**
+     * constructor.
      *
      * @access     public
      */
     public function __construct()
     {
+        parent::__construct();
+    }
+
+
+
+
+    /**
+     * prepare.
+     *
+     * @implements
+     */
+    public function prepare()
+    {
+        // get schema path
+        $schema_files = $this->getSchemaFiles();
+        if ( ! $schema_files->getSize() ) {
+            $this->reporter->flushTaskMessage('Not found schema files.', $this);
+            return false;
+        }
         
-    }
-
-
-
-
-
-    /**
-     * 要素の追加
-     *
-     * @access     public
-     * @param      mixed   $element   要素
-     * @param      mixed   $key       キー
-     */
-    public function addElement($element, $key=NULL)
-    {
-        if($key === NULL){
-            $this->_elements[] = $element;
-        } else {
-            $this->_elements[$key] = $element;
+        // load schema file.
+        foreach ( $schema_files as $file ) {
+            $this->_load($file->filename, $file->path);
         }
+        $this->reporter->flushTaskMessage('finished preapred.', $this);
     }
 
 
     /**
-     * 空にする
+     * load.
      *
-     * @access     public
+     * @access  private
+     * @param   string  $alias
+     * @param   string  $schema_file
      */
-    public function clear()
+    private function _load($alias, $schema_file)
     {
-        $this->_elements = array();
-    }
+        $this->reporter->flushTaskMessage(sprintf('load schema [%s], and preparing...', $alias), $this);
 
+        $class = 'Db_Schema_' . ucfirst($alias);
+        require_once $schema_file;
+        $schema = new $class($alias);
+        $schema->define();
+        $this->_schemas[] = $schema;
 
-    /**
-     * 逆にする
-     *
-     * @access     public
-     */
-    public function reverse()
-    {
-        $this->_elements = array_reverse($this->_elements);
-    }
-
-
-    /**
-     * 要素を削除する
-     *
-     * @access     public
-     * @param      int     $key
-     */
-    public function remove($_key)
-    {
-        if(isset($this->_elements[$_key])){
-            unset($this->_elements[$_key]);
-            $this->_elements = array_values($this->_elements);
-            if($_key <= $this->_index){
-                $this->_index--;
-            }
+        // schema defines to task
+        $before = $this;
+        foreach ( $schema->getDefines() as $define ) {
+            $task = $this->TaskManager->interrupt('database:schema:load:define', $this, $before);
+            $task->setDefine($define);
+            $before = $task;
         }
+        
+        // initialize schema_migrations
+        $task = $this->TaskManager->interrupt('database:schema:migrations:initialize', $this, $before);
+        $task->setSchema($schema);
+
+        // build schema migration versions.
+        $task = $this->TaskManager->interrupt('database:schema:migrations:build', $this, $task);
+        $task->setSchema($schema);
     }
 
 
+
+
     /**
-     * 要素数を取得
+     * execute.
      *
-     * @access     public
-     * @return     int     要素数
+     * @implements
      */
-    public function getSize()
+    public function execute()
     {
-        return count($this->_elements);
     }
 
 
@@ -147,29 +145,18 @@ class Samurai_Iterator implements Iterator
 
 
     /**
-     * implements.
+     * get schema file path.
+     *
+     * @access  public
+     * @return  string
      */
-    public function rewind()
+    public function getSchemaFiles()
     {
-        $this->_index = 0;
-    }
-    public function key()
-    {
-        return $this->_index;
-    }
-    public function current()
-    {
-        return isset($this->_elements[$this->_index]) ? $this->_elements[$this->_index] : false;
-    }
-    public function next()
-    {
-        $this->_index++;
-    }
-    public function valid()
-    {
-        $current = $this->current();
-        if($current === false) $this->rewind();
-        return $current !== false;
+        $dir = Samurai_Loader::getPath('db/schema', true);
+        $cond = $this->FileScanner->getCondition();
+        $cond->setExtension('php');
+        $files = $this->FileScanner->scan($dir, $cond);
+        return $files;
     }
 }
 

@@ -1,0 +1,7 @@
+#
+# db - schema - load.yml
+#
+
+View:
+    usage: 'db/schema/load.php'
+

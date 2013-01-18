@@ -2,7 +2,7 @@
 /**
  * PHP version 5.
  *
- * Copyright (c) 2007-2010, Samurai Framework Project, All rights reserved.
+ * Copyright (c) Samurai Framework Project, All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -27,21 +27,20 @@
  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @package    Samurai
- * @copyright  2007-2010 Samurai Framework Project
- * @link       http://samurai-fw.org/
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @version    SVN: $Id$
+ * @package     Samurai
+ * @copyright   Samurai Framework Project
+ * @link        http://samurai-fw.org/
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 
 /**
  * プロジェクトを生成する
  * 
- * @package    Samurai
- * @subpackage Generator
- * @copyright  2007-2010 Samurai Framework Project
- * @author     KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
- * @license    http://www.opensource.org/licenses/bsd-license.php The BSD License
+ * @package     Samurai
+ * @subpackage  Generator
+ * @copyright   Samurai Framework Project
+ * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
+ * @license     http://www.opensource.org/licenses/bsd-license.php The BSD License
  */
 class Action_Add_Project extends Generator_Action
 {
@@ -199,39 +198,39 @@ class Action_Add_Project extends Generator_Action
 
 
     /**
-     * 実行トリガー
+     * execute.
      *
      * @access     public
      */
     public function execute()
     {
         parent::execute();
-        //Usage
-        if($this->_isUsage() || !$this->args) return 'usage';
-        //入力チェック
-        if(!$this->_checkInput()) return 'usage';
-        //ディレクトリー群作成
-        if(!$this->_generateDirectories()){
+        if ( $this->_isUsage() || ! $this->args ) return 'usage';
+        if ( ! $this->_validate() ) return 'usage';
+
+        // generate directories.
+        if ( ! $this->_generateDirectories() ) {
             return 'aborted';
-        //デフォルトファイル群作成
-        } else {
-            $this->_generateDefaultFiles();
         }
-        //wwwファイルのコピー
+
+        // generate default files.
+        $this->_generateDefaultFiles();
+
+        // copy to public.
         $this->_copyWww();
-        //終了
+
         $this->_sendMessage('');
         $this->_sendMessage('Generated Project ...!');
     }
 
 
     /**
-     * 入力チェック
+     * validate.
      *
      * @access     private
      * @return     boolean
      */
-    private function _checkInput()
+    private function _validate()
     {
         //プロジェクト名のチェック
         $this->project_name = array_shift($this->args);
@@ -371,18 +370,24 @@ class Action_Add_Project extends Generator_Action
                                                 $this->GeneratorProject->CONFIG_SAMURAI_FRONTFILTER);
         //Renderer
         $this->GeneratorProject->generate4Config($this->project_name,
-                                            $this->GeneratorProject->getSkeleton($this->GeneratorProject->SKELETON_CONFIG_RENDERER_SMARTY),
-                                            array(), $this->GeneratorProject->CONFIG_RENDERER_SMARTY);
+                                                $this->GeneratorProject->getSkeleton($this->GeneratorProject->SKELETON_CONFIG_RENDERER_SMARTY),
+                                                array(), $this->GeneratorProject->CONFIG_RENDERER_SMARTY);
         $this->GeneratorProject->generate4Config($this->project_name,
-                                            $this->GeneratorProject->getSkeleton($this->GeneratorProject->SKELETON_CONFIG_RENDERER_PHPTAL),
-                                            array(), $this->GeneratorProject->CONFIG_RENDERER_PHPTAL);
+                                                $this->GeneratorProject->getSkeleton($this->GeneratorProject->SKELETON_CONFIG_RENDERER_PHPTAL),
+                                                array(), $this->GeneratorProject->CONFIG_RENDERER_PHPTAL);
         $this->GeneratorProject->generate4Config($this->project_name,
-                                            $this->GeneratorProject->getSkeleton($this->GeneratorProject->SKELETON_CONFIG_RENDERER_SIMPLE),
-                                            array(), $this->GeneratorProject->CONFIG_RENDERER_SIMPLE);
+                                                $this->GeneratorProject->getSkeleton($this->GeneratorProject->SKELETON_CONFIG_RENDERER_SIMPLE),
+                                                array(), $this->GeneratorProject->CONFIG_RENDERER_SIMPLE);
         //ActiveGateway
         $this->GeneratorProject->generate4Config($this->project_name,
                                                 $this->GeneratorProject->getSkeleton($this->GeneratorProject->SKELETON_CONFIG_AG),
-                                                array(), $this->GeneratorProject->CONFIG_AG);
+                                                array('env' => 'production'), $this->GeneratorProject->CONFIG_AG);
+        $this->GeneratorProject->generate4Config($this->project_name,
+                                                $this->GeneratorProject->getSkeleton($this->GeneratorProject->SKELETON_CONFIG_AG),
+                                                array('env' => 'development'), $this->GeneratorProject->CONFIG_AG);
+        $this->GeneratorProject->generate4Config($this->project_name,
+                                                $this->GeneratorProject->getSkeleton($this->GeneratorProject->SKELETON_CONFIG_AG),
+                                                array('env' => 'sandbox'), $this->GeneratorProject->CONFIG_AG);
         //Routing
         $this->GeneratorProject->generate4Config($this->project_name,
                                                 $this->GeneratorProject->getSkeleton($this->GeneratorProject->SKELETON_CONFIG_ROUTING),
