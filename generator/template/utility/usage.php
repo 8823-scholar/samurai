@@ -23,6 +23,7 @@ Commands:
     add-component               Add Component.
     add-filter                  Add Filter.
     add-template                Add Template.
+    add-migration               Add Migration files.
     add-spec                    Add Spec files.
 
 

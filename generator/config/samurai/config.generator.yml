@@ -24,6 +24,7 @@ generator:
         action    : 'component/action'
         template  : 'template'
         spec      : 'spec'
+        migration : 'db/migrate'
         skeleton  : 'skeleton'
         www       : 'public_html'
     action:

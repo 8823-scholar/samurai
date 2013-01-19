@@ -25,12 +25,17 @@ GeneratorSpec:
     class: Generator_Generator_Spec
     setter:
         Renderer : $Renderer4Generator
+    
+GeneratorMigration:
+    class: Generator_Generator_Migration
+    setter:
+        Renderer : $Renderer4Generator
 
 GeneratorProject:
     class: Generator_Generator_Project
     setter:
         Renderer: $Renderer4Generator
 
-FileScanner:
-    class: Etc_File_Scanner
+SpecHelper: Samurai_Spec_Helper
+FileScanner: Etc_File_Scanner
 

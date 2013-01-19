@@ -221,6 +221,7 @@ abstract class Samurai_Task
     }
 
 
+
     /**
      * get past sec as float.
      *
@@ -231,6 +232,20 @@ abstract class Samurai_Task
     {
         $diff = $this->_finished_at - $this->_started_at;
         return $diff;
+    }
+
+
+    /**
+     * send message to reporter.
+     *
+     * @access  public
+     * @param   string
+     */
+    public function flushMessage($message)
+    {
+        if ( $this->reporter ) {
+            $this->reporter->flushTaskMessage($message, $this);
+        }
     }
 }
 

@@ -173,7 +173,11 @@ class Samurai_Loader
             $name = strtolower($name);
         }
         array_push($names, $main_name);
-        return join(DS, $names) . '.' . $suffix . '.php';
+        if ( $suffix ) {
+            return join(DS, $names) . '.' . $suffix . '.php';
+        } else {
+            return join(DS, $names) . '.php';
+        }
     }
 
 

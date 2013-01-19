@@ -25,6 +25,8 @@ generator:
 #        component : 'component'
 #        action    : 'component/action'
 #        template  : 'template'
+#        migration : 'db/migrate'
+#        spec      : 'spec'
 #        skeleton  : 'skeleton'
 #        www       : 'public_html'
 #    action:

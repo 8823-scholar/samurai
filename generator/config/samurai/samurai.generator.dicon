@@ -16,7 +16,3 @@ Renderer4Generator:
         name: init
         args: ['config/renderer/simple4generator.php']
 
-# spec.
-SpecHelper: Samurai_Spec_Helper
-FileScanner: Etc_File_Scanner
-
