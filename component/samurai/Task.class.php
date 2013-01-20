@@ -69,6 +69,14 @@ abstract class Samurai_Task
     public $depth = 0;
 
     /**
+     * options
+     *
+     * @access  public
+     * @var     object
+     */
+    public $options;
+
+    /**
      * start time.
      *
      * @access  private
@@ -98,6 +106,7 @@ abstract class Samurai_Task
      */
     public function __construct()
     {
+        $this->options = new stdClass();
     }
 
 
@@ -146,6 +155,32 @@ abstract class Samurai_Task
     {
         $this->depth = $depth;
     }
+
+
+    /**
+     * set option value
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   mixed   $value
+     */
+    public function setOption($key, $value)
+    {
+        $this->options->$key = $value;
+    }
+
+    /**
+     * get option value.
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   mixed   $default
+     */
+    public function getOption($key, $default = NULL)
+    {
+        return isset($this->options->$key) ? $this->options->$key : $default;
+    }
+
 
 
 

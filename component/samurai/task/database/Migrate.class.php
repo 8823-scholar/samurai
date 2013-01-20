@@ -109,8 +109,9 @@ class Samurai_Task_Database_Migrate extends Samurai_Task
             require_once $info['path'];
             $migration = new $info['class']();
             $migration->setReporter($this);
-            $migration->execute();
+            $migration->migrate();
         }
+        $this->flushMessage('');
     }
 
 
@@ -120,10 +121,10 @@ class Samurai_Task_Database_Migrate extends Samurai_Task
     /**
      * load done migrate version.
      *
-     * @access  private
+     * @access  protected
      * @param   string  $alias
      */
-    private function _loadAlreadyVersions($alias)
+    protected function _loadAlreadyVersions($alias)
     {
         $AGManager = ActiveGateway::getManager();
         $AG = $AGManager->get($alias);
@@ -131,15 +132,19 @@ class Samurai_Task_Database_Migrate extends Samurai_Task
         foreach ( $versions as $version ) {
             $this->_alreadys[] = (int)$version->version;
         }
+
+        // sort
+        sort($this->_alreadys, SORT_NUMERIC);
     }
 
 
     /**
      * get migration files.
      *
-     * @access  private
+     * @access  protected
+     * @return  array
      */
-    private function _getMigrationFiles()
+    protected function _getMigrationFiles()
     {
         $files = array();
         $helper = ActiveGateway::getManager()->getHelper();
