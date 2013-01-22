@@ -50,7 +50,7 @@
 $DI = Samurai::getContainer();
 
 // ActiveGateway
-$AGManager = ActiveGatewayManager::singleton();
+$AGManager = ActiveGateway::getManager();
 $AGManager->import(Samurai_Loader::getPath('config/database/sandbox.yml'));
 $DI->registerComponent('AG', $AGManager->getActiveGateway('base'));
 

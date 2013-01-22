@@ -37,7 +37,7 @@
                     "reference": "master"
                 },
                 "autoload": {
-                    "classmap": ["Spyc.php"]
+                    "files": ["Spyc.php"]
                 }
             }
         },
@@ -53,10 +53,10 @@
                 "source": {
                     "url": "https://github.com/8823-scholar/ActiveGateway.git",
                     "type": "git",
-                    "reference": "2.0"
+                    "reference": "origin/2.0"
                 },
                 "autoload": {
-                    "classmap": ["ActiveGatewayManager.class.php"]
+                    "classmap": ["."]
                 }
             }
         }
