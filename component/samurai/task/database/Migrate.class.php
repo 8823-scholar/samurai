@@ -112,6 +112,9 @@ class Samurai_Task_Database_Migrate extends Samurai_Task
             $migration->migrate();
         }
         $this->flushMessage('');
+
+        // next to dump
+        $this->add('database:schema:dump');
     }
 
 
@@ -148,7 +151,7 @@ class Samurai_Task_Database_Migrate extends Samurai_Task
     {
         $files = array();
         $helper = ActiveGateway::getManager()->getHelper();
-        $dir = Samurai_Loader::getPath(Samurai_Config::get('generator.directory.migration'), true);
+        $dir = Samurai_Config::get('generator.directory.samurai') . DS . Samurai_Config::get('generator.directory.migration');
         $migration_files = $helper->getMigrationFiles($dir);
         foreach ( $migration_files as $file ) {
             if ( ! in_array($file['version'], $this->_alreadys) ) {

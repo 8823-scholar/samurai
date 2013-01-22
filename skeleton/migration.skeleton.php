@@ -9,6 +9,22 @@
 class <?php echo $class_name ?> extends ActiveGateway_Migration
 {
     /**
+     * when change.
+     * in most cases, would be enough to describe here.
+     * if you don't use this method, please delete this.
+     *
+     * @access  public
+     */
+    public function change()
+    {
+        // implements.
+    }
+
+
+
+
+
+    /**
      * when version up.
      *
      * @access  public

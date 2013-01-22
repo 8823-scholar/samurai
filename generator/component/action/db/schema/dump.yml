@@ -1,0 +1,7 @@
+#
+# db - schema - dump.yml
+#
+
+View:
+    usage: 'db/schema/dump.php'
+
