@@ -4,7 +4,7 @@
     "version": "3.0.0-dev",
     "type": "library",
     "keywords":["framework", "DI Container", "Maple"],
-    "license": "http://www.opensource.org/licenses/bsd-license.php The BSD License",
+    "license": "MIT",
     "authors": [
         {
             "name": "KIUCHI Satoshinosuke",
@@ -56,7 +56,7 @@
                     "reference": "origin/2.0"
                 },
                 "autoload": {
-                    "classmap": ["."]
+                    "classmap": ["src"]
                 }
             }
         }
