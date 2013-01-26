@@ -106,7 +106,8 @@ class Action_Spec extends Generator_Action
         $this->runner->setTarget($this->Request->get('args.0', $this->_getSpecDir()));
 
         // target dir.
-        $workspace = Samurai_Loader::getPath($this->_workspace, true);
+        $dir = sprintf('%s/%s', Samurai_Config::get('generator.directory.samurai'), $this->_workspace);
+        $workspace = $dir;
         $this->runner->setWorkspace($workspace);
     }
 
@@ -149,7 +150,7 @@ class Action_Spec extends Generator_Action
      */
     private function _truncateWorkspace()
     {
-        $workspace = Samurai_Loader::getPath($this->_workspace, true);
+        $workspace = $this->runner->getWorkspace();
         if ( is_dir($workspace) ) {
             $this->Utility->rmdir($workspace);
         }
@@ -171,7 +172,7 @@ class Action_Spec extends Generator_Action
         $dst_class_file = $this->runner->validateClassFile($dst_class_name);
 
         // generate.
-        $workspace = Samurai_Loader::getPath($this->_workspace, true);
+        $workspace = $this->runner->getWorkspace();
         $class_text = "<?php class {$dst_class_name} extends {$src_class_name} {}";
         file_put_contents($workspace . DS . $dst_class_file, $class_text);
     }

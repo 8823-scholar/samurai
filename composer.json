@@ -15,7 +15,7 @@
     ],
     "require": {
         "spyc/spyc": "dev-master",
-        "samurai/activegateway": "dev-master",
+        "samurai/activegateway": "2.0.*@dev",
         "smarty/smarty": "v3.1.12",
         "phpspec/phpspec": "*",
         "phpunit/phpunit": "3.7.*",
@@ -38,25 +38,6 @@
                 },
                 "autoload": {
                     "files": ["Spyc.php"]
-                }
-            }
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "samurai/activegateway",
-                "version": "dev-master",
-                "dist": {
-                    "url": "https://github.com/8823-scholar/ActiveGateway/archive/2.0.zip",
-                    "type": "zip"
-                },
-                "source": {
-                    "url": "https://github.com/8823-scholar/ActiveGateway.git",
-                    "type": "git",
-                    "reference": "origin/2.0"
-                },
-                "autoload": {
-                    "classmap": ["src"]
                 }
             }
         }
