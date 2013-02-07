@@ -1,7 +1,0 @@
-#
-# db - migrate.yml
-#
-
-View:
-    usage: 'db/migrate.php'
-

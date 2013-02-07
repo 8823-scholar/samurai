@@ -1,7 +1,0 @@
-#
-# migrate - *
-#
-
-View:
-    invalidInput : 'error/input.php'
-

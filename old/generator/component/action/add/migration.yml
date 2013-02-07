@@ -1,7 +1,0 @@
-#
-# add - migration.yml
-#
-
-View:
-    usage: 'add/migration.php'
-

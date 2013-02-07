@@ -1,7 +1,0 @@
-#
-# make - package.yml
-#
-
-View:
-    usage : 'make/package_usage.php'
-

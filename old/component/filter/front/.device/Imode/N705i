@@ -1,8 +1,0 @@
-## imode/N705i
-
-http:
-    'User-Agent' : 'DoCoMo/2.0 N705i(c100;TB;W24H16)'
-    'X-Dcmguid'  : 'N705i1234567890123456'
-
-uid_section : 'X-Dcmguid'
-
