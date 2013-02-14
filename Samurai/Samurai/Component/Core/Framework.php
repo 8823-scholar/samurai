@@ -28,17 +28,59 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
+namespace Samurai\Samurai\Component\Core;
+
+use Samurai\Raikiri;
+
 /**
- * web wntry point.
+ * Framework executer.
  *
  * @package     Samurai
- * @subpackage  [sub package]
+ * @subpackage  Component.Core
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
+class Framework extends Raikiri\Object
+{
+    /**
+     * execute.
+     *
+     * 1. init container.
+     * 2. load config
+     * 3. routing
+     * 4. action chain
+     * 5. filter chain
+     */
+    public function execute()
+    {
+        // init DI Container.
+        $this->_initContainer();
 
-// bootstrap
-require dirname(__DIR__) . '/Config/bootstrap.php'
+        // $this->_loadConfig();
+    }
 
+
+    /**
+     * initialize DI Container.
+     *
+     * load main instances settings from Config/Samurai/samurai.dicon
+     *
+     * @access  private
+     */
+    private function _initContainer()
+    {
+    }
+
+
+    /**
+     * load configuration and register to container.
+     *
+     * @access  private
+     */
+    private function _loadConfig()
+    {
+        // 
+    }
+}
 
