@@ -28,44 +28,59 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
-
-use Samurai\Raikiri;
+namespace Samurai\Samurai\Component\Utility;
 
 /**
- * Framework main class.
+ * Utility class for array.
  *
  * @package     Samurai
+ * @subpackage  Utility
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class ArrayUtility
 {
     /**
-     * version
-     *
-     * @const   string
-     */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
-
-
-    /**
-     * get container
+     * merge recursive.
      *
      * @access  public
-     * @return  Samurai\Raikiri\Container
+     * @param   array   $array1
+     * @param   array   $array2
      */
-    public function getContainer()
+    public function merge()
     {
-        return Raikiri\ContainerFactory::get('samurai');
+        $marged = NULL;
+        foreach ( func_get_args() as $arg ) {
+            // first is override.
+            if ( $marged === null ) {
+                $marged = $arg;
+
+            // when mismatch variable type, then override.
+            } elseif ( gettype($marged) !== gettype($arg) ) {
+                $marged = $arg;
+
+            // when not array, then override.
+            } elseif ( ! is_array($arg) ) {
+                $marged = $arg;
+
+            // when both array, then merge recursive.
+            } else {
+                foreach ( $arg as $_key => $_val ) {
+                    // when int key, then push.
+                    if( is_int($_key) ) {
+                        $marged[] = $_val;
+                    // when not exists key, then override.
+                    } elseif( ! isset($marged[$_key]) ) {
+                        $marged[$_key] = $_val;
+                    // merge.
+                    } else {
+                        $marged[$_key] = $this->merge($marged[$_key], $_val);
+                    }
+                }
+            }
+        }
+        return $marged;
     }
 }
 

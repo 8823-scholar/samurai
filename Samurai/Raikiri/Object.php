@@ -22,7 +22,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Samurai
+ * @package     Raikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
@@ -33,14 +33,22 @@ namespace Samurai\Raikiri;
 /**
  * DI Container common object class.
  *
- * @package     Samurai
- * @subpackage  Raikiri
+ * @package     Raikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
 class Object
 {
+    /**
+     * dependencies
+     *
+     * @access  protected
+     * @var     array
+     */
+    protected $_deps = array();
+
+
     /**
      * constructor
      *
@@ -87,6 +95,28 @@ class Object
     public function hasDep($name)
     {
         return array_key_exists($name, $this->_deps);
+    }
+
+
+
+
+    /**
+     * magick method: get
+     *
+     * bridge to dependencies.
+     *
+     * @implements
+     */
+    public function __get($name)
+    {
+        if ( $this->hasDep($name) ) {
+            if ( $this->_deps[$name] === null ) {
+                $container = ContainerFactory::get();
+                $this->_deps[$name] = $container->getComponent($name);
+            }
+            return $this->_deps[$name];
+        }
+        return null;
     }
 }
 

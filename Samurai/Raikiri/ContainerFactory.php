@@ -22,50 +22,62 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Samurai
+ * @package     Raikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
-
-use Samurai\Raikiri;
+namespace Samurai\Raikiri;
 
 /**
- * Framework main class.
+ * Container factory class.
  *
  * @package     Samurai
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class ContainerFactory
 {
     /**
-     * version
+     * containers
      *
-     * @const   string
+     * @access  private
+     * @var     array
      */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
+    private static $_containers = array();
 
 
     /**
-     * get container
+     * Create container.
      *
      * @access  public
-     * @return  Samurai\Raikiri\Container
+     * @param   string  $name
+     * @return  Container
      */
-    public function getContainer()
+    public static function create($name)
     {
-        return Raikiri\ContainerFactory::get('samurai');
+        if ( ! isset(self::$_containers[$name]) ) {
+            self::$_containers[$name] = new Container();
+        }
+        return self::$_containers[$name];
+    }
+
+
+    /**
+     * Get container.
+     *
+     * @access  public
+     * @param   string  $name
+     * @return  Container
+     */
+    public function get($name = null)
+    {
+        if ( $name === null ) {
+            $name = array_shift(array_keys(self::$_containers));
+        }
+        return self::$_containers[$name] ? self::$_containers[$name] : null;
     }
 }
 

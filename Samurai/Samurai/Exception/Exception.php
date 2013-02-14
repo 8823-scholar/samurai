@@ -28,44 +28,18 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
-
-use Samurai\Raikiri;
+namespace Samurai\Samurai\Exception;
 
 /**
- * Framework main class.
+ * Exception
  *
  * @package     Samurai
+ * @subpackage  Exception
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class Exception extends \Exception
 {
-    /**
-     * version
-     *
-     * @const   string
-     */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
-
-
-    /**
-     * get container
-     *
-     * @access  public
-     * @return  Samurai\Raikiri\Container
-     */
-    public function getContainer()
-    {
-        return Raikiri\ContainerFactory::get('samurai');
-    }
 }
 

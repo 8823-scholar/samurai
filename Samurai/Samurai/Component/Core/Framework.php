@@ -31,6 +31,8 @@
 namespace Samurai\Samurai\Component\Core;
 
 use Samurai\Raikiri;
+use Samurai\Samurai\Samurai;
+use Samurai\Samurai\Config;
 
 /**
  * Framework executer.
@@ -43,6 +45,15 @@ use Samurai\Raikiri;
  */
 class Framework extends Raikiri\Object
 {
+    /**
+     * @override
+     */
+    public function defineDeps()
+    {
+        $this->addDep('Config');
+    }
+
+
     /**
      * execute.
      *
@@ -57,7 +68,8 @@ class Framework extends Raikiri\Object
         // init DI Container.
         $this->_initContainer();
 
-        // $this->_loadConfig();
+        // load settings
+        $this->_loadConfig();
     }
 
 
@@ -67,20 +79,23 @@ class Framework extends Raikiri\Object
      * load main instances settings from Config/Samurai/samurai.dicon
      *
      * @access  private
+     * @see     Raikiri
      */
     private function _initContainer()
     {
+        $container = Raikiri\ContainerFactory::create('samurai');
+        $container->import(Config\APP_DIR . '/Config/Samurai/samurai.dicon');
     }
 
 
     /**
-     * load configuration and register to container.
+     * load configuration.
      *
      * @access  private
      */
     private function _loadConfig()
     {
-        // 
+        $this->Config->import(Config\APP_DIR . '/Config/Samurai/config.yml');
     }
 }
 

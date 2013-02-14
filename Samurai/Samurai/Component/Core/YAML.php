@@ -28,44 +28,63 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
+namespace Samurai\Samurai\Component\Core;
 
-use Samurai\Raikiri;
+use Samurai\Samurai\Exception;
 
 /**
- * Framework main class.
+ * YAML Loader/Dumper.
  *
  * @package     Samurai
+ * @subpackage  Core
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class YAML
 {
     /**
-     * version
-     *
-     * @const   string
-     */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
-
-
-    /**
-     * get container
+     * load YAML file.
      *
      * @access  public
-     * @return  Samurai\Raikiri\Container
+     * @param   string  $file
+     * @return  array
+     * @throw   Samurai\Exception\NotFoundException
      */
-    public function getContainer()
+    public static function load($file)
     {
-        return Raikiri\ContainerFactory::get('samurai');
+        if ( self::enableSpyc() ) {
+            return self::loadBySpyc($file);
+        } else {
+            throw new Exception\NotFoundException('Not found YAML parser.');
+        }
+    }
+
+
+
+    /**
+     * has Spyc YAML parser ?
+     *
+     * @access  public
+     * @return  boolean
+     */
+    public static function enableSpyc()
+    {
+        return class_exists('Spyc');
+    }
+
+
+    /**
+     * load YAML file by Spyc
+     *
+     * @access  public
+     * @param   string  $file
+     * @return  array
+     */
+    public static function loadBySpyc($file)
+    {
+        $data = \Spyc::YAMLLoad($file);
+        return $data;
     }
 }
 

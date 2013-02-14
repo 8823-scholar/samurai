@@ -45,7 +45,13 @@ use Samurai\Samurai;
 // common constants.
 defined('DS') ?: define('DS', DIRECTORY_SEPARATOR);
 
-// autoload
+// autoload by composer
+$autoload_file = dirname(__DIR__) . '/vendor/autoload.php';;
+if ( file_exists($autoload_file) ) {
+    require_once $autoload_file;
+}
+
+// autoload by samurai
 require_once CORE_DIR . '/Samurai.php';
 require_once CORE_DIR . '/Component/Core/Loader.php';
 spl_autoload_register('\Samurai\Samurai\Component\Core\Loader::autoload');

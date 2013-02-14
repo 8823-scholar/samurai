@@ -28,44 +28,46 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
+namespace Samurai\Samurai\Component\Core;
 
 use Samurai\Raikiri;
 
 /**
- * Framework main class.
+ * Config
  *
  * @package     Samurai
+ * @subpackage  Core
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class Config extends Raikiri\Object
 {
     /**
-     * version
-     *
-     * @const   string
+     * @dependencies
      */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
+    public $ArrayUtil;
 
 
     /**
-     * get container
+     * data
+     *
+     * @access  protected
+     * @var     array
+     */
+    protected $_data = array();
+
+
+    /**
+     * import config file.
      *
      * @access  public
-     * @return  Samurai\Raikiri\Container
+     * @param   string  $file
      */
-    public function getContainer()
+    public function import($file)
     {
-        return Raikiri\ContainerFactory::get('samurai');
+        $data = YAML::load($file);
+        $this->_data = $this->ArrayUtil->merge($this->_data, $data);
     }
 }
 
