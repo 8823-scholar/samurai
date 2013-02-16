@@ -28,29 +28,20 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Core;
+namespace Samurai\Samurai\Controller;
+
+use Samurai\Raikiri;
 
 /**
- * Config
+ * Samurai base controller.
  *
  * @package     Samurai
- * @subpackage  Core
+ * @subpackage  Controller
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Config extends Parameters
+class SamuraiController extends Raikiri\Object
 {
-    /**
-     * import config file.
-     *
-     * @access  public
-     * @param   string  $file
-     */
-    public function import($file)
-    {
-        $data = YAML::load($file);
-        $this->_import($data);
-    }
 }
 

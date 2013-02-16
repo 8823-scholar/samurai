@@ -152,9 +152,14 @@ class ComponentDefine
                 case 'type':
                     $this->$key = $value;
                     break;
-                case 'init_method':
-                    $this->init_method_name = $value['name'];
-                    $this->init_method_args = isset($value['args']) ? $value['args'] : array();
+                case 'initMethod':
+                    if ( is_string($value) ) {
+                        $this->init_method_name = $value;
+                        $this->init_method_args = array();
+                    } else {
+                        $this->init_method_name = $value['name'];
+                        $this->init_method_args = isset($value['args']) ? $value['args'] : array();
+                    }
                     break;
             }
         }
@@ -205,6 +210,11 @@ class ComponentDefine
 
         // inject dependency
         $this->_container->injectDependency($instance);
+        
+        // init method
+        if ( $this->hasInitMethod() ) {
+            $this->_callInitMethod($instance);
+        }
 
         return $instance;
     }
@@ -231,6 +241,18 @@ class ComponentDefine
         return join(', ', $args);
     }
 
+
+
+    /**
+     * call init method
+     *
+     * @access  private
+     * @param   object  $instance
+     */
+    private function _callInitMethod($instance)
+    {
+        call_user_func_array(array($instance, $this->init_method_name), $this->init_method_args);
+    }
 
 
 
@@ -267,6 +289,17 @@ class ComponentDefine
     public function isPrototype()
     {
         return $this->type === self::TYPE_PROTOTYPE;
+    }
+
+    /**
+     * has init method ?
+     *
+     * @access  public
+     * @return  boolean
+     */
+    public function hasInitMethod()
+    {
+        return $this->init_method_name !== null;
     }
 }
 

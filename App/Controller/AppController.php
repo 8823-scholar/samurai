@@ -28,29 +28,20 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Core;
+namespace App\Controller;
+
+use Samurai\Samurai\Controller\SamuraiController;
 
 /**
- * Config
+ * App base controller.
  *
- * @package     Samurai
- * @subpackage  Core
+ * @package     App
+ * @subpackage  Controller
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Config extends Parameters
+class AppController extends SamuraiController
 {
-    /**
-     * import config file.
-     *
-     * @access  public
-     * @param   string  $file
-     */
-    public function import($file)
-    {
-        $data = YAML::load($file);
-        $this->_import($data);
-    }
 }
 

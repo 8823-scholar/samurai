@@ -27,19 +27,11 @@
 # @license     http://opensource.org/licenses/MIT
 #
 
-Config: Samurai\Samurai\Component\Core\Config
+#
+# routing configulation.
+#
 
-Request:
-    class: Samurai\Samurai\Component\Request\HttpRequest
-    initMethod: init
+- root: default.index
 
-Response: Samurai\Samurai\Component\Response\HttpResponse
-
-Router: Samurai\Samurai\Component\Routing\Router
-
-ActionChain: Samurai\Samurai\Component\Core\ActionChain
-
-FilterChain: Samurai\Samurai\Component\Core\FilterChain
-
-ArrayUtil: Samurai\Samurai\Component\Utility\ArrayUtility
+- match: { /photo/:id.jpg: photo.show, as: photo_show }
 

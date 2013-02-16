@@ -28,29 +28,61 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Core;
+namespace Samurai\Samurai\Component\Routing\Rule;
 
 /**
- * Config
+ * Routing Rule "Match"
+ *
+ * matching routing rule.
  *
  * @package     Samurai
- * @subpackage  Core
+ * @subpackage  Component.Routing
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Config extends Parameters
+class MatchRule extends Rule
 {
     /**
-     * import config file.
+     * constructor
      *
      * @access  public
-     * @param   string  $file
      */
-    public function import($file)
+    public function __construct($rule)
     {
-        $data = YAML::load($file);
-        $this->_import($data);
+        foreach ( $rule as $key => $value ) {
+            switch ( $key ) {
+                case 'as':
+                    $this->setName($value);
+                    break;
+                case 'controller':
+                    $this->setController($value);
+                    break;
+                case 'action':
+                    $this->setAction($value);
+                    break;
+                default:
+                    // when numeric key, then path
+                    if ( is_numeric($key) ) {
+                        $this->setPath($value);
+                    // else key is path, and value is action
+                    } else {
+                        $this->setPath($key);
+                        $this->setAction($value);
+                    }
+                    break;
+            }
+        }
+    }
+
+
+
+    /**
+     * @implements
+     */
+    public function match($path)
+    {
+        return false;
     }
 }
 

@@ -28,29 +28,39 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Core;
+namespace Samurai\Samurai\Component\Routing\Rule;
 
 /**
- * Config
+ * Routing Rule "Root"
+ *
+ * default routing rule.
  *
  * @package     Samurai
- * @subpackage  Core
+ * @subpackage  Component.Routing
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Config extends Parameters
+class RootRule extends Rule
 {
     /**
-     * import config file.
+     * constructor
      *
      * @access  public
-     * @param   string  $file
      */
-    public function import($file)
+    public function __construct($rule)
     {
-        $data = YAML::load($file);
-        $this->_import($data);
+        $this->setAction($rule);
+    }
+
+
+
+    /**
+     * @implements
+     */
+    public function match($path)
+    {
+        return $path === '/';
     }
 }
 

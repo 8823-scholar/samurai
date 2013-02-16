@@ -30,27 +30,80 @@
 
 namespace Samurai\Samurai\Component\Core;
 
+use Samurai\Raikiri;
+
 /**
- * Config
+ * get, set parameters.
  *
  * @package     Samurai
- * @subpackage  Core
+ * @subpackage  Component.Core
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Config extends Parameters
+class Parameters extends Raikiri\Object
 {
     /**
-     * import config file.
+     * parameters
+     *
+     * @access  protected
+     * @var     array
+     */
+    protected $_params = array();
+    
+    /**
+     * @dependencies
+     */
+    public $ArrayUtil;
+
+
+    /**
+     * import
+     *
+     * @access  protected
+     * @param   array   $data
+     */
+    protected function _import(array $data)
+    {
+        $this->_params = $this->ArrayUtil->merge($this->_params, $data);
+    }
+
+
+    /**
+     * get.
      *
      * @access  public
-     * @param   string  $file
+     * @param   string  $key
+     * @param   mixed   $default
+     * @return  mixed
      */
-    public function import($file)
+    public function get($key, $default = null)
     {
-        $data = YAML::load($file);
-        $this->_import($data);
+        $keys = explode('.', $key);
+        $value = $default;
+        foreach ( $keys as $i => $_key ) {
+            if ( ! $i && isset($this->_params[$_key]) ) {
+                $value = $this->_params[$_key];
+            } elseif ( is_array($value) && isset($value[$_key]) ) {
+                $value = $value[$_key];
+            } else {
+                $value = $default;
+                break;
+            }
+        }
+        return $value;
+    }
+
+
+    /**
+     * get all.
+     *
+     * @access  public
+     * @return  array
+     */
+    public function getAll()
+    {
+        return $this->_params;
     }
 }
 
