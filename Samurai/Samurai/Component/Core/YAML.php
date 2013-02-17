@@ -83,6 +83,8 @@ class YAML
      */
     public static function loadBySpyc($file)
     {
+        if ( ! file_exists($file) ) return array();
+
         $data = \Spyc::YAMLLoad($file);
         return $data;
     }

@@ -28,46 +28,18 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Core;
-
-use Samurai\Samurai\Config;
+namespace Samurai\Samurai\Filter;
 
 /**
- * Class loader.
+ * ExecutionTime filter.
  *
  * @package     Samurai
- * @subpackage  Component.Core
+ * @subpackage  Filter
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Loader
+class ExecutionTimeFilter extends Filter
 {
-    /**
-     * autoload.
-     *
-     * @access  public
-     * @param   string  $class
-     */
-    public static function autoload($class)
-    {
-        // priority.
-        $priority = array(Config\ROOT_DIR);
-
-        // path.
-        $path = str_replace('\\', DS, $class);
-        $path = str_replace('_', DS, $path);
-        $path = $path . '.php';
-
-        // load
-        foreach ( $priority as $dir ) {
-            $file_path = $dir . DS . $path;
-            if ( file_exists($file_path) ) {
-                require_once $file_path;
-                return true;
-            }
-        }
-        return false;
-    }
 }
 

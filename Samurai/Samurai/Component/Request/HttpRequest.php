@@ -121,6 +121,23 @@ class HttpRequest extends Parameters
 
 
     /**
+     * Get method
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getMethod()
+    {
+        // method in request.
+        if ( $method = $this->get('_method') ) {
+            return strtoupper($method);
+        }
+
+        $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+        return strtoupper($method);
+    }
+
+    /**
      * Set header
      *
      * @access  public

@@ -28,46 +28,75 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Core;
-
-use Samurai\Samurai\Config;
+namespace Samurai\Samurai\Filter;
 
 /**
- * Class loader.
+ * Filter class.
  *
  * @package     Samurai
- * @subpackage  Component.Core
+ * @subpackage  Filter
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Loader
+class Filter
 {
     /**
-     * autoload.
+     * @dependencies
+     */
+    public $FilterChain;
+
+
+    /**
+     * execute.
+     *
+     * prefilter -> next filter::execute -> postfilter
+     */
+    public function execute()
+    {
+        $this->prefilter();
+        $this->chainFilter();
+        $this->postfilter();
+    }
+
+
+    /**
+     * Pre filter.
+     *
+     * execute brefore action.
      *
      * @access  public
-     * @param   string  $class
      */
-    public static function autoload($class)
+    public function prefilter()
     {
-        // priority.
-        $priority = array(Config\ROOT_DIR);
+        // TODO:logger
+        echo get_class($this), '::prefilter', PHP_EOL;
+    }
+    
+    
+    /**
+     * Post filter.
+     *
+     * execute after action.
+     *
+     * @access  public
+     */
+    public function postfilter()
+    {
+        // TODO:logger
+        echo get_class($this), '::postfilter', PHP_EOL;
+    }
 
-        // path.
-        $path = str_replace('\\', DS, $class);
-        $path = str_replace('_', DS, $path);
-        $path = $path . '.php';
 
-        // load
-        foreach ( $priority as $dir ) {
-            $file_path = $dir . DS . $path;
-            if ( file_exists($file_path) ) {
-                require_once $file_path;
-                return true;
-            }
-        }
-        return false;
+    /**
+     * chaining filter.
+     *
+     * @access  public
+     */
+    public function chainFilter()
+    {
+        $this->FilterChain->next();
+        $this->FilterChain->execute();
     }
 }
 

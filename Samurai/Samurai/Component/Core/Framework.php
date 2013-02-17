@@ -53,6 +53,7 @@ class Framework extends Raikiri\Object
         $this->addDep('Config');
         $this->addDep('Router');
         $this->addDep('ActionChain');
+        $this->addDep('FilterChain');
     }
 
 
@@ -79,12 +80,12 @@ class Framework extends Raikiri\Object
         // action chain.
         while ( $action = $this->ActionChain->getCurrentAction() ) {
 
-            // filter chain.
-            /*
-            $this->FilterChain->setAction($action);
+            // clear.
+            $this->FilterChain->clear();
+
+            $this->FilterChain->setAction($action['controller'], $action['action']);
             $this->FilterChain->build();
             $this->FilterChain->execute();
-             */
 
             $this->ActionChain->next();
         }

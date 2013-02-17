@@ -131,7 +131,7 @@ class Router extends Raikiri\Object
     {
         // has dispatch.
         if ( $action = $this->getDispatchAction() ) {
-            return Rule\MatchRule(array('action' => $action));
+            return new Rule\MatchRule(array('action' => $action));
         }
 
         // root rule.
@@ -146,7 +146,7 @@ class Router extends Raikiri\Object
      * Get dispatched action
      *
      * enable target action name by request key.
-     * ex. <input type="button" name="dispatch.controller.action" value="submit" />
+     * ex. <input type="submit" name="dispatch-controller-action" value="submit" />
      *
      * @access  public
      * @return  string
@@ -155,8 +155,9 @@ class Router extends Raikiri\Object
     {
         $params = $this->Request->getAll();
         foreach ( array_keys($params) as $key ) {
-            if ( preg_match('dispatch\.(.+)', $key, $matches) ) {
-                return $matches[1];
+            if ( preg_match('/^dispatch-(.+)/', $key, $matches) ) {
+                $action = str_replace('-', '.', $matches[1]);
+                return $action;
             }
         }
     }

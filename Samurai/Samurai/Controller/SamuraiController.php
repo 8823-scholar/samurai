@@ -31,6 +31,7 @@
 namespace Samurai\Samurai\Controller;
 
 use Samurai\Raikiri;
+use Samurai\Samurai\Config;
 
 /**
  * Samurai base controller.
@@ -43,5 +44,82 @@ use Samurai\Raikiri;
  */
 class SamuraiController extends Raikiri\Object
 {
+    /**
+     * Get filter paths
+     *
+     * 1. App/Controller/filter.yml
+     * 2. App/Controller/foo.filter.yml
+     */
+    public function getFilters()
+    {
+        $filters = array();
+
+        $class = get_class($this);
+        $names = explode('\\', $class);
+
+        // top 2 level is namespace.
+        $dir = $this->getBaseDir();
+        $dir = $dir . DS . array_shift($names);
+        $dir = $dir . DS . array_shift($names);
+
+        while ( $name = array_shift($names) ) {
+            // when has rest.
+            if ( count($names) > 0 ) {
+                $filters[] = $dir . DS . 'filter.yml';
+                $dir = $dir . DS . strtolower($name);
+
+            // when last.
+            } else {
+                $name = strtolower(preg_replace('/Controller$/', '', $name));
+                $filters[] = $dir . DS . 'filter.yml';
+                $filters[] = $dir . DS . $name . '.filter.yml';
+            }
+        }
+
+        return $filters;
+    }
+
+
+    /**
+     * Get filter key
+     *
+     * @access  public
+     * @param   string  $action
+     * @return  string
+     */
+    public function getFilterKey($action)
+    {
+        $class = get_class($this);
+        $names = explode('\\', $class);
+
+        // top 2 level is namespace.
+        array_shift($names);
+        array_shift($names);
+
+        // controller.action
+        $controller = preg_replace('/controller$/', '', strtolower(join('_', $names)));
+        return $controller . '.' . $action;
+    }
+
+
+    /**
+     * Get base dir.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getBaseDir()
+    {
+        $class = get_class($this);
+        $path = str_replace('\\', DS, $class) . '.php';
+
+        // APP
+        $app_dir = dirname(Config\APP_DIR);
+        if ( $app_dir . DS . $path ) {
+            return $app_dir;
+        }
+
+        return Config\ROOT_DIR;
+    }
 }
 
