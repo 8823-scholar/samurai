@@ -28,41 +28,73 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Filter;
+namespace Samurai\Samurai\Component\Renderer;
+
+use Samurai\Samurai\Component\Core\Loader;
 
 /**
- * Action filter.
+ * Renderer abstract class.
  *
  * @package     Samurai
- * @subpackage  Filter
+ * @subpackage  Component.Renderer
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class ActionFilter extends Filter
+abstract class Renderer
 {
     /**
-     * @dependencies
+     * renderer engine.
+     *
+     * @access  public
+     * @var     object
      */
-    public $ActionChain;
-    public $Config;
+    public $engine;
 
 
     /**
-     * @override
+     * constructor
+     *
+     * @access  public
+     * @param   string  $bootstrap
      */
-    public function prefilter()
+    public function __construct($bootstrap = null)
     {
-        parent::prefilter();
-
-        $actionDef = $this->ActionChain->getCurrentAction();
-        //$ErrorList = $this->ActionChain->getCurrentErrorList();
-
-        // TODO: When has error, execute
-        $controller = $actionDef['controller'];
-        $action = $actionDef['action'];
-        $result = $controller->$action();
-        $this->ActionChain->setCurrentResult($result);
+        if ( $bootstrap ) {
+            $engine = require_once Loader::getPath($bootstrap);
+            $this->setEngine($engine);
+        }
     }
+
+
+    /**
+     * Set engine.
+     *
+     * @access  public
+     * @param   object
+     */
+    public function setEngine($engine)
+    {
+        $this->engine = $engine;
+    }
+
+
+    /**
+     * get suffix (template extension)
+     *
+     * @access  public
+     * @return  string
+     */
+    abstract public function getSuffix();
+
+
+    /**
+     * rendering template trigger.
+     *
+     * @access  public
+     * @param   string  $template
+     * @return  string
+     */
+    abstract public function render($template);
 }
 

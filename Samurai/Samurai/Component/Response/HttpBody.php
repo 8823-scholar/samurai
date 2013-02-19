@@ -28,41 +28,103 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Filter;
+namespace Samurai\Samurai\Component\Response;
 
 /**
- * Action filter.
+ * Response body for HTTP.
  *
  * @package     Samurai
- * @subpackage  Filter
+ * @subpackage  Component.Response
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class ActionFilter extends Filter
+class HttpBody
 {
     /**
-     * @dependencies
+     * content
+     *
+     * @access  public
+     * @var     string
      */
-    public $ActionChain;
-    public $Config;
+    public $content = '';
+
+    /**
+     * headers
+     *
+     * @access  public
+     * @var     array
+     */
+    public $headers = array();
 
 
     /**
-     * @override
+     * constructor
+     *
+     * @access  public
+     * @param   string  $content
      */
-    public function prefilter()
+    public function __construct($content = null)
     {
-        parent::prefilter();
+        if ( $content ) {
+            $this->setContent($content);
+        }
+    }
 
-        $actionDef = $this->ActionChain->getCurrentAction();
-        //$ErrorList = $this->ActionChain->getCurrentErrorList();
 
-        // TODO: When has error, execute
-        $controller = $actionDef['controller'];
-        $action = $actionDef['action'];
-        $result = $controller->$action();
-        $this->ActionChain->setCurrentResult($result);
+    /**
+     * Set content.
+     *
+     * @access  public
+     * @param   string  $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+        $this->setHeader('content-length', strlen($this->content));
+    }
+
+
+
+
+    /**
+     * Set header.
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   string  $value
+     */
+    public function setHeader($key, $value)
+    {
+        $key = strtolower($key);
+        $this->headers[$key] = $value;
+    }
+
+
+    /**
+     * Get header.
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   string  $default
+     * @return  string
+     */
+    public function getHeader($key, $default = null)
+    {
+        $key = strtolower($key);
+        return isset($this->headers[$key]) ? $this->headers[$key] : $default;
+    }
+
+
+    /**
+     * Get all headers.
+     *
+     * @access  public
+     * @return  array
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
     }
 }
 

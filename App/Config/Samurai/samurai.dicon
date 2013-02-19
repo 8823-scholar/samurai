@@ -41,5 +41,9 @@ ActionChain: Samurai\Samurai\Component\Core\ActionChain
 
 FilterChain: Samurai\Samurai\Component\Core\FilterChain
 
+Renderer:
+    class: Samurai\Samurai\Component\Renderer\TwigRenderer
+    args: ['Config/Renderer/twig.php']
+
 ArrayUtil: Samurai\Samurai\Component\Utility\ArrayUtility
 

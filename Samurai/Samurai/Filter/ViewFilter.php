@@ -30,8 +30,13 @@
 
 namespace Samurai\Samurai\Filter;
 
+use Samurai\Samurai\Component\Core\Loader;
+use Samurai\Samurai\Exception\Exception;
+
 /**
  * View filter.
+ *
+ * render template, forward action, location, etc...
  *
  * @package     Samurai
  * @subpackage  Filter
@@ -41,5 +46,107 @@ namespace Samurai\Samurai\Filter;
  */
 class ViewFilter extends Filter
 {
+    /**
+     * View template.
+     *
+     * @const   string
+     */
+    const VIEW_TEMPLATE = \Samurai\Samurai\Controller\SamuraiController::VIEW_TEMPLATE;
+
+
+    /**
+     * @dependencies
+     */
+    public $Config;
+    public $ActionChain;
+    public $Renderer;
+    public $Response;
+
+
+    /**
+     * @override
+     */
+    public function postfilter()
+    {
+        parent::postfilter();
+
+        $result = $this->_getResult();
+        $data = $this->_getResultData();
+        if ( ! $result ) return;
+
+        // what do ?
+        switch ( $result ) {
+            case self::VIEW_TEMPLATE:
+                $this->_renderTemplate($data);
+                break;
+        }
+    }
+
+
+    /**
+     * rendering template.
+     *
+     * @access  private
+     * @param   string  $template
+     */
+    private function _renderTemplate($template = null)
+    {
+        // when no template, auto generate template path.
+        // View/Content/[controller]/[action].html.twig
+        if ( ! $template ) {
+            $def = $this->ActionChain->getCurrentAction();
+            $controller = join(DS, array_map('ucfirst', explode('_', $def['controller_name'])));
+            $action = $def['action'];
+            $template = sprintf('%s/%s.%s', $controller, $action, $this->Renderer->getSuffix());
+        }
+
+        // rendering by renderer.
+        $result = $this->Renderer->render($template);
+        $this->Response->setBody($result);
+        $this->Response->setHeader('content-type', sprintf('text/html; charset=%s', $this->Config->get('encoding.output')));
+        var_dump($this->Response);
+    }
+
+
+
+
+    /**
+     * Get action result.
+     *
+     * @access  private
+     * @return  string
+     * @throw   Samurai\Samurai\Exception\Exception
+     */
+    private function _getResult()
+    {
+        $def = $this->ActionChain->getCurrentAction();
+        $result = $def['result'];
+        if ( is_string($result) ) {
+            return $result;
+        } elseif ( is_array($result) ) {
+            return array_shift($result);
+        } else {
+            throw new Exception('invalid action result.');
+        }
+    }
+
+    /**
+     * Get action result data.
+     *
+     * @access  private
+     * @return  mixed
+     */
+    private function _getResultData()
+    {
+        $def = $this->ActionChain->getCurrentAction();
+        $result = $def['result'];
+        if ( is_string($result) ) {
+            return null;
+        } elseif ( is_array($result) ) {
+            return array_pop($result);
+        } else {
+            return null;
+        }
+    }
 }
 

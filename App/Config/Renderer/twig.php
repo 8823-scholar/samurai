@@ -28,41 +28,48 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Filter;
+namespace App\Config\Renderer;
+
+use Samurai\Raikiri;
+use Samurai\Samurai\Component\Core\Loader;
 
 /**
- * Action filter.
+ * bootstrap of "Twig" renderer.
  *
  * @package     Samurai
- * @subpackage  Filter
+ * @subpackage  Config.Renderer
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class ActionFilter extends Filter
-{
-    /**
-     * @dependencies
-     */
-    public $ActionChain;
-    public $Config;
+
+// get DI.
+$container = Raikiri\ContainerFactory::get();
+$config = $container->getComponent('Config');
 
 
-    /**
-     * @override
-     */
-    public function prefilter()
-    {
-        parent::prefilter();
+// register autoloader.
+\Twig_Autoloader::register();
 
-        $actionDef = $this->ActionChain->getCurrentAction();
-        //$ErrorList = $this->ActionChain->getCurrentErrorList();
 
-        // TODO: When has error, execute
-        $controller = $actionDef['controller'];
-        $action = $actionDef['action'];
-        $result = $controller->$action();
-        $this->ActionChain->setCurrentResult($result);
-    }
-}
+// set directory.
+$loader = new \Twig_Loader_Filesystem(Loader::getPath($config->get('directory.template')));
+$loader->addPath(Loader::getPath($config->get('directory.layout')), 'layout');
+
+
+// init.
+$twig = new \Twig_Environment($loader, array(
+    'cache' => Loader::getPath($config->get('directory.temp')) . DS . 'twig',
+    'auto_reload' => true,
+));
+
+
+// default escape.
+$filter = new \Twig_Extension_Escaper(true);
+$twig->addExtension($filter);
+
+
+
+// return engine.
+return $twig;
 

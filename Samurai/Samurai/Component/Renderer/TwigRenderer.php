@@ -28,41 +28,45 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Filter;
+namespace Samurai\Samurai\Component\Renderer;
 
 /**
- * Action filter.
+ * Renderer Twig bridge.
  *
  * @package     Samurai
- * @subpackage  Filter
+ * @subpackage  Component.Renderer
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class ActionFilter extends Filter
+class TwigRenderer extends Renderer
 {
     /**
-     * @dependencies
+     * template suffix.
+     *
+     * @access  public
+     * @var     string
      */
-    public $ActionChain;
-    public $Config;
+    public $template_suffix = 'html.twig';
 
 
     /**
-     * @override
+     * @implements
      */
-    public function prefilter()
+    public function getSuffix()
     {
-        parent::prefilter();
+        return $this->template_suffix;
+    }
 
-        $actionDef = $this->ActionChain->getCurrentAction();
-        //$ErrorList = $this->ActionChain->getCurrentErrorList();
 
-        // TODO: When has error, execute
-        $controller = $actionDef['controller'];
-        $action = $actionDef['action'];
-        $result = $controller->$action();
-        $this->ActionChain->setCurrentResult($result);
+    /**
+     * @implements
+     */
+    public function render($template)
+    {
+        $result = $this->engine->render($template);
+        return $result;
+        return 'baka';
     }
 }
 

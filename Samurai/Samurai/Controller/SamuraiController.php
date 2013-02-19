@@ -45,6 +45,34 @@ use Samurai\Samurai\Config;
 class SamuraiController extends Raikiri\Object
 {
     /**
+     * View template.
+     *
+     * @const   string
+     */
+    const VIEW_TEMPLATE = 'template';
+
+    /**
+     * View forward action.
+     *
+     * @const   string
+     */
+    const VIEW_ACTION = 'action';
+
+    /**
+     * View location.
+     *
+     * @const   string
+     */
+    const VIEW_LOCATION = 'location';
+
+
+    /**
+     * @dependencies
+     */
+    public $Request;
+
+
+    /**
      * Get filter paths
      *
      * 1. App/Controller/filter.yml

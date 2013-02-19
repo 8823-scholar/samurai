@@ -201,7 +201,7 @@ class ComponentDefine
         // initialize
         $class = $this->class;
         if ( $class[0] !== '\\' ) $class = '\\' . $class;
-        $script = sprintf('$instance = new %s(%s);', $class, $this->_array2ArgsWithInjectDependency($this->args));
+        $script = sprintf('$instance = new %s(%s);', $class, $this->_array2ArgsWithInjectDependency('$this->args', $this->args));
         eval($script);
 
         if ( $this->isSingleton() ) {
@@ -235,7 +235,7 @@ class ComponentDefine
             if ( is_string($_val) && preg_match('/^\$([\w_]+)$/', $_val, $matches) ) {
                 $args[] = sprintf('Raikiri\\ContainerFactory::get()->getComponent("%s")', $matches[1]);
             } else {
-                $args[] = is_numeric($_key) ? sprintf('%s[%s]', $name, $_key) : sprintf("%s['%s']", $name, $_key) ;
+                $args[] = is_numeric($_key) ? sprintf('%s[%s]', $parent, $_key) : sprintf("%s['%s']", $parent, $_key) ;
             }   
         }   
         return join(', ', $args);

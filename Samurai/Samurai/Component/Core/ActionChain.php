@@ -31,6 +31,7 @@
 namespace Samurai\Samurai\Component\Core;
 
 use Samurai\Exception\Controller\NotFoundException;
+use Samurai\Raikiri;
 
 /**
  * Action chaining class.
@@ -52,14 +53,6 @@ class ActionChain
     private $_actions = array();
 
     /**
-     * controller cache
-     *
-     * @access  private
-     * @var     array
-     */
-    private $_controllers = array();
-
-    /**
      * position of action
      *
      * @access  private
@@ -77,7 +70,12 @@ class ActionChain
      */
     public function addAction($controller, $action)
     {
-        $this->_actions[] = array('controller' => $controller, 'action' => $action);
+        $this->_actions[] = array(
+            'controller' => null,
+            'controller_name' => $controller,
+            'action' => $action,
+            'result' => null,
+        );
     }
 
 
@@ -92,8 +90,12 @@ class ActionChain
         if ( ! isset($this->_actions[$this->_position]) ) return null;
 
         $define = $this->_actions[$this->_position];
-        $controller = $this->getController($define['controller']);
+        if ( $define['controller'] ) return $define;
+
+        $controller = $this->getController($define['controller_name']);
         $define['controller'] = $controller;
+
+        $this->_actions[$this->_position] = $define;
 
         return $define;
     }
@@ -107,9 +109,6 @@ class ActionChain
      */
     public function getController($name)
     {
-        // already created.
-        if ( isset($this->_controllers[$name]) ) return $this->_controllers[$name];
-
         // App
         $base = join('\\', array_map('ucfirst', explode('_', $name))) . 'Controller';
         $class = '\\App\\Controller\\' . $base;
@@ -117,15 +116,26 @@ class ActionChain
         if ( class_exists($class) ) {
             $controller = new $class();
         }
-
-        // cache
         if ( $controller ) {
-            $this->_controllers[$name] = $controller;
+            $container = Raikiri\ContainerFactory::get();
+            $container->injectDependency($controller);
             return $controller;
         }
 
         // not found.
         throw new NotFoundException();
+    }
+
+
+    /**
+     * Set current action result.
+     *
+     * @access  public
+     * @param   mixed   $result
+     */
+    public function setCurrentResult($result)
+    {
+        $this->_actions[$this->_position]['result'] = $result;
     }
 
 

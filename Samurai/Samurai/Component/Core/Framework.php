@@ -114,6 +114,7 @@ class Framework extends Raikiri\Object
      */
     private function _loadConfig()
     {
+        // base configurations.
         $this->Config->import(Config\APP_DIR . '/Config/Samurai/config.yml');
     }
 

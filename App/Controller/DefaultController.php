@@ -41,5 +41,14 @@ namespace App\Controller;
  */
 class DefaultController extends AppController
 {
+    /**
+     * index action.
+     *
+     * @access  public
+     */
+    public function index()
+    {
+        return self::VIEW_TEMPLATE;
+    }
 }
 

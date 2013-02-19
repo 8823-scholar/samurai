@@ -69,5 +69,30 @@ class Loader
         }
         return false;
     }
+
+
+    /**
+     * Get path by priority.
+     *
+     * 1. App
+     * 2. Modules
+     * 3. Lib
+     *
+     * @access  public
+     * @param   string  $path
+     * @return  string
+     */
+    public static function getPath($path)
+    {
+        // is absolute path.
+        if ( $path[0] === '/' ) return $path;
+
+        // APP.
+        $app_path = Config\APP_DIR . DS . $path;
+        if ( file_exists($app_path) ) return $app_path;
+
+        // when not found, path is "app_path"
+        return $app_path;
+    }
 }
 
