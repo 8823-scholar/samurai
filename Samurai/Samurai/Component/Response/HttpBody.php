@@ -126,5 +126,23 @@ class HttpBody
     {
         return $this->headers;
     }
+
+
+
+    /**
+     * build and return content string.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function render($with_headers = false)
+    {
+        $contents = array();
+
+        // content
+        $contents[] = $this->content;
+
+        return join("\n", $contents);
+    }
 }
 

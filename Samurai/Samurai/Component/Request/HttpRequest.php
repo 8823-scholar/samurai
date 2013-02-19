@@ -120,6 +120,22 @@ class HttpRequest extends Parameters
     }
 
 
+
+    /**
+     * Get HTTP version.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getHttpVersion()
+    {
+        if ( ! isset($_SERVER['SERVER_PROTOCOL']) ) return '1.0';
+
+        $version = str_replace('HTTP/', '', $_SERVER['SERVER_PROTOCOL']);
+        return $version;
+    }
+
+
     /**
      * Get method
      *

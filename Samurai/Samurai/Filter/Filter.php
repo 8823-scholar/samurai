@@ -70,7 +70,6 @@ class Filter
     public function prefilter()
     {
         // TODO:logger
-        echo get_class($this), '::prefilter', PHP_EOL;
     }
     
     
@@ -84,7 +83,6 @@ class Filter
     public function postfilter()
     {
         // TODO:logger
-        echo get_class($this), '::postfilter', PHP_EOL;
     }
 
 

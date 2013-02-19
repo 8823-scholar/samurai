@@ -30,6 +30,8 @@
 
 namespace Samurai\Samurai\Component\Response;
 
+use Samurai\Samurai\Samurai;
+
 /**
  * Response for HTTP.
  *
@@ -41,6 +43,14 @@ namespace Samurai\Samurai\Component\Response;
  */
 class HttpResponse
 {
+    /**
+     * status code
+     *
+     * @access  private
+     * @var     int
+     */
+    private $_status = 200;
+
     /**
      * top level body.
      *
@@ -109,6 +119,11 @@ class HttpResponse
         510 => 'Not Extended',
     );
 
+    /**
+     * @dependencies
+     */
+    public $Request;
+
 
     /**
      * constructor
@@ -120,6 +135,17 @@ class HttpResponse
         $this->_body = new HttpBody();
     }
 
+
+    /**
+     * Set status code.
+     *
+     * @access  public
+     * @param   int     $code
+     */
+    public function setStatus($code)
+    {
+        $this->_status = $code;
+    }
 
     /**
      * Set body.
@@ -148,6 +174,68 @@ class HttpResponse
     public function setHeader($key, $value)
     {
         $this->_body->setHeader($key, $value);
+    }
+
+
+
+    /**
+     * output contents
+     *
+     * @access  public
+     */
+    public function execute()
+    {
+        // completion headers.
+        $this->setHeader('date', date('r'));
+        $this->setHeader('x-php-framework', 'Samurai Framework/' . Samurai::getVersion());
+
+        // send headers.
+        $this->_sendStatus();
+        $this->_sendHeaders();
+        $this->_sendBody();
+    }
+
+
+    /**
+     * send status code.
+     *
+     * @access  private
+     */
+    private function _sendStatus()
+    {
+        if ( headers_sent() ) return;
+
+        if ( isset($this->status_messages[$this->_status]) ) {
+            header(sprintf('HTTP/%s %d %s', $this->Request->getHttpVersion(), $this->_status, $this->status_messages[$this->_status]));
+        } else {
+            header('Status: ' . $this->_status);
+        }
+    }
+
+
+    /**
+     * send headers.
+     *
+     * @access  private
+     */
+    private function _sendHeaders()
+    {
+        foreach ( $this->_body->getHeaders() as $key => $value ) {
+            $key = join('-', array_map('ucfirst', explode('-', $key)));
+            header(sprintf('%s: %s', $key, $value));
+        }
+    }
+
+
+    /**
+     * send body content
+     *
+     * @access  private
+     */
+    private function _sendBody()
+    {
+        $content = $this->_body->render();
+        echo $content;
     }
 }
 

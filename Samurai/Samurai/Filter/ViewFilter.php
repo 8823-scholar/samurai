@@ -104,7 +104,6 @@ class ViewFilter extends Filter
         $result = $this->Renderer->render($template);
         $this->Response->setBody($result);
         $this->Response->setHeader('content-type', sprintf('text/html; charset=%s', $this->Config->get('encoding.output')));
-        var_dump($this->Response);
     }
 
 

@@ -54,6 +54,7 @@ class Framework extends Raikiri\Object
         $this->addDep('Router');
         $this->addDep('ActionChain');
         $this->addDep('FilterChain');
+        $this->addDep('Response');
     }
 
 
@@ -89,6 +90,9 @@ class Framework extends Raikiri\Object
 
             $this->ActionChain->next();
         }
+
+        // response.
+        $this->Response->execute();
     }
 
 

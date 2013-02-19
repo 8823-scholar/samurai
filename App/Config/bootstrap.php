@@ -69,6 +69,10 @@ if ( ! defined('Samurai\Samurai\Config\ENV') ) {
 }
 
 
+// date timezone.
+date_default_timezone_set('Asia/Tokyo');
+
+
 // samurai bootsrap
 require_once Samurai\Config\CORE_DIR . '/Config/bootstrap.php';
 

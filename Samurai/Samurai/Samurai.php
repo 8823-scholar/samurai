@@ -58,6 +58,18 @@ class Samurai
 
 
     /**
+     * Get version.
+     *
+     * @access  public
+     * @return  string
+     */
+    public static function getVersion()
+    {
+        return self::VERSION;
+    }
+
+
+    /**
      * get container
      *
      * @access  public
