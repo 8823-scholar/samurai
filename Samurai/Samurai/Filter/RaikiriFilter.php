@@ -28,73 +28,18 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
-
-use Samurai\Raikiri;
+namespace Samurai\Samurai\Filter;
 
 /**
- * Framework main class.
+ * Raikiri (DI Container) filter.
  *
  * @package     Samurai
+ * @subpackage  Filter
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class RaikiriFilter extends Filter
 {
-    /**
-     * version
-     *
-     * @const   string
-     */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
-
-
-    /**
-     * Get version.
-     *
-     * @access  public
-     * @return  string
-     */
-    public static function getVersion()
-    {
-        return self::VERSION;
-    }
-
-
-
-    /**
-     * Get environment constant
-     *
-     * @access  public
-     * @return  string
-     */
-    public static function getEnv()
-    {
-        $env = 'development';
-        if ( defined('Samurai\Samurai\Config\ENV') ) {
-            $env = \Samurai\Samurai\Config\ENV;
-        }
-        return $env;
-    }
-
-
-    /**
-     * get container
-     *
-     * @access  public
-     * @return  Samurai\Raikiri\Container
-     */
-    public function getContainer()
-    {
-        return Raikiri\ContainerFactory::get('samurai');
-    }
 }
 

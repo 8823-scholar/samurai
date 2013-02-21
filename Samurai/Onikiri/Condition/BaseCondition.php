@@ -22,79 +22,43 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Samurai
+ * @package     Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
-
-use Samurai\Raikiri;
+namespace Samurai\Onikiri\Condition;
 
 /**
- * Framework main class.
+ * Base condition.
  *
- * @package     Samurai
+ * @package     Onikiri
+ * @subpackage  Condition
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class BaseCondition
 {
     /**
-     * version
-     *
-     * @const   string
-     */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
-
-
-    /**
-     * Get version.
+     * parent.
      *
      * @access  public
-     * @return  string
+     * @var     Samurai\Onikiri\Condition\Condition
      */
-    public static function getVersion()
-    {
-        return self::VERSION;
-    }
-
+    public $parent;
 
 
     /**
-     * Get environment constant
+     * constructor
      *
      * @access  public
-     * @return  string
+     * @param   Samurai\Onikiri\Condition\Condition $parent
      */
-    public static function getEnv()
+    public function __construct(Condition $parent)
     {
-        $env = 'development';
-        if ( defined('Samurai\Samurai\Config\ENV') ) {
-            $env = \Samurai\Samurai\Config\ENV;
-        }
-        return $env;
-    }
-
-
-    /**
-     * get container
-     *
-     * @access  public
-     * @return  Samurai\Raikiri\Container
-     */
-    public function getContainer()
-    {
-        return Raikiri\ContainerFactory::get('samurai');
+        $this->parent = $parent;
     }
 }
 

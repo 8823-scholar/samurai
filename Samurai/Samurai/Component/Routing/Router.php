@@ -50,9 +50,17 @@ class Router extends Raikiri\Object
      * root routing.
      *
      * @access  private
-     * @var     Rule\RootRoutingRule
+     * @var     Rule\RootRule
      */
     private $_root;
+
+    /**
+     * default routing.
+     *
+     * @access  private
+     * @var     Rule\DefaultRule
+     */
+    private $_default;
 
     /**
      * routes
@@ -66,6 +74,20 @@ class Router extends Raikiri\Object
      * @dependencies
      */
     public $Request;
+
+
+    /**
+     * constructor.
+     *
+     * @access  public
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->_default = new Rule\DefaultRule();
+    }
+
 
 
     /**
@@ -138,6 +160,11 @@ class Router extends Raikiri\Object
         $path = $this->Request->getPath();
         if ( $this->_root && $this->_root->match($path) ) {
             return $this->_root;
+        }
+
+        // default rule.
+        if ( $this->_default && $this->_default->match($path) ) {
+            return $this->_default;
         }
     }
 

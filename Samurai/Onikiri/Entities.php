@@ -22,79 +22,92 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Samurai
+ * @package     Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
-
-use Samurai\Raikiri;
+namespace Samurai\Onikiri;
 
 /**
- * Framework main class.
+ * Entities class.
  *
- * @package     Samurai
+ * @package     Onikiri
+ * @subpackage  Entity
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class Entities
 {
     /**
-     * version
-     *
-     * @const   string
-     */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
-
-
-    /**
-     * Get version.
+     * Model.
      *
      * @access  public
-     * @return  string
+     * @var     Model
      */
-    public static function getVersion()
+    public $model;
+
+    /**
+     * Statement.
+     *
+     * @access  public
+     * @var     Statement
+     */
+    public $statement;
+
+
+    /**
+     * constructor.
+     *
+     * @access  public
+     * @param   Model       $model
+     * @param   Statement   $statement
+     */
+    public function __construct(Model $model, Statement $statement)
     {
-        return self::VERSION;
+        $this->setModel($model);
+        $this->setStatement($statement);
+    }
+
+
+    /**
+     * Set model.
+     *
+     * @access  public
+     * @param   Model   $model
+     */
+    public function setModel(Model $model)
+    {
+        $this->model = $model;
+    }
+
+
+    /**
+     * Set statement.
+     *
+     * @access  public
+     * @param   Statement   $statement
+     */
+    public function setStatement(Statement $statement)
+    {
+        $this->statement = $statement;
     }
 
 
 
     /**
-     * Get environment constant
+     * get first entity.
      *
      * @access  public
-     * @return  string
+     * @return  Entity
      */
-    public static function getEnv()
+    public function first()
     {
-        $env = 'development';
-        if ( defined('Samurai\Samurai\Config\ENV') ) {
-            $env = \Samurai\Samurai\Config\ENV;
-        }
-        return $env;
-    }
-
-
-    /**
-     * get container
-     *
-     * @access  public
-     * @return  Samurai\Raikiri\Container
-     */
-    public function getContainer()
-    {
-        return Raikiri\ContainerFactory::get('samurai');
+        $row = $this->statement->fetch(Connection::FETCH_ASSOC);
+        $entity = $this->model->build($row, true);
+        return $entity;
     }
 }
 

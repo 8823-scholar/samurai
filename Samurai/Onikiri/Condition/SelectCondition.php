@@ -22,79 +22,50 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Samurai
+ * @package     Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
-
-use Samurai\Raikiri;
+namespace Samurai\Onikiri\Condition;
 
 /**
- * Framework main class.
+ * Select Condition class.
  *
- * @package     Samurai
+ * @package     Onikiri
+ * @subpackage  Condition
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class SelectCondition
 {
     /**
-     * version
+     * conditions
      *
-     * @const   string
+     * @access  public
+     * @var     array
      */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
+    public $conditions = array();
 
 
     /**
-     * Get version.
+     * convert to SQL
      *
      * @access  public
      * @return  string
      */
-    public static function getVersion()
+    public function toSQL()
     {
-        return self::VERSION;
-    }
-
-
-
-    /**
-     * Get environment constant
-     *
-     * @access  public
-     * @return  string
-     */
-    public static function getEnv()
-    {
-        $env = 'development';
-        if ( defined('Samurai\Samurai\Config\ENV') ) {
-            $env = \Samurai\Samurai\Config\ENV;
+        $sql = array();
+        $sql[] = 'SELECT';
+        if ( ! $this->conditions ) {
+            $sql[] = '*';
+        } else {
+            $sql[] = join(', ', $this->conditions);
         }
-        return $env;
-    }
-
-
-    /**
-     * get container
-     *
-     * @access  public
-     * @return  Samurai\Raikiri\Container
-     */
-    public function getContainer()
-    {
-        return Raikiri\ContainerFactory::get('samurai');
+        return join(' ', $sql);
     }
 }
 

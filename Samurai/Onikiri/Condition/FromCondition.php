@@ -22,79 +22,77 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Samurai
+ * @package     Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
-
-use Samurai\Raikiri;
+namespace Samurai\Onikiri\Condition;
 
 /**
- * Framework main class.
+ * From condition class.
  *
- * @package     Samurai
+ * @package     Onikiri
+ * @subpackage  Condition
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class FromCondition
 {
     /**
-     * version
-     *
-     * @const   string
-     */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
-
-
-    /**
-     * Get version.
+     * conditions
      *
      * @access  public
-     * @return  string
+     * @var     array
      */
-    public static function getVersion()
+    public $conditions = array();
+
+
+    /**
+     * Set
+     *
+     * @access  public
+     * @param   string  $table
+     */
+    public function set($table)
     {
-        return self::VERSION;
+        $this->conditions = array();
+        $this->add($table);
     }
 
 
+    /**
+     * add.
+     *
+     * @access  public
+     * @param   string  $table
+     */
+    public function add($table)
+    {
+        $this->conditions[] = $table;
+    }
+
 
     /**
-     * Get environment constant
+     * convert to SQL
      *
      * @access  public
      * @return  string
      */
-    public static function getEnv()
+    public function toSQL()
     {
-        $env = 'development';
-        if ( defined('Samurai\Samurai\Config\ENV') ) {
-            $env = \Samurai\Samurai\Config\ENV;
+        $sql = array();
+        $sql[] = 'FROM';
+
+        $sub = array();
+        foreach ( $this->conditions as $condition ) {
+            $sub[] = $condition;
         }
-        return $env;
-    }
+        $sql[] = join(', ', $sub);
 
-
-    /**
-     * get container
-     *
-     * @access  public
-     * @return  Samurai\Raikiri\Container
-     */
-    public function getContainer()
-    {
-        return Raikiri\ContainerFactory::get('samurai');
+        return join(' ', $sql);
     }
 }
 

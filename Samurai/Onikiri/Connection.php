@@ -22,79 +22,34 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Samurai
+ * @package     Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
+namespace Samurai\Onikiri;
 
-use Samurai\Raikiri;
+use PDO;
 
 /**
- * Framework main class.
+ * Connection (base is PDO)
  *
- * @package     Samurai
+ * @package     Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class Connection extends PDO
 {
     /**
-     * version
-     *
-     * @const   string
+     * @override
      */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
-
-
-    /**
-     * Get version.
-     *
-     * @access  public
-     * @return  string
-     */
-    public static function getVersion()
+    public function __construct($dsn, $user = null, $password = null, array $options = array())
     {
-        return self::VERSION;
-    }
-
-
-
-    /**
-     * Get environment constant
-     *
-     * @access  public
-     * @return  string
-     */
-    public static function getEnv()
-    {
-        $env = 'development';
-        if ( defined('Samurai\Samurai\Config\ENV') ) {
-            $env = \Samurai\Samurai\Config\ENV;
-        }
-        return $env;
-    }
-
-
-    /**
-     * get container
-     *
-     * @access  public
-     * @return  Samurai\Raikiri\Container
-     */
-    public function getContainer()
-    {
-        return Raikiri\ContainerFactory::get('samurai');
+        parent::__construct($dsn, $user, $password, $options);
+        $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('\\Samurai\\Onikiri\\Statement', array()));
+        $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 }
 

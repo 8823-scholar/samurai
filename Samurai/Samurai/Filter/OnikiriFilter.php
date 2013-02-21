@@ -28,73 +28,40 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
+namespace Samurai\Samurai\Filter;
 
-use Samurai\Raikiri;
+use Samurai\Samurai\Samurai;
+use Samurai\Onikiri;
+use Samurai\Samurai\Component\Core\Loader;
 
 /**
- * Framework main class.
+ * Onikiri(O/R Mapper) filter.
  *
  * @package     Samurai
+ * @subpackage  Filter
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class OnikiriFilter extends Filter
 {
     /**
-     * version
-     *
-     * @const   string
+     * @dependencies
      */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
+    public $Config;
 
 
     /**
-     * Get version.
-     *
-     * @access  public
-     * @return  string
+     * @override
      */
-    public static function getVersion()
+    public function prefilter()
     {
-        return self::VERSION;
-    }
+        $manager = Onikiri\Manager::singleton();
 
-
-
-    /**
-     * Get environment constant
-     *
-     * @access  public
-     * @return  string
-     */
-    public static function getEnv()
-    {
-        $env = 'development';
-        if ( defined('Samurai\Samurai\Config\ENV') ) {
-            $env = \Samurai\Samurai\Config\ENV;
-        }
-        return $env;
-    }
-
-
-    /**
-     * get container
-     *
-     * @access  public
-     * @return  Samurai\Raikiri\Container
-     */
-    public function getContainer()
-    {
-        return Raikiri\ContainerFactory::get('samurai');
+        // load configuration.
+        // App/Config/Database/production.yml
+        $file = Loader::getPath($this->Config->get('directory.config.database') . DS . Samurai::getEnv() . '.yml');
+        $manager->importDatabase($file);
     }
 }
 

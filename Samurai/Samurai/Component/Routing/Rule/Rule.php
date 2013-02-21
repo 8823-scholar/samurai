@@ -81,6 +81,14 @@ abstract class Rule
      */
     public $format;
 
+    /**
+     * params
+     *
+     * @access  public
+     * @var     array
+     */
+    public $params = array();
+
 
     /**
      * Set name.
@@ -187,6 +195,18 @@ abstract class Rule
         $this->format = $format;
     }
 
+
+    /**
+     * Set params
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   string  $value
+     */
+    public function setParam($key, $value)
+    {
+        $this->params[$key] = $value;
+    }
 
 
     /**

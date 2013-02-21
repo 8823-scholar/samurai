@@ -22,79 +22,76 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Samurai
+ * @package     Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
-
-use Samurai\Raikiri;
+namespace Samurai\Onikiri;
 
 /**
- * Framework main class.
+ * Entity class.
  *
- * @package     Samurai
+ * @package     Onikiri
+ * @subpackage  Entity
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class Entity
 {
     /**
-     * version
-     *
-     * @const   string
-     */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
-
-
-    /**
-     * Get version.
+     * Model.
      *
      * @access  public
-     * @return  string
+     * @var     Model
      */
-    public static function getVersion()
+    public $model;
+
+    /**
+     * attributes
+     *
+     * @access  public
+     * @var     array
+     */
+    public $attributes = array();
+
+    /**
+     * exists in backend ?
+     *
+     * @access  public
+     * @var     boolean
+     */
+    public $exists = false;
+
+    
+    /**
+     * constructor.
+     *
+     * @access  public
+     * @param   Model   $model
+     * @param   array   $attributes
+     * @param   boolean $exists
+     */
+    public function __construct(Model $model, array $attributes = array(), $exists = false)
     {
-        return self::VERSION;
+        $this->setModel($model);
+        $this->attributes = $attributes;
+        $this->exists = $exists;
     }
 
 
-
     /**
-     * Get environment constant
+     * Set model.
      *
      * @access  public
-     * @return  string
+     * @param   Model   $model
      */
-    public static function getEnv()
+    public function setModel(Model $model)
     {
-        $env = 'development';
-        if ( defined('Samurai\Samurai\Config\ENV') ) {
-            $env = \Samurai\Samurai\Config\ENV;
-        }
-        return $env;
+        $this->model = $model;
     }
 
-
-    /**
-     * get container
-     *
-     * @access  public
-     * @return  Samurai\Raikiri\Container
-     */
-    public function getContainer()
-    {
-        return Raikiri\ContainerFactory::get('samurai');
-    }
 }
 

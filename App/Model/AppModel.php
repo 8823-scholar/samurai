@@ -28,73 +28,20 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
+namespace App\Model;
 
-use Samurai\Raikiri;
+use Samurai\Onikiri;
 
 /**
- * Framework main class.
+ * App base model.
  *
  * @package     Samurai
+ * @subpackage  Model
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class AppModel extends Onikiri\Model
 {
-    /**
-     * version
-     *
-     * @const   string
-     */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
-
-
-    /**
-     * Get version.
-     *
-     * @access  public
-     * @return  string
-     */
-    public static function getVersion()
-    {
-        return self::VERSION;
-    }
-
-
-
-    /**
-     * Get environment constant
-     *
-     * @access  public
-     * @return  string
-     */
-    public static function getEnv()
-    {
-        $env = 'development';
-        if ( defined('Samurai\Samurai\Config\ENV') ) {
-            $env = \Samurai\Samurai\Config\ENV;
-        }
-        return $env;
-    }
-
-
-    /**
-     * get container
-     *
-     * @access  public
-     * @return  Samurai\Raikiri\Container
-     */
-    public function getContainer()
-    {
-        return Raikiri\ContainerFactory::get('samurai');
-    }
 }
 

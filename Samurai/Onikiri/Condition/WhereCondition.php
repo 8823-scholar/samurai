@@ -22,79 +22,100 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Samurai
+ * @package     Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
-
-use Samurai\Raikiri;
+namespace Samurai\Onikiri\Condition;
 
 /**
- * Framework main class.
+ * Where section class of condition.
  *
- * @package     Samurai
+ * @package     Onikiri
+ * @subpackage  Condition
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class WhereCondition extends BaseCondition
 {
     /**
-     * version
-     *
-     * @const   string
-     */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
-
-
-    /**
-     * Get version.
+     * conditions
      *
      * @access  public
-     * @return  string
+     * @var     array
      */
-    public static function getVersion()
-    {
-        return self::VERSION;
-    }
+    public $conditions = array();
 
+    /**
+     * params
+     *
+     * @access  public
+     * @var     array
+     */
+    public $params = array();
 
 
     /**
-     * Get environment constant
+     * add condition.
+     *
+     * 1. $cond->where->add('foo = ?', $foo);
+     * 2. $cond->where->add('foo = ? AND bar = ?', $foo, $bar);
+     * 3. $cond->where->add('foo = ? AND bar = ?', [$foo, $bar]);
+     * 4. $cond->where->add('foo = :foo AND bar = :bar', ['foo' => $foo, 'bar' => $bar]);
      *
      * @access  public
-     * @return  string
+     * @param   
      */
-    public static function getEnv()
+    public function add()
     {
-        $env = 'development';
-        if ( defined('Samurai\Samurai\Config\ENV') ) {
-            $env = \Samurai\Samurai\Config\ENV;
+        $args = func_get_args();
+        $condition = array_shift($args);
+
+        if ( count($this->conditions) > 0 ) {
+            $this->conditions[] = 'AND';
         }
-        return $env;
+        $this->conditions[] = $condition;
+
+        while ( $param = array_shift($args) ) {
+            if ( is_array($param) ) {
+                $this->params = array_merge($this->params, $param);
+            } else {
+                $this->params[] = $param;
+            }
+        }
     }
 
 
     /**
-     * get container
+     * get params
      *
      * @access  public
-     * @return  Samurai\Raikiri\Container
+     * @return  array
      */
-    public function getContainer()
+    public function getParams()
     {
-        return Raikiri\ContainerFactory::get('samurai');
+        return $this->params;
+    }
+
+
+
+    /**
+     * convert to SQL.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function toSQL()
+    {
+        $sql = array();
+
+        $sql[] = 'WHERE';
+        $sql[] = join(' ', $this->conditions);
+
+        return join(" ", $sql);
     }
 }
 

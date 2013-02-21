@@ -28,73 +28,59 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
-
-use Samurai\Raikiri;
+namespace Samurai\Samurai\Component\Routing\Rule;
 
 /**
- * Framework main class.
+ * Default Rule.
  *
  * @package     Samurai
+ * @subpackage  Componen.Routing
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class DefaultRule extends Rule
 {
     /**
-     * version
-     *
-     * @const   string
+     * @implements
      */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
-
-
-    /**
-     * Get version.
-     *
-     * @access  public
-     * @return  string
-     */
-    public static function getVersion()
+    public function match($path)
     {
-        return self::VERSION;
-    }
+        $paths = explode(DS, $path);
+        array_shift($paths);
+        if ( count($paths) < 2 ) return false;
 
-
-
-    /**
-     * Get environment constant
-     *
-     * @access  public
-     * @return  string
-     */
-    public static function getEnv()
-    {
-        $env = 'development';
-        if ( defined('Samurai\Samurai\Config\ENV') ) {
-            $env = \Samurai\Samurai\Config\ENV;
+        // more population pattern.
+        // /:controller/:action
+        if ( preg_match('|^/(\w+)/(\w+)/?$|', $path, $matches) ) {
+            $this->setController($matches[1]);
+            $this->setAction($matches[2]);
+            return true;
         }
-        return $env;
-    }
 
+        // has id, or nested controller ?
+        // /:controller/:action/:id
+        // /:controller/:controller/:action
+        if ( count($paths) > 2 ) {
+            $action = array_pop($paths);
 
-    /**
-     * get container
-     *
-     * @access  public
-     * @return  Samurai\Raikiri\Container
-     */
-    public function getContainer()
-    {
-        return Raikiri\ContainerFactory::get('samurai');
+            // has format.
+            if ( preg_match('/^(\w+)\.(\w+)$/', $action, $matches) ) {
+                $action = $matches[1];
+                $this->setFormat($matches[2]);
+            }
+
+            if ( is_numeric($action) ) {
+                $this->setParam('id', $action);
+                $action = array_pop($paths);
+            }
+            $controller = join('_', $paths);
+            $this->setController($controller);
+            $this->setAction($action);
+            return true;
+        }
+
+        return false;
     }
 }
 

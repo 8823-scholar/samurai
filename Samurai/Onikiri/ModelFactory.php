@@ -22,79 +22,98 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Samurai
+ * @package     Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
-
-use Samurai\Raikiri;
+namespace Samurai\Onikiri;
 
 /**
- * Framework main class.
+ * Model factory class.
  *
  * @package     Samurai
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class ModelFactory
 {
     /**
-     * version
+     * instance.
      *
-     * @const   string
+     * @access  private
+     * @var     ModelFactory
      */
-    const VERSION = '3.0.0';
+    private static $_instance;
 
     /**
-     * state.
+     * models
      *
-     * @const   string
+     * @access  private
+     * @var     array
      */
-    const STATE = 'beta';
+    private $_models = array();
 
 
     /**
-     * Get version.
+     * constructor.
      *
-     * @access  public
-     * @return  string
+     * @access  private
      */
-    public static function getVersion()
+    private function __construct()
     {
-        return self::VERSION;
     }
 
 
-
     /**
-     * Get environment constant
+     * get instance.
      *
      * @access  public
-     * @return  string
+     * @return  ModelFactory
      */
-    public static function getEnv()
+    public static function singleton()
     {
-        $env = 'development';
-        if ( defined('Samurai\Samurai\Config\ENV') ) {
-            $env = \Samurai\Samurai\Config\ENV;
+        if ( self::$_instance === null ) {
+            self::$_instance = new ModelFactory();
         }
-        return $env;
+        return self::$_instance;
+    }
+
+
+
+    /**
+     * get model.
+     *
+     * @access  public
+     * @param   string  $name
+     * @return  Model
+     */
+    public function get($name)
+    {
+        if ( ! isset($this->_models[$name]) ) {
+            $this->_models[$name] = $this->createModel($name);
+        }
+        return $this->_models[$name];
     }
 
 
     /**
-     * get container
+     * create and return model instance.
      *
      * @access  public
-     * @return  Samurai\Raikiri\Container
+     * @param   string  $name
+     * @return  Model
      */
-    public function getContainer()
+    public function createModel($name)
     {
-        return Raikiri\ContainerFactory::get('samurai');
+        $names = preg_split('/(?=[A-Z])/', $name);
+        array_shift($names);
+
+        $class = '\\App\\Model\\' . join('\\', $names) . 'Model';
+        $model = new $class();
+        return $model;
     }
 }
 

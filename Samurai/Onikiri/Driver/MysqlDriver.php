@@ -22,79 +22,61 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Samurai
+ * @package     Onikiri
+ * @subpackage  Driver
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai;
+namespace Samurai\Onikiri\Driver;
 
-use Samurai\Raikiri;
+use Samurai\Onikiri\Database;
+use Samurai\Onikiri\Connection;
 
 /**
- * Framework main class.
+ * Driver for mysql class.
  *
- * @package     Samurai
+ * @package     Onikiri
+ * @subpackage  Driver
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Samurai
+class MysqlDriver extends Driver
 {
     /**
-     * version
-     *
-     * @const   string
+     * @implements
      */
-    const VERSION = '3.0.0';
-
-    /**
-     * state.
-     *
-     * @const   string
-     */
-    const STATE = 'beta';
-
-
-    /**
-     * Get version.
-     *
-     * @access  public
-     * @return  string
-     */
-    public static function getVersion()
+    public function connect(Database $database)
     {
-        return self::VERSION;
+        $dsn = $this->makeDsn($database);
+        $con = new Connection($dsn, $database->getUser(), $database->getPassword(), $database->getOptions());
+        return $con;
     }
 
 
-
     /**
-     * Get environment constant
-     *
-     * @access  public
-     * @return  string
+     * @implements
      */
-    public static function getEnv()
+    public function makeDsn(Database $database)
     {
-        $env = 'development';
-        if ( defined('Samurai\Samurai\Config\ENV') ) {
-            $env = \Samurai\Samurai\Config\ENV;
+        $dsn = 'mysql:';
+        $info = array();
+
+        // database name
+        $info[] = 'dbname=' . $database->getDatabaseName();
+
+        // host name
+        $info[] = 'host=' . $database->getHostName();
+
+        // port
+        if ( $port = $database->getPort() ) {
+            $info[] = 'port=' . $port;
         }
-        return $env;
-    }
 
-
-    /**
-     * get container
-     *
-     * @access  public
-     * @return  Samurai\Raikiri\Container
-     */
-    public function getContainer()
-    {
-        return Raikiri\ContainerFactory::get('samurai');
+        $dsn = $dsn . join(';', $info);
+        return $dsn;
     }
 }
 

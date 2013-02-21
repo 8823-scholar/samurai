@@ -32,6 +32,7 @@ directory:
     config:
         samurai: Config/Samurai
         routing: Config/Routing
+        database: Config/Database
     layout: View/Layout
     template: View/Content
     locale: Locale

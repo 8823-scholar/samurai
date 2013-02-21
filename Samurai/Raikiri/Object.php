@@ -30,6 +30,8 @@
 
 namespace Samurai\Raikiri;
 
+use Samurai\Onikiri\ModelFactory;
+
 /**
  * DI Container common object class.
  *
@@ -47,6 +49,14 @@ class Object
      * @var     array
      */
     protected $_deps = array();
+
+    /**
+     * models
+     *
+     * @access  protected
+     * @var     array
+     */
+    protected $_models = array();
 
 
     /**
@@ -99,6 +109,34 @@ class Object
 
 
 
+    /**
+     * add model.
+     *
+     * @access  public
+     * @param   string  $name
+     */
+    public function addModel($name)
+    {
+        if ( ! $this->hasModel($name) ) {
+            $this->_models[$name] = null;
+        }
+    }
+
+
+    /**
+     * has model ?
+     *
+     * @access  public
+     * @param   string  $name
+     * @return  boolean
+     */
+    public function hasModel($name)
+    {
+        return array_key_exists($name, $this->_models);
+    }
+
+
+
 
     /**
      * magick method: get
@@ -107,15 +145,26 @@ class Object
      *
      * @implements
      */
-    public function __get($name)
+    public function __get($key)
     {
-        if ( $this->hasDep($name) ) {
-            if ( $this->_deps[$name] === null ) {
+        // has dependency ?
+        if ( $this->hasDep($key) ) {
+            if ( $this->_deps[$key] === null ) {
                 $container = ContainerFactory::get();
-                $this->_deps[$name] = $container->getComponent($name);
+                $this->_deps[$key] = $container->getComponent($key);
             }
-            return $this->_deps[$name];
+            return $this->_deps[$key];
         }
+
+        // has model ?
+        if ( $this->hasModel($key) && class_exists('Samurai\Onikiri\ModelFactory') ) {
+            if ( $this->_models[$key] === null ) {
+                $factory = ModelFactory::singleton($key);
+                $this->_models[$key] = $factory->get($key);
+            }
+            return $this->_models[$key];
+        }
+
         return null;
     }
 }

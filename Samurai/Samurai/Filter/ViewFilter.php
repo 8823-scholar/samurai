@@ -120,7 +120,9 @@ class ViewFilter extends Filter
     {
         $def = $this->ActionChain->getCurrentAction();
         $result = $def['result'];
-        if ( is_string($result) ) {
+        if ( ! $result ) {
+            return null;
+        } elseif ( is_string($result) ) {
             return $result;
         } elseif ( is_array($result) ) {
             return array_shift($result);

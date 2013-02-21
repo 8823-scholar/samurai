@@ -109,6 +109,12 @@ class HttpRequest extends Parameters
 
         // path
         if ( isset($_SERVER['REQUEST_URI']) ) {
+
+            // bugfix built in server, when has format, then SCRIPT_NAME is seems like REQUEST_URI.
+            if ( php_sapi_name() === 'cli-server' ) {
+                $_SERVER['SCRIPT_NAME'] = preg_replace('|^' . preg_quote($_SERVER['DOCUMENT_ROOT']) .  '|', '', $_SERVER['SCRIPT_FILENAME']);
+            }
+
             $this->_parent_path = dirname($_SERVER['SCRIPT_NAME']) == '/' ? '' : dirname($_SERVER['SCRIPT_NAME']);
             $this->_path = preg_replace('|^' . preg_quote($this->_parent_path, '|') . '|', '', array_shift(explode('?', $_SERVER['REQUEST_URI'])));
         }
