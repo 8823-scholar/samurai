@@ -42,6 +42,37 @@ namespace Samurai\Onikiri\Condition;
 class OrderCondition extends BaseCondition
 {
     /**
+     * add order by field.
+     *
+     * @access  public
+     */
+    public function addByField()
+    {
+        $args = func_get_args();
+        $column = array_shift($args);
+        if ( ! is_string($column) ) throw new \Exception('Invalid arguments.');
+
+        $conditions = array();
+        $conditions[] = 'FIELD(';
+        $sub = array();
+        $sub[] = $column;
+        while ( $param = array_shift($args) ) {
+            if ( is_array($param) ) {
+                $sub = array_merge($sub, array_fill(0, count($param), '?'));
+                $this->params = array_merge($this->params, $param);
+            } else {
+                $sub[] = '?';
+                $this->params[] = $param;
+            }
+        }
+        $conditions[] = join(', ', $sub);
+        $conditions[] = ')';
+        $this->conditions[] = join(' ', $conditions);
+        return $this;
+    }
+
+
+    /**
      * convert to SQL
      *
      * @access  public

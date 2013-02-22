@@ -134,6 +134,20 @@ class Condition
 
 
     /**
+     * select
+     *
+     * @access  public
+     */
+    public function select()
+    {
+        $args = func_get_args();
+        while ( $arg = array_shift($args) ) {
+            $this->select->add($arg);
+        }
+        return $this->select;
+    }
+
+    /**
      * from
      *
      * @access  public
@@ -144,6 +158,7 @@ class Condition
         while ( $arg = array_shift($args) ) {
             $this->from->add($arg);
         }
+        return $this->from;
     }
 
 
@@ -152,12 +167,13 @@ class Condition
      *
      * @access  public
      */
-    public function group()
+    public function groupBy()
     {
         $args = func_get_args();
         while ( $arg = array_shift($args) ) {
             $this->group->add($arg);
         }
+        return $this->group;
     }
 
 
@@ -166,12 +182,24 @@ class Condition
      *
      * @access  public
      */
-    public function order()
+    public function orderBy()
     {
         $args = func_get_args();
         while ( $arg = array_shift($args) ) {
             $this->order->add($arg);
         }
+        return $this->order;
+    }
+
+    /**
+     * order by field.
+     *
+     * @access  public
+     */
+    public function orderByField()
+    {
+        call_user_func_array(array($this->order, 'addByField'), func_get_args());
+        return $this->order;
     }
 
 
@@ -188,6 +216,7 @@ class Condition
     public function limit($limit)
     {
         $this->limit = $limit;
+        return $this;
     }
 
 
@@ -201,6 +230,7 @@ class Condition
     public function offset($offset)
     {
         $this->offset = $offset;
+        return $this;
     }
 
     /**
@@ -213,6 +243,7 @@ class Condition
     {
         $offset = $this->limit * ( $page - 1 );
         $this->offset($offset);
+        return $this;
     }
 
 
@@ -254,10 +285,10 @@ class Condition
                     call_user_func_array(array($this->where, 'add'), $value);
                     break;
                 case 'group':
-                    $this->group($value);
+                    $this->groupBy($value);
                     break;
                 case 'order':
-                    $this->order($value);
+                    $this->orderBy($value);
                     break;
             }
         }

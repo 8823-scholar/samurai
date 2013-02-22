@@ -56,7 +56,7 @@ class WhereCondition extends BaseCondition
         $args = func_get_args();
         $condition = array_shift($args);
 
-        if ( count($this->conditions) > 0 ) {
+        if ( $this->has() ) {
             $this->conditions[] = 'AND';
         }
         $this->conditions[] = $condition;
@@ -68,7 +68,99 @@ class WhereCondition extends BaseCondition
                 $this->params[] = $param;
             }
         }
+        return $this;
     }
+
+
+    /**
+     * add by "OR".
+     *
+     * @access  public
+     */
+    public function addOr()
+    {
+        $args = func_get_args();
+        $condition = array_shift($args);
+
+        if ( $this->has() ) {
+            $this->conditions[] = 'OR';
+        }
+        $this->conditions[] = $condition;
+
+        while ( $param = array_shift($args) ) {
+            if ( is_array($param) ) {
+                $this->params = array_merge($this->params, $param);
+            } else {
+                $this->params[] = $param;
+            }
+        }
+        return $this;
+    }
+
+
+    /**
+     * add in use "AND"
+     *
+     * @access  public
+     */
+    public function addIn()
+    {
+        $args = func_get_args();
+        $column = array_shift($args);
+        if ( ! is_string($column) ) throw new \Exception('Invalid arguments.');
+
+        if ( $this->has() ) {
+            $this->conditions[] = 'AND';
+        }
+        $this->conditions[] = $condition;
+        $this->conditions[] = 'IN(';
+
+        $sub = array();
+        while ( $param = array_shift($args) ) {
+            $sub[] = '?';
+            if ( is_array($param) ) {
+                $this->params = array_merge($this->params, $param);
+            } else {
+                $this->params[] = $param;
+            }
+        }
+        $this->conditions[] = join(', ', $sub);
+        $this->conditions[] = ')';
+        return $this;
+    }
+    
+    
+    /**
+     * add in use "OR"
+     *
+     * @access  public
+     */
+    public function addOrIn()
+    {
+        $args = func_get_args();
+        $column = array_shift($args);
+        if ( ! is_string($column) ) throw new \Exception('Invalid arguments.');
+
+        if ( $this->has() ) {
+            $this->conditions[] = 'OR';
+        }
+        $this->conditions[] = $column;
+        $this->conditions[] = 'IN(';
+
+        $sub = array();
+        while ( $param = array_shift($args) ) {
+            $sub[] = '?';
+            if ( is_array($param) ) {
+                $this->params = array_merge($this->params, $param);
+            } else {
+                $this->params[] = $param;
+            }
+        }
+        $this->conditions[] = join(', ', $sub);
+        $this->conditions[] = ')';
+        return $this;
+    }
+
 
 
 

@@ -100,6 +100,7 @@ abstract class BaseCondition
     {
         $this->conditions = array();
         $this->add($table);
+        return $this;
     }
 
 
@@ -112,6 +113,7 @@ abstract class BaseCondition
     public function add($table)
     {
         $this->conditions[] = $table;
+        return $this;
     }
 
 
@@ -139,6 +141,19 @@ abstract class BaseCondition
     public function has()
     {
         return count($this->conditions) > 0;
+    }
+
+
+
+
+    /**
+     * magick method for bridge to parent.
+     *
+     * @access  public
+     */
+    public function __call($method, array $args)
+    {
+        return call_user_func_array(array($this->parent, $method), $args);
     }
 }
 

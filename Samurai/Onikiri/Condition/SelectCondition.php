@@ -39,17 +39,8 @@ namespace Samurai\Onikiri\Condition;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class SelectCondition
+class SelectCondition extends BaseCondition
 {
-    /**
-     * conditions
-     *
-     * @access  public
-     * @var     array
-     */
-    public $conditions = array();
-
-
     /**
      * convert to SQL
      *
