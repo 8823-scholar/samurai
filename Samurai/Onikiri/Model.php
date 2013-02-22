@@ -231,7 +231,7 @@ class Model
     {
         //$helper = $this->getHelper();
         $con = $this->establishConnection();
-        $sth = $con->prepare($sql);
+        $sth = $con->prepare($sql, array(Connection::ATTR_CURSOR => Connection::CURSOR_SCROLL));
 
         // bind params
         foreach($params as $key => $value){

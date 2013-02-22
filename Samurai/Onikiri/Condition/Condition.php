@@ -203,6 +203,18 @@ class Condition
         $this->offset = $offset;
     }
 
+    /**
+     * Set page.
+     *
+     * @access  public
+     * @param   int     $page
+     */
+    public function page($page)
+    {
+        $offset = $this->limit * ( $page - 1 );
+        $this->offset($offset);
+    }
+
 
     /**
      * get all params.

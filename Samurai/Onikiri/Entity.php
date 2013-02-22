@@ -111,5 +111,24 @@ class Entity
         }
         return null;
     }
+
+
+    /**
+     * magick method for getter.
+     *
+     * @access  public
+     * @param   string  $method
+     * @param   array   $args
+     */
+    public function __call($method, array $args)
+    {
+        // when getter.
+        if ( preg_match('/^get([A-Z]\w+)$/', $method, $matches) ) {
+            $names = preg_split('/(?=[A-Z])/', $matches[1]);
+            array_shift($names);
+            $key = strtolower(join('_', $names));
+            return $this->$key;
+        }
+    }
 }
 

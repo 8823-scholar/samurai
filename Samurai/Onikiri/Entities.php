@@ -30,6 +30,8 @@
 
 namespace Samurai\Onikiri;
 
+use Iterator;
+
 /**
  * Entities class.
  *
@@ -39,7 +41,7 @@ namespace Samurai\Onikiri;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Entities
+class Entities implements Iterator
 {
     /**
      * Model.
@@ -56,6 +58,22 @@ class Entities
      * @var     Statement
      */
     public $statement;
+
+    /**
+     * entities cache.
+     *
+     * @access  private
+     * @var     array
+     */
+    private $_entities = array();
+
+    /**
+     * position.
+     *
+     * @access  private
+     * @var     int
+     */
+    private $_position = 0;
 
 
     /**
@@ -98,6 +116,27 @@ class Entities
 
 
     /**
+     * get by position.
+     *
+     * @access  public
+     * @param   int     $position
+     * @return  Entity
+     */
+    public function getByPosition($position)
+    {
+        // already has entity.
+        if ( isset($this->_entities[$position]) ) return $this->_entities[$position];
+        
+        $row = $this->statement->fetch(Connection::FETCH_ASSOC, Connection::FETCH_ORI_ABS, $position);
+        if ( ! $row ) return null;
+
+        $entity = $this->model->build($row, true);
+        $this->_entities[$position] = $entity;
+        return $entity;
+    }
+
+
+    /**
      * get first entity.
      *
      * @access  public
@@ -105,9 +144,50 @@ class Entities
      */
     public function first()
     {
-        $row = $this->statement->fetch(Connection::FETCH_ASSOC);
-        $entity = $this->model->build($row, true);
-        return $entity;
+        return $this->getByPosition(0);
+    }
+
+
+
+    /**
+     * @implements
+     */
+    public function current()
+    {
+        return $this->getByPosition($this->_position);
+    }
+
+    /**
+     * @implements
+     */
+    public function key()
+    {
+        return $this->_position;
+    }
+
+    /**
+     * @implements
+     */
+    public function next()
+    {
+        $this->_position++;
+    }
+
+    /**
+     * @implements
+     */
+    public function rewind()
+    {
+        $this->_position = 0;
+    }
+
+    /**
+     * @implements
+     */
+    public function valid()
+    {
+        $entity = $this->getByPosition($this->_position);
+        return $entity ? true : false;
     }
 }
 
