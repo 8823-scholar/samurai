@@ -31,7 +31,7 @@
 namespace Samurai\Onikiri\Condition;
 
 /**
- * Base condition.
+ * Order condition class.
  *
  * @package     Onikiri
  * @subpackage  Condition
@@ -39,106 +39,28 @@ namespace Samurai\Onikiri\Condition;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-abstract class BaseCondition
+class OrderCondition extends BaseCondition
 {
     /**
-     * parent.
-     *
-     * @access  public
-     * @var     Samurai\Onikiri\Condition\Condition
-     */
-    public $parent;
-    
-    /**
-     * conditions
-     *
-     * @access  public
-     * @var     array
-     */
-    public $conditions = array();
-
-    /**
-     * params
-     *
-     * @access  public
-     * @var     array
-     */
-    public $params = array();
-
-
-
-
-    /**
-     * constructor
-     *
-     * @access  public
-     * @param   Samurai\Onikiri\Condition\Condition $parent
-     */
-    public function __construct(Condition $parent)
-    {
-        $this->parent = $parent;
-    }
-
-
-    /**
-     * make SQL.
+     * convert to SQL
      *
      * @access  public
      * @return  string
      */
-    abstract public function toSQL();
-    
-    
-    
-    /**
-     * Set
-     *
-     * @access  public
-     * @param   string  $table
-     */
-    public function set($table)
+    public function toSQL()
     {
-        $this->conditions = array();
-        $this->add($table);
-    }
+        if ( ! $this->has() ) return '';
 
+        $sql = array();
+        $sql[] = 'ORDER BY';
 
-    /**
-     * add.
-     *
-     * @access  public
-     * @param   string  $table
-     */
-    public function add($table)
-    {
-        $this->conditions[] = $table;
-    }
+        $sub = array();
+        foreach ( $this->conditions as $condition ) {
+            $sub[] = $condition;
+        }
+        $sql[] = join(', ', $sub);
 
-
-    /**
-     * get params
-     *
-     * @access  public
-     * @return  array
-     */
-    public function getParams()
-    {
-        return $this->params;
-    }
-
-
-
-
-
-    /**
-     * has conditions ?
-     *
-     * @access  public
-     * @return  boolean
-     */
-    public function has()
-    {
-        return count($this->conditions) > 0;
+        return join(' ', $sql);
     }
 }
 

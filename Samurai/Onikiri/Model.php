@@ -320,17 +320,33 @@ class Model
     public function toCondition()
     {
         $args = func_get_args();
-        $id = array_shift($args);
+        $first = array_shift($args);
         $cond = $this->getCondition();
 
         // already condition.
-        if ( $id instanceof Condition\Condition ) {
-            return $id;
+        if ( $first instanceof Condition\Condition ) {
+            return $first;
         }
 
         // first argument is int ? then it's id.
-        if ( is_numeric($id) ) {
-            $cond->where->add(sprintf('%s = ?', $this->getPrimaryKey()), $id);
+        if ( is_numeric($first) ) {
+            $cond->where->add(sprintf('%s = ?', $this->getPrimaryKey()), $first);
+
+        // first argument is string ? then simple where.
+        } elseif( is_string($first) ) {
+            array_unshift($args, $first);
+            call_user_func_array(array($cond->where, 'add'), $args);
+
+        // first argument is array ? then id list or array condition.
+        } elseif( is_array($first) ) {
+            // when id list.
+            if ( isset($first[0]) ) {
+                call_user_func_array(array($cond->where, 'add'), $args);
+
+            // when array condition.
+            } else {
+                $cond->import($first);
+            }
         }
         
         var_dump($cond);

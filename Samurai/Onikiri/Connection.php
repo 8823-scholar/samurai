@@ -43,6 +43,15 @@ use PDO;
 class Connection extends PDO
 {
     /**
+     * count of number holder.
+     *
+     * @access  private
+     * @var     int
+     */
+    private $_count_numbered = 1;
+
+
+    /**
      * @override
      */
     public function __construct($dsn, $user = null, $password = null, array $options = array())
@@ -50,6 +59,34 @@ class Connection extends PDO
         parent::__construct($dsn, $user, $password, $options);
         $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('\\Samurai\\Onikiri\\Statement', array()));
         $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+
+
+    /**
+     * For support number, named mixed placeholder.
+     *
+     * @override
+     */
+    public function prepare($sql)
+    {
+        // numbering placeholder to named placeholder.
+        $this->_count_numbered = 1;
+        $sql = preg_replace_callback('/(^|\s)\?(\s|$)/', array($this, '_replaceNumberedHolder'), $sql);
+        return parent::prepare($sql);
+    }
+
+    /**
+     * replace numbered(?) holder.
+     *
+     * @access  private
+     * @param   array   $matches
+     * @return  string
+     */
+    private function _replaceNumberedHolder(array $matches)
+    {
+        $holder = ':numbered_holder_' . $this->_count_numbered;
+        $this->_count_numbered++;
+        return $matches[1] . $holder . $matches[2];
     }
 }
 

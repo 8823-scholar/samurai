@@ -122,6 +122,8 @@ class Condition
         $this->select = new SelectCondition($this);
         $this->from = new FromCondition($this);
         $this->where = new WhereCondition($this);
+        $this->group = new GroupCondition($this);
+        $this->order = new OrderCondition($this);
 
         // initialize define.
         foreach ( $define as $key => $value ) {
@@ -141,6 +143,34 @@ class Condition
         $args = func_get_args();
         while ( $arg = array_shift($args) ) {
             $this->from->add($arg);
+        }
+    }
+
+
+    /**
+     * group
+     *
+     * @access  public
+     */
+    public function group()
+    {
+        $args = func_get_args();
+        while ( $arg = array_shift($args) ) {
+            $this->group->add($arg);
+        }
+    }
+
+
+    /**
+     * order
+     *
+     * @access  public
+     */
+    public function order()
+    {
+        $args = func_get_args();
+        while ( $arg = array_shift($args) ) {
+            $this->order->add($arg);
         }
     }
 
@@ -198,6 +228,31 @@ class Condition
 
 
 
+    /**
+     * import from array.
+     *
+     * @access  public
+     * @param   array   $condition
+     */
+    public function import(array $condition = array())
+    {
+        foreach ( $condition as $key => $value ) {
+            switch ( strtolower($key) ) {
+                case 'where':
+                    call_user_func_array(array($this->where, 'add'), $value);
+                    break;
+                case 'group':
+                    $this->group($value);
+                    break;
+                case 'order':
+                    $this->order($value);
+                    break;
+            }
+        }
+    }
+
+
+
 
     /**
      * convert to SQL.
@@ -214,6 +269,10 @@ class Condition
         $sql[] = $this->from->toSQL();
         $sql[] = $this->where->toSQL();
         $this->appendParams($this->where->getParams());
+        $sql[] = $this->group->toSQL();
+        $this->appendParams($this->group->getParams());
+        $sql[] = $this->order->toSQL();
+        $this->appendParams($this->order->getParams());
 
         // TODO: Helper
         if ( $this->limit !== null ) {
@@ -225,7 +284,7 @@ class Condition
             $this->params[] = $this->offset;
         }
 
-        return join("\n", $sql);
+        return join(' ', $sql);
     }
 }
 

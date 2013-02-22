@@ -39,42 +39,8 @@ namespace Samurai\Onikiri\Condition;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class FromCondition
+class FromCondition extends BaseCondition
 {
-    /**
-     * conditions
-     *
-     * @access  public
-     * @var     array
-     */
-    public $conditions = array();
-
-
-    /**
-     * Set
-     *
-     * @access  public
-     * @param   string  $table
-     */
-    public function set($table)
-    {
-        $this->conditions = array();
-        $this->add($table);
-    }
-
-
-    /**
-     * add.
-     *
-     * @access  public
-     * @param   string  $table
-     */
-    public function add($table)
-    {
-        $this->conditions[] = $table;
-    }
-
-
     /**
      * convert to SQL
      *

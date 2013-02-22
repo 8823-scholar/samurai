@@ -42,23 +42,6 @@ namespace Samurai\Onikiri\Condition;
 class WhereCondition extends BaseCondition
 {
     /**
-     * conditions
-     *
-     * @access  public
-     * @var     array
-     */
-    public $conditions = array();
-
-    /**
-     * params
-     *
-     * @access  public
-     * @var     array
-     */
-    public $params = array();
-
-
-    /**
      * add condition.
      *
      * 1. $cond->where->add('foo = ?', $foo);
@@ -67,7 +50,6 @@ class WhereCondition extends BaseCondition
      * 4. $cond->where->add('foo = :foo AND bar = :bar', ['foo' => $foo, 'bar' => $bar]);
      *
      * @access  public
-     * @param   
      */
     public function add()
     {
@@ -89,18 +71,6 @@ class WhereCondition extends BaseCondition
     }
 
 
-    /**
-     * get params
-     *
-     * @access  public
-     * @return  array
-     */
-    public function getParams()
-    {
-        return $this->params;
-    }
-
-
 
     /**
      * convert to SQL.
@@ -113,7 +83,12 @@ class WhereCondition extends BaseCondition
         $sql = array();
 
         $sql[] = 'WHERE';
-        $sql[] = join(' ', $this->conditions);
+
+        if ( ! $this->conditions ) {
+            $sql[] = '1';
+        } else {
+            $sql[] = join(' ', $this->conditions);
+        }
 
         return join(" ", $sql);
     }

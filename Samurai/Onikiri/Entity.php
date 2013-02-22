@@ -93,5 +93,23 @@ class Entity
         $this->model = $model;
     }
 
+
+
+
+    /**
+     * magick method for get.
+     *
+     * @access  public
+     * @param   string  $key
+     * @return  mixed
+     */
+    public function __get($key)
+    {
+        // has attributes ?
+        if ( array_key_exists($key, $this->attributes) ) {
+            return $this->attributes[$key];
+        }
+        return null;
+    }
 }
 

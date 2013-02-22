@@ -48,5 +48,20 @@ class Statement extends PDOStatement
     private function __construct()
     {
     }
+
+
+    /**
+     * For support number, named mixed placeholder.
+     *
+     * @override
+     */
+    public function bindValue($parameter, $value, $data_type = Statement::PARAM_STR)
+    {
+        // numbered holder to named holder.
+        if ( is_int($parameter) ) {
+            $parameter = ':numbered_holder_' . $parameter;
+        }
+        return parent::bindValue($parameter, $value, $data_type);
+    }
 }
 
