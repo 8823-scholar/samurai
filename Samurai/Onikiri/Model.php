@@ -215,7 +215,8 @@ class Model
         var_dump($sql, $cond->getParams());
 
         // query.
-        $entities = $this->query($sql, $cond->getParams());
+        $sth = $this->query($sql, $cond->getParams());
+        $entities = new Entities($this, $sth);
         return $entities;
     }
 
@@ -235,6 +236,9 @@ class Model
 
         // when new record.
         if ( $entity->isNew() ) {
+            $new = $this->create($entity->toArray());
+            $entity->exists = true;
+            $entity->setPrimaryValue($new->getPrimaryValue());
         }
 
         // when update.
@@ -242,7 +246,21 @@ class Model
             $attributes = $entity->getAttributes(true);
             if ( ! $attributes ) return;
 
-            return $this->update($attributes, [$this->getPrimaryKey() => $entity->getId()]);
+            return $this->update($attributes, $entity->getPrimaryValue());
+        }
+    }
+
+
+    /**
+     * destroy entity.
+     *
+     * @access  public
+     * @param   Entity  $entity
+     */
+    public function destroy(Entity $entity)
+    {
+        if ( ! $entity->isNew() ) {
+            $this->delete($entity->getPrimaryValue());
         }
     }
 
@@ -251,21 +269,72 @@ class Model
      * update by condition.
      *
      * @access  public
+     * @param   array   attributes
+     * @param   mixed   conditions
      */
     public function update()
     {
         // convert to condition.
         $args = func_get_args();
         $attributes = array_shift($args);
-        $cond = call_user_func_array(array($this, 'toCondition'), [['where' => $args]]);
+        $cond = call_user_func_array(array($this, 'toCondition'), $args);
 
         // to SQL.
         $sql = $cond->toUpdateSQL($attributes);
         var_dump($sql, $cond->getParams());
 
         // query.
-        $entities = $this->query($sql, $cond->getParams());
-        return $entities->statement->isSuccess();
+        $sth = $this->query($sql, $cond->getParams());
+        return $sth->isSuccess();
+    }
+
+
+    /**
+     * create.
+     *
+     * @access  public
+     * @param   array   $attributes
+     * @return  Entity
+     */
+    public function create($attributes = array())
+    {
+        $entity = $this->build($attributes);
+        $cond = $this->condition();
+
+        // to SQL.
+        $sql = $cond->toInsertSQL($attributes);
+        var_dump($sql, $cond->getParams());
+
+        // query.
+        $sth = $this->query($sql, $cond->getParams());
+        if ( $sth->isSuccess() ) {
+            $entity->exists = true;
+            $entity->setPrimaryValue($sth->lastInsertId());
+            return $entity;
+        }
+    }
+    
+    
+    /**
+     * delete by condition.
+     *
+     * @access  public
+     * @param   array   attributes
+     * @param   mixed   conditions
+     */
+    public function delete()
+    {
+        // convert to condition.
+        $args = func_get_args();
+        $cond = call_user_func_array(array($this, 'toCondition'), $args);
+
+        // to SQL.
+        $sql = $cond->toDeleteSQL();
+        var_dump($sql, $cond->getParams());
+
+        // query.
+        $sth = $this->query($sql, $cond->getParams());
+        return $sth->isSuccess();
     }
 
 
@@ -275,6 +344,7 @@ class Model
      * @access  public
      * @param   string  $sql
      * @param   array   $params
+     * @return  Statement
      */
     public function query($sql, array $params = array())
     {
@@ -302,8 +372,7 @@ class Model
         }
 
         $result = $sth->execute();
-        $entities = new Entities($this, $sth);
-        return $entities;
+        return $sth;
     }
 
 
@@ -333,7 +402,7 @@ class Model
      * @param   boolean $exists
      * @return  Entity
      */
-    public function build($attributes, $exists = false)
+    public function build($attributes = array(), $exists = false)
     {
         $class = $this->getEntityClass();
         $entity = new $class($this, $attributes, $exists);

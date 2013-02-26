@@ -72,7 +72,9 @@ class Connection extends PDO
         // numbering placeholder to named placeholder.
         $this->_count_numbered = 1;
         $sql = preg_replace_callback('/(^|\s|,)?\?(,|\s|$)?/', array($this, '_replaceNumberedHolder'), $sql);
-        return parent::prepare($sql);
+        $sth = parent::prepare($sql);
+        $sth->setConnection($this);
+        return $sth;
     }
 
     /**
@@ -86,7 +88,7 @@ class Connection extends PDO
     {
         $holder = ':numbered_holder_' . $this->_count_numbered;
         $this->_count_numbered++;
-        return $matches[1] . $holder . $matches[2];
+        return ( isset($matches[1]) ? $matches[1] : '' ) . $holder . ( isset($matches[2]) ? $matches[2] : '' );
     }
 }
 

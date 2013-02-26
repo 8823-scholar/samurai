@@ -117,6 +117,17 @@ class Entity
     }
 
 
+    /**
+     * destroy entity.
+     *
+     * @access  public
+     */
+    public function destroy()
+    {
+        $this->model->destroy($this);
+    }
+
+
 
 
     /**
@@ -137,6 +148,43 @@ class Entity
         }
         return $attributes;
     }
+
+
+    /**
+     * Get primary value.
+     *
+     * @access  public
+     * @return  mixed
+     */
+    public function getPrimaryValue()
+    {
+        return $this->{$this->model->getPrimaryKey()};
+    }
+
+    /**
+     * Set primary value.
+     *
+     * @access  public
+     * @param   mixed   $value
+     */
+    public function setPrimaryValue($value)
+    {
+        $this->{$this->model->getPrimaryKey()} = $value;
+    }
+
+
+
+    /**
+     * convert to Array
+     *
+     * @access  public
+     * @return  array
+     */
+    public function toArray()
+    {
+        return $this->attributes;
+    }
+
 
 
     /**
@@ -179,12 +227,7 @@ class Entity
      */
     public function __set($key, $value)
     {
-        // has attributes ?
-        if ( array_key_exists($key, $this->attributes) ) {
-            $this->attributes[$key] = $value;
-            return;
-        }
-        $this->key = $value;
+        $this->attributes[$key] = $value;
     }
 
 

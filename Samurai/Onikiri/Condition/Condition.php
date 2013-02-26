@@ -428,6 +428,51 @@ class Condition
 
         return join(' ', $sql);
     }
+    
+    
+    /**
+     * convert to insert SQL.
+     *
+     * @access  public
+     * @param   array   $attributes
+     * @return  string
+     */
+    public function toInsertSQL($attributes = array())
+    {
+        $sql = array();
+        $this->params = array();
+        
+        $sql[] = sprintf('INSERT INTO %s (', $this->model->getTableName());
+        $keys = array();
+        $values = array();
+        foreach ( $attributes as $key => $value ) {
+            $keys[] = $key;
+            $values[] = '?';
+            $this->addParam($value);
+        }
+        $sql[] = join(', ', $keys) . ')';
+        $sql[] = 'VALUES (' . join(', ', $values) . ');';
+        return join(' ', $sql);
+    }
+    
+    
+    /**
+     * convert to delete SQL.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function toDeleteSQL()
+    {
+        $sql = array();
+        $this->params = array();
+        
+        $sql[] = sprintf('DELETE FROM %s', $this->model->getTableName());
+        $sql[] = $this->where->toSQL();
+        $this->appendParams($this->where->getParams());
+
+        return join(' ', $sql);
+    }
 
 
 

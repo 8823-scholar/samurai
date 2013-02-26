@@ -43,6 +43,15 @@ use PDOStatement;
 class Statement extends PDOStatement
 {
     /**
+     * connection.
+     *
+     * @access  public
+     * @var     Connection
+     */
+    public $connection;
+
+
+    /**
      * @override
      */
     private function __construct()
@@ -64,6 +73,41 @@ class Statement extends PDOStatement
         return parent::bindValue($parameter, $value, $data_type);
     }
 
+
+
+    /**
+     * Set connection.
+     *
+     * @access  public
+     * @param   Connection  $onnection
+     */
+    public function setConnection(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    /**
+     * Get connection.
+     *
+     * @access  public
+     * @return  Connection
+     */
+    public function getConnection()
+    {
+        return $this->connection;
+    }
+
+
+    /**
+     * get last insert id.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function lastInsertId()
+    {
+        return $this->connection->lastInsertId();
+    }
 
 
 
