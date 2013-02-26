@@ -109,6 +109,14 @@ class Condition
      */
     public $params = array();
 
+    /**
+     * Model
+     *
+     * @access  public
+     * @var     Samurai\Onikiri\Model
+     */
+    public $model;
+
 
     /**
      * constructor.
@@ -129,6 +137,19 @@ class Condition
         foreach ( $define as $key => $value ) {
         }
     }
+
+
+    /**
+     * set model.
+     *
+     * @access  public
+     * @param   Samurai\Onikiri\Model   $model
+     */
+    public function setModel(\Samurai\Onikiri\Model $model)
+    {
+        $this->model = $model;
+    }
+
 
 
 
@@ -159,6 +180,17 @@ class Condition
             $this->from->add($arg);
         }
         return $this->from;
+    }
+
+
+    /**
+     * where
+     *
+     * @access  public
+     */
+    public function where()
+    {
+        return call_user_func_array(array($this->where, 'add'), func_get_args());
     }
 
 
@@ -259,6 +291,22 @@ class Condition
     }
 
     /**
+     * add param
+     *
+     * @access  public
+     * @param   mixed   $value
+     * @param   string  $key
+     */
+    public function addParam($value, $key = null)
+    {
+        if ( $key !== null && ! is_numeric($key) ) {
+            $this->params[$key] = $value;
+        } else {
+            $this->params[] = $value;
+        }
+    }
+
+    /**
      * append params
      *
      * @access  public
@@ -298,6 +346,31 @@ class Condition
 
 
     /**
+     * bridge to model find.
+     *
+     * @access  public
+     * @return  Samurai\Onikiri\Entity
+     */
+    public function find()
+    {
+        return $this->model->find($this);
+    }
+
+    /**
+     * bridge to model findAll
+     *
+     * @access  public
+     * @return  Samurai\Onikiri\Entities
+     */
+    public function findAll()
+    {
+        return $this->model->findAll($this);
+    }
+
+
+
+
+    /**
      * convert to SQL.
      *
      * @access  public
@@ -328,6 +401,21 @@ class Condition
         }
 
         return join(' ', $sql);
+    }
+
+
+    /**
+     * generate bind key.
+     *
+     * @access  public
+     * @param   string  $key
+     * @return  string
+     */
+    public function makeBindKey($key = null)
+    {
+        $bind = ( $key ? $key : '' );
+        $bind = $bind . md5(uniqid());
+        return $bind;
     }
 }
 

@@ -212,7 +212,7 @@ class Model
 
         // to SQL.
         $sql = $cond->toSQL();
-        var_dump($sql);
+        var_dump($sql, $cond->getParams());
 
         // query.
         $entities = $this->query($sql, $cond->getParams());
@@ -302,7 +302,7 @@ class Model
      * @access  public
      * @return  Samurai\Onikiri\Condition\Condition
      */
-    public function getCondition()
+    public function condition()
     {
         $cond = new Condition\Condition();
         $cond->from($this->getTableName());
@@ -321,7 +321,7 @@ class Model
     {
         $args = func_get_args();
         $first = array_shift($args);
-        $cond = $this->getCondition();
+        $cond = $this->condition();
 
         // already condition.
         if ( $first instanceof Condition\Condition ) {
@@ -349,7 +349,22 @@ class Model
             }
         }
         
-        var_dump($cond);
+        return $cond;
+    }
+
+
+    /**
+     * where add condition and return.
+     *
+     * @access  public
+     */
+    public function where()
+    {
+        $args = func_get_args();
+        $cond = $this->condition();
+        $cond->setModel($this);
+
+        $cond = call_user_func_array(array($cond, 'where'), $args);
         return $cond;
     }
 

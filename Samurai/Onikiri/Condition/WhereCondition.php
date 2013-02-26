@@ -42,125 +42,251 @@ namespace Samurai\Onikiri\Condition;
 class WhereCondition extends BaseCondition
 {
     /**
+     * chain by "AND".
+     *
+     * @const   string
+     */
+    const CHAIN_BY_AND = 'AND';
+    
+    /**
+     * chain by "OR".
+     *
+     * @const   string
+     */
+    const CHAIN_BY_OR = 'OR';
+
+
+    /**
      * add condition.
      *
-     * 1. $cond->where->add('foo = ?', $foo);
-     * 2. $cond->where->add('foo = ? AND bar = ?', $foo, $bar);
-     * 3. $cond->where->add('foo = ? AND bar = ?', [$foo, $bar]);
-     * 4. $cond->where->add('foo = :foo AND bar = :bar', ['foo' => $foo, 'bar' => $bar]);
+     * 1. $cond->where->add(['foo' => $foo]);
+     *    => WHERE foo = :foo
+     * 2. $cond->where->add(['foo' => ['foo1', 'foo2']]);
+     *    => WHERE foo IN (:foo1, :foo2)
+     * 3. $cond->where->add('foo = ?', $foo);
+     * 4. $cond->where->add('foo = ? AND bar = ?', $foo, $bar);
+     * 5. $cond->where->add('foo = ? AND bar = ?', [$foo, $bar]);
+     * 6. $cond->where->add('foo = :foo AND bar = :bar', ['foo' => $foo, 'bar' => $bar]);
      *
      * @access  public
      */
     public function add()
     {
         $args = func_get_args();
-        $condition = array_shift($args);
+        $arg = array_shift($args);
 
-        if ( $this->has() ) {
-            $this->conditions[] = 'AND';
-        }
-        $this->conditions[] = $condition;
-
-        while ( $param = array_shift($args) ) {
-            if ( is_array($param) ) {
-                $this->params = array_merge($this->params, $param);
-            } else {
-                $this->params[] = $param;
+        if ( is_array($arg) ) {
+            $values = new WhereValues($this);
+            foreach ( $arg as $key => $value ) {
+                $values->add($key, $value);
             }
+            $this->conditions[] = $values;
+
+        } else {
+            $value = new WhereRawValue($this, $arg, $args);
+            $this->conditions[] = $value;
         }
         return $this;
     }
 
-
     /**
-     * add by "OR".
+     * add or condition.
      *
      * @access  public
      */
-    public function addOr()
+    public function orAdd()
     {
         $args = func_get_args();
-        $condition = array_shift($args);
+        $arg = array_shift($args);
 
-        if ( $this->has() ) {
-            $this->conditions[] = 'OR';
-        }
-        $this->conditions[] = $condition;
-
-        while ( $param = array_shift($args) ) {
-            if ( is_array($param) ) {
-                $this->params = array_merge($this->params, $param);
-            } else {
-                $this->params[] = $param;
+        if ( is_array($arg) ) {
+            $values = new WhereValues($this);
+            $values->chain_by = WhereCondition::CHAIN_BY_OR;
+            foreach ( $arg as $key => $value ) {
+                $values->add($key, $value);
+                $value = new WhereValue($this, $key, $value);
+                $this->conditions[] = $value;
             }
+            $this->conditions[] = $values;
+
+        } else {
+            $value = new WhereRawValue($this, $arg, $args);
+            $value->chain_by = WhereCondition::CHAIN_BY_OR;
+            $this->conditions[] = $value;
         }
         return $this;
     }
 
 
     /**
-     * add in use "AND"
+     * add like condition.
+     *
+     * @access  public
+     */
+    public function addLike($key, $value)
+    {
+        $value = new WhereLikeValue($this, $key, $value);
+        $this->conditions[] = $value;
+        return $this;
+    }
+
+    /**
+     * add not like condition.
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   string  $value
+     * @return  WhereCondition
+     */
+    public function notLike($key, $value)
+    {
+        $value = new WhereLikeValue($this, $key, $value);
+        $value->not();
+        $this->conditions[] = $value;
+        return $this;
+    }
+
+    /**
+     * add like condition chain by "OR".
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   string  $value
+     * @return  WhereCondition
+     */
+    public function orLike($key, $value)
+    {
+        $value = new WhereLikeValue($this, $key, $value);
+        $value->chain_by = WhereCondition::CHAIN_BY_OR;
+        $this->conditions[] = $value;
+        return $this;
+    }
+
+    /**
+     * add not like condition chain by "OR".
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   string  $value
+     * @return  WhereCondition
+     */
+    public function orNotLike($key, $value)
+    {
+        $value = new WhereLikeValue($this, $key, $value);
+        $value->not();
+        $value->chain_by = WhereCondition::CHAIN_BY_OR;
+        $this->conditions[] = $value;
+        return $this;
+    }
+    
+    
+    /**
+     * add in condition.
      *
      * @access  public
      */
     public function addIn()
     {
         $args = func_get_args();
-        $column = array_shift($args);
-        if ( ! is_string($column) ) throw new \Exception('Invalid arguments.');
+        $key = array_shift($args);
+        if ( ! is_string($key) ) throw new \Exception('Invalid arguments.');
 
-        if ( $this->has() ) {
-            $this->conditions[] = 'AND';
-        }
-        $this->conditions[] = $condition;
-        $this->conditions[] = 'IN(';
-
-        $sub = array();
-        while ( $param = array_shift($args) ) {
-            $sub[] = '?';
-            if ( is_array($param) ) {
-                $this->params = array_merge($this->params, $param);
+        $values = array();
+        while ( $value = array_shift($args) ) {
+            if ( is_array($value) ) {
+                $values = array_merge($values, $value);
             } else {
-                $this->params[] = $param;
+                $values[] = $value;
             }
         }
-        $this->conditions[] = join(', ', $sub);
-        $this->conditions[] = ')';
+
+        $value = new WhereValue($this, $key, $values);
+        $this->conditions[] = $value;
+
         return $this;
     }
-    
-    
+
     /**
-     * add in use "OR"
+     * add not in condition.
      *
      * @access  public
      */
-    public function addOrIn()
+    public function notIn()
     {
         $args = func_get_args();
-        $column = array_shift($args);
-        if ( ! is_string($column) ) throw new \Exception('Invalid arguments.');
+        $key = array_shift($args);
+        if ( ! is_string($key) ) throw new \Exception('Invalid arguments.');
 
-        if ( $this->has() ) {
-            $this->conditions[] = 'OR';
-        }
-        $this->conditions[] = $column;
-        $this->conditions[] = 'IN(';
-
-        $sub = array();
-        while ( $param = array_shift($args) ) {
-            $sub[] = '?';
-            if ( is_array($param) ) {
-                $this->params = array_merge($this->params, $param);
+        $values = array();
+        while ( $value = array_shift($args) ) {
+            if ( is_array($value) ) {
+                $values = array_merge($values, $value);
             } else {
-                $this->params[] = $param;
+                $values[] = $value;
             }
         }
-        $this->conditions[] = join(', ', $sub);
-        $this->conditions[] = ')';
+
+        $value = new WhereValue($this, $key, $values);
+        $value->not();
+        $this->conditions[] = $value;
+
+        return $this;
+    }
+    
+    /**
+     * add in condition chain by "OR".
+     *
+     * @access  public
+     */
+    public function orIn()
+    {
+        $args = func_get_args();
+        $key = array_shift($args);
+        if ( ! is_string($key) ) throw new \Exception('Invalid arguments.');
+
+        $values = array();
+        while ( $value = array_shift($args) ) {
+            if ( is_array($value) ) {
+                $values = array_merge($values, $value);
+            } else {
+                $values[] = $value;
+            }
+        }
+
+        $value = new WhereValue($this, $key, $values);
+        $value->chain_by = WhereCondition::CHAIN_BY_OR;
+        $this->conditions[] = $value;
+
         return $this;
     }
 
+    /**
+     * add not in condition chain by "OR".
+     *
+     * @access  public
+     */
+    public function orNotIn()
+    {
+        $args = func_get_args();
+        $key = array_shift($args);
+        if ( ! is_string($key) ) throw new \Exception('Invalid arguments.');
+
+        $values = array();
+        while ( $value = array_shift($args) ) {
+            if ( is_array($value) ) {
+                $values = array_merge($values, $value);
+            } else {
+                $values[] = $value;
+            }
+        }
+
+        $value = new WhereValue($this, $key, $values);
+        $value->not();
+        $value->chain_by = WhereCondition::CHAIN_BY_OR;
+        $this->conditions[] = $value;
+
+        return $this;
+    }
 
 
 
@@ -179,10 +305,13 @@ class WhereCondition extends BaseCondition
         if ( ! $this->conditions ) {
             $sql[] = '1';
         } else {
-            $sql[] = join(' ', $this->conditions);
+            foreach ( $this->conditions as $index => $value ) {
+                if ( $index > 0 ) $sql[] = $value->chain_by;
+                $sql[] = $value->toSQL();
+            }
         }
 
-        return join(" ", $sql);
+        return join(' ', $sql);
     }
 }
 

@@ -28,65 +28,113 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri;
-
-use PDO;
+namespace Samurai\Onikiri\Condition;
 
 /**
- * Connection (base is PDO)
+ * Where Condition's values.
  *
  * @package     Onikiri
+ * @subpackage  Condition
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Connection extends PDO
+class WhereValues
 {
     /**
-     * count of number holder.
+     * values
      *
-     * @access  private
-     * @var     int
+     * @access  public
+     * @param   array
      */
-    private $_count_numbered = 1;
+    public $values = array();
+
+    /**
+     * negative
+     *
+     * @access  public
+     * @param   boolean
+     */
+    public $negative = false;
+
+    /**
+     * chain by.
+     *
+     * @access  public
+     * @param   string
+     */
+    public $chain_by = WhereCondition::CHAIN_BY_AND;
+
+    /**
+     * parent.
+     *
+     * @access  public
+     * @var     Samurai\Onikiri\Condition\Condition
+     */
+    public $parent;
 
 
     /**
-     * @override
+     * constructor.
+     *
+     * @access  public
+     * @param   WhereCondition  $where
      */
-    public function __construct($dsn, $user = null, $password = null, array $options = array())
+    public function __construct(WhereCondition $where)
     {
-        parent::__construct($dsn, $user, $password, $options);
-        $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('\\Samurai\\Onikiri\\Statement', array()));
-        $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->parent = $where;
+    }
+
+
+
+    /**
+     * add value.
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   mixed   $value
+     * @return  WhereCondition
+     */
+    public function add($key, $value)
+    {
+        $value = new WhereValue($this->parent, $key, $value);
+        $this->values[] = $value;
     }
 
 
     /**
-     * For support number, named mixed placeholder.
+     * negative flag on.
      *
-     * @override
+     * @access  public
      */
-    public function prepare($sql)
+    public function not()
     {
-        // numbering placeholder to named placeholder.
-        $this->_count_numbered = 1;
-        $sql = preg_replace_callback('/(^|\s|,)?\?(,|\s|$)?/', array($this, '_replaceNumberedHolder'), $sql);
-        return parent::prepare($sql);
+        $this->negative = true;
     }
 
+
+
     /**
-     * replace numbered(?) holder.
+     * convert to SQL.
      *
-     * @access  private
-     * @param   array   $matches
+     * @access  public
      * @return  string
      */
-    private function _replaceNumberedHolder(array $matches)
+    public function toSQL()
     {
-        $holder = ':numbered_holder_' . $this->_count_numbered;
-        $this->_count_numbered++;
-        return $matches[1] . $holder . $matches[2];
+        $sql = array();
+
+        if ( $this->negative ) {
+            $sql[] = '!';
+        }
+
+        $sql[] = '(';
+        foreach ( $this->values as $value ) {
+            $sql[] = $value->toSQL();
+        }
+        $sql[] = ')';
+
+        return join(' ', $sql);
     }
 }
 

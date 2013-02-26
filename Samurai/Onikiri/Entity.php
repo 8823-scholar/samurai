@@ -114,6 +114,24 @@ class Entity
 
 
     /**
+     * magick method for setter.
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   mixed   $value
+     */
+    public function __set($key, $value)
+    {
+        // has attributes ?
+        if ( array_key_exists($key, $this->attributes) ) {
+            $this->attributes[$key] = $value;
+            return;
+        }
+        $this->key = $value;
+    }
+
+
+    /**
      * magick method for getter.
      *
      * @access  public
@@ -128,6 +146,13 @@ class Entity
             array_shift($names);
             $key = strtolower(join('_', $names));
             return $this->$key;
+            
+        // when getter.
+        } elseif ( preg_match('/^set([A-Z]\w+)$/', $method, $matches) ) {
+            $names = preg_split('/(?=[A-Z])/', $matches[1]);
+            array_shift($names);
+            $key = strtolower(join('_', $names));
+            return $this->$key = array_shift($args);
         }
     }
 }

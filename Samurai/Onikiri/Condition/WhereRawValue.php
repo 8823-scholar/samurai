@@ -28,65 +28,73 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri;
-
-use PDO;
+namespace Samurai\Onikiri\Condition;
 
 /**
- * Connection (base is PDO)
+ * Where Condition's raw value.
  *
  * @package     Onikiri
+ * @subpackage  Condition
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Connection extends PDO
+class WhereRawValue extends WhereValue
 {
     /**
-     * count of number holder.
+     * constructor.
      *
-     * @access  private
-     * @var     int
+     * @access  public
+     * @param   WhereCondition  $where
+     * @param   string          $key
+     * @param   mixed           $value
      */
-    private $_count_numbered = 1;
-
-
-    /**
-     * @override
-     */
-    public function __construct($dsn, $user = null, $password = null, array $options = array())
+    public function __construct(WhereCondition $where, $key, $value)
     {
-        parent::__construct($dsn, $user, $password, $options);
-        $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('\\Samurai\\Onikiri\\Statement', array()));
-        $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->parent = $where;
+        $this->key = $key;
+        $this->value = array();
+        $this->add($value);
     }
 
 
     /**
-     * For support number, named mixed placeholder.
+     * add value.
      *
-     * @override
+     * @access  public
+     * @param   mixed   $value
+     * @param   string  $key
      */
-    public function prepare($sql)
+    public function add($value, $key = null)
     {
-        // numbering placeholder to named placeholder.
-        $this->_count_numbered = 1;
-        $sql = preg_replace_callback('/(^|\s|,)?\?(,|\s|$)?/', array($this, '_replaceNumberedHolder'), $sql);
-        return parent::prepare($sql);
+        if ( is_array($value) ) {
+            foreach ( $value as $_key => $_val ) {
+                $this->add($_val, $_key);
+            }
+        } elseif( $key !== null && ! is_numeric($key) ) {
+            $this->value[$key] = $value;
+        } else {
+            $this->value[] = $value;
+        }
     }
 
+
     /**
-     * replace numbered(?) holder.
+     * convert to SQL.
      *
-     * @access  private
-     * @param   array   $matches
+     * @access  public
      * @return  string
      */
-    private function _replaceNumberedHolder(array $matches)
+    public function toSQL()
     {
-        $holder = ':numbered_holder_' . $this->_count_numbered;
-        $this->_count_numbered++;
-        return $matches[1] . $holder . $matches[2];
+        $sql = array();
+
+        $sql[] = $this->key;
+        foreach ( $this->value as $_key => $value ) {
+            $this->parent->parent->addParam($value, $_key);
+        }
+
+        return join(' ', $sql);
     }
 }
 

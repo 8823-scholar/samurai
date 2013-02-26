@@ -28,65 +28,35 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri;
-
-use PDO;
+namespace Samurai\Onikiri\Condition;
 
 /**
- * Connection (base is PDO)
+ * Where Condition's "LIKE" value.
  *
  * @package     Onikiri
+ * @subpackage  Condition
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Connection extends PDO
+class WhereLikeValue extends WhereValue
 {
     /**
-     * count of number holder.
+     * convert to SQL.
      *
-     * @access  private
-     * @var     int
-     */
-    private $_count_numbered = 1;
-
-
-    /**
-     * @override
-     */
-    public function __construct($dsn, $user = null, $password = null, array $options = array())
-    {
-        parent::__construct($dsn, $user, $password, $options);
-        $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('\\Samurai\\Onikiri\\Statement', array()));
-        $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    }
-
-
-    /**
-     * For support number, named mixed placeholder.
-     *
-     * @override
-     */
-    public function prepare($sql)
-    {
-        // numbering placeholder to named placeholder.
-        $this->_count_numbered = 1;
-        $sql = preg_replace_callback('/(^|\s|,)?\?(,|\s|$)?/', array($this, '_replaceNumberedHolder'), $sql);
-        return parent::prepare($sql);
-    }
-
-    /**
-     * replace numbered(?) holder.
-     *
-     * @access  private
-     * @param   array   $matches
+     * @access  public
      * @return  string
      */
-    private function _replaceNumberedHolder(array $matches)
+    public function toSQL()
     {
-        $holder = ':numbered_holder_' . $this->_count_numbered;
-        $this->_count_numbered++;
-        return $matches[1] . $holder . $matches[2];
+        $sql = array();
+
+        $sql[] = $this->key;
+        $sql[] = $this->negative ? 'NOT LIKE' : 'LIKE';
+        $sql[] = '?';
+        $this->parent->parent->addParam($this->value);
+
+        return join(' ', $sql);
     }
 }
 
