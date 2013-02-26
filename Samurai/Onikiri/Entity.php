@@ -58,6 +58,14 @@ class Entity
     public $attributes = array();
 
     /**
+     * original attributes.
+     *
+     * @access  protected
+     * @var     array
+     */
+    protected $_o_attributes = array();
+
+    /**
      * exists in backend ?
      *
      * @access  public
@@ -78,6 +86,7 @@ class Entity
     {
         $this->setModel($model);
         $this->attributes = $attributes;
+        $this->_o_attributes = $attributes;
         $this->exists = $exists;
     }
 
@@ -91,6 +100,54 @@ class Entity
     public function setModel(Model $model)
     {
         $this->model = $model;
+    }
+
+
+
+
+    /**
+     * save entity.
+     *
+     * @access  public
+     * @param   array   $attributes
+     */
+    public function save($attributes = array())
+    {
+        $this->model->save($this, $attributes);
+    }
+
+
+
+
+    /**
+     * get attributes.
+     *
+     * @access  public
+     * @return  array
+     */
+    public function getAttributes($updated = false)
+    {
+        if ( ! $updated ) return $this->attributes;
+
+        $attributes = array();
+        foreach ( $this->attributes as $key => $value ) {
+            if ( ! array_key_exists($key, $this->_o_attributes) || $value !== $this->_o_attributes[$key] ) {
+                $attributes[$key] = $value;
+            }
+        }
+        return $attributes;
+    }
+
+
+    /**
+     * is new record ?
+     *
+     * @access  public
+     * @return  boolean
+     */
+    public function isNew()
+    {
+        return ! $this->exists;
     }
 
 

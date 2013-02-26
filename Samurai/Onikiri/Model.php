@@ -221,6 +221,55 @@ class Model
 
 
     /**
+     * save or create entity.
+     *
+     * @access  public
+     * @param   Entity  $entity
+     * @param   array   $attributes
+     */
+    public function save(Entity $entity, $attributes = array())
+    {
+        foreach ( $attributes as $key => $value ) {
+            $entity->$key = $value;
+        }
+
+        // when new record.
+        if ( $entity->isNew() ) {
+        }
+
+        // when update.
+        else {
+            $attributes = $entity->getAttributes(true);
+            if ( ! $attributes ) return;
+
+            return $this->update($attributes, [$this->getPrimaryKey() => $entity->getId()]);
+        }
+    }
+
+
+    /**
+     * update by condition.
+     *
+     * @access  public
+     */
+    public function update()
+    {
+        // convert to condition.
+        $args = func_get_args();
+        $attributes = array_shift($args);
+        $cond = call_user_func_array(array($this, 'toCondition'), [['where' => $args]]);
+
+        // to SQL.
+        $sql = $cond->toUpdateSQL($attributes);
+        var_dump($sql, $cond->getParams());
+
+        // query.
+        $entities = $this->query($sql, $cond->getParams());
+        return $entities->statement->isSuccess();
+    }
+
+
+    /**
      * execute sql.
      *
      * @access  public
@@ -306,6 +355,7 @@ class Model
     {
         $cond = new Condition\Condition();
         $cond->from($this->getTableName());
+        $cond->setModel($this);
         return $cond;
     }
 
@@ -362,8 +412,6 @@ class Model
     {
         $args = func_get_args();
         $cond = $this->condition();
-        $cond->setModel($this);
-
         $cond = call_user_func_array(array($cond, 'where'), $args);
         return $cond;
     }

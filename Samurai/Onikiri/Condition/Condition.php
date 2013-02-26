@@ -390,7 +390,7 @@ class Condition
         $sql[] = $this->order->toSQL();
         $this->appendParams($this->order->getParams());
 
-        // TODO: Helper
+        // TODO: Make by helper.
         if ( $this->limit !== null ) {
             $sql[] = 'LIMIT ?';
             $this->params[] = $this->limit;
@@ -402,6 +402,33 @@ class Condition
 
         return join(' ', $sql);
     }
+
+
+    /**
+     * convert to update SQL.
+     *
+     * @access  public
+     * @param   array   $attributes
+     * @return  string
+     */
+    public function toUpdateSQL($attributes = array())
+    {
+        $sql = array();
+        $this->params = array();
+        
+        $sql[] = sprintf('UPDATE %s SET', $this->model->getTableName());
+        $setts = array();
+        foreach ( $attributes as $key => $value ) {
+            $setts[] = sprintf('%s = ?', $key);
+            $this->addParam($value);
+        }
+        $sql[] = join(', ', $setts);
+        $sql[] = $this->where->toSQL();
+        $this->appendParams($this->where->getParams());
+
+        return join(' ', $sql);
+    }
+
 
 
     /**

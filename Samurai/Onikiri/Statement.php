@@ -63,5 +63,19 @@ class Statement extends PDOStatement
         }
         return parent::bindValue($parameter, $value, $data_type);
     }
+
+
+
+
+    /**
+     * is success ?
+     *
+     * @access  public
+     * @return  boolean
+     */
+    public function isSuccess()
+    {
+        return $this->errorCode() === '00000';
+    }
 }
 
