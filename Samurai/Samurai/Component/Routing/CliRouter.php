@@ -28,37 +28,88 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Config;
+namespace Samurai\Samurai\Component\Routing;
 
-use Samurai\Samurai;
+use Samurai\Samurai\Component\Core\YAML;
 
 /**
- * Config - Bootstrap
+ * Routing class for cli.
+ *
+ * command option dispatch to action.
  *
  * @package     Samurai
- * @subpackage  Config
+ * @subpackage  Routing
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
+class CliRouter extends Router
+{
+    /**
+     * constructor.
+     *
+     * @access  public
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-// common constants.
-defined('DS') ?: define('DS', DIRECTORY_SEPARATOR);
 
 
-// path constants
-define('Samurai\Samurai\Config\CORE_DIR', dirname(__DIR__));
+    /**
+     * import routing config.
+     *
+     * @access  public
+     * @param   string  $file
+     */
+    public function import($file)
+    {
+        // ignore argument file.
+        // cli routing only default "task_execute"
+        $this->setRoot('task.execute');
+        $this->_default = $this->_root;
+    }
 
 
-// autoload by composer
-$autoload_file = dirname(__DIR__) . '/vendor/autoload.php';;
-if ( file_exists($autoload_file) ) {
-    require_once $autoload_file;
+
+    /**
+     * routing.
+     *
+     * @access  public
+     * @return  Rule\Rule
+     */
+    public function routing()
+    {
+        // has dispatch.
+        if ( $action = $this->getDispatchAction() ) {
+            return new Rule\MatchRule(array('action' => $action));
+        }
+
+        // default rule.
+        $path = '/';
+        if ( $this->_default && $this->_default->match($path) ) {
+            return $this->_default;
+        }
+    }
+
+
+    /**
+     * Get dispatched action
+     *
+     * enable target action name by command-line argument.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getDispatchAction()
+    {
+        $args = $this->Request->getAsArray('args');
+        $arg = array_shift($args);
+        if ( preg_match('/^(\w+\.\w+)$/', $arg, $matches) ) {
+            $action = $matches[1];
+            return $action;
+        }
+    }
 }
-
-
-// autoload by samurai
-require_once CORE_DIR . '/Samurai.php';
-require_once CORE_DIR . '/Component/Core/Loader.php';
-spl_autoload_register('\Samurai\Samurai\Component\Core\Loader::autoload');
 

@@ -41,7 +41,7 @@ use Samurai\Samurai\Samurai;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class HttpResponse
+class HttpResponse extends Response
 {
     /**
      * status code

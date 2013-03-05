@@ -49,26 +49,26 @@ class Router extends Raikiri\Object
     /**
      * root routing.
      *
-     * @access  private
+     * @access  protected
      * @var     Rule\RootRule
      */
-    private $_root;
+    protected $_root;
 
     /**
      * default routing.
      *
-     * @access  private
+     * @access  protected
      * @var     Rule\DefaultRule
      */
-    private $_default;
+    protected $_default;
 
     /**
      * routes
      *
-     * @access  private
+     * @access  protected
      * @var     array
      */
-    private $_rules = array();
+    protected $_rules = array();
 
     /**
      * @dependencies

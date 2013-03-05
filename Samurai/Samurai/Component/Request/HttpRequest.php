@@ -30,8 +30,6 @@
 
 namespace Samurai\Samurai\Component\Request;
 
-use Samurai\Samurai\Component\Core\Parameters;
-
 /**
  * HTTP Request class.
  *
@@ -41,7 +39,7 @@ use Samurai\Samurai\Component\Core\Parameters;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class HttpRequest extends Parameters
+class HttpRequest extends Request
 {
     /**
      * @dependencies

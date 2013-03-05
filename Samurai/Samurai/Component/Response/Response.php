@@ -28,50 +28,33 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace App\Config;
-
-use Samurai\Samurai;
+namespace Samurai\Samurai\Component\Response;
 
 /**
- * Config - Bootstrap
+ * Response for cli.
  *
- * @package     App
- * @subpackage  Config
+ * @package     Samurai
+ * @subpackage  Component.Response
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
+abstract class Response
+{
+    /**
+     * Set body.
+     *
+     * @access  public
+     * @param   string  $body
+     */
+    abstract public function setBody($body = null);
 
-// path constants
-define('Samurai\Samurai\Config\ROOT_DIR', dirname(dirname(__DIR__)));
-define('Samurai\Samurai\Config\APP_DIR', dirname(__DIR__));
 
-
-// composer autoload
-$autoload_file = dirname(dirname(__DIR__)) . '/vendor/autoload.php';;
-if ( file_exists($autoload_file) ) {
-    require_once $autoload_file;
+    /**
+     * output contents
+     *
+     * @access  public
+     */
+    abstract public function execute();
 }
-
-
-// environment
-if ( ! defined('Samurai\Samurai\Config\ENV') ) {
-    // from ENV
-    if ( $env = getenv('SAMURAI_ENV') ) {
-        define('Samurai\Samurai\Config\ENV', $env);
-    }
-
-    // default
-    else {
-        define('Samurai\Samurai\Config\ENV', 'development');
-    }
-}
-
-
-// date timezone.
-date_default_timezone_set('Asia/Tokyo');
-
-
-// samurai bootsrap
-Samurai\Samurai::bootstrap();
 

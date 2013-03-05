@@ -85,6 +85,18 @@ class HttpBody
     }
 
 
+    /**
+     * Get content.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+
 
 
     /**

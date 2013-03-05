@@ -69,7 +69,6 @@ class Samurai
     }
 
 
-
     /**
      * Get environment constant
      *
@@ -84,6 +83,20 @@ class Samurai
         }
         return $env;
     }
+
+
+
+    /**
+     * bootstrap
+     *
+     * @access  public
+     */
+    public static function bootstrap()
+    {
+        require_once __DIR__ . '/Config/bootstrap.php';
+    }
+
+
 
 
     /**

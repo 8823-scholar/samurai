@@ -59,6 +59,20 @@ class Framework extends Raikiri\Object
 
 
     /**
+     * initialize container.
+     *
+     * @access  public
+     * @param   string  $dicon
+     */
+    public function initContainer($dicon)
+    {
+        $container = Raikiri\ContainerFactory::create('samurai');
+        $container->import($dicon);
+    }
+
+
+
+    /**
      * execute.
      *
      * 1. init container.
@@ -69,9 +83,6 @@ class Framework extends Raikiri\Object
      */
     public function execute()
     {
-        // init DI Container.
-        $this->_initContainer();
-
         // load settings
         $this->_loadConfig();
 
@@ -93,21 +104,6 @@ class Framework extends Raikiri\Object
 
         // response.
         $this->Response->execute();
-    }
-
-
-    /**
-     * initialize DI Container.
-     *
-     * load main instances settings from Config/Samurai/samurai.dicon
-     *
-     * @access  private
-     * @see     Raikiri
-     */
-    private function _initContainer()
-    {
-        $container = Raikiri\ContainerFactory::create('samurai');
-        $container->import(Config\APP_DIR . '/Config/Samurai/samurai.dicon');
     }
 
 
