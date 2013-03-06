@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 /**
  * The MIT License
@@ -24,32 +23,26 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @package     Samurai
+ * @subpackage  Console
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace App;
+namespace Samurai\Console\Controller;
 
-use Samurai\Samurai\Samurai;
-use Samurai\Samurai\Config;
-use Samurai\Samurai\Component\Core\Framework;
+use Samurai\Samurai\Controller\SamuraiController;
 
 /**
- * web wntry point.
+ * Console base controller.
  *
  * @package     Samurai
+ * @subpackage  Console.Controller
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-
-// bootstrap.
-require __DIR__ . '/Console/Config/bootstrap.php';
-
-
-// execute.
-$framework = new Framework();
-$framework->initContainer(Config\APP_DIR . '/Console/Config/Samurai/samurai.dicon');
-$framework->execute();
+class ConsoleController extends SamuraiController
+{
+}
 

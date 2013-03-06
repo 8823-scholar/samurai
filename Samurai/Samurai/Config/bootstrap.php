@@ -30,7 +30,7 @@
 
 namespace Samurai\Samurai\Config;
 
-use Samurai\Samurai;
+use Samurai\Samurai\Component\Core\Loader;
 
 /**
  * Config - Bootstrap
@@ -47,18 +47,23 @@ defined('DS') ?: define('DS', DIRECTORY_SEPARATOR);
 
 
 // path constants
-define('Samurai\Samurai\Config\CORE_DIR', dirname(__DIR__));
+defined('Samurai\Samurai\Config\CORE_DIR') ?: define('Samurai\Samurai\Config\CORE_DIR', dirname(__DIR__));
+defined('Samurai\Samurai\Config\ROOT_DIR') ?: define('Samurai\Samurai\Config\ROOT_DIR', dirname(dirname(__DIR__)));
+defined('Samurai\Samurai\Config\APP_DIR') ?: define('Samurai\Samurai\Config\APP_DIR', dirname(__DIR__));
 
 
 // autoload by composer
-$autoload_file = dirname(__DIR__) . '/vendor/autoload.php';;
+$autoload_file = dirname(__DIR__) . '/vendor/autoload.php';
 if ( file_exists($autoload_file) ) {
     require_once $autoload_file;
 }
 
 
 // autoload by samurai
-require_once CORE_DIR . '/Samurai.php';
-require_once CORE_DIR . '/Component/Core/Loader.php';
-spl_autoload_register('\Samurai\Samurai\Component\Core\Loader::autoload');
+spl_autoload_register('Samurai\Samurai\Component\Core\Loader::autoload');
+
+
+// set spaces.
+Loader::addControllerSpace('Samurai\\Samurai\\Controller');
+Loader::addControllerSpace(APP_NAME . '\\Controller');
 

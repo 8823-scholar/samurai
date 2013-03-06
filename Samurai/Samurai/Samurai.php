@@ -85,15 +85,15 @@ class Samurai
     }
 
 
-
     /**
-     * bootstrap
+     * get path.
      *
      * @access  public
      */
-    public static function bootstrap()
+    public static function getPath()
     {
-        require_once __DIR__ . '/Config/bootstrap.php';
+        // defined consttant ?
+        return defined('Samurai\Samurai\Config\CORE_DIR') ? Config\CORE_DIR : __DIR__;
     }
 
 

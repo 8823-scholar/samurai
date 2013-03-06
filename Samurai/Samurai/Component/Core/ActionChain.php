@@ -30,6 +30,7 @@
 
 namespace Samurai\Samurai\Component\Core;
 
+use Samurai\Samurai\Component\Core\Loader;
 use Samurai\Exception\Controller\NotFoundException;
 use Samurai\Raikiri;
 
@@ -109,17 +110,19 @@ class ActionChain
      */
     public function getController($name)
     {
-        // App
-        $base = join('\\', array_map('ucfirst', explode('_', $name))) . 'Controller';
-        $class = '\\App\\Controller\\' . $base;
-        $controller = null;
-        if ( class_exists($class) ) {
-            $controller = new $class();
-        }
-        if ( $controller ) {
-            $container = Raikiri\ContainerFactory::get();
-            $container->injectDependency($controller);
-            return $controller;
+        // search use namespaces.
+        foreach ( Loader::getControllerSpaces() as $namespace ) {
+            $base = join('\\', array_map('ucfirst', explode('_', $name))) . 'Controller';
+            $class = $namespace . '\\' . $base;
+            $controller = null;
+            if ( class_exists($class) ) {
+                $controller = new $class();
+            }
+            if ( $controller ) {
+                $container = Raikiri\ContainerFactory::get();
+                $container->injectDependency($controller);
+                return $controller;
+            }
         }
 
         // not found.

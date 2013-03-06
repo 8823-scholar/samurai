@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 /**
  * The MIT License
@@ -29,27 +28,24 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace App;
+namespace App\Console\Config;
 
-use Samurai\Samurai\Samurai;
-use Samurai\Samurai\Config;
-use Samurai\Samurai\Component\Core\Framework;
+use Samurai\Samurai\Component\Core\Loader;
 
 /**
- * web wntry point.
+ * Console - Config - Bootstrap
  *
- * @package     Samurai
+ * @package     App
+ * @subpackage  Console.Config
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
 
-// bootstrap.
-require __DIR__ . '/Console/Config/bootstrap.php';
+// app bootstrap.
+require_once dirname(dirname(__DIR__)) . '/Config/bootstrap.php';
 
 
-// execute.
-$framework = new Framework();
-$framework->initContainer(Config\APP_DIR . '/Console/Config/Samurai/samurai.dicon');
-$framework->execute();
+// set controller spaces.
+Loader::setControllerSpaces(array('App\\Console\\Controller', 'Samurai\\Console\\Controller'));
 

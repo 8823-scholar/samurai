@@ -30,7 +30,7 @@
 
 namespace App\Config;
 
-use Samurai\Samurai;
+use Samurai\Samurai\Samurai;
 
 /**
  * Config - Bootstrap
@@ -43,8 +43,9 @@ use Samurai\Samurai;
  */
 
 // path constants
-define('Samurai\Samurai\Config\ROOT_DIR', dirname(dirname(__DIR__)));
-define('Samurai\Samurai\Config\APP_DIR', dirname(__DIR__));
+defined('Samurai\Samurai\Config\APP_NAME') ?: define('Samurai\Samurai\Config\APP_NAME', 'App');
+defined('Samurai\Samurai\Config\ROOT_DIR') ?: define('Samurai\Samurai\Config\ROOT_DIR', dirname(dirname(__DIR__)));
+defined('Samurai\Samurai\Config\APP_DIR') ?: define('Samurai\Samurai\Config\APP_DIR', dirname(__DIR__));
 
 
 // composer autoload
@@ -69,9 +70,11 @@ if ( ! defined('Samurai\Samurai\Config\ENV') ) {
 
 
 // date timezone.
+// TODO: Support Date class.
 date_default_timezone_set('Asia/Tokyo');
 
 
-// samurai bootsrap
-Samurai\Samurai::bootstrap();
+// samurai bootstrap
+require_once Samurai::getPath() . '/Config/bootstrap.php';
+
 

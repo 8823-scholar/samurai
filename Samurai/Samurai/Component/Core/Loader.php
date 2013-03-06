@@ -30,6 +30,7 @@
 
 namespace Samurai\Samurai\Component\Core;
 
+use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Config;
 
 /**
@@ -43,6 +44,25 @@ use Samurai\Samurai\Config;
  */
 class Loader
 {
+    /**
+     * namespaces.
+     * (all autoload priorities.)
+     *
+     * @access  private
+     * @var     array
+     */
+    private static $_namespaces = array();
+
+    /**
+     * controller spaces.
+     * (controller autoload priorities.)
+     *
+     * @access  private
+     * @var     array
+     */
+    private static $_controller_spaces = array();
+
+
     /**
      * autoload.
      *
@@ -93,6 +113,43 @@ class Loader
 
         // when not found, path is "app_path"
         return $app_path;
+    }
+
+
+
+    /**
+     * set controller spaces.
+     *
+     * @access  public
+     * @param   array   $spaces
+     */
+    public static function setControllerSpaces(array $spaces = array())
+    {
+        self::$_controller_spaces = $spaces;
+    }
+
+
+    /**
+     * add controller space.
+     *
+     * @access  public
+     * @param   string  $space
+     */
+    public static function addControllerSpace($space)
+    {
+        self::$_controller_spaces[] = $space;
+    }
+
+
+    /**
+     * get controller spaces.
+     *
+     * @access  public
+     * @return  array
+     */
+    public static function getControllerSpaces()
+    {
+        return self::$_controller_spaces;
     }
 }
 
