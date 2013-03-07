@@ -89,6 +89,16 @@ abstract class Renderer
 
 
     /**
+     * variable assign to engine.
+     *
+     * @access  public
+     * @param   string  $name
+     * @param   mixed   $value
+     */
+    abstract public function set($name, $value);
+
+
+    /**
      * rendering template trigger.
      *
      * @access  public

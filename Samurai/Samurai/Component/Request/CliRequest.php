@@ -48,6 +48,7 @@ class CliRequest extends Request
      */
     public function init()
     {
+        $this->set('args', array());
         if ( isset($_SERVER['argv']) ) {
             // first argument is script name.
             $args = $_SERVER['argv'];
@@ -69,9 +70,9 @@ class CliRequest extends Request
 
                 // is short option
                 // -abc
-                //   => a=true, b=true, c=true
+                //   => option.a=true, option.b=true, option.c=true
                 // -abc=foo
-                //   => a=true, b=true, c=foo
+                //   => option.a=true, option.b=true, option.c=foo
                 elseif ( preg_match('/^-(.+)/', $arg, $matches) ) {
                     $option = $matches[1];
                     for ( $i = 0; $i < strlen($option); $i++ ) {
@@ -79,11 +80,11 @@ class CliRequest extends Request
                         $key = $option[$i];
                         if ( isset($option[$j]) && $option[$j] === '=' ) {
                             $value = substr($option, $j + 1);
-                            $this->add($key, $value);
+                            $this->set('option.' . $key, $value);
                             break;
                         } else {
                             $value = true;
-                            $this->add($key, $value);
+                            $this->set('option.' . $key, $value);
                         }
                     }
                 }
@@ -115,17 +116,16 @@ class CliRequest extends Request
     /**
      * Get param.
      *
-     * param is array.
-     * when count is 1, then return first value.
-     * else, then return all.
+     * when value is array, then return first value.
+     * if you want to get as array, use "getAsArray", please.
      *
      * @override
      */
     public function get($key, $default = null)
     {
         $value = parent::get($key, $default);
-        if ( is_array($value) && count($value) === 1 ) {
-            $value = $value[0];
+        if ( is_array($value) ) {
+            $value = array_shift($value);
         }
         return $value;
     }
@@ -141,7 +141,7 @@ class CliRequest extends Request
      */
     public function getAsArray($key, array $default = array())
     {
-        $value =$this->get($key, $default);
+        $value = parent::get($key, $default);
         return (array)$value;
     }
 

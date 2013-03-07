@@ -49,6 +49,14 @@ class TwigRenderer extends Renderer
      */
     public $template_suffix = 'html.twig';
 
+    /**
+     * variables
+     *
+     * @access  private
+     * @var     array
+     */
+    private $_variables = array();
+
 
     /**
      * @implements
@@ -62,11 +70,19 @@ class TwigRenderer extends Renderer
     /**
      * @implements
      */
+    public function set($name, $value)
+    {
+        $this->_variables[$name] = $value;
+    }
+
+
+    /**
+     * @implements
+     */
     public function render($template)
     {
-        $result = $this->engine->render($template);
+        $result = $this->engine->render($template, $this->_variables);
         return $result;
-        return 'baka';
     }
 }
 

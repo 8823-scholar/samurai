@@ -101,5 +101,19 @@ class CliResponse extends Response
         $content = $this->_body->getContent();
         echo $content;
     }
+
+
+
+
+    /**
+     * is http ?
+     *
+     * @access  public
+     * @return  boolean
+     */
+    public function isHttp()
+    {
+        return false;
+    }
 }
 

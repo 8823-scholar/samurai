@@ -30,7 +30,7 @@
 
 namespace App\Config\Renderer;
 
-use Samurai\Raikiri;
+use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Component\Core\Loader;
 
 /**
@@ -44,7 +44,7 @@ use Samurai\Samurai\Component\Core\Loader;
  */
 
 // get DI.
-$container = Raikiri\ContainerFactory::get();
+$container = Samurai::getContainer();
 $config = $container->getComponent('Config');
 
 
@@ -53,8 +53,24 @@ $config = $container->getComponent('Config');
 
 
 // set directory.
+/*
 $loader = new \Twig_Loader_Filesystem(Loader::getPath($config->get('directory.template')));
 $loader->addPath(Loader::getPath($config->get('directory.layout')), 'layout');
+ */
+$loader = null;
+foreach ( Loader::getControllerSpaces() as $space ) {
+    $path = $space['dir'];
+    $content_dir = $path . DS . $config->get('directory.template');
+    $layout_dir = $path . DS . $config->get('directory.layout');
+    if ( is_dir($content_dir) ) {
+        if ( ! $loader ) {
+            $loader = new \Twig_Loader_Filesystem($content_dir);
+        } else {
+            $loader->addPath($content_dir);
+        }
+        $loader->addPath($layout_dir, 'layout');
+    }
+}
 
 
 // init.

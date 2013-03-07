@@ -64,6 +64,6 @@ spl_autoload_register('Samurai\Samurai\Component\Core\Loader::autoload');
 
 
 // set spaces.
-Loader::addControllerSpace('Samurai\\Samurai\\Controller');
-Loader::addControllerSpace(APP_NAME . '\\Controller');
+Loader::addControllerSpace('Samurai\\Samurai', CORE_DIR);
+Loader::addControllerSpace(APP_NAME, APP_DIR);
 

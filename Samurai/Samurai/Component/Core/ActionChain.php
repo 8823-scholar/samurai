@@ -30,6 +30,7 @@
 
 namespace Samurai\Samurai\Component\Core;
 
+use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Component\Core\Loader;
 use Samurai\Exception\Controller\NotFoundException;
 use Samurai\Raikiri;
@@ -43,7 +44,7 @@ use Samurai\Raikiri;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class ActionChain
+class ActionChain extends Raikiri\Object
 {
     /**
      * stacked actions
@@ -69,8 +70,11 @@ class ActionChain
      * @param   string  $controller
      * @param   string  $action
      */
-    public function addAction($controller, $action)
+    public function addAction($controller, $action = null)
     {
+        if ( $action === null ) {
+            list($controller, $action) = explode('.', $controller);
+        }
         $this->_actions[] = array(
             'controller' => null,
             'controller_name' => $controller,
@@ -110,16 +114,17 @@ class ActionChain
      */
     public function getController($name)
     {
+        $base = join('\\', array_map('ucfirst', explode('_', $name))) . 'Controller';
+
         // search use namespaces.
-        foreach ( Loader::getControllerSpaces() as $namespace ) {
-            $base = join('\\', array_map('ucfirst', explode('_', $name))) . 'Controller';
-            $class = $namespace . '\\' . $base;
+        foreach ( Loader::getControllerSpaces() as $space ) {
+            $class = $space['namespace'] . '\\Controller\\' . $base;
             $controller = null;
             if ( class_exists($class) ) {
                 $controller = new $class();
             }
             if ( $controller ) {
-                $container = Raikiri\ContainerFactory::get();
+                $container = Samurai::getContainer();
                 $container->injectDependency($controller);
                 return $controller;
             }

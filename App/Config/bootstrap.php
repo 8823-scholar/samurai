@@ -31,6 +31,7 @@
 namespace App\Config;
 
 use Samurai\Samurai\Samurai;
+use Samurai\Samurai\Component\Core\Loader;
 
 /**
  * Config - Bootstrap

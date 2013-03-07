@@ -44,5 +44,25 @@ use Samurai\Samurai\Controller\SamuraiController;
  */
 class ConsoleController extends SamuraiController
 {
+    /**
+     * is usage ?
+     *
+     * usage options:
+     *   --help
+     *   --usage
+     *   --h
+     *   --u
+     *
+     * @access  public
+     * @return  boolean
+     */
+    public function isUsage()
+    {
+        $options = array('help', 'usage', 'option.h');
+        foreach ( $options as $option ) {
+            if ( $this->Request->get($option) ) return true;
+        }
+        return false;
+    }
 }
 

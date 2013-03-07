@@ -67,7 +67,7 @@ class CliRouter extends Router
     {
         // ignore argument file.
         // cli routing only default "task_execute"
-        $this->setRoot('task.execute');
+        $this->setRoot('utility.locator');
         $this->_default = $this->_root;
     }
 

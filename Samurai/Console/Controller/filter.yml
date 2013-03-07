@@ -1,0 +1,14 @@
+#
+# global filter
+#
+# *:          # all action target.
+# foo:        # foo controller target.
+# foo.index:  # foo.index action target.
+#
+
+*:
+    ExecutionTime:
+    Raikiri:
+    Onikiri:
+    View:
+

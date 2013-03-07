@@ -70,6 +70,18 @@ class Samurai
 
 
     /**
+     * Ge state.
+     *
+     * @access  public
+     * @return  string
+     */
+    public static function getState()
+    {
+        return self::STATE;
+    }
+
+
+    /**
      * Get environment constant
      *
      * @access  public

@@ -45,15 +45,6 @@ use Samurai\Samurai\Config;
 class Loader
 {
     /**
-     * namespaces.
-     * (all autoload priorities.)
-     *
-     * @access  private
-     * @var     array
-     */
-    private static $_namespaces = array();
-
-    /**
      * controller spaces.
      * (controller autoload priorities.)
      *
@@ -125,7 +116,10 @@ class Loader
      */
     public static function setControllerSpaces(array $spaces = array())
     {
-        self::$_controller_spaces = $spaces;
+        self::$_controller_spaces = array();
+        foreach ( $spaces as $space ) {
+            call_user_func_array('self::addControllerSpace', $space);
+        }
     }
 
 
@@ -134,10 +128,11 @@ class Loader
      *
      * @access  public
      * @param   string  $space
+     * @param   string  $base_dir
      */
-    public static function addControllerSpace($space)
+    public static function addControllerSpace($space, $dir)
     {
-        self::$_controller_spaces[] = $space;
+        self::$_controller_spaces[] = array('namespace' => $space, 'dir' => $dir);
     }
 
 

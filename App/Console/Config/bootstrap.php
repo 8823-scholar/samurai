@@ -31,6 +31,7 @@
 namespace App\Console\Config;
 
 use Samurai\Samurai\Component\Core\Loader;
+use Samurai\Samurai\Config;
 
 /**
  * Console - Config - Bootstrap
@@ -47,5 +48,8 @@ require_once dirname(dirname(__DIR__)) . '/Config/bootstrap.php';
 
 
 // set controller spaces.
-Loader::setControllerSpaces(array('App\\Console\\Controller', 'Samurai\\Console\\Controller'));
+Loader::setControllerSpaces(array(
+    array('App\\Console', Config\APP_DIR . DS . 'Console'),
+    array('Samurai\\Console', dirname(Config\CORE_DIR) . DS . 'Console'),
+));
 

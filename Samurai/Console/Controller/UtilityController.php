@@ -23,107 +23,73 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @package     Samurai
+ * @subpackage  Console
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Core;
+namespace Samurai\Console\Controller;
 
-use Samurai\Raikiri;
+use Samurai\Samurai\Samurai;
 
 /**
- * get, set parameters.
+ * Utility controller.
  *
  * @package     Samurai
- * @subpackage  Component.Core
+ * @subpackage  Console.Controller
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Parameters extends Raikiri\Object
+class UtilityController extends ConsoleController
 {
     /**
-     * parameters
-     *
-     * @access  protected
-     * @var     array
-     */
-    protected $_params = array();
-    
-    /**
-     * @dependencies
-     */
-    public $ArrayUtil;
-
-
-    /**
-     * import
-     *
-     * @access  protected
-     * @param   array   $data
-     */
-    protected function _import(array $data)
-    {
-        $this->_params = $this->ArrayUtil->merge($this->_params, $data);
-    }
-
-
-    /**
-     * get.
+     * action locator action.
      *
      * @access  public
-     * @param   string  $key
-     * @param   mixed   $default
-     * @return  mixed
      */
-    public function get($key, $default = null)
+    public function locator()
     {
-        $keys = explode('.', $key);
-        $value = $default;
-        foreach ( $keys as $i => $_key ) {
-            if ( ! $i && isset($this->_params[$_key]) ) {
-                $value = $this->_params[$_key];
-            } elseif ( is_array($value) && isset($value[$_key]) ) {
-                $value = $value[$_key];
-            } else {
-                $value = $default;
-                break;
-            }
+        $arg = $this->Request->get('args');
+
+        // show version.
+        if ( $this->Request->get('option.v') || $this->Request->get('version') ) {
+            return [self::FORWARD_ACTION, 'utility.version'];
         }
-        return $value;
-    }
 
-
-    /**
-     * get all.
-     *
-     * @access  public
-     * @return  array
-     */
-    public function getAll()
-    {
-        return $this->_params;
-    }
-
-
-
-    /**
-     * set.
-     *
-     * @access  public
-     * @param   string  $key
-     * @param   mixed   $value
-     */
-    public function set($key, $value)
-    {
-        $keys = explode('.', $key);
-        $key_string = '';
-        foreach ( $keys as $i => $_key ) {
-            $key_string = $key_string . ( ( is_numeric($_key) || $_key === '' ) ? "[{$_key}]" : "['{$_key}']" );
+        // show usage.
+        if ( $arg === null && $this->isUsage() ) {
+            return [self::FORWARD_ACTION, 'utility.usage'];
         }
-        $script = sprintf('$this->_params%s = $value;', $key_string);
-        eval($script);
+    }
+
+
+
+    /**
+     * show version action.
+     *
+     * @access  public
+     */
+    public function version()
+    {
+        $this->assign('version', Samurai::getVersion());
+        $this->assign('state', Samurai::getState());
+        return self::VIEW_TEMPLATE;
+    }
+
+
+    /**
+     * show usage action.
+     *
+     * @access  public
+     */
+    public function usage()
+    {
+        $this->assign('version', Samurai::getVersion());
+        $this->assign('state', Samurai::getState());
+        $this->assign('script', './app');   // TODO: $this->Request->getScript()
+        return self::VIEW_TEMPLATE;
     }
 }
 

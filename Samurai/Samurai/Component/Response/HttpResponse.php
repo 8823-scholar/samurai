@@ -237,5 +237,19 @@ class HttpResponse extends Response
         $content = $this->_body->render();
         echo $content;
     }
+
+
+
+
+    /**
+     * is http ?
+     *
+     * @access  public
+     * @return  boolean
+     */
+    public function isHttp()
+    {
+        return true;
+    }
 }
 

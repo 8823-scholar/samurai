@@ -52,24 +52,40 @@ class SamuraiController extends Raikiri\Object
     const VIEW_TEMPLATE = 'template';
 
     /**
-     * View forward action.
+     * Forward action.
      *
      * @const   string
      */
-    const VIEW_ACTION = 'action';
+    const FORWARD_ACTION = 'action';
 
     /**
-     * View location.
+     * Location.
      *
      * @const   string
      */
-    const VIEW_LOCATION = 'location';
+    const LOCATION = 'location';
 
 
     /**
      * @dependencies
      */
     public $Request;
+    public $Renderer;
+
+
+
+    /**
+     * assign variable to renderer.
+     *
+     * @access  public
+     * @param   string  $name
+     * @param   mixed   $value
+     */
+    public function assign($name, $value)
+    {
+        $this->Renderer->set($name, $value);
+    }
+
 
 
     /**

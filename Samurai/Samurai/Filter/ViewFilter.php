@@ -31,6 +31,7 @@
 namespace Samurai\Samurai\Filter;
 
 use Samurai\Samurai\Component\Core\Loader;
+use Samurai\Samurai\Controller\SamuraiController;
 use Samurai\Samurai\Exception\Exception;
 
 /**
@@ -51,7 +52,14 @@ class ViewFilter extends Filter
      *
      * @const   string
      */
-    const VIEW_TEMPLATE = \Samurai\Samurai\Controller\SamuraiController::VIEW_TEMPLATE;
+    const VIEW_TEMPLATE = SamuraiController::VIEW_TEMPLATE;
+
+    /**
+     * Forward action.
+     *
+     * @const   string
+     */
+    const FORWARD_ACTION = SamuraiController::FORWARD_ACTION;
 
 
     /**
@@ -79,6 +87,9 @@ class ViewFilter extends Filter
             case self::VIEW_TEMPLATE:
                 $this->_renderTemplate($data);
                 break;
+            case self::FORWARD_ACTION:
+                $this->_forwardAction($data);
+                break;
         }
     }
 
@@ -103,7 +114,22 @@ class ViewFilter extends Filter
         // rendering by renderer.
         $result = $this->Renderer->render($template);
         $this->Response->setBody($result);
-        $this->Response->setHeader('content-type', sprintf('text/html; charset=%s', $this->Config->get('encoding.output')));
+        if ( $this->Response->isHttp() ) {
+            $this->Response->setHeader('content-type', sprintf('text/html; charset=%s', $this->Config->get('encoding.output')));
+        }
+    }
+
+
+
+    /**
+     * forward action.
+     *
+     * @access  private
+     * @param   string  $action
+     */
+    private function _forwardAction($action)
+    {
+        $this->ActionChain->addAction($action);
     }
 
 
