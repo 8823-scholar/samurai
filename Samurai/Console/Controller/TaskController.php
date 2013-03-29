@@ -49,7 +49,8 @@ class TaskController extends ConsoleController
      */
     public function execute()
     {
-        var_dump('task.execute');
+        $task = $this->Request->get('arg');
+        $this->task($task)->request2Option($this->Request)->do();
     }
 }
 

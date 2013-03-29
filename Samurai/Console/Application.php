@@ -28,28 +28,31 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace App\Console\Config;
+namespace Samurai\Console;
 
-use Samurai\Samurai\Component\Core\Loader;
-use Samurai\Samurai\Config;
+use Samurai\Samurai;
 
 /**
- * Console - Config - Bootstrap
+ * Application class.
  *
- * @package     App
- * @subpackage  Console.Config
+ * @package     Samurai.Console
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-
-// app bootstrap.
-require_once dirname(dirname(__DIR__)) . '/Config/bootstrap.php';
-
-
-// set controller spaces.
-Loader::setControllerSpaces(array(
-    array('App\\Console', Config\APP_DIR . DS . 'Console'),
-    array('Samurai\\Console', dirname(Config\CORE_DIR) . DS . 'Console'),
-));
+class Application extends Samurai\Application
+{
+    /**
+     * bootstrap
+     *
+     * @access  public
+     */
+    public static function bootstrap()
+    {
+        // add path.
+        self::clearPath();
+        self::addPath(__DIR__, __NAMESPACE__);
+        self::addClassPath(dirname(dirname(__DIR__)));
+    }
+}
 

@@ -30,6 +30,7 @@
 
 namespace Samurai\Samurai\Component\Core;
 
+use App\Application;
 use Samurai\Raikiri;
 use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Config;
@@ -58,19 +59,6 @@ class Framework extends Raikiri\Object
     }
 
 
-    /**
-     * initialize container.
-     *
-     * @access  public
-     * @param   string  $dicon
-     */
-    public function initContainer($dicon)
-    {
-        $container = Raikiri\ContainerFactory::create('samurai');
-        $container->import($dicon);
-    }
-
-
 
     /**
      * execute.
@@ -83,6 +71,9 @@ class Framework extends Raikiri\Object
      */
     public function execute()
     {
+        // init container.
+        $this->_initContainer();
+
         // load settings
         $this->_loadConfig();
 
@@ -108,6 +99,19 @@ class Framework extends Raikiri\Object
 
 
     /**
+     * initialize container.
+     *
+     * @access  public
+     */
+    private function _initContainer()
+    {
+        $dicon = Application::config('dicon');
+        $container = Raikiri\ContainerFactory::create('samurai');
+        $container->import($dicon);
+    }
+
+
+    /**
      * load configuration.
      *
      * @access  private
@@ -115,7 +119,8 @@ class Framework extends Raikiri\Object
     private function _loadConfig()
     {
         // base configurations.
-        $this->Config->import(Config\APP_DIR . '/Config/Samurai/config.yml');
+        $file = Application::config('directory.app') . '/Config/Samurai/config.yml';
+        $this->Config->import($file);
     }
 
 
@@ -128,7 +133,8 @@ class Framework extends Raikiri\Object
     private function _routing()
     {
         // import.
-        $this->Router->import(Config\APP_DIR . DS . $this->Config->get('directory.config.routing') . '/routes.yml');
+        $file = Application::config('directory.app') . DS . $this->Config->get('directory.config.routing') . '/routes.yml';
+        $this->Router->import($file);
 
         // routing.
         $rule = $this->Router->routing();

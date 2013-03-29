@@ -30,8 +30,10 @@
 
 namespace Samurai\Samurai\Controller;
 
+use App\Application;
 use Samurai\Raikiri;
 use Samurai\Samurai\Config;
+use Samurai\Samurai\Component\Core\Loader;
 
 /**
  * Samurai base controller.
@@ -44,6 +46,15 @@ use Samurai\Samurai\Config;
  */
 class SamuraiController extends Raikiri\Object
 {
+    /**
+     * name
+     *
+     * @access  public
+     * @var     string
+     */
+    public $name = '';
+
+
     /**
      * View template.
      *
@@ -75,6 +86,19 @@ class SamuraiController extends Raikiri\Object
 
 
     /**
+     * set name.
+     *
+     * @access  public
+     * @param   string
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+
+
+    /**
      * assign variable to renderer.
      *
      * @access  public
@@ -91,32 +115,26 @@ class SamuraiController extends Raikiri\Object
     /**
      * Get filter paths
      *
-     * 1. App/Controller/filter.yml
-     * 2. App/Controller/foo.filter.yml
+     * 1. Controller/filter.yml
+     * 2. Controller/foo.filter.yml
      */
     public function getFilters()
     {
         $filters = array();
 
-        $class = get_class($this);
-        $names = explode('\\', $class);
-
-        // top 2 level is namespace.
-        $dir = $this->getBaseDir();
-        $dir = $dir . DS . array_shift($names);
-        $dir = $dir . DS . array_shift($names);
-
+        $names = explode('_', $this->name);
+        $base = 'Controller';
+        $filters = array();
         while ( $name = array_shift($names) ) {
             // when has rest.
             if ( count($names) > 0 ) {
-                $filters[] = $dir . DS . 'filter.yml';
-                $dir = $dir . DS . strtolower($name);
+                $filters = array_merge($filters, Loader::getPaths($base . DS . 'filter.yml'));
+                $base = $base . DS . ucfirst($name);
 
             // when last.
             } else {
-                $name = strtolower(preg_replace('/Controller$/', '', $name));
-                $filters[] = $dir . DS . 'filter.yml';
-                $filters[] = $dir . DS . $name . '.filter.yml';
+                $filters = array_merge($filters, Loader::getPaths($base . DS . 'filter.yml'));
+                $filters = array_merge($filters, Loader::getPaths($base . DS . $name . '.filter.yml'));
             }
         }
 
@@ -164,6 +182,20 @@ class SamuraiController extends Raikiri\Object
         }
 
         return Config\ROOT_DIR;
+    }
+
+
+
+    /**
+     * Get dicon files.
+     *
+     * @access  public
+     * @return  array
+     */
+    public function getDiconFiles()
+    {
+        var_dump(__FILE__);
+        var_dump($this->getBaseDir());
     }
 }
 

@@ -28,54 +28,45 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace App\Config;
+namespace App;
 
-use Samurai\Samurai\Samurai;
+use Samurai\Samurai;
 use Samurai\Samurai\Component\Core\Loader;
 
-/**
- * Config - Bootstrap
- *
- * @package     App
- * @subpackage  Config
- * @copyright   2007-2013, Samurai Framework Project
- * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
- * @license     http://opensource.org/licenses/MIT
- */
-
-// path constants
-defined('Samurai\Samurai\Config\APP_NAME') ?: define('Samurai\Samurai\Config\APP_NAME', 'App');
-defined('Samurai\Samurai\Config\ROOT_DIR') ?: define('Samurai\Samurai\Config\ROOT_DIR', dirname(dirname(__DIR__)));
-defined('Samurai\Samurai\Config\APP_DIR') ?: define('Samurai\Samurai\Config\APP_DIR', dirname(__DIR__));
-
-
 // composer autoload
-$autoload_file = dirname(dirname(__DIR__)) . '/vendor/autoload.php';;
+$autoload_file = dirname(__DIR__) . '/vendor/autoload.php';;
 if ( file_exists($autoload_file) ) {
     require_once $autoload_file;
 }
 
+/**
+ * Application class.
+ *
+ * @package     App
+ * @copyright   2007-2013, Samurai Framework Project
+ * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
+ * @license     http://opensource.org/licenses/MIT
+ */
+class Application extends Samurai\Application
+{
+    /**
+     * bootstrap
+     *
+     * @access  public
+     */
+    public static function bootstrap()
+    {
+        parent::bootstrap();
 
-// environment
-if ( ! defined('Samurai\Samurai\Config\ENV') ) {
-    // from ENV
-    if ( $env = getenv('SAMURAI_ENV') ) {
-        define('Samurai\Samurai\Config\ENV', $env);
-    }
+        // directory app.
+        self::config('directory.app', __DIR__);
 
-    // default
-    else {
-        define('Samurai\Samurai\Config\ENV', 'development');
+        // core dicon.
+        self::config('dicon', __DIR__ . '/Config/Samurai/samurai.dicon');
+        
+        // add path.
+        self::addPath(__DIR__, __NAMESPACE__);
+        self::addClassPath(dirname(__DIR__));
     }
 }
-
-
-// date timezone.
-// TODO: Support Date class.
-date_default_timezone_set('Asia/Tokyo');
-
-
-// samurai bootstrap
-require_once Samurai::getPath() . '/Config/bootstrap.php';
-
 

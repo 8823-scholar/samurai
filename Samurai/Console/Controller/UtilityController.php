@@ -51,7 +51,7 @@ class UtilityController extends ConsoleController
      */
     public function locator()
     {
-        $arg = $this->Request->get('args');
+        $arg = $this->Request->get('arg');
 
         // show version.
         if ( $this->Request->get('option.v') || $this->Request->get('version') ) {
@@ -61,6 +61,11 @@ class UtilityController extends ConsoleController
         // show usage.
         if ( $arg === null && $this->isUsage() ) {
             return [self::FORWARD_ACTION, 'utility.usage'];
+        }
+
+        // task execute.
+        if ( $arg && $this->isTask($arg) ) {
+            return [self::FORWARD_ACTION, 'task.execute'];
         }
     }
 
@@ -90,6 +95,22 @@ class UtilityController extends ConsoleController
         $this->assign('state', Samurai::getState());
         $this->assign('script', './app');   // TODO: $this->Request->getScript()
         return self::VIEW_TEMPLATE;
+    }
+
+
+
+
+    /**
+     * arg is task ?
+     * task format is "namespace:somedo"
+     *
+     * @access  public
+     * @param   string  $arg
+     * @return  boolean
+     */
+    public function isTask($arg)
+    {
+        return preg_match('/:/', $arg);
     }
 }
 

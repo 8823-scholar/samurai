@@ -30,8 +30,8 @@
 
 namespace Samurai\Samurai\Component\Core;
 
+use App\Application;
 use Samurai\Samurai\Samurai;
-use Samurai\Samurai\Component\Core\Loader;
 use Samurai\Exception\Controller\NotFoundException;
 use Samurai\Raikiri;
 
@@ -117,8 +117,8 @@ class ActionChain extends Raikiri\Object
         $base = join('\\', array_map('ucfirst', explode('_', $name))) . 'Controller';
 
         // search use namespaces.
-        foreach ( Loader::getControllerSpaces() as $space ) {
-            $class = $space['namespace'] . '\\Controller\\' . $base;
+        foreach ( Application::getPath() as $path ) {
+            $class = $path['namespace'] . '\\Controller\\' . $base;
             $controller = null;
             if ( class_exists($class) ) {
                 $controller = new $class();
@@ -126,6 +126,7 @@ class ActionChain extends Raikiri\Object
             if ( $controller ) {
                 $container = Samurai::getContainer();
                 $container->injectDependency($controller);
+                $controller->setName($name);
                 return $controller;
             }
         }

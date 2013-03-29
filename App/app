@@ -31,7 +31,7 @@
 
 namespace App;
 
-use Samurai\Samurai\Samurai;
+use App\Console\Application;
 use Samurai\Samurai\Config;
 use Samurai\Samurai\Component\Core\Framework;
 
@@ -45,11 +45,11 @@ use Samurai\Samurai\Component\Core\Framework;
  */
 
 // bootstrap.
-require __DIR__ . '/Console/Config/bootstrap.php';
+require __DIR__ . '/Console/Application.php';
+Application::bootstrap();
 
 
 // execute.
 $framework = new Framework();
-$framework->initContainer(Config\APP_DIR . '/Console/Config/Samurai/samurai.dicon');
 $framework->execute();
 

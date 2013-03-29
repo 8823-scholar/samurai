@@ -124,6 +124,7 @@ class FilterChain
         $this->_controller = null;
         $this->_action = null;
         $this->_filters = array();
+        $this->_filter_names = array();
         $this->_position = 0;
         $this->_has_action_filter = false;
     }

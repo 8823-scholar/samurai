@@ -48,7 +48,7 @@ class CliRequest extends Request
      */
     public function init()
     {
-        $this->set('args', array());
+        $this->set('arg', array());
         if ( isset($_SERVER['argv']) ) {
             // first argument is script name.
             $args = $_SERVER['argv'];
@@ -90,7 +90,7 @@ class CliRequest extends Request
                 }
                 // is else to args.
                 else {
-                    $this->add('args', $arg);
+                    $this->add('arg', $arg);
                 }
             }
         }

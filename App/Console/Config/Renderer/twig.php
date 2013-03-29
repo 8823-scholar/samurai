@@ -28,27 +28,55 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Filter;
+namespace App\Console\Config\Renderer;
 
+use App\Application;
+use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Component\Core\Loader;
 
 /**
- * Raikiri (DI Container) filter.
+ * bootstrap of "Twig" renderer.
  *
  * @package     Samurai
- * @subpackage  Filter
+ * @subpackage  Config.Renderer
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class RaikiriFilter extends Filter
-{
-    /**
-     * @implements
-     */
-    public function prefilter()
-    {
-        parent::prefilter();
+
+// get DI.
+$container = Samurai::getContainer();
+$config = $container->getComponent('Config');
+
+
+// register autoloader.
+\Twig_Autoloader::register();
+
+
+// set directory.
+$loader = null;
+foreach ( Application::getPath() as $path ) {
+    $dir = $path['path'];
+    $content_dir = $dir . DS . $config->get('directory.template');
+    $layout_dir = $dir . DS . $config->get('directory.layout');
+    if ( is_dir($content_dir) ) {
+        if ( ! $loader ) {
+            $loader = new \Twig_Loader_Filesystem($content_dir);
+        } else {
+            $loader->addPath($content_dir);
+        }
+        $loader->addPath($layout_dir, 'layout');
     }
 }
+
+
+// init.
+$twig = new \Twig_Environment($loader, array(
+    'cache' => Loader::getPath($config->get('directory.temp')) . DS . 'twig',
+    'auto_reload' => true,
+));
+
+
+// return engine.
+return $twig;
 

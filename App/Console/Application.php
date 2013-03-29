@@ -28,42 +28,39 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Config;
+namespace App\Console;
 
-use Samurai\Samurai\Component\Core\Loader;
+use App;
+use Samurai\Console;
+
+require_once dirname(__DIR__) . '/Application.php';
 
 /**
- * Config - Bootstrap
+ * Application class.
  *
- * @package     Samurai
- * @subpackage  Config
+ * @package     App
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
+class Application extends App\Application
+{
+    /**
+     * bootstrap
+     *
+     * @access  public
+     */
+    public static function bootstrap()
+    {
+        parent::bootstrap();
+        Console\Application::bootstrap();
 
-// common constants.
-defined('DS') ?: define('DS', DIRECTORY_SEPARATOR);
-
-
-// path constants
-defined('Samurai\Samurai\Config\CORE_DIR') ?: define('Samurai\Samurai\Config\CORE_DIR', dirname(__DIR__));
-defined('Samurai\Samurai\Config\ROOT_DIR') ?: define('Samurai\Samurai\Config\ROOT_DIR', dirname(dirname(__DIR__)));
-defined('Samurai\Samurai\Config\APP_DIR') ?: define('Samurai\Samurai\Config\APP_DIR', dirname(__DIR__));
-
-
-// autoload by composer
-$autoload_file = dirname(__DIR__) . '/vendor/autoload.php';
-if ( file_exists($autoload_file) ) {
-    require_once $autoload_file;
+        // core dicon.
+        self::config('dicon', __DIR__ . '/Config/Samurai/samurai.dicon');
+        
+        // add path.
+        self::addPath(__DIR__, __NAMESPACE__);
+        self::addClassPath(dirname(__DIR__));
+    }
 }
-
-
-// autoload by samurai
-spl_autoload_register('Samurai\Samurai\Component\Core\Loader::autoload');
-
-
-// set spaces.
-Loader::addControllerSpace('Samurai\\Samurai', CORE_DIR);
-Loader::addControllerSpace(APP_NAME, APP_DIR);
 

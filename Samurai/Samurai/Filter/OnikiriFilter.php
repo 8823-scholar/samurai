@@ -56,6 +56,8 @@ class OnikiriFilter extends Filter
      */
     public function prefilter()
     {
+        parent::prefilter();
+
         $manager = Onikiri\Manager::singleton();
 
         // load configuration.

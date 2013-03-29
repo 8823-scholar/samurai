@@ -32,6 +32,7 @@
 namespace Samurai\Console\Controller;
 
 use Samurai\Samurai\Controller\SamuraiController;
+use Samurai\Console\Exception\Task\NotFoundException;
 
 /**
  * Console base controller.
@@ -45,13 +46,35 @@ use Samurai\Samurai\Controller\SamuraiController;
 class ConsoleController extends SamuraiController
 {
     /**
+     * @dependencies
+     */
+    public $TaskProcessor;
+
+
+    /**
+     * task
+     *
+     * @access  public
+     * @param   string  $task
+     * @return  Samurai\Console\Task\Task
+     */
+    public function task($task)
+    {
+        $task = $this->TaskProcessor->get($task);
+        if ( ! $task ) throw new NotFoundException('No such task. -> ' . $task);
+        var_dump($task);
+    }
+
+
+
+
+    /**
      * is usage ?
      *
      * usage options:
      *   --help
      *   --usage
      *   --h
-     *   --u
      *
      * @access  public
      * @return  boolean

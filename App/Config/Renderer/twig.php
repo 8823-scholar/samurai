@@ -30,6 +30,7 @@
 
 namespace App\Config\Renderer;
 
+use App\Application;
 use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Component\Core\Loader;
 
@@ -53,15 +54,11 @@ $config = $container->getComponent('Config');
 
 
 // set directory.
-/*
-$loader = new \Twig_Loader_Filesystem(Loader::getPath($config->get('directory.template')));
-$loader->addPath(Loader::getPath($config->get('directory.layout')), 'layout');
- */
 $loader = null;
-foreach ( Loader::getControllerSpaces() as $space ) {
-    $path = $space['dir'];
-    $content_dir = $path . DS . $config->get('directory.template');
-    $layout_dir = $path . DS . $config->get('directory.layout');
+foreach ( Application::getPath() as $path ) {
+    $dir = $path['path'];
+    $content_dir = $dir . DS . $config->get('directory.template');
+    $layout_dir = $dir . DS . $config->get('directory.layout');
     if ( is_dir($content_dir) ) {
         if ( ! $loader ) {
             $loader = new \Twig_Loader_Filesystem($content_dir);
@@ -83,7 +80,6 @@ $twig = new \Twig_Environment($loader, array(
 // default escape.
 $filter = new \Twig_Extension_Escaper(true);
 $twig->addExtension($filter);
-
 
 
 // return engine.

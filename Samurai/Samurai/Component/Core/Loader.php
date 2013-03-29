@@ -30,6 +30,7 @@
 
 namespace Samurai\Samurai\Component\Core;
 
+use App\Application;
 use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Config;
 
@@ -45,16 +46,6 @@ use Samurai\Samurai\Config;
 class Loader
 {
     /**
-     * controller spaces.
-     * (controller autoload priorities.)
-     *
-     * @access  private
-     * @var     array
-     */
-    private static $_controller_spaces = array();
-
-
-    /**
      * autoload.
      *
      * @access  public
@@ -62,32 +53,65 @@ class Loader
      */
     public static function autoload($class)
     {
-        // priority.
-        $priority = array(Config\ROOT_DIR);
-
         // path.
-        $path = str_replace('\\', DS, $class);
-        $path = str_replace('_', DS, $path);
-        $path = $path . '.php';
+        $path = self::getPathByClass($class);
 
         // load
-        foreach ( $priority as $dir ) {
-            $file_path = $dir . DS . $path;
-            if ( file_exists($file_path) ) {
-                require_once $file_path;
-                return true;
-            }
+        if ( $path ) {
+            require_once $path;
+            return true;
         }
         return false;
     }
 
+    
+    /**
+     * get path by class.
+     *
+     * @access  public
+     * @param   string  $class
+     * @return  string
+     */
+    public function getPathByClass($class)
+    {
+        $class_path = str_replace('\\', DS, $class);
+        $class_path = str_replace('_', DS, $class_path) . '.php';
+
+        foreach ( Application::getClassPath() as $path ) {
+            $file = $path . DS . $class_path;
+            if ( file_exists($file) ) return $file;
+        }
+        return null;
+    }
+
+
 
     /**
-     * Get path by priority.
+     * 存在するファイルをすべて返却
      *
-     * 1. App
-     * 2. Modules
-     * 3. Lib
+     * @access  public
+     * @param   string  $name
+     * @return  array
+     */
+    public function getPaths($name)
+    {
+        // is absolute path.
+        if ( $name[0] === '/' ) return array($name);
+
+        $paths = array();
+        foreach ( Application::getPath() as $path ) {
+            $file = $path['path'] . DS . $name;
+            if ( file_exists($file) ) {
+                $paths[] = $file;
+            }
+        }
+        return $paths;
+    }
+
+
+
+    /**
+     * Get path.
      *
      * @access  public
      * @param   string  $path
@@ -98,53 +122,12 @@ class Loader
         // is absolute path.
         if ( $path[0] === '/' ) return $path;
 
-        // APP.
-        $app_path = Config\APP_DIR . DS . $path;
-        if ( file_exists($app_path) ) return $app_path;
-
-        // when not found, path is "app_path"
-        return $app_path;
-    }
-
-
-
-    /**
-     * set controller spaces.
-     *
-     * @access  public
-     * @param   array   $spaces
-     */
-    public static function setControllerSpaces(array $spaces = array())
-    {
-        self::$_controller_spaces = array();
-        foreach ( $spaces as $space ) {
-            call_user_func_array('self::addControllerSpace', $space);
+        // search path.
+        foreach ( Application::getPath() as $app_path ) {
+            $file = $app_path['path'] . DS . $path;
+            if ( file_exists($file) ) return $file;
         }
-    }
-
-
-    /**
-     * add controller space.
-     *
-     * @access  public
-     * @param   string  $space
-     * @param   string  $base_dir
-     */
-    public static function addControllerSpace($space, $dir)
-    {
-        self::$_controller_spaces[] = array('namespace' => $space, 'dir' => $dir);
-    }
-
-
-    /**
-     * get controller spaces.
-     *
-     * @access  public
-     * @return  array
-     */
-    public static function getControllerSpaces()
-    {
-        return self::$_controller_spaces;
+        return null;
     }
 }
 
