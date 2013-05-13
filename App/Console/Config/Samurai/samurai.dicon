@@ -45,5 +45,7 @@ Renderer:
     class: Samurai\Samurai\Component\Renderer\TwigRenderer
     args: ['Config/Renderer/twig.php']
 
+TaskProcessor: Samurai\Samurai\Component\Task\Processor
+
 ArrayUtil: Samurai\Samurai\Component\Utility\ArrayUtility
 

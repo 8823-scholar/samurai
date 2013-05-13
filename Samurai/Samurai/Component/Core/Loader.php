@@ -87,7 +87,7 @@ class Loader
 
 
     /**
-     * 存在するファイルをすべて返却
+     * get all file paths if exists.
      *
      * @access  public
      * @param   string  $name
@@ -99,7 +99,9 @@ class Loader
         if ( $name[0] === '/' ) return array($name);
 
         $paths = array();
+        var_dump('----------');
         foreach ( Application::getPath() as $path ) {
+            var_dump($path);
             $file = $path['path'] . DS . $name;
             if ( file_exists($file) ) {
                 $paths[] = $file;

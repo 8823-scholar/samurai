@@ -28,32 +28,36 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Filter;
+namespace Samurai\Samurai\Component\Task;
 
-use Samurai\Samurai\Component\Core\Loader;
+use Samurai\Raikiri;
 
 /**
- * Raikiri (DI Container) filter.
+ * task processor.
  *
  * @package     Samurai
- * @subpackage  Filter
+ * @subpackage  Component.Task
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class RaikiriFilter extends Filter
+class Processor extends Raikiri\Object
 {
     /**
-     * @implements
+     * get task.
+     *
+     * format:
+     *   namespace:some:do
+     *
+     * @access  public
+     * @param   string  $task
+     * @return  Task
      */
-    public function prefilter()
+    public function get($task)
     {
-        parent::prefilter();
-
-        var_dump($this->getAttribute('dicon'));
-
-        $files = Loader::getPaths('Config/App/samurai.dicon');
-        var_dump($files);
+        $class_name = 'Task\\' . join('\\', array_map('ucfirst', explode(':', $task)));
+        $class_name = Loader::searchClass($class_name);
+        var_dump($class_name);
     }
 }
 
