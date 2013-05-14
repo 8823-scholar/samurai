@@ -49,6 +49,13 @@ class RaikiriFilter extends Filter
     public function prefilter()
     {
         parent::prefilter();
+
+        /*
+        var_dump($this->getAttribute('dicon'));
+
+        $files = Loader::getPaths('Config/App/samurai.dicon');
+        var_dump($files);
+         */
     }
 }
 

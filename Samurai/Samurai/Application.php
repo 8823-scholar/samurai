@@ -51,21 +51,20 @@ class Application
     public static $env = self::ENV_DEVELOPMENT;
 
     /**
-     * paths
+     * class contain paths
      *
      * @access  public
      * @var     array
      */
-    public static $path = array();
+    public static $paths = array();
 
     /**
-     * class paths.
-     * (used by autoload.)
+     * controller contain spaces.
      *
      * @access  public
      * @var     array
      */
-    public static $class_path = array();
+    public static $controller_spaces = array();
 
     /**
      * config data
@@ -81,6 +80,13 @@ class Application
      * @const   string
      */
     const ENV_DEVELOPMENT = 'development';
+
+    /**
+     * ENV: staging
+     *
+     * @const   string
+     */
+    const ENV_STAGING = 'staging';
 
     /**
      * ENV: production
@@ -107,8 +113,8 @@ class Application
         }
 
         // add path.
-        self::addPath(__DIR__, __NAMESPACE__);
-        self::addClassPath(dirname(dirname(__DIR__)));
+        self::addPath(dirname(dirname(__DIR__)));
+        self::addControllerSpace(__NAMESPACE__);
         
         // autoload by samurai
         spl_autoload_register('Samurai\Samurai\Component\Core\Loader::autoload');
@@ -116,70 +122,72 @@ class Application
         // timezone.
         self::setTimezone('Asia/Tokyo');
     }
-
-
-
+    
+    
+    
     /**
-     * add path.
-     *
-     * @access  public
-     * @param   string  $path
-     * @param   string  $namespace
-     */
-    public static function addPath($path, $namespace)
-    {
-        self::$path[] = array('path' => $path, 'namespace' => $namespace);
-    }
-
-
-    /**
-     * get path.
-     *
-     * @access  public
-     * @return  array
-     */
-    public static function getPath()
-    {
-        return self::$path;
-    }
-
-
-    /**
-     * clear path.
-     *
-     * @access  public
-     */
-    public static function clearPath()
-    {
-        self::$path = array();
-    }
-
-
-
-    /**
-     * add class path.
+     * add class contain path.
      *
      * @access  public
      * @param   string  $path
      */
-    public static function addClassPath($path)
+    public static function addPath($path)
     {
-        if ( ! in_array($path, self::$class_path) ) {
-            self::$class_path[] = $path;
+        if ( ! in_array($path, self::$paths) ) {
+            self::$paths[] = $path;
         }
     }
 
 
     /**
-     * Get class path.
+     * get class contain path.
      *
      * @access  public
      * @return  array
      */
-    public function getClassPath()
+    public function getPaths()
     {
-        return self::$class_path;
+        return self::$paths;
     }
+
+
+
+    /**
+     * add controller contain namespace.
+     *
+     * @access  public
+     * @param   string  $namespace
+     */
+    public static function addControllerSpace($namespace)
+    {
+        if ( ! in_array($namespace, self::$controller_spaces) ) {
+            self::$controller_spaces[] = $namespace;
+        }
+    }
+
+
+    /**
+     * get controller contain spaces.
+     *
+     * @access  public
+     * @return  array
+     */
+    public static function getControllerSpaces()
+    {
+        return self::$controller_spaces;
+    }
+
+
+    /**
+     * clear controller contain spaces.
+     *
+     * @access  public
+     */
+    public static function clearControllerSpaces()
+    {
+        self::$controller_spaces = array();
+    }
+
 
 
 

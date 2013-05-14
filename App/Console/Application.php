@@ -59,8 +59,8 @@ class Application extends App\Application
         self::config('dicon', __DIR__ . '/Config/Samurai/samurai.dicon');
         
         // add path.
-        self::addPath(__DIR__, __NAMESPACE__);
-        self::addClassPath(dirname(__DIR__));
+        self::addPath(dirname(dirname(__DIR__)));
+        self::addControllerSpace(__NAMESPACE__);
     }
 }
 

@@ -117,8 +117,8 @@ class ActionChain extends Raikiri\Object
         $base = join('\\', array_map('ucfirst', explode('_', $name))) . 'Controller';
 
         // search use namespaces.
-        foreach ( Application::getPath() as $path ) {
-            $class = $path['namespace'] . '\\Controller\\' . $base;
+        foreach ( Application::getControllerSpaces() as $space ) {
+            $class = $space . '\\Controller\\' . $base;
             $controller = null;
             if ( class_exists($class) ) {
                 $controller = new $class();

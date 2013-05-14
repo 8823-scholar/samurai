@@ -128,13 +128,13 @@ class SamuraiController extends Raikiri\Object
         while ( $name = array_shift($names) ) {
             // when has rest.
             if ( count($names) > 0 ) {
-                $filters = array_merge($filters, Loader::getPaths($base . DS . 'filter.yml'));
+                $filters[] = Loader::getPath($base . DS . 'filter.yml', null, Application::getControllerSpaces());
                 $base = $base . DS . ucfirst($name);
 
             // when last.
             } else {
-                $filters = array_merge($filters, Loader::getPaths($base . DS . 'filter.yml'));
-                $filters = array_merge($filters, Loader::getPaths($base . DS . $name . '.filter.yml'));
+                $filters[] = Loader::getPath($base . DS . 'filter.yml', null, Application::getControllerSpaces());
+                $filters[] = Loader::getPath($base . DS . $name . '.filter.yml', null, Application::getControllerSpaces());
             }
         }
 

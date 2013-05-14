@@ -96,5 +96,49 @@ class Filter
         $this->FilterChain->next();
         $this->FilterChain->execute();
     }
+
+
+
+
+
+    /**
+     * set attribute.
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   mixed   $value
+     */
+    public function setAttribute($key, $value)
+    {
+        $this->attributes[$key] = $value;
+    }
+
+    /**
+     * set all attributes
+     *
+     * @access  public
+     * @param   array   $attributes
+     * @param   boolean $force
+     */
+    public function setAttributes($attributes, $force = false)
+    {
+        if ( $force ) {
+            $this->attributes = $attributes;
+        } else {
+            $this->attributes = array_merge($this->attributes, $attributes);
+        }
+    }
+
+
+    /**
+     * get attribute.
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   mixed   $default
+     */
+    public function getAttribute($key, $default = null)
+    {
+    }
 }
 

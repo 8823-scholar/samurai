@@ -97,17 +97,6 @@ class Samurai
     }
 
 
-    /**
-     * get path.
-     *
-     * @access  public
-     */
-    public static function getPath()
-    {
-        // defined consttant ?
-        return defined('Samurai\Samurai\Config\CORE_DIR') ? Config\CORE_DIR : __DIR__;
-    }
-
 
 
 

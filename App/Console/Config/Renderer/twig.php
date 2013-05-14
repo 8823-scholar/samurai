@@ -55,24 +55,23 @@ $config = $container->getComponent('Config');
 
 // set directory.
 $loader = null;
-foreach ( Application::getPath() as $path ) {
-    $dir = $path['path'];
-    $content_dir = $dir . DS . $config->get('directory.template');
-    $layout_dir = $dir . DS . $config->get('directory.layout');
-    if ( is_dir($content_dir) ) {
-        if ( ! $loader ) {
-            $loader = new \Twig_Loader_Filesystem($content_dir);
-        } else {
-            $loader->addPath($content_dir);
-        }
-        $loader->addPath($layout_dir, 'layout');
+foreach ( Loader::getPaths($config->get('directory.template'), null, Application::getControllerSpaces()) as $path ) {
+    if ( ! $loader ) {
+        $loader = new \Twig_Loader_Filesystem($path);
+    } else {
+        $loader->addPath($path);
+    }
+}
+if ( $loader ) {
+    foreach ( Loader::getPaths($config->get('directory.layout'), null, Application::getControllerSpaces()) as $path ) {
+        $loader->addPath($path, 'layout');
     }
 }
 
 
 // init.
 $twig = new \Twig_Environment($loader, array(
-    'cache' => Loader::getPath($config->get('directory.temp')) . DS . 'twig',
+    'cache' => Loader::getPath('App/Console' . DS . $config->get('directory.temp')) . DS . 'twig',
     'auto_reload' => true,
 ));
 

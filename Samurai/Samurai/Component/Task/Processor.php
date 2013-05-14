@@ -28,31 +28,36 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Console;
+namespace Samurai\Samurai\Component\Task;
 
-use Samurai\Samurai;
+use Samurai\Raikiri;
 
 /**
- * Application class.
+ * task processor.
  *
- * @package     Samurai.Console
+ * @package     Samurai
+ * @subpackage  Component.Task
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Application extends Samurai\Application
+class Processor extends Raikiri\Object
 {
     /**
-     * bootstrap
+     * get task.
+     *
+     * format:
+     *   namespace:some:do
      *
      * @access  public
+     * @param   string  $task
+     * @return  Task
      */
-    public static function bootstrap()
+    public function get($task)
     {
-        // add path.
-        self::clearControllerSpaces();
-        self::addPath(dirname(dirname(__DIR__)));
-        self::addControllerSpace(__NAMESPACE__);
+        $class_name = 'Task\\' . join('\\', array_map('ucfirst', explode(':', $task)));
+        $class_name = Loader::searchClass($class_name);
+        var_dump($class_name);
     }
 }
 

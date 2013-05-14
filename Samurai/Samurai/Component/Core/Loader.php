@@ -77,7 +77,7 @@ class Loader
         $class_path = str_replace('\\', DS, $class);
         $class_path = str_replace('_', DS, $class_path) . '.php';
 
-        foreach ( Application::getClassPath() as $path ) {
+        foreach ( Application::getPaths() as $path ) {
             $file = $path . DS . $class_path;
             if ( file_exists($file) ) return $file;
         }
@@ -87,27 +87,31 @@ class Loader
 
 
     /**
-     * 存在するファイルをすべて返却
+     * get all file paths if exists.
      *
      * @access  public
-     * @param   string  $name
+     * @param   string  $path
      * @return  array
      */
-    public function getPaths($name)
+    public static function getPaths($path, $dirs = array(), $namespaces = array())
     {
         // is absolute path.
-        if ( $name[0] === '/' ) return array($name);
+        if ( $path[0] === '/' ) return array($path);
 
         $paths = array();
-        foreach ( Application::getPath() as $path ) {
-            $file = $path['path'] . DS . $name;
-            if ( file_exists($file) ) {
-                $paths[] = $file;
+        $dirs = $dirs ? $dirs : Application::getPaths();
+        $namespaces = $namespaces ? $namespaces : array(null);
+        foreach ( $dirs as $dir ) {
+            foreach ( $namespaces as $namespace ) {
+                $_dir = $namespace ? $dir . DS . str_replace('\\', DS, $namespace) : $dir;
+                $file = $_dir . DS . $path;
+                if ( file_exists($file) ) {
+                    $paths[] = $file;
+                }
             }
         }
         return $paths;
     }
-
 
 
     /**
@@ -117,15 +121,20 @@ class Loader
      * @param   string  $path
      * @return  string
      */
-    public static function getPath($path)
+    public static function getPath($path, $dirs = array(), $namespaces = array())
     {
         // is absolute path.
         if ( $path[0] === '/' ) return $path;
 
         // search path.
-        foreach ( Application::getPath() as $app_path ) {
-            $file = $app_path['path'] . DS . $path;
-            if ( file_exists($file) ) return $file;
+        $dirs = $dirs ? $dirs : Application::getPaths();
+        $namespaces = $namespaces ? $namespaces : array(null);
+        foreach ( $dirs as $dir ) {
+            foreach ( $namespaces as $namespace ) {
+                $_dir = $namespace ? $dir . DS . str_replace('\\', DS, $namespace) : $dir;
+                $file = $_dir . DS . $path;
+                if ( file_exists($file) ) return $file;
+            }
         }
         return null;
     }
