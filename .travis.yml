@@ -1,0 +1,21 @@
+language: php
+
+php:
+    - 5.3
+    - 5.4
+
+notifications:
+    email:
+        - 8823-scholar@hayabusa-lab.jp
+
+branches:
+    only:
+        - works/spec
+        - feature/3.0
+
+before_script:
+    - composer install
+
+script:
+    - Samurai/Console/app spec
+
