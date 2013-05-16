@@ -30,12 +30,12 @@
 
 namespace App\Console\Config\Renderer;
 
-use App\Application;
-use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Component\Core\Loader;
 
 /**
  * bootstrap of "Twig" renderer.
+ *
+ * twig engnine instance reference is "$engine".
  *
  * @package     Samurai
  * @subpackage  Config.Renderer
@@ -44,33 +44,6 @@ use Samurai\Samurai\Component\Core\Loader;
  * @license     http://opensource.org/licenses/MIT
  */
 
-// register autoloader.
-\Twig_Autoloader::register();
-
-
-// set directory.
-$loader = null;
-foreach ( Loader::getPaths(Application::config('directory.template'), null, Application::getControllerSpaces()) as $path ) {
-    if ( ! $loader ) {
-        $loader = new \Twig_Loader_Filesystem($path);
-    } else {
-        $loader->addPath($path);
-    }
-}
-if ( $loader ) {
-    foreach ( Loader::getPaths(Application::config('directory.layout'), null, Application::getControllerSpaces()) as $path ) {
-        $loader->addPath($path, 'layout');
-    }
-}
-
-
-// init.
-$twig = new \Twig_Environment($loader, array(
-    'cache' => Loader::getPath('App/Console' . DS . Application::config('directory.temp')) . DS . 'twig',
-    'auto_reload' => true,
-));
-
-
-// return engine.
-return $twig;
+// include app config.
+require Loader::getPath('App/Config/Renderer/twig.php');
 

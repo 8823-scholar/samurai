@@ -120,6 +120,7 @@ class Application
         self::config('directory.config.samurai', 'Config/Samurai');
         self::config('directory.config.routing', 'Config/Routing');
         self::config('directory.config.database', 'Config/Database');
+        self::config('directory.config.renderer', 'Config/Renderer');
         self::config('directory.layout', 'View/Layout');
         self::config('directory.template', 'View/Content');
         self::config('directory.locale', 'Locale');

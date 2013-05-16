@@ -30,6 +30,8 @@
 
 namespace Samurai\Samurai\Component\Renderer;
 
+use Twig_Environment;
+
 /**
  * Renderer Twig bridge.
  *
@@ -61,6 +63,16 @@ class TwigRenderer extends Renderer
     /**
      * @implements
      */
+    public function initEngine()
+    {
+        $engine = new Twig_Environment();
+        return $engine;
+    }
+
+
+    /**
+     * @implements
+     */
     public function getSuffix()
     {
         return $this->template_suffix;
@@ -81,7 +93,7 @@ class TwigRenderer extends Renderer
      */
     public function render($template)
     {
-        $result = $this->engine->render($template, $this->_variables);
+        $result = $this->_engine->render($template, $this->_variables);
         return $result;
     }
 }

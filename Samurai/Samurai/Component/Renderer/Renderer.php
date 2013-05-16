@@ -46,10 +46,10 @@ abstract class Renderer
     /**
      * renderer engine.
      *
-     * @access  public
+     * @access  protected
      * @var     object
      */
-    public $engine;
+    protected $_engine;
 
 
     /**
@@ -60,23 +60,36 @@ abstract class Renderer
      */
     public function __construct($bootstrap = null)
     {
+        $this->_engine = $this->initEngine();
+
         if ( $bootstrap ) {
-            $engine = require_once Loader::getPath($bootstrap);
-            $this->setEngine($engine);
+            // for bootstrap variable.
+            $engine = $this->getEngine();
+            include Loader::getPath($bootstrap);
         }
     }
 
 
+
     /**
-     * Set engine.
+     * get engine.
      *
      * @access  public
-     * @param   object
+     * @return  object
      */
-    public function setEngine($engine)
+    public function getEngine()
     {
-        $this->engine = $engine;
+        return $this->_engine;
     }
+
+
+    /**
+     * initialize engine.
+     *
+     * @access  public
+     * @return  object
+     */
+    abstract public function initEngine();
 
 
     /**

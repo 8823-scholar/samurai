@@ -44,6 +44,10 @@ use Samurai\Samurai\Component\Core\Loader;
  * @license     http://opensource.org/licenses/MIT
  */
 
+// get engine.
+$twig = $engine;
+
+
 // register autoloader.
 \Twig_Autoloader::register();
 
@@ -65,17 +69,12 @@ if ( $loader ) {
 
 
 // init.
-$twig = new \Twig_Environment($loader, array(
-    'cache' => Loader::getPath('App' . DS . Application::config('directory.temp')) . DS . 'twig',
-    'auto_reload' => true,
-));
+$twig->setLoader($loader);
+$twig->enableAutoReload();
+$twig->setCache(Loader::getPath(Application::config('directory.temp'), null, Application::getControllerSpaces()) . DS . 'twig');
 
 
 // default escape.
 $filter = new \Twig_Extension_Escaper(true);
 $twig->addExtension($filter);
-
-
-// return engine.
-return $twig;
 
