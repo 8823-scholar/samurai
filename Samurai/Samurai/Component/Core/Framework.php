@@ -51,7 +51,6 @@ class Framework extends Raikiri\Object
      */
     public function defineDeps()
     {
-        $this->addDep('Config');
         $this->addDep('Router');
         $this->addDep('ActionChain');
         $this->addDep('FilterChain');
@@ -75,7 +74,7 @@ class Framework extends Raikiri\Object
         $this->_initContainer();
 
         // load settings
-        $this->_loadConfig();
+        //$this->_loadConfig();
 
         // routing
         $this->_routing();
@@ -112,20 +111,6 @@ class Framework extends Raikiri\Object
 
 
     /**
-     * load configuration.
-     *
-     * @access  private
-     */
-    private function _loadConfig()
-    {
-        // base configurations.
-        $file = Application::config('directory.app') . '/Config/Samurai/config.yml';
-        $this->Config->import($file);
-    }
-
-
-
-    /**
      * routing.
      *
      * @access  private
@@ -133,7 +118,7 @@ class Framework extends Raikiri\Object
     private function _routing()
     {
         // import.
-        $file = Application::config('directory.app') . DS . $this->Config->get('directory.config.routing') . '/routes.yml';
+        $file = Application::config('directory.app') . DS . Application::config('directory.config.routing') . '/routes.yml';
         $this->Router->import($file);
 
         // routing.

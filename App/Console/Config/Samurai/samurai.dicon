@@ -27,8 +27,6 @@
 # @license     http://opensource.org/licenses/MIT
 #
 
-Config: Samurai\Samurai\Component\Core\Config
-
 Request:
     class: Samurai\Samurai\Component\Request\CliRequest
     initMethod: init

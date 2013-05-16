@@ -115,6 +115,28 @@ class Application
         // add path.
         self::addPath(dirname(dirname(__DIR__)));
         self::addControllerSpace(__NAMESPACE__);
+
+        // set directory names.
+        self::config('directory.config.samurai', 'Config/Samurai');
+        self::config('directory.config.routing', 'Config/Routing');
+        self::config('directory.config.database', 'Config/Database');
+        self::config('directory.layout', 'View/Layout');
+        self::config('directory.template', 'View/Content');
+        self::config('directory.locale', 'Locale');
+        self::config('directory.spec', 'Spec');
+        self::config('directory.skeleton', 'Skeleton');
+        self::config('directory.log', 'Log');
+        self::config('directory.temp', 'Temp');
+
+        // set encodings.
+        self::config('encoding.input', 'UTF-8');
+        self::config('encoding.output', 'UTF-8');
+        self::config('encoding.internal', 'UTF-8');
+        self::config('encoding.text.html', 'UTF-8');
+
+        // set caches.
+        self::config('cache.yaml.enable', true);
+        self::config('cache.yaml.expire', 60 * 60 * 24);    // 1 day
         
         // autoload by samurai
         spl_autoload_register('Samurai\Samurai\Component\Core\Loader::autoload');

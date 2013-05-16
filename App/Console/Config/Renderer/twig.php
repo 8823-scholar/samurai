@@ -44,18 +44,13 @@ use Samurai\Samurai\Component\Core\Loader;
  * @license     http://opensource.org/licenses/MIT
  */
 
-// get DI.
-$container = Samurai::getContainer();
-$config = $container->getComponent('Config');
-
-
 // register autoloader.
 \Twig_Autoloader::register();
 
 
 // set directory.
 $loader = null;
-foreach ( Loader::getPaths($config->get('directory.template'), null, Application::getControllerSpaces()) as $path ) {
+foreach ( Loader::getPaths(Application::config('directory.template'), null, Application::getControllerSpaces()) as $path ) {
     if ( ! $loader ) {
         $loader = new \Twig_Loader_Filesystem($path);
     } else {
@@ -63,7 +58,7 @@ foreach ( Loader::getPaths($config->get('directory.template'), null, Application
     }
 }
 if ( $loader ) {
-    foreach ( Loader::getPaths($config->get('directory.layout'), null, Application::getControllerSpaces()) as $path ) {
+    foreach ( Loader::getPaths(Application::config('directory.layout'), null, Application::getControllerSpaces()) as $path ) {
         $loader->addPath($path, 'layout');
     }
 }
@@ -71,7 +66,7 @@ if ( $loader ) {
 
 // init.
 $twig = new \Twig_Environment($loader, array(
-    'cache' => Loader::getPath('App/Console' . DS . $config->get('directory.temp')) . DS . 'twig',
+    'cache' => Loader::getPath('App/Console' . DS . Application::config('directory.temp')) . DS . 'twig',
     'auto_reload' => true,
 ));
 
