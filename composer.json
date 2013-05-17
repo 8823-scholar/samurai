@@ -1,0 +1,53 @@
+{
+    "name": "samurai/samurai",
+    "description": "PHP Fullstacked Framework made in JAPAN.",
+    "version": "3.0.0-dev",
+    "type": "library",
+    "keywords":["framework", "DI Container", "ORM"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "KIUCHI Satoshinosuke",
+            "email": "scholar@hayabusa-lab.jp",
+            "homepage": "https://github.com/8823-scholar",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "App": "",
+            "Samurai\\Samurai": "",
+            "Samurai\\Console": "",
+            "Samurai\\Onikiri": "",
+            "Samurai\\Raikiri": ""
+        }
+    },
+    "require": {
+        "spyc/spyc": "dev-master",
+        "twig/twig": "1.*",
+        "phpspec/phpspec": "*",
+        "phpunit/phpunit": "3.7.*",
+        "phpunit/phpunit-story": "*"
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "spyc/spyc",
+                "version": "dev-master",
+                "dist": {
+                    "url": "https://github.com/mustangostang/spyc/archive/master.zip",
+                    "type": "zip"
+                },
+                "source": {
+                    "url": "https://github.com/mustangostang/spyc.git",
+                    "type": "git",
+                    "reference": "master"
+                },
+                "autoload": {
+                    "files": ["Spyc.php"]
+                }
+            }
+        }
+    ]
+}

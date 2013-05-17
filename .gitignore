@@ -1,5 +1,5 @@
-Log
-Temp
+Log/
+Temp/
 composer.lock
 composer.phar
 vendor
