@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /**
  * The MIT License
@@ -30,43 +31,24 @@
 
 namespace Samurai\Console;
 
-use Samurai\Samurai;
-
-// composer autoload
-$autoload_file = dirname(dirname(__DIR__)) . '/vendor/autoload.php';;
-if ( file_exists($autoload_file) ) {
-    require_once $autoload_file;
-}
+use Samurai\Console\Application;
+use Samurai\Samurai\Component\Core\Framework;
 
 /**
- * Application class.
+ * web wntry point.
  *
- * @package     Samurai.Console
+ * @package     Samurai
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Application extends Samurai\Application
-{
-    /**
-     * bootstrap
-     *
-     * @access  public
-     */
-    public static function bootstrap()
-    {
-        parent::bootstrap();
-        
-        // directory app.
-        self::config('directory.app', __DIR__);
 
-        // core dicon.
-        self::config('dicon', __DIR__ . '/Config/Samurai/samurai.dicon');
+// bootstrap.
+require __DIR__ . '/Application.php';
+Application::bootstrap();
 
-        // add path.
-        self::clearControllerSpaces();
-        self::addPath(dirname(dirname(__DIR__)));
-        self::addControllerSpace(__NAMESPACE__);
-    }
-}
+
+// execute.
+$framework = new Framework();
+$framework->execute();
 

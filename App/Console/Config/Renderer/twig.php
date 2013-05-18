@@ -45,5 +45,9 @@ use Samurai\Samurai\Component\Core\Loader;
  */
 
 // include app config.
+$twig = $engine;
 require Loader::getPath('App/Config/Renderer/twig.php');
+
+// remove escape for html.
+$twig->removeExtension('escaper');
 

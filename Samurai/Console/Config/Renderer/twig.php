@@ -28,45 +28,53 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Console;
+namespace Samurai\Console\Config\Renderer;
 
-use Samurai\Samurai;
-
-// composer autoload
-$autoload_file = dirname(dirname(__DIR__)) . '/vendor/autoload.php';;
-if ( file_exists($autoload_file) ) {
-    require_once $autoload_file;
-}
+use Samurai\Console\Application;
+use Samurai\Samurai\Component\Core\Loader;
 
 /**
- * Application class.
+ * bootstrap of "Twig" renderer.
  *
- * @package     Samurai.Console
+ * twig engnine instance reference is "$engine".
+ *
+ * @package     Samurai
+ * @subpackage  Config.Renderer
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Application extends Samurai\Application
-{
-    /**
-     * bootstrap
-     *
-     * @access  public
-     */
-    public static function bootstrap()
-    {
-        parent::bootstrap();
-        
-        // directory app.
-        self::config('directory.app', __DIR__);
 
-        // core dicon.
-        self::config('dicon', __DIR__ . '/Config/Samurai/samurai.dicon');
+// get engine.
+$twig = $engine;
 
-        // add path.
-        self::clearControllerSpaces();
-        self::addPath(dirname(dirname(__DIR__)));
-        self::addControllerSpace(__NAMESPACE__);
+
+// register autoloader.
+\Twig_Autoloader::register();
+
+
+// set directory.
+$loader = null;
+foreach ( Loader::getPaths(Application::config('directory.template'), null, Application::getControllerSpaces()) as $path ) {
+    if ( ! $loader ) {
+        $loader = new \Twig_Loader_Filesystem($path);
+    } else {
+        $loader->addPath($path);
     }
 }
+if ( $loader ) {
+    foreach ( Loader::getPaths(Application::config('directory.layout'), null, Application::getControllerSpaces()) as $path ) {
+        $loader->addPath($path, 'layout');
+    }
+}
+
+
+// init.
+$twig->setLoader($loader);
+$twig->enableAutoReload();
+$twig->setCache(Loader::getPath(Application::config('directory.temp'), null, Application::getControllerSpaces()) . DS . 'twig');
+
+
+// remove escape for html.
+$twig->removeExtension('escaper');
 
