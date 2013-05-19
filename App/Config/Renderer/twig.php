@@ -30,7 +30,6 @@
 
 namespace App\Config\Renderer;
 
-use App\Application;
 use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Component\Core\Loader;
 
@@ -53,25 +52,25 @@ $twig = $engine;
 
 
 // set directory.
-$loader = null;
-foreach ( Loader::getPaths(Application::config('directory.template'), null, Application::getControllerSpaces()) as $path ) {
-    if ( ! $loader ) {
-        $loader = new \Twig_Loader_Filesystem($path);
+$twig_loader = null;
+foreach ( $loader->getPaths($app->config('directory.template'), null, $app->getControllerSpaces()) as $path ) {
+    if ( ! $twig_loader ) {
+        $twig_loader = new \Twig_Loader_Filesystem($path);
     } else {
-        $loader->addPath($path);
+        $twig_loader->addPath($path);
     }
 }
-if ( $loader ) {
-    foreach ( Loader::getPaths(Application::config('directory.layout'), null, Application::getControllerSpaces()) as $path ) {
-        $loader->addPath($path, 'layout');
+if ( $twig_loader ) {
+    foreach ( $loader->getPaths($app->config('directory.layout'), null, $app->getControllerSpaces()) as $path ) {
+        $twig_loader->addPath($path, 'layout');
     }
 }
 
 
 // init.
-$twig->setLoader($loader);
+$twig->setLoader($twig_loader);
 $twig->enableAutoReload();
-$twig->setCache(Loader::getPath(Application::config('directory.temp'), null, Application::getControllerSpaces()) . DS . 'twig');
+$twig->setCache($loader->getPath($app->config('directory.temp'), null, $app->getControllerSpaces()) . DS . 'twig');
 
 
 // default escape.

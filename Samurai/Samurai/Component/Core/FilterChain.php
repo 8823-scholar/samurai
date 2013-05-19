@@ -44,7 +44,7 @@ use Samurai\Raikiri;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class FilterChain
+class FilterChain extends Raikiri\Object
 {
     /**
      * controller
@@ -99,6 +99,7 @@ class FilterChain
      */
     public $Request;
     public $ArrayUtil;
+    public $Container;
 
 
     /**
@@ -274,8 +275,6 @@ class FilterChain
      */
     public function getFilterByName($name)
     {
-        $container = Raikiri\ContainerFactory::get();
-
         // APP ?
         $filter = null;
         $name = ucfirst($name) . 'Filter';
@@ -295,7 +294,7 @@ class FilterChain
             throw new Exception\NotFoundException('No such filter. -> ' . $name);
         }
         
-        $container->injectDependency($filter);
+        $this->Container->injectDependency($filter);
         return $filter;
     }
 

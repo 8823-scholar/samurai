@@ -53,15 +53,13 @@ class ContainerFactory
      * Create container.
      *
      * @access  public
-     * @param   string  $name
      * @return  Container
      */
-    public static function create($name)
+    public static function create()
     {
-        if ( ! isset(self::$_containers[$name]) ) {
-            self::$_containers[$name] = new Container();
-        }
-        return self::$_containers[$name];
+        $container = new Container();
+        $container->registerComponent('Container', $container);
+        return $container;
     }
 
 
@@ -72,7 +70,7 @@ class ContainerFactory
      * @param   string  $name
      * @return  Container
      */
-    public function get($name = null)
+    public static function get($name = null)
     {
         if ( $name === null ) {
             $name = array_shift(array_keys(self::$_containers));

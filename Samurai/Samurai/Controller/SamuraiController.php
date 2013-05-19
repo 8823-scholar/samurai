@@ -82,6 +82,8 @@ class SamuraiController extends Raikiri\Object
      */
     public $Request;
     public $Renderer;
+    public $Application;
+    public $Loader;
 
 
 
@@ -128,13 +130,13 @@ class SamuraiController extends Raikiri\Object
         while ( $name = array_shift($names) ) {
             // when has rest.
             if ( count($names) > 0 ) {
-                $filters[] = Loader::getPath($base . DS . 'filter.yml', null, Application::getControllerSpaces());
+                $filters[] = $this->Loader->getPath($base . DS . 'filter.yml', null, $this->Application->getControllerSpaces());
                 $base = $base . DS . ucfirst($name);
 
             // when last.
             } else {
-                $filters[] = Loader::getPath($base . DS . 'filter.yml', null, Application::getControllerSpaces());
-                $filters[] = Loader::getPath($base . DS . $name . '.filter.yml', null, Application::getControllerSpaces());
+                $filters[] = $this->Loader->getPath($base . DS . 'filter.yml', null, $this->Application->getControllerSpaces());
+                $filters[] = $this->Loader->getPath($base . DS . $name . '.filter.yml', null, $this->Application->getControllerSpaces());
             }
         }
 

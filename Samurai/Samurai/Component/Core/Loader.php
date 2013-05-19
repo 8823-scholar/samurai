@@ -30,9 +30,9 @@
 
 namespace Samurai\Samurai\Component\Core;
 
-use App\Application;
 use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Config;
+use Samurai\Samurai\Application;
 
 /**
  * Class loader.
@@ -46,15 +46,48 @@ use Samurai\Samurai\Config;
 class Loader
 {
     /**
+     * app
+     *
+     * @access  public
+     * @var     Samurai\Samurai\Application
+     */
+    public $app;
+
+
+    /**
+     * constructor
+     *
+     * @access  public
+     * @param   Samurai\Samurai\Application $app
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
+
+    /**
+     * register to autoload
+     *
+     * @access  public
+     */
+    public function register()
+    {
+        spl_autoload_register(array($this, 'autoload'));
+    }
+
+
+
+    /**
      * autoload.
      *
      * @access  public
      * @param   string  $class
      */
-    public static function autoload($class)
+    public function autoload($class)
     {
         // path.
-        $path = self::getPathByClass($class);
+        $path = $this->getPathByClass($class);
 
         // load
         if ( $path ) {
@@ -77,7 +110,7 @@ class Loader
         $class_path = str_replace('\\', DS, $class);
         $class_path = str_replace('_', DS, $class_path) . '.php';
 
-        foreach ( Application::getPaths() as $path ) {
+        foreach ( $this->app->getPaths() as $path ) {
             $file = $path . DS . $class_path;
             if ( file_exists($file) ) return $file;
         }
@@ -93,13 +126,13 @@ class Loader
      * @param   string  $path
      * @return  array
      */
-    public static function getPaths($path, $dirs = array(), $namespaces = array())
+    public function getPaths($path, $dirs = array(), $namespaces = array())
     {
         // is absolute path.
         if ( $path[0] === '/' ) return array($path);
 
         $paths = array();
-        $dirs = $dirs ? $dirs : Application::getPaths();
+        $dirs = $dirs ? $dirs : $this->app->getPaths();
         $namespaces = $namespaces ? $namespaces : array(null);
         foreach ( $dirs as $dir ) {
             foreach ( $namespaces as $namespace ) {
@@ -121,13 +154,13 @@ class Loader
      * @param   string  $path
      * @return  string
      */
-    public static function getPath($path, $dirs = array(), $namespaces = array())
+    public function getPath($path, $dirs = array(), $namespaces = array())
     {
         // is absolute path.
         if ( $path[0] === '/' ) return $path;
 
         // search path.
-        $dirs = $dirs ? $dirs : Application::getPaths();
+        $dirs = $dirs ? $dirs : $this->app->getPaths();
         $namespaces = $namespaces ? $namespaces : array(null);
         foreach ( $dirs as $dir ) {
             foreach ( $namespaces as $namespace ) {

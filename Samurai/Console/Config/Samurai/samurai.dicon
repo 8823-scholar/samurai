@@ -41,7 +41,9 @@ FilterChain: Samurai\Samurai\Component\Core\FilterChain
 
 Renderer:
     class: Samurai\Samurai\Component\Renderer\TwigRenderer
-    args: ['Samurai/Console/Config/Renderer/twig.php']
+    initMethod:
+        name: bootstrap
+        args: 'Samurai/Console/Config/Renderer/twig.php'
 
 TaskProcessor: Samurai\Samurai\Component\Task\Processor
 

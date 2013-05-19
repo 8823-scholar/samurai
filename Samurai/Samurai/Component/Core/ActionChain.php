@@ -62,6 +62,12 @@ class ActionChain extends Raikiri\Object
      */
     private $_position = 0;
 
+    /**
+     * @dependencies
+     */
+    public $Application;
+    public $Container;
+
 
     /**
      * Add action
@@ -117,15 +123,14 @@ class ActionChain extends Raikiri\Object
         $base = join('\\', array_map('ucfirst', explode('_', $name))) . 'Controller';
 
         // search use namespaces.
-        foreach ( Application::getControllerSpaces() as $space ) {
+        foreach ( $this->Application->getControllerSpaces() as $space ) {
             $class = $space . '\\Controller\\' . $base;
             $controller = null;
             if ( class_exists($class) ) {
                 $controller = new $class();
             }
             if ( $controller ) {
-                $container = Samurai::getContainer();
-                $container->injectDependency($controller);
+                $this->Container->injectDependency($controller);
                 $controller->setName($name);
                 return $controller;
             }

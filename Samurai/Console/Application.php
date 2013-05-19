@@ -53,20 +53,33 @@ class Application extends Samurai\Application
      *
      * @access  public
      */
-    public static function bootstrap()
+    public function bootstrap()
     {
         parent::bootstrap();
         
         // directory app.
-        self::config('directory.app', __DIR__);
+        $this->config('directory.app', __DIR__);
 
         // core dicon.
-        self::config('dicon', __DIR__ . '/Config/Samurai/samurai.dicon');
+        $this->config('dicon', __DIR__ . '/Config/Samurai/samurai.dicon');
 
         // add path.
-        self::clearControllerSpaces();
-        self::addPath(dirname(dirname(__DIR__)));
-        self::addControllerSpace(__NAMESPACE__);
+        $this->clearControllerSpaces();
+        $this->addPath(dirname(dirname(__DIR__)));
+        $this->addControllerSpace(__NAMESPACE__);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function _getEnvFromEnvironmentVariables()
+    {
+        var_dump(1);
+        // has request ?
+        var_dump($_ENV);
+
+        return parent::_getEnvFromEnvironmentVariavles();
     }
 }
 

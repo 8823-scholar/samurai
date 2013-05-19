@@ -30,7 +30,7 @@
 
 namespace Samurai\Samurai\Component\Renderer;
 
-use Samurai\Samurai\Component\Core\Loader;
+use Samurai\Raikiri;
 
 /**
  * Renderer abstract class.
@@ -41,7 +41,7 @@ use Samurai\Samurai\Component\Core\Loader;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-abstract class Renderer
+abstract class Renderer extends Raikiri\Object
 {
     /**
      * renderer engine.
@@ -51,21 +51,39 @@ abstract class Renderer
      */
     protected $_engine;
 
+    /**
+     * @dependencies
+     */
+    public $Loader;
+    public $Application;
+
 
     /**
      * constructor
      *
      * @access  public
-     * @param   string  $bootstrap
      */
-    public function __construct($bootstrap = null)
+    public function __construct()
     {
+        parent::__construct();
         $this->_engine = $this->initEngine();
+    }
 
-        if ( $bootstrap ) {
+
+    /**
+     * bootstrap
+     *
+     * @access  public
+     * @param   string  $script
+     */
+    public function bootstrap($script)
+    {
+        if ( $script ) {
             // for bootstrap variable.
             $engine = $this->getEngine();
-            include Loader::getPath($bootstrap);
+            $loader = $this->Loader;
+            $app = $this->Application;
+            include $this->Loader->getPath($script);
         }
     }
 

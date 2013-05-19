@@ -30,7 +30,7 @@
 
 namespace Samurai\Samurai\Component\Core;
 
-use App\Application;
+use Samurai\Samurai\Application;
 use Samurai\Raikiri;
 use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Config;
@@ -47,14 +47,32 @@ use Samurai\Samurai\Config;
 class Framework extends Raikiri\Object
 {
     /**
-     * @override
+     * application instance
+     *
+     * @access  public
+     * @var     Samurai\Samurai\Application
      */
-    public function defineDeps()
+    public $app;
+
+    /**
+     * @dependencies
+     */
+    public $Router;
+    public $ActionChain;
+    public $FilterChain;
+    public $Response;
+
+     
+    /**
+     * constructor
+     *
+     * @access  public
+     * @param   Samurai\Samurai\Application
+     */
+    public function __construct(Application $app)
     {
-        $this->addDep('Router');
-        $this->addDep('ActionChain');
-        $this->addDep('FilterChain');
-        $this->addDep('Response');
+        parent::__construct();
+        $this->app = $app;
     }
 
 
@@ -67,14 +85,13 @@ class Framework extends Raikiri\Object
      * 3. routing
      * 4. action chain
      * 5. filter chain
+     *
+     * @access  public
      */
     public function execute()
     {
         // init container.
         $this->_initContainer();
-
-        // load settings
-        //$this->_loadConfig();
 
         // routing
         $this->_routing();
@@ -98,15 +115,35 @@ class Framework extends Raikiri\Object
 
 
     /**
+     * get application instance.
+     *
+     * @access  public
+     * @return  Samurai\Samurai\Application
+     */
+    public function getApplication()
+    {
+        return $this->app;
+    }
+
+
+
+    /**
      * initialize container.
      *
      * @access  public
      */
     private function _initContainer()
     {
-        $dicon = Application::config('dicon');
-        $container = Raikiri\ContainerFactory::create('samurai');
+        $dicon = $this->app->config('dicon');
+        $container = Raikiri\ContainerFactory::create();
         $container->import($dicon);
+
+        $container->registerComponent('Framework', $this);
+        $container->registerComponent('Application', $this->app);
+        $container->registerComponent('Loader', $this->app->loader);
+        $container->injectDependency($this);
+
+        $this->app->setContainer($container);
     }
 
 
@@ -118,7 +155,7 @@ class Framework extends Raikiri\Object
     private function _routing()
     {
         // import.
-        $file = Application::config('directory.app') . DS . Application::config('directory.config.routing') . '/routes.yml';
+        $file = $this->app->config('directory.app') . DS . $this->app->config('directory.config.routing') . '/routes.yml';
         $this->Router->import($file);
 
         // routing.

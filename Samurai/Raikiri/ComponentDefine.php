@@ -158,7 +158,7 @@ class ComponentDefine
                         $this->init_method_args = array();
                     } else {
                         $this->init_method_name = $value['name'];
-                        $this->init_method_args = isset($value['args']) ? $value['args'] : array();
+                        $this->init_method_args = isset($value['args']) ? (array)$value['args'] : array();
                     }
                     break;
             }
@@ -206,6 +206,9 @@ class ComponentDefine
 
         if ( $this->isSingleton() ) {
             $this->_instance = $instance;
+        }
+        if ( $instance instanceof Object ) {
+            $instance->setContainer($this->_container);
         }
 
         // inject dependency

@@ -30,6 +30,7 @@
 
 namespace Samurai\Samurai;
 
+use Samurai\Raikiri;
 use Samurai\Samurai\Component\Core\Loader;
 
 /**
@@ -40,7 +41,7 @@ use Samurai\Samurai\Component\Core\Loader;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Application
+class Application extends Raikiri\Object
 {
     /**
      * environment.
@@ -48,7 +49,7 @@ class Application
      * @access  public
      * @var     string
      */
-    public static $env = self::ENV_DEVELOPMENT;
+    public $env = self::ENV_DEVELOPMENT;
 
     /**
      * class contain paths
@@ -56,7 +57,7 @@ class Application
      * @access  public
      * @var     array
      */
-    public static $paths = array();
+    public $paths = array();
 
     /**
      * controller contain spaces.
@@ -64,7 +65,7 @@ class Application
      * @access  public
      * @var     array
      */
-    public static $controller_spaces = array();
+    public $controller_spaces = array();
 
     /**
      * config data
@@ -72,7 +73,23 @@ class Application
      * @access  public
      * @var     array
      */
-    public static $config = array();
+    public $config = array();
+
+    /**
+     * booted ?
+     *
+     * @access  protected
+     * @var     boolean
+     */
+    protected $_booted = false;
+
+    /**
+     * loader
+     *
+     * @access  public
+     * @var     Samurai\Samurai\Component\Core\Loader
+     */
+    public $loader;
 
     /**
      * ENV: development
@@ -101,8 +118,12 @@ class Application
      *
      * @access  public
      */
-    public static function bootstrap()
+    public function bootstrap()
     {
+        // booted ?
+        if ( $this->_booted ) return;
+        $this->_booted = true;
+
         // common constants.
         defined('DS') ?: define('DS', DIRECTORY_SEPARATOR);
         
@@ -112,38 +133,87 @@ class Application
             require_once $autoload_file;
         }
 
+        // environment
+        if ( $env = $this->_getEnvFromEnvironmentVariables() ) {
+            $this->setEnv($env);
+        }
+
         // add path.
-        self::addPath(dirname(dirname(__DIR__)));
-        self::addControllerSpace(__NAMESPACE__);
+        $this->addPath(dirname(dirname(__DIR__)));
+        $this->addControllerSpace(__NAMESPACE__);
 
         // set directory names.
-        self::config('directory.config.samurai', 'Config/Samurai');
-        self::config('directory.config.routing', 'Config/Routing');
-        self::config('directory.config.database', 'Config/Database');
-        self::config('directory.config.renderer', 'Config/Renderer');
-        self::config('directory.layout', 'View/Layout');
-        self::config('directory.template', 'View/Content');
-        self::config('directory.locale', 'Locale');
-        self::config('directory.spec', 'Spec');
-        self::config('directory.skeleton', 'Skeleton');
-        self::config('directory.log', 'Log');
-        self::config('directory.temp', 'Temp');
+        $this->config('directory.config.samurai', 'Config/Samurai');
+        $this->config('directory.config.routing', 'Config/Routing');
+        $this->config('directory.config.database', 'Config/Database');
+        $this->config('directory.config.renderer', 'Config/Renderer');
+        $this->config('directory.layout', 'View/Layout');
+        $this->config('directory.template', 'View/Content');
+        $this->config('directory.locale', 'Locale');
+        $this->config('directory.spec', 'Spec');
+        $this->config('directory.skeleton', 'Skeleton');
+        $this->config('directory.log', 'Log');
+        $this->config('directory.temp', 'Temp');
 
         // set encodings.
-        self::config('encoding.input', 'UTF-8');
-        self::config('encoding.output', 'UTF-8');
-        self::config('encoding.internal', 'UTF-8');
-        self::config('encoding.text.html', 'UTF-8');
+        $this->config('encoding.input', 'UTF-8');
+        $this->config('encoding.output', 'UTF-8');
+        $this->config('encoding.internal', 'UTF-8');
+        $this->config('encoding.text.html', 'UTF-8');
 
         // set caches.
-        self::config('cache.yaml.enable', true);
-        self::config('cache.yaml.expire', 60 * 60 * 24);    // 1 day
+        $this->config('cache.yaml.enable', true);
+        $this->config('cache.yaml.expire', 60 * 60 * 24);    // 1 day
+        
+        // timezone.
+        $this->setTimezone('Asia/Tokyo');
         
         // autoload by samurai
-        spl_autoload_register('Samurai\Samurai\Component\Core\Loader::autoload');
+        $loader = new Loader($this);
+        $loader->register();
+        $this->loader = $loader;
+    }
 
-        // timezone.
-        self::setTimezone('Asia/Tokyo');
+
+
+    /**
+     * set env.
+     *
+     * @access  public
+     * @param   string  $env
+     */
+    public function setEnv($env)
+    {
+        $this->env = $env;
+        return $this->getEnv();
+    }
+
+
+    /**
+     * get env
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getEnv()
+    {
+        return $this->env;
+    }
+
+
+    /**
+     * get env from environment variables.
+     *
+     * @access  protected
+     */
+    protected function _getEnvFromEnvironmentVariables()
+    {
+        // has env ?
+        if ( $env = getenv('SAMURAI_ENV') ) {
+            return $env;
+        }
+
+        return null;
     }
     
     
@@ -154,10 +224,10 @@ class Application
      * @access  public
      * @param   string  $path
      */
-    public static function addPath($path)
+    public function addPath($path)
     {
-        if ( ! in_array($path, self::$paths) ) {
-            self::$paths[] = $path;
+        if ( ! in_array($path, $this->paths) ) {
+            $this->paths[] = $path;
         }
     }
 
@@ -170,7 +240,7 @@ class Application
      */
     public function getPaths()
     {
-        return self::$paths;
+        return $this->paths;
     }
 
 
@@ -181,10 +251,10 @@ class Application
      * @access  public
      * @param   string  $namespace
      */
-    public static function addControllerSpace($namespace)
+    public function addControllerSpace($namespace)
     {
-        if ( ! in_array($namespace, self::$controller_spaces) ) {
-            self::$controller_spaces[] = $namespace;
+        if ( ! in_array($namespace, $this->controller_spaces) ) {
+            $this->controller_spaces[] = $namespace;
         }
     }
 
@@ -195,9 +265,9 @@ class Application
      * @access  public
      * @return  array
      */
-    public static function getControllerSpaces()
+    public function getControllerSpaces()
     {
-        return self::$controller_spaces;
+        return $this->controller_spaces;
     }
 
 
@@ -206,9 +276,9 @@ class Application
      *
      * @access  public
      */
-    public static function clearControllerSpaces()
+    public function clearControllerSpaces()
     {
-        self::$controller_spaces = array();
+        $this->controller_spaces = array();
     }
 
 
@@ -224,11 +294,11 @@ class Application
     public function config($key, $value = null)
     {
         // when value is not null, then set to config.
-        if ( $value !== null || ! isset(self::$config[$key])) {
-            self::$config[$key] = $value;
+        if ( $value !== null || ! isset($this->config[$key])) {
+            $this->config[$key] = $value;
         }
 
-        return self::$config[$key];
+        return $this->config[$key];
     }
 
 
@@ -240,7 +310,7 @@ class Application
      */
     public function setTimezone($zone)
     {
-        self::config('date.timezone', $zone);
+        $this->config('date.timezone', $zone);
         date_default_timezone_set($zone);
     }
 }

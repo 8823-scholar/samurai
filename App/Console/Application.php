@@ -50,17 +50,18 @@ class Application extends App\Application
      *
      * @access  public
      */
-    public static function bootstrap()
+    public function bootstrap()
     {
         parent::bootstrap();
-        Console\Application::bootstrap();
 
         // core dicon.
-        self::config('dicon', __DIR__ . '/Config/Samurai/samurai.dicon');
+        $this->config('dicon', __DIR__ . '/Config/Samurai/samurai.dicon');
         
         // add path.
-        self::addPath(dirname(dirname(__DIR__)));
-        self::addControllerSpace(__NAMESPACE__);
+        $this->clearControllerSpaces();
+        $this->addPath(dirname(dirname(__DIR__)));
+        $this->addControllerSpace(__NAMESPACE__);
+        $this->addControllerSpace('Samurai\Console');
     }
 }
 
