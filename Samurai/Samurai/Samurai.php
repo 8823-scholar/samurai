@@ -30,8 +30,6 @@
 
 namespace Samurai\Samurai;
 
-use Samurai\Raikiri;
-
 /**
  * Framework main class.
  *
@@ -80,35 +78,5 @@ class Samurai
         return self::STATE;
     }
 
-
-    /**
-     * Get environment constant
-     *
-     * @access  public
-     * @return  string
-     */
-    public static function getEnv()
-    {
-        $env = 'development';
-        if ( defined('Samurai\Samurai\Config\ENV') ) {
-            $env = \Samurai\Samurai\Config\ENV;
-        }
-        return $env;
-    }
-
-
-
-
-
-    /**
-     * get container
-     *
-     * @access  public
-     * @return  Samurai\Raikiri\Container
-     */
-    public function getContainer()
-    {
-        return Raikiri\ContainerFactory::get('samurai');
-    }
 }
 

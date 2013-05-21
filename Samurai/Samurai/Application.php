@@ -124,6 +124,21 @@ class Application extends Raikiri\Object
         if ( $this->_booted ) return;
         $this->_booted = true;
 
+        // configure
+        $this->configure();
+
+        // include environment
+        $this->_includeEnvironment();
+    }
+
+
+    /**
+     * configure
+     *
+     * @access  public
+     */
+    public function configure()
+    {
         // common constants.
         defined('DS') ?: define('DS', DIRECTORY_SEPARATOR);
         
@@ -173,6 +188,26 @@ class Application extends Raikiri\Object
         $loader->register();
         $this->loader = $loader;
     }
+
+
+    /**
+     * include environment file.
+     *
+     * @access  private
+     */
+    private function _includeEnvironment()
+    {
+        $env = $this->getEnv();
+        foreach ( $this->getPaths() as $path ) {
+            foreach ( $this->getControllerSpaces() as $space ) {
+                $file = sprintf('%s/%s/Config/Environment/%s.php', $path, str_replace('\\', DS, $space), $env);
+                if ( file_exists($file) ) {
+                    include $file;
+                }
+            }
+        }
+    }
+
 
 
 

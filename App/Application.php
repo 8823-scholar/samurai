@@ -50,13 +50,11 @@ if ( file_exists($autoload_file) ) {
 class Application extends Samurai\Application
 {
     /**
-     * bootstrap
-     *
-     * @access  public
+     * {@inheritdoc}
      */
-    public function bootstrap()
+    public function configure()
     {
-        parent::bootstrap();
+        parent::configure();
 
         // directory app.
         $this->config('directory.app', __DIR__);

@@ -28,41 +28,15 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Filter;
-
-use Samurai\Onikiri;
-
 /**
- * Onikiri(O/R Mapper) filter.
+ * for configuration under development environment (console).
  *
  * @package     Samurai
- * @subpackage  Filter
+ * @subpackage  Config.Environment
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class OnikiriFilter extends Filter
-{
-    /**
-     * @dependencies
-     */
-    public $Loader;
-    public $Application;
 
-
-    /**
-     * @override
-     */
-    public function prefilter()
-    {
-        parent::prefilter();
-
-        $manager = Onikiri\Manager::singleton();
-
-        // load configuration.
-        // App/Config/Database/production.yml
-        $file = $this->Loader->getPath($this->Application->config('directory.config.database') . DS . $this->Application->getEnv() . '.yml');
-        $manager->importDatabase($file);
-    }
-}
+include dirname(dirname(dirname(__DIR__))) . '/Config/Environment/staging.php';
 

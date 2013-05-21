@@ -46,13 +46,11 @@ require_once dirname(__DIR__) . '/Application.php';
 class Application extends App\Application
 {
     /**
-     * bootstrap
-     *
-     * @access  public
+     * {@inheritdoc}
      */
-    public function bootstrap()
+    public function configure()
     {
-        parent::bootstrap();
+        parent::configure();
 
         // core dicon.
         $this->config('dicon', __DIR__ . '/Config/Samurai/samurai.dicon');
