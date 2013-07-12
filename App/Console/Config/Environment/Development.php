@@ -28,12 +28,12 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace App\Config\Environment;
+namespace App\Console\Config\Environment;
 
-use App\Application;
+use Samurai\Samurai\Component\Core\Initializer;
 
 /**
- * for configuration under development environment.
+ * for configuration under development environment (console).
  *
  * @package     Samurai
  * @subpackage  Config.Environment
@@ -41,8 +41,13 @@ use App\Application;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-
-// php setting.
-ini_set('display_erros', 0);
-error_reporting(E_ALL | E_STRICT);
+class Development extends Initializer
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function configure($app)
+    {
+    }
+}
 

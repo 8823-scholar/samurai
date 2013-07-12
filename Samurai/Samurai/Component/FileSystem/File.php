@@ -28,71 +28,95 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace App\Console;
-
-use App;
-use Samurai\Console as SamuraiConsole;
-
-require_once dirname(__DIR__) . '/Application.php';
+namespace Samurai\Samurai\Component\FileSystem;
 
 /**
- * Application class.
+ * File info class.
  *
- * @package     App
+ * @package     Samurai
+ * @subpackage  Component.FileSystem
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Application extends App\Application
+class File extends \SplFileInfo
 {
     /**
-     * samurai console application.
+     * app dir.
      *
-     * @access  private
+     * @access  public
+     * @var     string
      */
-    private $console_app;
+    public $app_dir;
+
+    /**
+     * app namespace.
+     *
+     * @access  public
+     * @var     string
+     */
+    public $app_namespace;
 
 
     /**
-     * {@inheritdoc}
-     */
-    public function configure()
-    {
-        parent::configure();
-
-        // Samurai console application configure inherit.
-        $this->inheritConsoleApplication();
-        
-        // application dir.
-        $this->config('directory.app.', ['dir' => __DIR__, 'namespace' => __NAMESPACE__, 'priority' => 'high']);
-    }
-
-
-
-    /**
-     * inherit samurai console application.
+     * app dir accessor.
      *
-     * @access  private
+     * @access  public
+     * @param   string  $dir
+     * @return  string
      */
-    private function inheritConsoleApplication()
+    public function appDir($dir = null)
     {
-        $app = $this->getConsoleApplication();
-        $app->inheritConfigure($this);
+        if ($dir !== null) $this->app_dir = $dir;
+        return $this->app_dir;
     }
     
+    
+    /**
+     * app namespace accessor.
+     *
+     * @access  public
+     * @param   string  $namespace
+     * @return  string
+     */
+    public function appNameSpace($namespace = null)
+    {
+        if ($namespace !== null) $this->app_namespace = $namespace;
+        return $this->app_namespace;
+    }
 
 
     /**
-     * get samurai console application.
+     * get root dir.
      *
-     * @access  private
+     * root dir is app-dir exclude namespace.
+     *
+     * @access  public
+     * @return  string
      */
-    private function getConsoleApplication()
+    public function rootDir()
     {
-        if (! $this->console_app) {
-            $this->console_app = new SamuraiConsole\Application();
-        }
-        return $this->console_app;
+        $dir = $this->appDir();
+        $pattern_namespace = preg_quote(DS . str_replace('\\', DS, $this->appNameSpace()), '/');
+        $dir = preg_replace("/{$pattern_namespace}/", '', $dir);
+        return $dir;
+    }
+
+
+
+    /**
+     * get ruled class name from path.
+     * (not real class name.)
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getClassName()
+    {
+        $dir = substr($this->getPath(), strlen($this->rootDir()) + 1);
+        $namespace = str_replace(DS, '\\', $dir);
+        $class_name = $this->getBasename(".{$this->getExtension()}");
+        return "${namespace}\\{$class_name}";
     }
 }
 

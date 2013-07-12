@@ -122,9 +122,12 @@ class ActionChain extends Raikiri\Object
     {
         $base = join('\\', array_map('ucfirst', explode('_', $name))) . 'Controller';
 
-        // search use namespaces.
-        foreach ( $this->Application->getControllerSpaces() as $space ) {
+        // search in app spaces.
+        foreach ($this->Application->getAppSpaces() as $path => $space) {
             $class = $space . '\\Controller\\' . $base;
+            $path = $this->Loader->getPath();
+        }
+        foreach ( $this->Application->getControllerSpaces() as $space ) {
             $controller = null;
             if ( class_exists($class) ) {
                 $controller = new $class();

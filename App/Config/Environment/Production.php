@@ -28,57 +28,26 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Console;
+namespace App\Config\Environment;
 
-use Samurai\Samurai;
+use Samurai\Samurai\Component\Core\Initializer;
 
 /**
- * Application class.
+ * for configuration under development environment.
  *
- * @package     Samurai.Console
+ * @package     Samurai
+ * @subpackage  Config.Environment
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Application extends Samurai\Application
+class Production extends Initializer
 {
     /**
      * {@inheritdoc}
      */
-    public function configure()
+    public function configure($app)
     {
-        parent::configure();
-    }
-
-
-    /**
-     * configure from application console
-     *
-     * @access  public
-     * @param   Samurai\Application $app
-     */
-    public function inheritConfigure(Samurai\Application $app)
-    {
-        // environment
-        $app->setEnv($this->getEnvFromEnvironmentVariables());
-
-        // application dir.
-        $app->config('directory.app.', ['dir' => __DIR__, 'namespace' => __NAMESPACE__, 'priority' => 'low']);
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getEnvFromEnvironmentVariables()
-    {
-        // has request ?
-        $opts = getopt('', array('ENV:'));
-        if (isset($opts['ENV'])) {
-            return $opts['ENV'];
-        }
-
-        return parent::getEnvFromEnvironmentVariables();
     }
 }
 

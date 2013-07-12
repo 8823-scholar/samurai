@@ -28,52 +28,40 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace App\Config\Renderer;
+namespace Samurai\Console\Config\Initializer;
 
-use Samurai\Samurai\Samurai;
-use Samurai\Samurai\Component\Core\Loader;
+use Samurai\Samurai\Config\Initializer\Renderer as Initializer;
+use Samurai\Samurai\Component\Renderer\Renderer as SamuraiRenderer;
 
 /**
- * bootstrap of "Twig" renderer.
+ * renderer initializer.
  *
  * @package     Samurai
- * @subpackage  Config.Renderer
+ * @subpackage  Config.Initializer
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
+class Renderer extends Initializer
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function configure($app)
+    {
+        $app->config('renderer.auto_escape_html', false);
+    }
 
-// get engine.
-$twig = $engine;
 
-
-// register autoloader.
-\Twig_Autoloader::register();
-
-
-// set directory.
-$twig_loader = null;
-foreach ( $loader->getPaths($app->config('directory.template'), null, $app->getControllerSpaces()) as $path ) {
-    if ( ! $twig_loader ) {
-        $twig_loader = new \Twig_Loader_Filesystem($path);
-    } else {
-        $twig_loader->addPath($path);
+    /**
+     * callback on initialize.
+     *
+     * @access  public
+     * @param   Samurai\Samurai\Component\Renderer\Renderer $renderer
+     */
+    public function initialize(SamuraiRenderer $renderer)
+    {
+        parent::initialize($renderer);
     }
 }
-if ( $twig_loader ) {
-    foreach ( $loader->getPaths($app->config('directory.layout'), null, $app->getControllerSpaces()) as $path ) {
-        $twig_loader->addPath($path, 'layout');
-    }
-}
-
-
-// init.
-$twig->setLoader($twig_loader);
-$twig->enableAutoReload();
-$twig->setCache($loader->getPath($app->config('directory.temp'), null, $app->getControllerSpaces()) . DS . 'twig');
-
-
-// default escape.
-$filter = new \Twig_Extension_Escaper(true);
-$twig->addExtension($filter);
 

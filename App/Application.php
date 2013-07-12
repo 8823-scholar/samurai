@@ -31,7 +31,6 @@
 namespace App;
 
 use Samurai\Samurai;
-use Samurai\Samurai\Component\Core\Loader;
 
 // composer autoload
 $autoload_file = dirname(__DIR__) . '/vendor/autoload.php';;
@@ -55,16 +54,12 @@ class Application extends Samurai\Application
     public function configure()
     {
         parent::configure();
-
-        // directory app.
-        $this->config('directory.app', __DIR__);
-
-        // core dicon.
-        $this->config('dicon', __DIR__ . '/Config/Samurai/samurai.dicon');
         
-        // add path.
-        $this->addPath(dirname(__DIR__));
-        $this->addControllerSpace(__NAMESPACE__);
+        // application root dir.
+        $this->config('directory.root', dirname(__DIR__));
+
+        // application dir.
+        $this->config('directory.app.', ['dir' => __DIR__, 'namespace' => __NAMESPACE__, 'priority' => 'high']);
     }
 }
 

@@ -28,57 +28,73 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Console;
+namespace Samurai\Samurai\Config\Initializer;
 
-use Samurai\Samurai;
+use Samurai\Samurai\Component\Core\Initializer;
+use Samurai\Samurai\Component\Renderer\Renderer as SamuraiRenderer;
 
 /**
- * Application class.
+ * renderer initializer.
  *
- * @package     Samurai.Console
+ * @package     Samurai
+ * @subpackage  Config.Initializer
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Application extends Samurai\Application
+class Renderer extends Initializer
 {
     /**
      * {@inheritdoc}
      */
-    public function configure()
+    public function configure($app)
     {
-        parent::configure();
+        $app->config('renderer.name', 'twig');
+        $app->config('renderer.initialize.callback', array($this, 'initialize'));
+        $app->config('renderer.auto_reload', true);
+        $app->config('renderer.auto_escape_html', true);
     }
 
 
     /**
-     * configure from application console
+     * callback on initialize.
      *
      * @access  public
-     * @param   Samurai\Application $app
+     * @param   Samurai\Samurai\Component\Renderer\Renderer $renderer
      */
-    public function inheritConfigure(Samurai\Application $app)
+    public function initialize(SamuraiRenderer $renderer)
     {
-        // environment
-        $app->setEnv($this->getEnvFromEnvironmentVariables());
+        /*
+// register autoloader.
+\Twig_Autoloader::register();
 
-        // application dir.
-        $app->config('directory.app.', ['dir' => __DIR__, 'namespace' => __NAMESPACE__, 'priority' => 'low']);
+
+// set directory.
+$twig_loader = null;
+foreach ( $loader->getPaths($app->config('directory.template'), null, $app->getControllerSpaces()) as $path ) {
+    if ( ! $twig_loader ) {
+        $twig_loader = new \Twig_Loader_Filesystem($path);
+    } else {
+        $twig_loader->addPath($path);
     }
+}
+if ( $twig_loader ) {
+    foreach ( $loader->getPaths($app->config('directory.layout'), null, $app->getControllerSpaces()) as $path ) {
+        $twig_loader->addPath($path, 'layout');
+    }
+}
 
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getEnvFromEnvironmentVariables()
-    {
-        // has request ?
-        $opts = getopt('', array('ENV:'));
-        if (isset($opts['ENV'])) {
-            return $opts['ENV'];
-        }
+// init.
+$twig->setLoader($twig_loader);
+$twig->enableAutoReload();
+$twig->setCache($loader->getPath($app->config('directory.temp'), null, $app->getControllerSpaces()) . DS . 'twig');
 
-        return parent::getEnvFromEnvironmentVariables();
+
+// default escape.
+$filter = new \Twig_Extension_Escaper(true);
+$twig->addExtension($filter);
+        */
     }
 }
 

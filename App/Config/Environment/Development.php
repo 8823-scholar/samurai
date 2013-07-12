@@ -28,8 +28,12 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
+namespace App\Config\Environment;
+
+use Samurai\Samurai\Component\Core\Initializer;
+
 /**
- * for configuration under development environment (console).
+ * for configuration under development environment.
  *
  * @package     Samurai
  * @subpackage  Config.Environment
@@ -37,6 +41,13 @@
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-
-include dirname(dirname(dirname(__DIR__))) . '/Config/Environment/staging.php';
+class Development extends Initializer
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function configure($app)
+    {
+    }
+}
 

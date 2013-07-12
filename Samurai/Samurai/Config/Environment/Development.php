@@ -28,8 +28,12 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
+namespace Samurai\Samurai\Config\Environment;
+
+use Samurai\Samurai\Component\Core\Initializer;
+
 /**
- * for configuration under development environment (console).
+ * for configuration under development environment.
  *
  * @package     Samurai
  * @subpackage  Config.Environment
@@ -37,6 +41,16 @@
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-
-include dirname(dirname(dirname(__DIR__))) . '/Config/Environment/production.php';
+class Development extends Initializer
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function configure($app)
+    {
+        // php setting.
+        ini_set('display_erros', 1);
+        error_reporting(E_ALL | E_STRICT);
+    }
+}
 

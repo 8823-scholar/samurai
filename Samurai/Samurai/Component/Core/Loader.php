@@ -33,6 +33,7 @@ namespace Samurai\Samurai\Component\Core;
 use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Config;
 use Samurai\Samurai\Application;
+use Samurai\Samurai\Component\FileSystem;
 
 /**
  * Class loader.
@@ -110,12 +111,39 @@ class Loader
         $class_path = str_replace('\\', DS, $class);
         $class_path = str_replace('_', DS, $class_path) . '.php';
 
-        foreach ( $this->app->getPaths() as $path ) {
-            $file = $path . DS . $class_path;
+        foreach ($this->app->config('directory.app') as $app) {
+            $file = $app['dir'] . DS . $class_path;
             if ( file_exists($file) ) return $file;
         }
         return null;
     }
+
+
+
+    /**
+     * file finder over application dirs.
+     *
+     * @access  public
+     * @return  array
+     * @todo    should be return some iterator aggregate...?
+     */
+    public function find($glob)
+    {
+        $files = array();
+
+        foreach ($this->app->config('directory.app') as $app) {
+            $matches = glob($app['dir'] . DS . $glob);
+            foreach ($matches as $path) {
+                $file = new FileSystem\File($path);
+                $file->appDir($app['dir']);
+                $file->appNameSpace($app['namespace']);
+                $files[] = $file;
+            }
+        }
+
+        return $files;
+    }
+
 
 
 

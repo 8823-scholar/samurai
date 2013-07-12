@@ -33,6 +33,15 @@ namespace Samurai\Samurai;
 use Samurai\Raikiri;
 use Samurai\Samurai\Component\Core\Loader;
 
+// common constants.
+defined('DS') ?: define('DS', DIRECTORY_SEPARATOR);
+
+// autoload by composer
+$autoload_file = __DIR__ . '/vendor/autoload.php';
+if (file_exists($autoload_file)) {
+    require_once $autoload_file;
+}
+
 /**
  * Application class.
  *
@@ -41,7 +50,7 @@ use Samurai\Samurai\Component\Core\Loader;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Application extends Raikiri\Object
+class Application
 {
     /**
      * environment.
@@ -50,22 +59,6 @@ class Application extends Raikiri\Object
      * @var     string
      */
     public $env = self::ENV_DEVELOPMENT;
-
-    /**
-     * class contain paths
-     *
-     * @access  public
-     * @var     array
-     */
-    public $paths = array();
-
-    /**
-     * controller contain spaces.
-     *
-     * @access  public
-     * @var     array
-     */
-    public $controller_spaces = array();
 
     /**
      * config data
@@ -116,46 +109,60 @@ class Application extends Raikiri\Object
     /**
      * bootstrap.
      *
+     * bootstrap steps is...
+     *
+     * 1. configure
+     * 
+     *     call Application::configure().
+     *     placed at path/to/App/Application.php
+     *
+     * 2. initializer
+     *
+     *     call Initializer::configure().
+     *     placed at path/to/App/Config/Initializer/*.php
+     *
+     * 3. environment 
+     *
+     *     call Environment::configure().
+     *     placed at path/to/App/Config/Environment/${ENV}.php
+     *
      * @access  public
      */
     public function bootstrap()
     {
         // booted ?
-        if ( $this->_booted ) return;
+        if ($this->_booted) return;
         $this->_booted = true;
 
-        // configure
+        // call application::configure
         $this->configure();
 
-        // include environment
-        $this->_includeEnvironment();
+        // collect initializers
+        $this->initializers();
+
+        // environment
+        $this->environment();
+        
+        var_dump($this);
+        exit;
     }
 
 
     /**
-     * configure
+     * base configure.
      *
      * @access  public
      */
     public function configure()
     {
-        // common constants.
-        defined('DS') ?: define('DS', DIRECTORY_SEPARATOR);
-        
-        // autoload by composer
-        $autoload_file = __DIR__ . '/vendor/autoload.php';
-        if ( file_exists($autoload_file) ) {
-            require_once $autoload_file;
-        }
-
         // environment
-        if ( $env = $this->_getEnvFromEnvironmentVariables() ) {
-            $this->setEnv($env);
-        }
+        $this->setEnv($this->getEnvFromEnvironmentVariables());
 
-        // add path.
-        $this->addPath(dirname(dirname(__DIR__)));
-        $this->addControllerSpace(__NAMESPACE__);
+        // application root dir.
+        $this->config('directory.root', dirname(dirname(__DIR__)));
+        
+        // application dir.
+        $this->config('directory.app.', ['dir' => __DIR__, 'namespace' => __NAMESPACE__, 'priority' => 'low']);
 
         // set directory names.
         $this->config('directory.config.samurai', 'Config/Samurai');
@@ -169,8 +176,12 @@ class Application extends Raikiri\Object
         $this->config('directory.skeleton', 'Skeleton');
         $this->config('directory.log', 'Log');
         $this->config('directory.temp', 'Temp');
+        
+        // main dicon
+        $this->config('dicon', 'Config/Samurai/samurai.dicon');
 
         // set encodings.
+        $this->config('locale', 'ja');
         $this->config('encoding.input', 'UTF-8');
         $this->config('encoding.output', 'UTF-8');
         $this->config('encoding.internal', 'UTF-8');
@@ -188,23 +199,40 @@ class Application extends Raikiri\Object
         $loader->register();
         $this->loader = $loader;
     }
+    
+    
+    /**
+     * call initializers.
+     *
+     * @access  protected
+     */
+    protected function initializers()
+    {
+        $initializers = $this->loader->find('Config/Initializer/*.php');
+        foreach ($initializers as $file) {
+            require_once $file->getRealPath();
+            $class = $file->getClassName();
+            $initializer = new $class();
+            $initializer->configure($this);
+        }
+    }
 
 
     /**
-     * include environment file.
+     * environment settings.
      *
-     * @access  private
+     * @access  public
      */
-    private function _includeEnvironment()
+    public function environment()
     {
         $env = $this->getEnv();
-        foreach ( $this->getPaths() as $path ) {
-            foreach ( $this->getControllerSpaces() as $space ) {
-                $file = sprintf('%s/%s/Config/Environment/%s.php', $path, str_replace('\\', DS, $space), $env);
-                if ( file_exists($file) ) {
-                    include $file;
-                }
-            }
+        $name = 'Config/Environment/' . ucfirst($env) . '.php';
+
+        foreach ($this->loader->find($name) as $file) {
+            require_once $file->getRealPath();
+            $class = $file->getClassName();
+            $initializer = new $class();
+            $initializer->configure($this);
         }
     }
 
@@ -219,6 +247,8 @@ class Application extends Raikiri\Object
      */
     public function setEnv($env)
     {
+        if (! $env) $env = self::ENV_DEVELOPMENT;
+
         $this->env = $env;
         return $this->getEnv();
     }
@@ -241,99 +271,68 @@ class Application extends Raikiri\Object
      *
      * @access  protected
      */
-    protected function _getEnvFromEnvironmentVariables()
+    protected function getEnvFromEnvironmentVariables()
     {
         // has env ?
         if ( $env = getenv('SAMURAI_ENV') ) {
             return $env;
         }
 
-        return null;
+        return self::ENV_DEVELOPMENT;
     }
     
     
     
-    /**
-     * add class contain path.
-     *
-     * @access  public
-     * @param   string  $path
-     */
-    public function addPath($path)
-    {
-        if ( ! in_array($path, $this->paths) ) {
-            $this->paths[] = $path;
-        }
-    }
-
-
-    /**
-     * get class contain path.
-     *
-     * @access  public
-     * @return  array
-     */
-    public function getPaths()
-    {
-        return $this->paths;
-    }
-
-
-
-    /**
-     * add controller contain namespace.
-     *
-     * @access  public
-     * @param   string  $namespace
-     */
-    public function addControllerSpace($namespace)
-    {
-        if ( ! in_array($namespace, $this->controller_spaces) ) {
-            $this->controller_spaces[] = $namespace;
-        }
-    }
-
-
-    /**
-     * get controller contain spaces.
-     *
-     * @access  public
-     * @return  array
-     */
-    public function getControllerSpaces()
-    {
-        return $this->controller_spaces;
-    }
-
-
-    /**
-     * clear controller contain spaces.
-     *
-     * @access  public
-     */
-    public function clearControllerSpaces()
-    {
-        $this->controller_spaces = array();
-    }
-
-
 
 
     /**
      * accessor config.
      *
+     * = get all config. (as array)
+     *
+     *   $config = $app->config();
+     *
+     * = get config by simple key. (as mixed)
+     *
+     *   $config = $app->config('namespace.key');
+     *
+     * = set config by simple scalar variable.
+     *
+     *   $app->config('namespace.key', 'hello');
+     *
+     * = set config into array post. (last char is ".")
+     *
+     *   $app->config('namespace.somethings.', 'value1');
+     *   $app->config('namespace.somethings.', 'value2');
+     *   $config = $app->config('namespace.somethings');    // ["value1", "value2"]
+     *
      * @access  public
      * @param   string  $key
      * @param   mixed   $value
      */
-    public function config($key, $value = null)
+    public function config($key = null, $value = null)
     {
-        // when value is not null, then set to config.
-        if ( $value !== null || ! isset($this->config[$key])) {
-            $this->config[$key] = $value;
+        // when key is null, then return all config.
+        if (! $key) return $this->config;
+
+        // when last char is ".", then behavior for array.
+        $is_array = false;
+        if (substr($key, -1) === '.') {
+            $is_array = true;
+            $key = substr($key, 0, -1);
         }
 
-        return $this->config[$key];
+        // set config.
+        if ($value !== null) {
+            if ($is_array) {
+                if (! array_key_exists($key, $this->config)) $this->config[$key] = array();
+                array_push($this->config[$key], $value);
+            } else {
+                $this->config[$key] = $value;
+            }
+        }
+
+        return array_key_exists($key, $this->config) ? $this->config[$key] : null;
     }
 
 
