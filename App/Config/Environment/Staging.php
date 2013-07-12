@@ -28,60 +28,27 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace App\Config\Renderer;
+namespace App\Config\Environment;
 
-use App\Application;
-use Samurai\Samurai\Samurai;
-use Samurai\Samurai\Component\Core\Loader;
+use Samurai\Samurai\Application;
+use Samurai\Samurai\Component\Core\Initializer;
 
 /**
- * bootstrap of "Twig" renderer.
+ * for configuration under development environment.
  *
  * @package     Samurai
- * @subpackage  Config.Renderer
+ * @subpackage  Config.Environment
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-
-// get DI.
-$container = Samurai::getContainer();
-$config = $container->getComponent('Config');
-
-
-// register autoloader.
-\Twig_Autoloader::register();
-
-
-// set directory.
-$loader = null;
-foreach ( Application::getPath() as $path ) {
-    $dir = $path['path'];
-    $content_dir = $dir . DS . $config->get('directory.template');
-    $layout_dir = $dir . DS . $config->get('directory.layout');
-    if ( is_dir($content_dir) ) {
-        if ( ! $loader ) {
-            $loader = new \Twig_Loader_Filesystem($content_dir);
-        } else {
-            $loader->addPath($content_dir);
-        }
-        $loader->addPath($layout_dir, 'layout');
+class Staging extends Initializer
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function configure(Application $app)
+    {
     }
 }
-
-
-// init.
-$twig = new \Twig_Environment($loader, array(
-    'cache' => Loader::getPath($config->get('directory.temp')) . DS . 'twig',
-    'auto_reload' => true,
-));
-
-
-// default escape.
-$filter = new \Twig_Extension_Escaper(true);
-$twig->addExtension($filter);
-
-
-// return engine.
-return $twig;
 

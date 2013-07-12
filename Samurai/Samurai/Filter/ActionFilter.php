@@ -45,7 +45,6 @@ class ActionFilter extends Filter
      * @dependencies
      */
     public $ActionChain;
-    public $Config;
 
 
     /**

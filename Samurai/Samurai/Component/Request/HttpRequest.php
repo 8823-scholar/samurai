@@ -44,7 +44,6 @@ class HttpRequest extends Request
     /**
      * @dependencies
      */
-    public $Config;
 
     /**
      * headers

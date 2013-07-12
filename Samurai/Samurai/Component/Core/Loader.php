@@ -30,9 +30,10 @@
 
 namespace Samurai\Samurai\Component\Core;
 
-use App\Application;
 use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Config;
+use Samurai\Samurai\Application;
+use Samurai\Samurai\Component\FileSystem;
 
 /**
  * Class loader.
@@ -46,18 +47,51 @@ use Samurai\Samurai\Config;
 class Loader
 {
     /**
+     * app
+     *
+     * @access  public
+     * @var     Samurai\Samurai\Application
+     */
+    public $app;
+
+
+    /**
+     * constructor
+     *
+     * @access  public
+     * @param   Samurai\Samurai\Application $app
+     */
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
+
+
+    /**
+     * register to autoload
+     *
+     * @access  public
+     */
+    public function register()
+    {
+        spl_autoload_register(array($this, 'autoload'));
+    }
+
+
+
+    /**
      * autoload.
      *
      * @access  public
      * @param   string  $class
      */
-    public static function autoload($class)
+    public function autoload($class)
     {
         // path.
-        $path = self::getPathByClass($class);
+        $path = $this->getPathByClass($class);
 
         // load
-        if ( $path ) {
+        if ($path) {
             require_once $path;
             return true;
         }
@@ -77,9 +111,9 @@ class Loader
         $class_path = str_replace('\\', DS, $class);
         $class_path = str_replace('_', DS, $class_path) . '.php';
 
-        foreach ( Application::getClassPath() as $path ) {
-            $file = $path . DS . $class_path;
-            if ( file_exists($file) ) return $file;
+        foreach ($this->app->config('directory.app') as $app) {
+            $file = $app['dir'] . DS . $class_path;
+            if (file_exists($file)) return $file;
         }
         return null;
     }
@@ -87,47 +121,28 @@ class Loader
 
 
     /**
-     * 存在するファイルをすべて返却
+     * file finder over application dirs.
      *
      * @access  public
-     * @param   string  $name
      * @return  array
+     * @todo    should be return some iterator aggregate...?
      */
-    public function getPaths($name)
+    public function find($glob)
     {
-        // is absolute path.
-        if ( $name[0] === '/' ) return array($name);
+        $files = new FileSystem\Iterator\FileListIterator();
 
-        $paths = array();
-        foreach ( Application::getPath() as $path ) {
-            $file = $path['path'] . DS . $name;
-            if ( file_exists($file) ) {
-                $paths[] = $file;
+        foreach ($this->app->config('directory.app') as $app) {
+            $matches = glob($app['dir'] . DS . $glob);
+            foreach ($matches as $path) {
+                $file = new FileSystem\File($path);
+                $file->appDir($app['dir']);
+                $file->appNameSpace($app['namespace']);
+                $files->add($file);
             }
         }
-        return $paths;
+
+        return $files;
     }
 
-
-
-    /**
-     * Get path.
-     *
-     * @access  public
-     * @param   string  $path
-     * @return  string
-     */
-    public static function getPath($path)
-    {
-        // is absolute path.
-        if ( $path[0] === '/' ) return $path;
-
-        // search path.
-        foreach ( Application::getPath() as $app_path ) {
-            $file = $app_path['path'] . DS . $path;
-            if ( file_exists($file) ) return $file;
-        }
-        return null;
-    }
 }
 

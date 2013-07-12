@@ -30,7 +30,7 @@
 
 namespace Samurai\Samurai\Component\Core;
 
-use App\Application;
+use Samurai\Samurai\Application;
 use Samurai\Raikiri;
 use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Config;
@@ -47,15 +47,32 @@ use Samurai\Samurai\Config;
 class Framework extends Raikiri\Object
 {
     /**
-     * @override
+     * application instance
+     *
+     * @access  public
+     * @var     Samurai\Samurai\Application
      */
-    public function defineDeps()
+    public $app;
+
+    /**
+     * @dependencies
+     */
+    public $Router;
+    public $ActionChain;
+    public $FilterChain;
+    public $Response;
+
+     
+    /**
+     * constructor
+     *
+     * @access  public
+     * @param   Samurai\Samurai\Application
+     */
+    public function __construct(Application $app)
     {
-        $this->addDep('Config');
-        $this->addDep('Router');
-        $this->addDep('ActionChain');
-        $this->addDep('FilterChain');
-        $this->addDep('Response');
+        parent::__construct();
+        $this->app = $app;
     }
 
 
@@ -68,20 +85,19 @@ class Framework extends Raikiri\Object
      * 3. routing
      * 4. action chain
      * 5. filter chain
+     *
+     * @access  public
      */
     public function execute()
     {
         // init container.
-        $this->_initContainer();
-
-        // load settings
-        $this->_loadConfig();
+        $this->initContainer();
 
         // routing
-        $this->_routing();
+        $this->routing();
 
         // action chain.
-        while ( $action = $this->ActionChain->getCurrentAction() ) {
+        while ($action = $this->ActionChain->getCurrentAction()) {
 
             // clear.
             $this->FilterChain->clear();
@@ -99,30 +115,38 @@ class Framework extends Raikiri\Object
 
 
     /**
-     * initialize container.
+     * get application instance.
      *
      * @access  public
+     * @return  Samurai\Samurai\Application
      */
-    private function _initContainer()
+    public function getApplication()
     {
-        $dicon = Application::config('dicon');
-        $container = Raikiri\ContainerFactory::create('samurai');
-        $container->import($dicon);
+        return $this->app;
     }
+
 
 
     /**
-     * load configuration.
+     * initialize container.
      *
      * @access  private
      */
-    private function _loadConfig()
+    private function initContainer()
     {
-        // base configurations.
-        $file = Application::config('directory.app') . '/Config/Samurai/config.yml';
-        $this->Config->import($file);
-    }
+        $name = $this->app->config('container.dicon');
+        $container = Raikiri\ContainerFactory::create();
+        foreach ($this->app->loader->find($name) as $dicon) {
+            $container->import($dicon);
+        }
 
+        $container->registerComponent('Framework', $this);
+        $container->registerComponent('Application', $this->app);
+        $container->registerComponent('Loader', $this->app->loader);
+        $container->injectDependency($this);
+
+        $this->app->setContainer($container);
+    }
 
 
     /**
@@ -130,10 +154,10 @@ class Framework extends Raikiri\Object
      *
      * @access  private
      */
-    private function _routing()
+    private function routing()
     {
         // import.
-        $file = Application::config('directory.app') . DS . $this->Config->get('directory.config.routing') . '/routes.yml';
+        $file = $this->app->loader->find($this->app->config('directory.config.routing') . DS . 'routes.yml')->first();
         $this->Router->import($file);
 
         // routing.

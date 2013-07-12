@@ -43,16 +43,42 @@ use Samurai\Samurai;
 class Application extends Samurai\Application
 {
     /**
-     * bootstrap
+     * {@inheritdoc}
+     */
+    public function configure()
+    {
+        parent::configure();
+    }
+
+
+    /**
+     * configure from application console
      *
      * @access  public
+     * @param   Samurai\Application $app
      */
-    public static function bootstrap()
+    public function inheritConfigure(Samurai\Application $app)
     {
-        // add path.
-        self::clearPath();
-        self::addPath(__DIR__, __NAMESPACE__);
-        self::addClassPath(dirname(dirname(__DIR__)));
+        // environment
+        $app->setEnv($this->getEnvFromEnvironmentVariables());
+
+        // application dir.
+        $app->addAppPath(__DIR__, __NAMESPACE__, self::PRIORITY_LOW);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getEnvFromEnvironmentVariables()
+    {
+        // has request ?
+        $opts = getopt('', array('ENV:'));
+        if (isset($opts['ENV'])) {
+            return $opts['ENV'];
+        }
+
+        return parent::getEnvFromEnvironmentVariables();
     }
 }
 

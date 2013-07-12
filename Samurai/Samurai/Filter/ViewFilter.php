@@ -30,6 +30,7 @@
 
 namespace Samurai\Samurai\Filter;
 
+use App\Application;
 use Samurai\Samurai\Component\Core\Loader;
 use Samurai\Samurai\Controller\SamuraiController;
 use Samurai\Samurai\Exception\Exception;
@@ -65,7 +66,6 @@ class ViewFilter extends Filter
     /**
      * @dependencies
      */
-    public $Config;
     public $ActionChain;
     public $Renderer;
     public $Response;
@@ -115,7 +115,7 @@ class ViewFilter extends Filter
         $result = $this->Renderer->render($template);
         $this->Response->setBody($result);
         if ( $this->Response->isHttp() ) {
-            $this->Response->setHeader('content-type', sprintf('text/html; charset=%s', $this->Config->get('encoding.output')));
+            $this->Response->setHeader('content-type', sprintf('text/html; charset=%s', Application::config('encoding.output')));
         }
     }
 

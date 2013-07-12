@@ -45,10 +45,11 @@ use Samurai\Samurai\Component\Core\Framework;
 
 // bootstrap.
 require dirname(__DIR__) . '/Application.php';
-Application::bootstrap();
+$app = new Application();
+$app->bootstrap();
 
 
 // execute.
-$framework = new Framework();
+$framework = new Framework($app);
 $framework->execute();
 

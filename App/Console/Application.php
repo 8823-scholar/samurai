@@ -31,7 +31,7 @@
 namespace App\Console;
 
 use App;
-use Samurai\Console;
+use Samurai\Console as SamuraiConsole;
 
 require_once dirname(__DIR__) . '/Application.php';
 
@@ -46,21 +46,53 @@ require_once dirname(__DIR__) . '/Application.php';
 class Application extends App\Application
 {
     /**
-     * bootstrap
+     * samurai console application.
      *
-     * @access  public
+     * @access  private
      */
-    public static function bootstrap()
-    {
-        parent::bootstrap();
-        Console\Application::bootstrap();
+    private $console_app;
 
-        // core dicon.
-        self::config('dicon', __DIR__ . '/Config/Samurai/samurai.dicon');
+
+    /**
+     * {@inheritdoc}
+     */
+    public function configure()
+    {
+        parent::configure();
+
+        // Samurai console application configure inherit.
+        $this->inheritConsoleApplication();
         
-        // add path.
-        self::addPath(__DIR__, __NAMESPACE__);
-        self::addClassPath(dirname(__DIR__));
+        // application dir.
+        $this->addAppPath(__DIR__, __NAMESPACE__, self::PRIORITY_HIGH);
+    }
+
+
+
+    /**
+     * inherit samurai console application.
+     *
+     * @access  private
+     */
+    private function inheritConsoleApplication()
+    {
+        $app = $this->getConsoleApplication();
+        $app->inheritConfigure($this);
+    }
+    
+
+
+    /**
+     * get samurai console application.
+     *
+     * @access  private
+     */
+    private function getConsoleApplication()
+    {
+        if (! $this->console_app) {
+            $this->console_app = new SamuraiConsole\Application();
+        }
+        return $this->console_app;
     }
 }
 

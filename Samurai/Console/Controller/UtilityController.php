@@ -59,7 +59,7 @@ class UtilityController extends ConsoleController
         }
 
         // show usage.
-        if ( $arg === null && $this->isUsage() ) {
+        if ( $arg === null || $this->isUsage() ) {
             return [self::FORWARD_ACTION, 'utility.usage'];
         }
 

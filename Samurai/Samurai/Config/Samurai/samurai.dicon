@@ -27,15 +27,13 @@
 # @license     http://opensource.org/licenses/MIT
 #
 
-Config: Samurai\Samurai\Component\Core\Config
-
 Request:
-    class: Samurai\Samurai\Component\Request\CliRequest
+    class: Samurai\Samurai\Component\Request\HttpRequest
     initMethod: init
 
-Response: Samurai\Samurai\Component\Response\CliResponse
+Response: Samurai\Samurai\Component\Response\HttpResponse
 
-Router: Samurai\Samurai\Component\Routing\CliRouter
+Router: Samurai\Samurai\Component\Routing\Router
 
 ActionChain: Samurai\Samurai\Component\Core\ActionChain
 
@@ -43,7 +41,7 @@ FilterChain: Samurai\Samurai\Component\Core\FilterChain
 
 Renderer:
     class: Samurai\Samurai\Component\Renderer\TwigRenderer
-    args: ['Config/Renderer/twig.php']
+    initMethod: initialize
 
 ArrayUtil: Samurai\Samurai\Component\Utility\ArrayUtility
 

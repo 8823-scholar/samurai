@@ -30,12 +30,12 @@
 
 namespace App\Console\Config\Renderer;
 
-use App\Application;
-use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Component\Core\Loader;
 
 /**
  * bootstrap of "Twig" renderer.
+ *
+ * twig engnine instance reference is "$engine".
  *
  * @package     Samurai
  * @subpackage  Config.Renderer
@@ -44,39 +44,10 @@ use Samurai\Samurai\Component\Core\Loader;
  * @license     http://opensource.org/licenses/MIT
  */
 
-// get DI.
-$container = Samurai::getContainer();
-$config = $container->getComponent('Config');
+// include app config.
+$twig = $engine;
+require $loader->getPath('App/Config/Renderer/twig.php');
 
-
-// register autoloader.
-\Twig_Autoloader::register();
-
-
-// set directory.
-$loader = null;
-foreach ( Application::getPath() as $path ) {
-    $dir = $path['path'];
-    $content_dir = $dir . DS . $config->get('directory.template');
-    $layout_dir = $dir . DS . $config->get('directory.layout');
-    if ( is_dir($content_dir) ) {
-        if ( ! $loader ) {
-            $loader = new \Twig_Loader_Filesystem($content_dir);
-        } else {
-            $loader->addPath($content_dir);
-        }
-        $loader->addPath($layout_dir, 'layout');
-    }
-}
-
-
-// init.
-$twig = new \Twig_Environment($loader, array(
-    'cache' => Loader::getPath($config->get('directory.temp')) . DS . 'twig',
-    'auto_reload' => true,
-));
-
-
-// return engine.
-return $twig;
+// remove escape for html.
+$twig->removeExtension('escaper');
 

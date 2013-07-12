@@ -9,6 +9,8 @@
 *:
     ExecutionTime:
     Raikiri:
+        dicon:
+            - App/Config/App/samurai.dicon
     Onikiri:
     View:
 

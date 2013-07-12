@@ -30,6 +30,8 @@
 
 namespace Samurai\Samurai\Component\Renderer;
 
+use Twig_Environment;
+
 /**
  * Renderer Twig bridge.
  *
@@ -55,7 +57,17 @@ class TwigRenderer extends Renderer
      * @access  private
      * @var     array
      */
-    private $_variables = array();
+    private $variables = array();
+
+
+    /**
+     * @implements
+     */
+    public function initEngine()
+    {
+        $engine = new Twig_Environment();
+        return $engine;
+    }
 
 
     /**
@@ -72,7 +84,7 @@ class TwigRenderer extends Renderer
      */
     public function set($name, $value)
     {
-        $this->_variables[$name] = $value;
+        $this->variables[$name] = $value;
     }
 
 
@@ -81,7 +93,7 @@ class TwigRenderer extends Renderer
      */
     public function render($template)
     {
-        $result = $this->engine->render($template, $this->_variables);
+        $result = $this->getEngine()->render($template, $this->variables);
         return $result;
     }
 }

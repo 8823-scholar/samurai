@@ -94,6 +94,9 @@ class Container
         if ( $component instanceof ComponentDefine ) {
             $component->setContainer($this);
         }
+        elseif ( $component instanceof Object ) {
+            $component->setContainer($this);
+        }
 
         $this->_components[$name] = $component;
     }

@@ -30,9 +30,7 @@
 
 namespace Samurai\Samurai\Filter;
 
-use Samurai\Samurai\Samurai;
 use Samurai\Onikiri;
-use Samurai\Samurai\Component\Core\Loader;
 
 /**
  * Onikiri(O/R Mapper) filter.
@@ -48,7 +46,8 @@ class OnikiriFilter extends Filter
     /**
      * @dependencies
      */
-    public $Config;
+    public $Loader;
+    public $Application;
 
 
     /**
@@ -62,7 +61,7 @@ class OnikiriFilter extends Filter
 
         // load configuration.
         // App/Config/Database/production.yml
-        $file = Loader::getPath($this->Config->get('directory.config.database') . DS . Samurai::getEnv() . '.yml');
+        $file = $this->Loader->find($this->Application->config('directory.config.database') . DS . $this->Application->getEnv() . '.yml')->first();
         $manager->importDatabase($file);
     }
 }

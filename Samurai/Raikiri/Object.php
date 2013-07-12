@@ -58,6 +58,14 @@ class Object
      */
     protected $_models = array();
 
+    /**
+     * container.
+     *
+     * @access  protected
+     * @var     Samurai\Raikiri\Container
+     */
+    protected $container;
+
 
     /**
      * constructor
@@ -68,6 +76,31 @@ class Object
     {
         $this->defineDeps();
     }
+
+
+    /**
+     * set container.
+     *
+     * @access  public
+     * @param   Container   $container
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+    }
+
+
+    /**
+     * get container.
+     *
+     * @access  public
+     * @return  Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
 
 
     /**
@@ -150,8 +183,7 @@ class Object
         // has dependency ?
         if ( $this->hasDep($key) ) {
             if ( $this->_deps[$key] === null ) {
-                $container = ContainerFactory::get();
-                $this->_deps[$key] = $container->getComponent($key);
+                $this->_deps[$key] = $this->container->getComponent($key);
             }
             return $this->_deps[$key];
         }
