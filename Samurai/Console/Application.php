@@ -63,7 +63,7 @@ class Application extends Samurai\Application
         $app->setEnv($this->getEnvFromEnvironmentVariables());
 
         // application dir.
-        $app->config('directory.app.', ['dir' => __DIR__, 'namespace' => __NAMESPACE__, 'priority' => 'low']);
+        $app->addAppPath(__DIR__, __NAMESPACE__, self::PRIORITY_LOW);
     }
 
 

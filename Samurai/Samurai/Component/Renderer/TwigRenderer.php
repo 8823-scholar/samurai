@@ -57,7 +57,7 @@ class TwigRenderer extends Renderer
      * @access  private
      * @var     array
      */
-    private $_variables = array();
+    private $variables = array();
 
 
     /**
@@ -84,7 +84,7 @@ class TwigRenderer extends Renderer
      */
     public function set($name, $value)
     {
-        $this->_variables[$name] = $value;
+        $this->variables[$name] = $value;
     }
 
 
@@ -93,7 +93,7 @@ class TwigRenderer extends Renderer
      */
     public function render($template)
     {
-        $result = $this->_engine->render($template, $this->_variables);
+        $result = $this->getEngine()->render($template, $this->variables);
         return $result;
     }
 }

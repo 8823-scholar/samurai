@@ -30,6 +30,7 @@
 
 namespace Samurai\Console\Config\Initializer;
 
+use Samurai\Samurai\Application;
 use Samurai\Samurai\Config\Initializer\Renderer as Initializer;
 use Samurai\Samurai\Component\Renderer\Renderer as SamuraiRenderer;
 
@@ -47,17 +48,14 @@ class Renderer extends Initializer
     /**
      * {@inheritdoc}
      */
-    public function configure($app)
+    public function configure(Application $app)
     {
         $app->config('renderer.auto_escape_html', false);
     }
 
 
     /**
-     * callback on initialize.
-     *
-     * @access  public
-     * @param   Samurai\Samurai\Component\Renderer\Renderer $renderer
+     * {@inheritdoc}
      */
     public function initialize(SamuraiRenderer $renderer)
     {

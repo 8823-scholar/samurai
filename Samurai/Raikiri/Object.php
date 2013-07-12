@@ -64,7 +64,7 @@ class Object
      * @access  protected
      * @var     Samurai\Raikiri\Container
      */
-    protected $_container;
+    protected $container;
 
 
     /**
@@ -86,7 +86,7 @@ class Object
      */
     public function setContainer(Container $container)
     {
-        $this->_container = $container;
+        $this->container = $container;
     }
 
 
@@ -98,7 +98,7 @@ class Object
      */
     public function getContainer()
     {
-        return $this->_container;
+        return $this->container;
     }
 
 
@@ -183,7 +183,7 @@ class Object
         // has dependency ?
         if ( $this->hasDep($key) ) {
             if ( $this->_deps[$key] === null ) {
-                $this->_deps[$key] = $this->_container->getComponent($key);
+                $this->_deps[$key] = $this->container->getComponent($key);
             }
             return $this->_deps[$key];
         }

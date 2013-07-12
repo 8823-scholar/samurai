@@ -67,6 +67,7 @@ class ActionChain extends Raikiri\Object
      */
     public $Application;
     public $Container;
+    public $Loader;
 
 
     /**
@@ -120,23 +121,17 @@ class ActionChain extends Raikiri\Object
      */
     public function getController($name)
     {
-        $base = join('\\', array_map('ucfirst', explode('_', $name))) . 'Controller';
+        $names = explode('_', $name);
+        array_unshift($names, 'Controller');
+        $base = join(DS, array_map('ucfirst', $names)) . 'Controller.php';
 
-        // search in app spaces.
-        foreach ($this->Application->getAppSpaces() as $path => $space) {
-            $class = $space . '\\Controller\\' . $base;
-            $path = $this->Loader->getPath();
-        }
-        foreach ( $this->Application->getControllerSpaces() as $space ) {
-            $controller = null;
-            if ( class_exists($class) ) {
-                $controller = new $class();
-            }
-            if ( $controller ) {
-                $this->Container->injectDependency($controller);
-                $controller->setName($name);
-                return $controller;
-            }
+        $file = $this->Loader->find($base)->first();
+        if ($file) {
+            $class = $file->getClassName();
+            $controller = new $class();
+            $this->Container->injectDependency($controller);
+            $controller->setName($name);
+            return $controller;
         }
 
         // not found.

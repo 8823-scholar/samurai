@@ -49,7 +49,7 @@ abstract class Renderer extends Raikiri\Object
      * @access  protected
      * @var     object
      */
-    protected $_engine;
+    protected $engine;
 
     /**
      * @dependencies
@@ -59,31 +59,18 @@ abstract class Renderer extends Raikiri\Object
 
 
     /**
-     * constructor
+     * initialize method.
      *
      * @access  public
      */
-    public function __construct()
+    public function initialize()
     {
-        parent::__construct();
-        $this->_engine = $this->initEngine();
-    }
+        $this->engine = $this->initEngine();
 
-
-    /**
-     * bootstrap
-     *
-     * @access  public
-     * @param   string  $script
-     */
-    public function bootstrap($script)
-    {
-        if ( $script ) {
-            // for bootstrap variable.
-            $engine = $this->getEngine();
-            $loader = $this->Loader;
-            $app = $this->Application;
-            include $this->Loader->getPath($script);
+        // bootstap callback.
+        $callback = $this->Application->config('renderer.initialize.callback');
+        if ($callback) {
+            $callback[0]->{$callback[1]}($this->Application, $this);
         }
     }
 
@@ -97,7 +84,7 @@ abstract class Renderer extends Raikiri\Object
      */
     public function getEngine()
     {
-        return $this->_engine;
+        return $this->engine;
     }
 
 

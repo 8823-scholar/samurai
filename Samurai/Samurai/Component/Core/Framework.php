@@ -91,13 +91,13 @@ class Framework extends Raikiri\Object
     public function execute()
     {
         // init container.
-        $this->_initContainer();
+        $this->initContainer();
 
         // routing
-        $this->_routing();
+        $this->routing();
 
         // action chain.
-        while ( $action = $this->ActionChain->getCurrentAction() ) {
+        while ($action = $this->ActionChain->getCurrentAction()) {
 
             // clear.
             $this->FilterChain->clear();
@@ -130,13 +130,15 @@ class Framework extends Raikiri\Object
     /**
      * initialize container.
      *
-     * @access  public
+     * @access  private
      */
-    private function _initContainer()
+    private function initContainer()
     {
-        $dicon = $this->app->config('dicon');
+        $name = $this->app->config('container.dicon');
         $container = Raikiri\ContainerFactory::create();
-        $container->import($dicon);
+        foreach ($this->app->loader->find($name) as $dicon) {
+            $container->import($dicon);
+        }
 
         $container->registerComponent('Framework', $this);
         $container->registerComponent('Application', $this->app);
@@ -152,10 +154,10 @@ class Framework extends Raikiri\Object
      *
      * @access  private
      */
-    private function _routing()
+    private function routing()
     {
         // import.
-        $file = $this->app->config('directory.app') . DS . $this->app->config('directory.config.routing') . '/routes.yml';
+        $file = $this->app->loader->find($this->app->config('directory.config.routing') . DS . 'routes.yml')->first();
         $this->Router->import($file);
 
         // routing.

@@ -42,6 +42,14 @@ namespace Samurai\Samurai\Component\FileSystem;
 class File extends \SplFileInfo
 {
     /**
+     * path
+     *
+     * @access  public
+     * @var     string
+     */
+    public $path;
+
+    /**
      * app dir.
      *
      * @access  public
@@ -56,6 +64,19 @@ class File extends \SplFileInfo
      * @var     string
      */
     public $app_namespace;
+
+
+    /**
+     * constructor
+     *
+     * @access  public
+     * @param   string  $file_name
+     */
+    public function __construct($file_name)
+    {
+        parent::__construct($file_name);
+        $this->path = $this->getRealPath();
+    }
 
 
     /**

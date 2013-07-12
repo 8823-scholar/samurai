@@ -91,7 +91,7 @@ class Loader
         $path = $this->getPathByClass($class);
 
         // load
-        if ( $path ) {
+        if ($path) {
             require_once $path;
             return true;
         }
@@ -113,7 +113,7 @@ class Loader
 
         foreach ($this->app->config('directory.app') as $app) {
             $file = $app['dir'] . DS . $class_path;
-            if ( file_exists($file) ) return $file;
+            if (file_exists($file)) return $file;
         }
         return null;
     }
@@ -129,7 +129,7 @@ class Loader
      */
     public function find($glob)
     {
-        $files = array();
+        $files = new FileSystem\Iterator\FileListIterator();
 
         foreach ($this->app->config('directory.app') as $app) {
             $matches = glob($app['dir'] . DS . $glob);
@@ -137,67 +137,12 @@ class Loader
                 $file = new FileSystem\File($path);
                 $file->appDir($app['dir']);
                 $file->appNameSpace($app['namespace']);
-                $files[] = $file;
+                $files->add($file);
             }
         }
 
         return $files;
     }
 
-
-
-
-    /**
-     * get all file paths if exists.
-     *
-     * @access  public
-     * @param   string  $path
-     * @return  array
-     */
-    public function getPaths($path, $dirs = array(), $namespaces = array())
-    {
-        // is absolute path.
-        if ( $path[0] === '/' ) return array($path);
-
-        $paths = array();
-        $dirs = $dirs ? $dirs : $this->app->getPaths();
-        $namespaces = $namespaces ? $namespaces : array(null);
-        foreach ( $dirs as $dir ) {
-            foreach ( $namespaces as $namespace ) {
-                $_dir = $namespace ? $dir . DS . str_replace('\\', DS, $namespace) : $dir;
-                $file = $_dir . DS . $path;
-                if ( file_exists($file) ) {
-                    $paths[] = $file;
-                }
-            }
-        }
-        return $paths;
-    }
-
-
-    /**
-     * Get path.
-     *
-     * @access  public
-     * @param   string  $path
-     * @return  string
-     */
-    public function getPath($path, $dirs = array(), $namespaces = array())
-    {
-        // is absolute path.
-        if ( $path[0] === '/' ) return $path;
-
-        // search path.
-        $dirs = $dirs ? $dirs : $this->app->getPaths();
-        $namespaces = $namespaces ? $namespaces : array(null);
-        foreach ( $dirs as $dir ) {
-            foreach ( $namespaces as $namespace ) {
-                $_dir = $namespace ? $dir . DS . str_replace('\\', DS, $namespace) : $dir;
-                $file = $_dir . DS . $path;
-                if ( file_exists($file) ) return $file;
-            }
-        }
-        return null;
-    }
 }
 

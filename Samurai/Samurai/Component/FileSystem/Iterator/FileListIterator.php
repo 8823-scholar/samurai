@@ -28,41 +28,74 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Filter;
+namespace Samurai\Samurai\Component\FileSystem\Iterator;
 
-use Samurai\Onikiri;
+use Samurai\Samurai\Component\FileSystem\File;
 
 /**
- * Onikiri(O/R Mapper) filter.
+ * simple file list iterator.
  *
  * @package     Samurai
- * @subpackage  Filter
+ * @subpackage  Component.FileSystem
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class OnikiriFilter extends Filter
+class FileListIterator implements \IteratorAggregate
 {
     /**
-     * @dependencies
+     * listing files.
+     *
+     * @access  private
      */
-    public $Loader;
-    public $Application;
+    private $list = array();
 
 
     /**
-     * @override
+     * add file
+     *
+     * @access  public
+     * @param   Samurai\Samurai\Component\FileSystem\File   $file
      */
-    public function prefilter()
+    public function add(File $file)
     {
-        parent::prefilter();
+        $this->list[] = $file;
+    }
 
-        $manager = Onikiri\Manager::singleton();
 
-        // load configuration.
-        // App/Config/Database/production.yml
-        $file = $this->Loader->find($this->Application->config('directory.config.database') . DS . $this->Application->getEnv() . '.yml')->first();
-        $manager->importDatabase($file);
+    /**
+     * get first element.
+     *
+     * @access  public
+     * @return  Samurai\Samurai\Component\FileSystem\File
+     */
+    public function first()
+    {
+        return $this->list ? $this->list[0] : null;
+    }
+
+
+    /**
+     * get last element.
+     *
+     * @access  public
+     * @return  Samurai\Samurai\Component\FileSystem\File
+     */
+    public function last()
+    {
+        return $this->list ? $this->list[count($this->list) -1] : null;
+    }
+
+
+    /**
+     * get iterator.
+     *
+     * @access  public
+     * @return  ArrayIterator
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->list);
     }
 }
 

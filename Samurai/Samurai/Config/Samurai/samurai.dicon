@@ -41,9 +41,7 @@ FilterChain: Samurai\Samurai\Component\Core\FilterChain
 
 Renderer:
     class: Samurai\Samurai\Component\Renderer\TwigRenderer
-    initMethod:
-        name: bootstrap
-        args: 'App/Config/Renderer/twig.php'
+    initMethod: initialize
 
 ArrayUtil: Samurai\Samurai\Component\Utility\ArrayUtility
 

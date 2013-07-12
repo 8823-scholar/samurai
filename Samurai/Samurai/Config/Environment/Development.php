@@ -30,6 +30,7 @@
 
 namespace Samurai\Samurai\Config\Environment;
 
+use Samurai\Samurai\Application;
 use Samurai\Samurai\Component\Core\Initializer;
 
 /**
@@ -46,7 +47,7 @@ class Development extends Initializer
     /**
      * {@inheritdoc}
      */
-    public function configure($app)
+    public function configure(Application $app)
     {
         // php setting.
         ini_set('display_erros', 1);

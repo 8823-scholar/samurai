@@ -30,6 +30,7 @@
 
 namespace Samurai\Console\Config\Environment;
 
+use Samurai\Samurai\Application;
 use Samurai\Samurai\Component\Core\Initializer;
 
 /**
@@ -46,7 +47,7 @@ class Production extends Initializer
     /**
      * {@inheritdoc}
      */
-    public function configure($app)
+    public function configure(Application $app)
     {
     }
 }

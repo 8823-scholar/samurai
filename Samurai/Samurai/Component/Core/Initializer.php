@@ -30,6 +30,8 @@
 
 namespace Samurai\Samurai\Component\Core;
 
+use Samurai\Samurai\Application;
+
 /**
  * initializer base class
  *
@@ -47,6 +49,6 @@ abstract class Initializer
      * @access  public
      * @param   Samurai\Samurai\Application $app
      */
-    abstract public function configure($app);
+    abstract public function configure(Application $app);
 }
 

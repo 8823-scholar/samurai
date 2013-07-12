@@ -64,7 +64,7 @@ class Application extends App\Application
         $this->inheritConsoleApplication();
         
         // application dir.
-        $this->config('directory.app.', ['dir' => __DIR__, 'namespace' => __NAMESPACE__, 'priority' => 'high']);
+        $this->addAppPath(__DIR__, __NAMESPACE__, self::PRIORITY_HIGH);
     }
 
 

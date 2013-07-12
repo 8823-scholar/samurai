@@ -85,6 +85,14 @@ class Application
     public $loader;
 
     /**
+     * container
+     *
+     * @access  public
+     * @var     Samurai\Raikiri\Container
+     */
+    public $container;
+
+    /**
      * ENV: development
      *
      * @const   string
@@ -104,6 +112,15 @@ class Application
      * @const   string
      */
     const ENV_PRODUCTION = 'production';
+
+    /**
+     * app directory priorities
+     *
+     * @const   int
+     */
+    const PRIORITY_LOW = 1;
+    const PRIORITY_MIDDLE = 5;
+    const PRIORITY_HIGH = 10;
 
 
     /**
@@ -142,9 +159,6 @@ class Application
 
         // environment
         $this->environment();
-        
-        var_dump($this);
-        exit;
     }
 
 
@@ -162,7 +176,7 @@ class Application
         $this->config('directory.root', dirname(dirname(__DIR__)));
         
         // application dir.
-        $this->config('directory.app.', ['dir' => __DIR__, 'namespace' => __NAMESPACE__, 'priority' => 'low']);
+        $this->addAppPath(__DIR__, __NAMESPACE__, self::PRIORITY_LOW);
 
         // set directory names.
         $this->config('directory.config.samurai', 'Config/Samurai');
@@ -178,10 +192,9 @@ class Application
         $this->config('directory.temp', 'Temp');
         
         // main dicon
-        $this->config('dicon', 'Config/Samurai/samurai.dicon');
+        $this->config('container.dicon', 'Config/Samurai/samurai.dicon');
 
         // set encodings.
-        $this->config('locale', 'ja');
         $this->config('encoding.input', 'UTF-8');
         $this->config('encoding.output', 'UTF-8');
         $this->config('encoding.internal', 'UTF-8');
@@ -192,6 +205,7 @@ class Application
         $this->config('cache.yaml.expire', 60 * 60 * 24);    // 1 day
         
         // timezone.
+        $this->config('locale', 'ja');
         $this->setTimezone('Asia/Tokyo');
         
         // autoload by samurai
@@ -337,6 +351,30 @@ class Application
 
 
     /**
+     * add application path.
+     *
+     * @access  public
+     * @param   string  $path
+     * @param   string  $namespace
+     * @param   string  $priority
+     */
+    public function addAppPath($path, $namespace, $priority = self::PRIORITY_LOW)
+    {
+        $dirs = $this->config('directory.app');
+        if (! $dirs) $dirs = array();
+        
+        $dirs[] = ['dir' => $path, 'namespace' => $namespace, 'priority' => $priority, 'index' => count($dirs)];
+        usort($dirs, function($a, $b) {
+            if ($a['priority'] == $b['priority']) {
+                return $a['index'] < $b['index'] ? -1 : 1;
+            }
+            return $a['priority'] < $b['priority'] ? -1 : 1;
+        });
+        $this->config('directory.app', $dirs);
+    }
+
+
+    /**
      * set timezone.
      *
      * @access  public
@@ -346,6 +384,19 @@ class Application
     {
         $this->config('date.timezone', $zone);
         date_default_timezone_set($zone);
+    }
+
+
+
+    /**
+     * set DI Container.
+     *
+     * @access  public
+     * @param   Samurai\Raikiri\Container   $container
+     */
+    public function setContainer(Raikiri\Container $container)
+    {
+        $this->container = $container;
     }
 }
 
