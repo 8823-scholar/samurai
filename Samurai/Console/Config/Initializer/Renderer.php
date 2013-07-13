@@ -57,9 +57,9 @@ class Renderer extends Initializer
     /**
      * {@inheritdoc}
      */
-    public function initialize(SamuraiRenderer $renderer)
+    public function initialize(Application $app, SamuraiRenderer $renderer)
     {
-        parent::initialize($renderer);
+        parent::initialize($app, $renderer);
     }
 }
 

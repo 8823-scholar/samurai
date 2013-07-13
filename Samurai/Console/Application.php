@@ -32,6 +32,12 @@ namespace Samurai\Console;
 
 use Samurai\Samurai;
 
+// composer autoload
+$autoload_file = dirname(dirname(__DIR__)) . '/vendor/autoload.php';;
+if ( file_exists($autoload_file) ) {
+    require_once $autoload_file;
+}
+
 /**
  * Application class.
  *
@@ -48,6 +54,12 @@ class Application extends Samurai\Application
     public function configure()
     {
         parent::configure();
+        
+        // environment
+        $this->setEnv($this->getEnvFromEnvironmentVariables());
+
+        // application dir.
+        $this->addAppPath(__DIR__, __NAMESPACE__, self::PRIORITY_LOW);
     }
 
 
