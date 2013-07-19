@@ -50,6 +50,14 @@ class File extends \SplFileInfo
     public $path;
 
     /**
+     * parent
+     *
+     * @access  public
+     * @var     Samurai\Samurai\Component\FileSystem\Directory
+     */
+    public $parent;
+
+    /**
      * app dir.
      *
      * @access  public
@@ -77,6 +85,19 @@ class File extends \SplFileInfo
         parent::__construct($file_name);
         $this->path = $this->getRealPath();
     }
+
+
+    /**
+     * set parent node.
+     *
+     * @access  public
+     * @param   Samurai\Samurai\Component\FileSystem\Directory  $parent
+     */
+    public function setParent(Directory $parent)
+    {
+        $this->parent = $parent;
+    }
+
 
 
     /**

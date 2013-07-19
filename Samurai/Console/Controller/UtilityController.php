@@ -51,22 +51,29 @@ class UtilityController extends ConsoleController
      */
     public function locator()
     {
-        $arg = $this->Request->get('arg');
+        $arg = $this->Request->get('args');
 
         // show version.
-        if ( $this->Request->get('option.v') || $this->Request->get('version') ) {
+        if ($this->Request->get('option.v') || $this->Request->get('version')) {
             return [self::FORWARD_ACTION, 'utility.version'];
         }
 
         // show usage.
-        if ( $arg === null || $this->isUsage() ) {
+        if ($arg === null) {
             return [self::FORWARD_ACTION, 'utility.usage'];
         }
 
         // task execute.
-        if ( $arg && $this->isTask($arg) ) {
+        if ($this->isTask($arg)) {
             return [self::FORWARD_ACTION, 'task.execute'];
         }
+
+        // action execute.
+        // exclude first argument, because this is command name.
+        $args = $this->Request->getAsArray('args');
+        array_shift($args);
+        $this->Request->set('args', $args);
+        return [self::FORWARD_ACTION, $this->completionActionArg($arg)];
     }
 
 
@@ -95,6 +102,20 @@ class UtilityController extends ConsoleController
         $this->assign('state', Samurai::getState());
         $this->assign('script', './app');   // TODO: $this->Request->getScript()
         return self::VIEW_TEMPLATE;
+    }
+
+
+
+    /**
+     * completion action arg string.
+     *
+     * @access  public
+     * @param   string  $arg
+     * @return  string
+     */
+    private function completionActionArg($arg)
+    {
+        return strpos($arg, '.') !== false ? $arg : "{$arg}.execute";
     }
 
 

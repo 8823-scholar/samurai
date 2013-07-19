@@ -25,7 +25,7 @@
     "require": {
         "spyc/spyc": "dev-master",
         "twig/twig": "1.*",
-        "phpspec/phpspec": "*",
+        "phpspec/phpspec": "*@dev",
         "phpunit/phpunit": "3.7.*",
         "phpunit/phpunit-story": "*"
     },

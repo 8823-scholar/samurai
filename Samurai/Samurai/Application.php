@@ -389,7 +389,7 @@ class Application
 
 
     /**
-     * set DI Container.
+     * Set DI Container.
      *
      * @access  public
      * @param   Samurai\Raikiri\Container   $container
@@ -397,6 +397,17 @@ class Application
     public function setContainer(Raikiri\Container $container)
     {
         $this->container = $container;
+    }
+
+    /**
+     * Get DI Container.
+     *
+     * @access  public
+     * @return  Samurai\Raikiri\Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
     }
 }
 

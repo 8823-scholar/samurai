@@ -43,5 +43,7 @@ Renderer:
     class: Samurai\Samurai\Component\Renderer\TwigRenderer
     initMethod: initialize
 
+Finder: Samurai\Samurai\Component\FileSystem\Finder\Finder
+
 ArrayUtil: Samurai\Samurai\Component\Utility\ArrayUtility
 

@@ -28,12 +28,10 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\FileSystem\Iterator;
-
-use Samurai\Samurai\Component\FileSystem\File;
+namespace Samurai\Samurai\Component\FileSystem;
 
 /**
- * simple file list iterator.
+ * Directory info class.
  *
  * @package     Samurai
  * @subpackage  Component.FileSystem
@@ -41,61 +39,7 @@ use Samurai\Samurai\Component\FileSystem\File;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class FileListIterator implements \IteratorAggregate
+class Directory extends File
 {
-    /**
-     * listing files.
-     *
-     * @access  private
-     */
-    private $list = array();
-
-
-    /**
-     * add file
-     *
-     * @access  public
-     * @param   Samurai\Samurai\Component\FileSystem\File   $file
-     */
-    public function add(File $file)
-    {
-        $this->list[] = $file;
-    }
-
-
-    /**
-     * get first element.
-     *
-     * @access  public
-     * @return  Samurai\Samurai\Component\FileSystem\File
-     */
-    public function first()
-    {
-        return $this->list ? $this->list[0] : null;
-    }
-
-
-    /**
-     * get last element.
-     *
-     * @access  public
-     * @return  Samurai\Samurai\Component\FileSystem\File
-     */
-    public function last()
-    {
-        return $this->list ? $this->list[count($this->list) -1] : null;
-    }
-
-
-    /**
-     * get iterator.
-     *
-     * @access  public
-     * @return  ArrayIterator
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->list);
-    }
 }
 

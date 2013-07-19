@@ -37,3 +37,7 @@ Router: Samurai\Samurai\Component\Routing\CliRouter
 
 TaskProcessor: Samurai\Samurai\Component\Task\Processor
 
+SpecHelper: Samurai\Samurai\Component\Spec\Helper
+
+FileUtil: Samurai\Samurai\Component\FileSystem\Utility
+

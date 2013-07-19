@@ -129,7 +129,7 @@ class Loader
      */
     public function find($glob)
     {
-        $files = new FileSystem\Iterator\FileListIterator();
+        $files = new FileSystem\Iterator\SimpleListIterator();
 
         foreach ($this->app->config('directory.app') as $app) {
             $matches = glob($app['dir'] . DS . $glob);
