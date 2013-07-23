@@ -99,6 +99,23 @@ abstract class Runner
 
 
 
+
+    /**
+     * run spec.
+     *
+     * @access  public
+     */
+    abstract public function run();
+
+
+    /**
+     * generate configuration file.
+     *
+     * @access  public
+     */
+    abstract public function generateConfigurationFile();
+
+
     /**
      * search spec files in targets
      *
@@ -106,5 +123,38 @@ abstract class Runner
      * @return  Samurai\Samurai\Component\FileSystem\Iterator\IteratorAggregate
      */
     abstract public function searchSpecFiles();
+
+
+    /**
+     * validate namespace.
+     *
+     * @access  public
+     * @param   string  $app_namespace
+     * @param   string  $src_class_name
+     * @return  string
+     */
+    abstract public function validateNameSpace($app_namespace, $src_class_name);
+
+
+    /**
+     * validate class name.
+     *
+     * @access  public
+     * @param   string  $app_namespace
+     * @param   string  $src_class_name
+     * @return  string
+     */
+    abstract public function validateClassName($app_namespace, $src_class_name);
+
+
+    /**
+     * validate class file from class name.
+     *
+     * @access  public
+     * @param   string  $namespace
+     * @param   string  $class_name
+     * @return  string
+     */
+    abstract public function validateClassFile($namespace, $class_name);
 }
 

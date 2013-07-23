@@ -32,6 +32,7 @@ namespace Samurai\Samurai;
 
 use Samurai\Raikiri;
 use Samurai\Samurai\Component\Core\Loader;
+use Samurai\Samurai\Component\Core\Namespacer;
 
 // common constants.
 defined('DS') ?: define('DS', DIRECTORY_SEPARATOR);
@@ -371,6 +372,9 @@ class Application
             return $a['priority'] < $b['priority'] ? -1 : 1;
         });
         $this->config('directory.app', $dirs);
+
+        // register namespacer
+        Namespacer::register($namespace, $path);
     }
 
 

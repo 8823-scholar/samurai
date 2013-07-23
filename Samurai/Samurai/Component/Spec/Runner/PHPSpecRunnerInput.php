@@ -28,24 +28,20 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Spec;
+namespace Samurai\Samurai\Component\Spec\Runner;
 
-use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
+use Symfony\Component\Console\Input\ArgvInput;
 
 /**
- * Sample for spec standard file.
+ * hack phpspec input.
  *
  * @package     Samurai
- * @subpackage  Spec
+ * @subpackage  Component.Spec
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class SampleSpec extends PHPSpecContext
+class PHPSpecRunnerInput extends ArgvInput
 {
-    public function it_should_be_equal()
-    {
-        $this->isFoo();
-    }
 }
 

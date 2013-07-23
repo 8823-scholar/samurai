@@ -59,6 +59,24 @@ class YAML
             throw new Exception\NotFoundException('Not found YAML parser.');
         }
     }
+    
+    
+    /**
+     * dump YAML formatted.
+     *
+     * @access  public
+     * @param   array   $array
+     * @return  string
+     * @throw   Samurai\Exception\NotFoundException
+     */
+    public static function dump($array)
+    {
+        if ( self::enableSpyc() ) {
+            return self::dumpBySpyc($array);
+        } else {
+            throw new Exception\NotFoundException('Not found YAML parser.');
+        }
+    }
 
 
 
@@ -86,6 +104,19 @@ class YAML
         if ( ! file_exists($file) ) return array();
 
         $data = \Spyc::YAMLLoad($file);
+        return $data;
+    }
+    
+    /**
+     * dump YAML formatted by Spyc
+     *
+     * @access  public
+     * @param   array   $array
+     * @return  string
+     */
+    public static function dumpBySpyc($array)
+    {
+        $data = \Spyc::YAMLDump($array);
         return $data;
     }
 }

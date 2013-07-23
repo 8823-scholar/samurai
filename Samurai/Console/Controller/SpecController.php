@@ -78,10 +78,8 @@ class SpecController extends ConsoleController
 
         $this->setup();
         $this->copy2Workspace();
-        /*
         $this->initialize();
         $this->run();
-         */
     }
     
     
@@ -182,6 +180,42 @@ class SpecController extends ConsoleController
     private function generateSpecFile(File $file)
     {
         require_once $file->getRealPath();
+        $src_class_name = $file->getClassName();
+        $dst_name_space = $this->runner->validateNameSpace($file->appNameSpace(), $src_class_name);
+        $dst_class_name = $this->runner->validateClassName($file->appNameSpace(), $src_class_name);
+        $dst_class_file = $this->runner->validateClassFile($dst_name_space, $dst_class_name);
+
+        $workspace = $this->runner->getWorkspace();
+        $body = [];
+        $body[] = '<?php';
+        $body[] = "namespace {$dst_name_space};";
+        $body[] = "class {$dst_class_name} extends \\{$src_class_name} {}";
+        $body[] = '';
+        $this->FileUtil->mkdirP(dirname($dst_class_file));
+        file_put_contents($dst_class_file, join(PHP_EOL, $body));
+    }
+
+
+    /**
+     * initialize runner
+     *
+     * @access  private
+     */
+    private function initialize()
+    {
+        // generate runner configuration
+        $this->runner->generateConfigurationFile();
+    }
+
+
+    /**
+     * run spec.
+     *
+     * @access  private
+     */
+    private function run()
+    {
+        $this->runner->run();
     }
 }
 

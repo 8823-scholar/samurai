@@ -30,6 +30,8 @@
 
 namespace Samurai\Samurai\Component\FileSystem;
 
+use Samurai\Samurai\Component\Core\Namespacer;
+
 /**
  * File info class.
  *
@@ -56,22 +58,6 @@ class File extends \SplFileInfo
      * @var     Samurai\Samurai\Component\FileSystem\Directory
      */
     public $parent;
-
-    /**
-     * app dir.
-     *
-     * @access  public
-     * @var     string
-     */
-    public $app_dir;
-
-    /**
-     * app namespace.
-     *
-     * @access  public
-     * @var     string
-     */
-    public $app_namespace;
 
 
     /**
@@ -104,13 +90,12 @@ class File extends \SplFileInfo
      * app dir accessor.
      *
      * @access  public
-     * @param   string  $dir
      * @return  string
      */
-    public function appDir($dir = null)
+    public function appDir()
     {
-        if ($dir !== null) $this->app_dir = $dir;
-        return $this->app_dir;
+        $app_dir = Namespacer::pickAppDir($this->path);
+        return $app_dir;
     }
     
     
@@ -118,13 +103,14 @@ class File extends \SplFileInfo
      * app namespace accessor.
      *
      * @access  public
-     * @param   string  $namespace
      * @return  string
      */
-    public function appNameSpace($namespace = null)
+    public function appNameSpace()
     {
-        if ($namespace !== null) $this->app_namespace = $namespace;
-        return $this->app_namespace;
+        $app_dir = $this->appDir();
+        $root_dir = $this->rootDir();
+        $ns_path = substr($app_dir, strlen($root_dir) + 1);
+        return str_replace(DS, '\\', $ns_path);
     }
 
 
@@ -138,9 +124,7 @@ class File extends \SplFileInfo
      */
     public function rootDir()
     {
-        $dir = $this->appDir();
-        $pattern_namespace = preg_quote(DS . str_replace('\\', DS, $this->appNameSpace()), '/');
-        $dir = preg_replace("/{$pattern_namespace}/", '', $dir);
+        $dir = Namespacer::pickRootDir($this->path);
         return $dir;
     }
 

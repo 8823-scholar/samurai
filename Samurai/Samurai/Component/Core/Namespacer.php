@@ -30,13 +30,10 @@
 
 namespace Samurai\Samurai\Component\Core;
 
-use Samurai\Samurai\Samurai;
-use Samurai\Samurai\Config;
-use Samurai\Samurai\Application;
-use Samurai\Samurai\Component\FileSystem;
-
 /**
- * Class loader.
+ * namespace management class.
+ *
+ * this class is referenced by static.
  *
  * @package     Samurai
  * @subpackage  Component.Core
@@ -44,103 +41,80 @@ use Samurai\Samurai\Component\FileSystem;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Loader
+class Namespacer
 {
     /**
-     * app
+     * path relationed to namespace.
      *
      * @access  public
-     * @var     Samurai\Samurai\Application
+     * @var     array
      */
-    public $app;
+    public static $namespaces = array();
 
 
     /**
-     * constructor
+     * register namespace.
      *
      * @access  public
-     * @param   Samurai\Samurai\Application $app
+     * @param   string  $namespace
+     * @param   string  $path
      */
-    public function __construct(Application $app)
+    public static function register($namespace, $path)
     {
-        $this->app = $app;
+        self::$namespaces[$path] = $namespace;
     }
-
-
-    /**
-     * register to autoload
-     *
-     * @access  public
-     */
-    public function register()
-    {
-        spl_autoload_register(array($this, 'autoload'));
-    }
-
-
-
-    /**
-     * autoload.
-     *
-     * @access  public
-     * @param   string  $class
-     */
-    public function autoload($class)
-    {
-        // path.
-        $path = $this->getPathByClass($class);
-
-        // load
-        if ($path) {
-            require_once $path;
-            return true;
-        }
-        return false;
-    }
-
+    
     
     /**
-     * get path by class.
+     * pick the app dir from some path.
      *
      * @access  public
-     * @param   string  $class
+     * @param   string  $path
      * @return  string
      */
-    public function getPathByClass($class)
+    public static function pickAppDir($path)
     {
-        $class_path = str_replace('\\', DS, $class);
-        $class_path = str_replace('_', DS, $class_path) . '.php';
+        // when relational path.
+        if ($path[0] !== '/') return $path;
 
-        foreach ($this->app->config('directory.app') as $app) {
-            $file = $app['dir'] . DS . $class_path;
-            if (file_exists($file)) return $file;
-        }
-        return null;
-    }
-
-
-
-    /**
-     * file finder over application dirs.
-     *
-     * @access  public
-     * @return  array
-     * @todo    should be return some iterator aggregate...?
-     */
-    public function find($glob)
-    {
-        $files = new FileSystem\Iterator\SimpleListIterator();
-
-        foreach ($this->app->config('directory.app') as $app) {
-            $matches = glob($app['dir'] . DS . $glob);
-            foreach ($matches as $path) {
-                $file = new FileSystem\File($path);
-                $files->add($file);
+        $root = null;
+        foreach (self::$namespaces as $p => $ns) {
+            if (strpos($path, $p) === 0) {
+                if ($root === null || strlen($root) < strlen($p)) $root = $p;
             }
         }
 
-        return $files;
+        return $root ? $root : $path;
     }
 
+
+    /**
+     * pick the root dir from some path.
+     *
+     * @access  public
+     * @param   string  $path
+     * @return  string
+     */
+    public static function pickRootDir($path)
+    {
+        // when relational path.
+        if ($path[0] !== '/') return $path;
+
+        $root = null;
+        foreach (self::$namespaces as $p => $ns) {
+            if (strpos($path, $p) === 0) {
+                $f = function($names, $count) {
+                    for ($i = 0; $i < $count; $i++) {
+                        array_pop($names);
+                    }
+                    return $names;
+                };
+                $d = join(DS, $f(explode(DS, $p), count(explode('\\', $ns))));
+                if ($root === null || strlen($root) < strlen($d)) $root = $d;
+            }
+        }
+
+        return $root ? $root : $path;
+    }
 }
 

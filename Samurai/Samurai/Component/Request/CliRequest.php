@@ -42,6 +42,15 @@ namespace Samurai\Samurai\Component\Request;
 class CliRequest extends Request
 {
     /**
+     * self
+     *
+     * @access  public
+     * @var     string
+     */
+    public $script_name;
+
+
+    /**
      * init.
      *
      * @access  public
@@ -53,6 +62,7 @@ class CliRequest extends Request
             // first argument is script name.
             $args = $_SERVER['argv'];
             $script = array_shift($args);
+            $this->script_name = $script;
 
             // parse options.
             foreach ( $args as $arg ) {
@@ -156,6 +166,18 @@ class CliRequest extends Request
     public function getMethod()
     {
         return php_sapi_name();
+    }
+
+
+    /**
+     * get self script name.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getScriptName()
+    {
+        return $this->script_name;
     }
 }
 

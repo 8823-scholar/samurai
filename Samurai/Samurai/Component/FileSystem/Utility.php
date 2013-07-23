@@ -57,12 +57,14 @@ class Utility
      */
     public function mkdirP($dir)
     {
-        $path = '';
+        $p = [];
         $dirs = explode(DS, $dir);
-        array_shift($dirs);
         foreach ($dirs as $name) {
-            $path = $path . DS . $name;
-            if (! file_exists($path)) {
+            $p[] = $name;
+            $path = join(DS, $p);
+            if ($path === '') {
+                continue;
+            } elseif (! file_exists($path)) {
                 mkdir($path);
             } elseif(! is_dir($path)) {
                 throw new Exception("Can not mkdir, this is not directory. -> {$path}");
