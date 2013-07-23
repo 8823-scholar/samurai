@@ -174,7 +174,7 @@ abstract class Runner
             // when namespace
             if (! strpos($query, DS)) {
                 $q_ns = join('\\', array_map('ucfirst', explode(':', $query)));
-                return strpos($file->appNamespace(), $q_ns) === 0;
+                return $file->appNamespace() === $q_ns;
             }
             // when file path
             elseif (is_dir($query) || is_file($query)) {

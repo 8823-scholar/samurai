@@ -65,6 +65,9 @@ class Application extends App\Application
         
         // application dir.
         $this->addAppPath(__DIR__, __NAMESPACE__, self::PRIORITY_HIGH);
+
+        // default spec namespaces
+        $this->config('spec.default.namespaces', ['app', 'app:console']);
     }
 
 

@@ -60,6 +60,9 @@ class Application extends Samurai\Application
 
         // application dir.
         $this->addAppPath(__DIR__, __NAMESPACE__, self::PRIORITY_LOW);
+        
+        // default spec namespaces
+        $this->config('spec.default.namespaces', ['samurai:samurai', 'samurai:console']);
     }
 
 

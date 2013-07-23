@@ -144,7 +144,7 @@ class SpecController extends ConsoleController
         $this->truncateWorkspace();
 
         // search spec files.
-        $queries = $this->Request->getAsArray('args', array('app', 'app:console'));
+        $queries = $this->Request->getAsArray('args', $this->Application->config('spec.default.namespaces'));
         $files = $this->runner->searchSpecFiles($queries);
         foreach ($files as $file) {
             $this->generateSpecFile($file);
