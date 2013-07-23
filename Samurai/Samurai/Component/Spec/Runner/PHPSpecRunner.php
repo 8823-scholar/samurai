@@ -81,13 +81,17 @@ class PHPSpecRunner extends Runner
     /**
      * {@inheritdoc}
      */
-    public function searchSpecFiles()
+    public function searchSpecFiles(array $queries = [])
     {
         $specfiles = new SimpleListIterator();
         foreach ($this->targets as $target) {
             $finder = $this->Finder->create();
             $files = $finder->path($target)->fileOnly()->name("*Spec.php")->find();
-            $specfiles->append($files);
+            foreach ($files as $file) {
+                if ($this->isMatch($file, $queries)) {
+                    $specfiles->add($file);
+                }
+            }
         }
 
         return $specfiles;

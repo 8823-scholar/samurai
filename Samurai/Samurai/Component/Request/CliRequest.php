@@ -152,6 +152,7 @@ class CliRequest extends Request
     public function getAsArray($key, array $default = array())
     {
         $value = parent::get($key, $default);
+        if (is_array($value) && !$value) $value = $default;
         return (array)$value;
     }
 

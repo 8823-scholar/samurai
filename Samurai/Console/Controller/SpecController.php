@@ -126,14 +126,11 @@ class SpecController extends ConsoleController
      */
     private function getTargetPaths()
     {
-        $args = $this->Request->getAsArray('args');
-        if (! $args) {
-            $args = array();
-            foreach ($this->Loader->find($this->Application->config('directory.spec')) as $dir) {
-                $args[] = $dir->getRealPath();
-            }
+        $paths = [];
+        foreach ($this->Loader->find($this->Application->config('directory.spec')) as $dir) {
+            $paths[] = $dir->getRealPath();
         }
-        return $args;
+        return $paths;
     }
 
 
@@ -147,7 +144,8 @@ class SpecController extends ConsoleController
         $this->truncateWorkspace();
 
         // search spec files.
-        $files = $this->runner->searchSpecFiles();
+        $queries = $this->Request->getAsArray('args', array('app', 'app:console'));
+        $files = $this->runner->searchSpecFiles($queries);
         foreach ($files as $file) {
             $this->generateSpecFile($file);
         }
