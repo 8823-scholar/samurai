@@ -58,7 +58,8 @@ class PHPSpecRunner extends Runner
         // cd
         chdir($this->getWorkspace());
 
-        $input = new PHPSpecRunnerInput([$this->Request->getScriptName(), 'run', $this->getWorkspace() . DS . 'spec', '--no-interaction']);
+        $input = new PHPSpecRunnerInput([$this->Request->getScriptName(), 'run',
+                                            $this->getWorkspace() . DS . 'spec', '--verbose', '--ansi']);
 
         $app = new Application(\Samurai\Samurai\Samurai::getVersion());
         $app->run($input);

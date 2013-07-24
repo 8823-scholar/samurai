@@ -75,7 +75,7 @@ class Application
      * @access  protected
      * @var     boolean
      */
-    protected $_booted = false;
+    public $booted = false;
 
     /**
      * loader
@@ -149,8 +149,8 @@ class Application
     public function bootstrap()
     {
         // booted ?
-        if ($this->_booted) return;
-        $this->_booted = true;
+        if ($this->booted) return;
+        $this->booted = true;
 
         // call application::configure
         $this->configure();
