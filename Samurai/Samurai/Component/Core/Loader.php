@@ -142,5 +142,18 @@ class Loader
         return $files;
     }
 
+
+    /**
+     * find and get first element.
+     *
+     * @access  public
+     * @return  Samurai\Samurai\Component\FileSystem\File
+     */
+    public function findFirst($glob)
+    {
+        $files = $this->find($glob);
+        return $files->first();
+    }
+
 }
 

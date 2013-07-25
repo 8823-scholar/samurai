@@ -32,7 +32,7 @@ namespace Samurai\Samurai\Component\Core;
 
 use App\Application;
 use Samurai\Samurai\Samurai;
-use Samurai\Exception\Controller\NotFoundException;
+use Samurai\Samurai\Exception\NotFoundException;
 use Samurai\Raikiri;
 
 /**
@@ -125,7 +125,7 @@ class ActionChain extends Raikiri\Object
         array_unshift($names, 'Controller');
         $base = join(DS, array_map('ucfirst', $names)) . 'Controller.php';
 
-        $file = $this->Loader->find($base)->first();
+        $file = $this->Loader->findFirst($base);
         if ($file) {
             $class = $file->getClassName();
             $controller = new $class();

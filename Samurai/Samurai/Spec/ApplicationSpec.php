@@ -4,6 +4,7 @@ namespace Samurai\Samurai\Spec;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 use Samurai\Samurai\Application;
+use Samurai\Samurai\Component\Core\Loader;
 use Samurai\Raikiri\Container;
 
 class ApplicationSpec extends PHPSpecContext
@@ -51,7 +52,12 @@ class ApplicationSpec extends PHPSpecContext
     {
         $this->bootstrap();
         $this->booted->shouldBe(true);
-        $this->loader->shouldHaveType('Samurai\Samurai\Component\Core\Loader');
+    }
+
+    public function it_get_loader_after_bootstrap()
+    {
+        $this->bootstrap();
+        $this->getLoader()->shouldHaveType('Samurai\Samurai\Component\Core\Loader');
     }
 }
 

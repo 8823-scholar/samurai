@@ -136,13 +136,13 @@ class Framework extends Raikiri\Object
     {
         $name = $this->app->config('container.dicon');
         $container = Raikiri\ContainerFactory::create();
-        foreach ($this->app->loader->find($name) as $dicon) {
+        foreach ($this->app->getLoader()->find($name) as $dicon) {
             $container->import($dicon);
         }
 
         $container->registerComponent('Framework', $this);
         $container->registerComponent('Application', $this->app);
-        $container->registerComponent('Loader', $this->app->loader);
+        $container->registerComponent('Loader', $this->app->getLoader());
         $container->injectDependency($this);
 
         $this->app->setContainer($container);
@@ -157,7 +157,7 @@ class Framework extends Raikiri\Object
     private function routing()
     {
         // import.
-        $file = $this->app->loader->find($this->app->config('directory.config.routing') . DS . 'routes.yml')->first();
+        $file = $this->app->getLoader()->findFirst($this->app->config('directory.config.routing') . DS . 'routes.yml');
         $this->Router->import($file);
 
         // routing.

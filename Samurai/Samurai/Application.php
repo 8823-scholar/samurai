@@ -413,5 +413,17 @@ class Application
     {
         return $this->container;
     }
+
+
+    /**
+     * get loader.
+     *
+     * @access  public
+     * @return  Samurai\Samurai\Component\Core\Loader
+     */
+    public function getLoader()
+    {
+        return $this->loader;
+    }
 }
 
