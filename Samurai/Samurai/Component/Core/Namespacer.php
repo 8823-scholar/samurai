@@ -53,6 +53,16 @@ class Namespacer
 
 
     /**
+     * private constructor.
+     *
+     * @access  private
+     */
+    private function __construct()
+    {
+    }
+
+
+    /**
      * register namespace.
      *
      * @access  public
