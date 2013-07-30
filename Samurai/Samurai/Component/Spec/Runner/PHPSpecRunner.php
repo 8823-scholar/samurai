@@ -31,8 +31,10 @@
 namespace Samurai\Samurai\Component\Spec\Runner;
 
 use Samurai\Samurai\Component\FileSystem\Iterator\SimpleListIterator;
-use PhpSpec\Console\Application;
 use Samurai\Samurai\Component\Core\YAML;
+use Samurai\Samurai\Component\Spec\PHPSpec\Input;
+use Samurai\Samurai\Component\Spec\PHPSpec\DIContainerMaintainer;
+use PhpSpec\Console\Application;
 
 /**
  * spec runner for PHPSpec.
@@ -49,6 +51,7 @@ class PHPSpecRunner extends Runner
      * @dependencies
      */
     public $Request;
+    public $Application;
 
     /**
      * {@inheritdoc}
@@ -58,10 +61,31 @@ class PHPSpecRunner extends Runner
         // cd
         chdir($this->getWorkspace());
 
-        $input = new PHPSpecRunnerInput([$this->Request->getScriptName(), 'run',
+        $input = new Input([$this->Request->getScriptName(), 'run',
                                             $this->getWorkspace() . DS . 'spec', '--verbose', '--ansi']);
 
         $app = new Application(\Samurai\Samurai\Samurai::getVersion());
+
+        // override
+        $container = $app->getContainer();
+        $container->set('samurai.container', $this->Application->getContainer());
+
+        $container->setShared('runner.specification', function($c) {
+            return new PHPSpecSpecificationRunner(
+                $c->get('event_dispatcher'),
+                $c->get('runner.example')
+            );
+        });
+
+        $container->set('runner.maintainers.dicontainer', function($c) {
+            $maintainer = new DIContainerMaintainer(
+                $c->get('formatter.presenter'),
+                $c->get('unwrapper')
+            );
+            $maintainer->Container = $c->get('samurai.container');
+            return $maintainer;
+        });
+
         $app->run($input);
     }
 

@@ -49,18 +49,18 @@ class ActionChain extends Raikiri\Object
     /**
      * stacked actions
      *
-     * @access  private
+     * @access  public
      * @var     array
      */
-    private $_actions = array();
+    public $actions = array();
 
     /**
      * position of action
      *
-     * @access  private
+     * @access  public
      * @var     int
      */
-    private $_position = 0;
+    public $position = 0;
 
     /**
      * @dependencies
@@ -82,7 +82,7 @@ class ActionChain extends Raikiri\Object
         if ( $action === null ) {
             list($controller, $action) = explode('.', $controller);
         }
-        $this->_actions[] = array(
+        $this->actions[] = array(
             'controller' => null,
             'controller_name' => $controller,
             'action' => $action,
@@ -99,15 +99,15 @@ class ActionChain extends Raikiri\Object
      */
     public function getCurrentAction()
     {
-        if ( ! isset($this->_actions[$this->_position]) ) return null;
+        if ( ! isset($this->actions[$this->position]) ) return null;
 
-        $define = $this->_actions[$this->_position];
+        $define = $this->actions[$this->position];
         if ( $define['controller'] ) return $define;
 
         $controller = $this->getController($define['controller_name']);
         $define['controller'] = $controller;
 
-        $this->_actions[$this->_position] = $define;
+        $this->actions[$this->position] = $define;
 
         return $define;
     }
@@ -147,7 +147,7 @@ class ActionChain extends Raikiri\Object
      */
     public function setCurrentResult($result)
     {
-        $this->_actions[$this->_position]['result'] = $result;
+        $this->actions[$this->position]['result'] = $result;
     }
 
 
@@ -160,7 +160,7 @@ class ActionChain extends Raikiri\Object
      */
     public function next()
     {
-        $this->_position++;
+        $this->position++;
     }
 }
 

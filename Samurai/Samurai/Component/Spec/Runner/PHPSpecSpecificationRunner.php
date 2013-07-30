@@ -30,18 +30,26 @@
 
 namespace Samurai\Samurai\Component\Spec\Runner;
 
-use Symfony\Component\Console\Input\ArgvInput;
+use PhpSpec\Runner\SpecificationRunner;
+use PhpSpec\Loader\Node\SpecificationNode;
 
 /**
- * hack phpspec input.
+ * spec runner for PHPSpec.
  *
  * @package     Samurai
- * @subpackage  Component.Spec
+ * @subpackage  Spec
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class PHPSpecRunnerInput extends ArgvInput
+class PHPSpecSpecificationRunner extends SpecificationRunner
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function run(SpecificationNode $specification)
+    {
+        parent::run($specification);
+    }
 }
 
