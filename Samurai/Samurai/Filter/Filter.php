@@ -140,5 +140,18 @@ class Filter
     public function getAttribute($key, $default = null)
     {
     }
+
+
+    /**
+     * get self name.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getName()
+    {
+        $names = explode('\\', get_class($this));
+        return preg_replace('/Filter$/', '', array_pop($names));
+    }
 }
 

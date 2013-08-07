@@ -52,7 +52,7 @@ class FilterChain extends Raikiri\Object
      * @access  private
      * @var     Samurai\Samurai\Controller\SamuraiController 
      */
-    private $_controller;
+    public $controller;
 
     /**
      * action
@@ -60,7 +60,7 @@ class FilterChain extends Raikiri\Object
      * @access  private
      * @var     string
      */
-    private $_action;
+    public $action;
 
     /**
      * filters
@@ -68,7 +68,7 @@ class FilterChain extends Raikiri\Object
      * @access  private
      * @var     array
      */
-    private $_filters = array();
+    public $filters = array();
 
     /**
      * filter names.
@@ -76,7 +76,7 @@ class FilterChain extends Raikiri\Object
      * @access  private
      * @var     array
      */
-    private $_filter_names = array();
+    public $filter_names = array();
 
     /**
      * position of filter
@@ -84,7 +84,7 @@ class FilterChain extends Raikiri\Object
      * @access  private
      * @var     int
      */
-    private $_position = 0;
+    public $position = 0;
 
     /**
      * has action filter ?
@@ -92,7 +92,7 @@ class FilterChain extends Raikiri\Object
      * @access  private
      * @var     boolean
      */
-    private $_has_action_filter = false;
+    public $has_action_filter = false;
 
     /**
      * @dependencies
@@ -106,12 +106,13 @@ class FilterChain extends Raikiri\Object
      * Set action
      *
      * @access  public
-     * @param   array
+     * @param   Samurai\Samurai\Controller\SamuraiController $controller
+     * @param   string  $action
      */
-    public function setAction(SamuraiController $controller, $action)
+    public function setAction(SamuraiController $controller, $action = 'execute')
     {
-        $this->_controller = $controller;
-        $this->_action = $action;
+        $this->controller = $controller;
+        $this->action = $action;
     }
 
 
@@ -122,12 +123,12 @@ class FilterChain extends Raikiri\Object
      */
     public function clear()
     {
-        $this->_controller = null;
-        $this->_action = null;
-        $this->_filters = array();
-        $this->_filter_names = array();
-        $this->_position = 0;
-        $this->_has_action_filter = false;
+        $this->controller = null;
+        $this->action = null;
+        $this->filters = array();
+        $this->filter_names = array();
+        $this->position = 0;
+        $this->has_action_filter = false;
     }
 
 
@@ -141,26 +142,26 @@ class FilterChain extends Raikiri\Object
         // load filter
         // 1. App/Controller/filter.yml
         // 2. App/Controller/foo.filter.yml
-        $filters = $this->_controller->getFilters();
-        for ( $i = 0; $i < count($filters); $i++ ) {
+        $filters = $this->controller->getFilters();
+        for ($i = 0; $i < count($filters); $i++) {
             $this->loadFilter($filters[$i], $i !== count($filters) - 1);
         }
 
         // action filter is already last.
-        if ( ! $this->_has_action_filter ) {
+        if (! $this->has_action_filter) {
             $this->addFilter('Action');
         } else {
             $action = null;
             $names = array();
-            foreach ( $this->_filter_names as $name) {
-                if ( strtolower($name) === 'action' ) {
+            foreach ($this->filter_names as $name) {
+                if (strtolower($name) === 'action') {
                     $action = $name;
                 } else {
                     $names[] = $name;
                 }
             }
             $names[] = $action;
-            $this->_filter_names = $names;
+            $this->filter_names = $names;
         }
     }
 
@@ -180,12 +181,12 @@ class FilterChain extends Raikiri\Object
         $filters = isset($defines['*']) && $defines['*'] ? $defines['*'] : array();
 
         // when local, load "*" and "controller.action"
-        if ( ! $is_global ) {
-            $key = $this->_controller->getFilterKey($this->_action);
+        if (! $is_global) {
+            $key = $this->controller->getFilterKey($this->action);
             $filters = array_merge($filters, isset($defines[$key]) && $defines[$key] ? (array)$defines[$key] : array());
         }
 
-        foreach ( $filters as $name => $attributes ) {
+        foreach ($filters as $name => $attributes) {
             $this->addFilter($name, $attributes);
         }
     }
@@ -205,22 +206,22 @@ class FilterChain extends Raikiri\Object
         $filter = array_shift($names);
         $method = array_shift($names);
         $alias = array_shift($names);
-        if ( ! $alias ) $alias = $filter;
+        if (! $alias) $alias = $filter;
 
         // method miss match, when return.
-        if ( $method && strtoupper($method) !== $this->Request->getMethod() ) return;
+        if ($method && strtoupper($method) !== $this->Request->getMethod()) return;
 
         // register.
-        if ( isset($this->_filters[$alias]) ) {
-            $this->_filters[$alias]['attributes'] = $this->ArrayUtil->merge($this->_filters[$alias]['attributes'], $attributes);
+        if (isset($this->filters[$alias])) {
+            $this->filters[$alias]['attributes'] = $this->ArrayUtil->merge($this->filters[$alias]['attributes'], $attributes);
         } else {
-            $this->_filter_names[] = $alias;
-            $this->_filters[$alias] = array('name' => $filter, 'attributes' => (array)$attributes);
+            $this->filter_names[] = $alias;
+            $this->filters[$alias] = array('name' => $filter, 'attributes' => (array)$attributes);
         }
 
         // if action filter.
-        if ( strtolower($filter) === 'action' ) {
-            $this->_has_action_filter = true;
+        if (strtolower($filter) === 'action') {
+            $this->has_action_filter = true;
         }
     }
 
@@ -233,7 +234,7 @@ class FilterChain extends Raikiri\Object
      */
     public function execute()
     {
-        if ( $this->has() ) {
+        if ($this->has()) {
             $filter = $this->getCurrentFilter();
             $filter->execute();
         }
@@ -247,7 +248,7 @@ class FilterChain extends Raikiri\Object
      */
     public function next()
     {
-        $this->_position++;
+        $this->position++;
     }
 
 
@@ -259,8 +260,8 @@ class FilterChain extends Raikiri\Object
      */
     public function getCurrentFilter()
     {
-        $alias = $this->_filter_names[$this->_position];
-        $define = $this->_filters[$alias];
+        $alias = $this->filter_names[$this->position];
+        $define = $this->filters[$alias];
         $filter = $this->getFilterByName($define['name']);
         return $filter;
     }
@@ -276,21 +277,22 @@ class FilterChain extends Raikiri\Object
     public function getFilterByName($name)
     {
         // APP ?
+        // TODO: serach by loader
         $filter = null;
         $name = ucfirst($name) . 'Filter';
         $class = '\\App\\Filter\\' . $name;
-        if ( class_exists($class) ) {
+        if (class_exists($class)) {
             $filter = new $class();
         }
 
         // CORE ?
         $class = '\\Samurai\Samurai\\Filter\\' . $name;
-        if ( ! $filter && class_exists($class) ) {
+        if (! $filter && class_exists($class)) {
             $filter = new $class();
         }
 
         // not found.
-        if ( ! $filter ) {
+        if (! $filter) {
             throw new Exception\NotFoundException('No such filter. -> ' . $name);
         }
         
@@ -310,7 +312,7 @@ class FilterChain extends Raikiri\Object
      */
     public function has()
     {
-        return isset($this->_filter_names[$this->_position]);
+        return isset($this->filter_names[$this->position]);
     }
 
 
@@ -322,7 +324,7 @@ class FilterChain extends Raikiri\Object
      */
     public function hasNext()
     {
-        return isset($this->_filter_names[$this->_position + 1]);
+        return isset($this->filter_names[$this->position + 1]);
     }
 }
 

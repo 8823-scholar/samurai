@@ -31,6 +31,7 @@
 namespace Samurai\Raikiri;
 
 use Samurai\Onikiri\ModelFactory;
+use Samurai\Samurai\Component\Core\Accessor;
 
 /**
  * DI Container common object class.
@@ -42,6 +43,9 @@ use Samurai\Onikiri\ModelFactory;
  */
 class Object
 {
+    use Accessor;
+
+
     /**
      * dependencies
      *
