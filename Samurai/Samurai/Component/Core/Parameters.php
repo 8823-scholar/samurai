@@ -60,10 +60,10 @@ class Parameters extends Raikiri\Object
     /**
      * import
      *
-     * @access  protected
+     * @access  public
      * @param   array   $data
      */
-    protected function _import(array $data)
+    public function import(array $data)
     {
         $this->_params = $this->ArrayUtil->merge($this->_params, $data);
     }

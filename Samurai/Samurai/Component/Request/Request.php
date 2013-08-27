@@ -30,6 +30,7 @@
 
 namespace Samurai\Samurai\Component\Request;
 
+use Samurai\Samurai\Component\Core\Accessor;
 use Samurai\Samurai\Component\Core\Parameters;
 
 /**
@@ -43,6 +44,12 @@ use Samurai\Samurai\Component\Core\Parameters;
  */
 abstract class Request extends Parameters
 {
+    /**
+     * @traits
+     */
+    use Accessor;
+
+
     /**
      * init.
      *

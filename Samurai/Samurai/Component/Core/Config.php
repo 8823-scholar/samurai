@@ -50,7 +50,7 @@ class Config extends Parameters
     public function import($file)
     {
         $data = YAML::load($file);
-        $this->_import($data);
+        parent::import($data);
     }
 }
 

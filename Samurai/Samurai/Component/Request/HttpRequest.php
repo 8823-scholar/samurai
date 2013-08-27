@@ -48,42 +48,42 @@ class HttpRequest extends Request
     /**
      * headers
      *
-     * @access  private
+     * @access  public
      * @var     array
      */
-    private $_headers = array();
+    public $headers = array();
 
     /**
      * path (after root dir)
      *
-     * @access  private
+     * @access  public
      * @var     string
      */
-    private $_path = '/';
+    public $path = '/';
 
     /**
      * path full
      *
-     * @access  private
+     * @access  public
      * @var     string
      */
-    private $_full_path = '/';
+    public $full_path = '/';
 
     /**
      * parent path.
      *
-     * @access  private
+     * @access  public
      * @var     string
      */
-    private $_parent_path = '';
+    public $parent_path = '';
 
     /**
      * base url
      *
-     * @access  private
+     * @access  public
      * @var     string
      */
-    private $_base_url = '';
+    public $base_url = '';
 
 
     /**
@@ -93,32 +93,30 @@ class HttpRequest extends Request
      */
     public function init()
     {
-        // no cookie.
+        // not contain cookie.
         $request = array_merge($_GET, $_POST);
-        $this->_import($request);
+        $this->import($request);
 
         // headers
-        if ( function_exists('apache_request_headers') ) {
-            foreach(apache_request_headers() as $_key => $_val){
-                $this->setHeader($_key, $_val);
-            }
+        foreach($this->getHttpHeaders() as $_key => $_val){
+            $this->setHeader($_key, $_val);
         }
 
         // path
-        if ( isset($_SERVER['REQUEST_URI']) ) {
-
+        if (isset($_SERVER['REQUEST_URI'])) {
             // bugfix built in server, when has format, then SCRIPT_NAME is seems like REQUEST_URI.
-            if ( php_sapi_name() === 'cli-server' ) {
+            if (php_sapi_name() === 'cli-server') {
                 $_SERVER['SCRIPT_NAME'] = preg_replace('|^' . preg_quote($_SERVER['DOCUMENT_ROOT']) .  '|', '', $_SERVER['SCRIPT_FILENAME']);
             }
 
-            $this->_parent_path = dirname($_SERVER['SCRIPT_NAME']) == '/' ? '' : dirname($_SERVER['SCRIPT_NAME']);
-            $this->_path = preg_replace('|^' . preg_quote($this->_parent_path, '|') . '|', '', array_shift(explode('?', $_SERVER['REQUEST_URI'])));
+            $temp = explode('?', $_SERVER['REQUEST_URI']);
+            $this->parent_path = dirname($_SERVER['SCRIPT_NAME']) == '/' ? '' : dirname($_SERVER['SCRIPT_NAME']);
+            $this->path = preg_replace('|^' . preg_quote($this->parent_path, '|') . '|', '', array_shift($temp));
         }
 
         // base url
-        if ( isset($_SERVER['HTTP_HOST']) ) {
-            $this->_base_url = 'http://' . $_SERVER['HTTP_HOST'] . $this->_parent_path;
+        if (isset($_SERVER['HTTP_HOST'])) {
+            $this->base_url = 'http://' . $_SERVER['HTTP_HOST'] . $this->parent_path;
         }
     }
 
@@ -132,7 +130,7 @@ class HttpRequest extends Request
      */
     public function getHttpVersion()
     {
-        if ( ! isset($_SERVER['SERVER_PROTOCOL']) ) return '1.0';
+        if (! isset($_SERVER['SERVER_PROTOCOL'])) return '1.0';
 
         $version = str_replace('HTTP/', '', $_SERVER['SERVER_PROTOCOL']);
         return $version;
@@ -148,7 +146,7 @@ class HttpRequest extends Request
     public function getMethod()
     {
         // method in request.
-        if ( $method = $this->get('_method') ) {
+        if ($method = $this->get('_method')) {
             return strtoupper($method);
         }
 
@@ -166,7 +164,7 @@ class HttpRequest extends Request
     public function setHeader($key, $value)
     {
         $key = strtolower($key);
-        $this->_headers[$key] = $value;
+        $this->headers[$key] = $value;
     }
 
 
@@ -180,19 +178,20 @@ class HttpRequest extends Request
     public function getHeader($key, $default = null)
     {
         $key = strtolower($key);
-        return $this->_headers[$key];
+        return isset($this->headers[$key]) ? $this->headers[$key] : $default;
     }
 
 
     /**
-     * Get path
+     * get headers from http.
      *
      * @access  public
-     * @return  string
+     * @return  array
      */
-    public function getPath()
+    public function getHttpHeaders()
     {
-        return $this->_path;
+        if (! function_exists('apache_request_headers')) return array();
+        return apache_request_headers();
     }
 }
 
