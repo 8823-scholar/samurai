@@ -132,7 +132,7 @@ class PHPSpecRunner extends Runner
     {
         $class = substr($src_class_name, strlen($app_namespace) + 6);
 
-        $namespaces = ['spec', $app_namespace];
+        $namespaces = ['spec'];
         $namespaces = array_merge($namespaces, explode('\\', $class));
         array_pop($namespaces);
         return join('\\', $namespaces);

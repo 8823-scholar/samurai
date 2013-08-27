@@ -1,6 +1,6 @@
 <?php
 
-namespace Samurai\Samurai\Spec\Component\Core;
+namespace Samurai\Samurai\Spec\Samurai\Samurai\Component\Core;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 use Samurai\Samurai\Application;

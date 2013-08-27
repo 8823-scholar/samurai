@@ -1,6 +1,6 @@
 <?php
 
-namespace Samurai\Samurai\Spec;
+namespace Samurai\Samurai\Spec\Samurai\Samurai;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 use Samurai\Samurai\Application;
@@ -31,7 +31,8 @@ class ApplicationSpec extends PHPSpecContext
     {
         $this->addAppPath(__DIR__, __NAMESPACE__, Application::PRIORITY_LOW);
         $this->config('directory.app')->shouldReturn(array(
-            ['dir' => __DIR__, 'namespace' => __NAMESPACE__, 'priority' => Application::PRIORITY_LOW, 'index' => 0]
+            ['dir' => __DIR__, 'root' => substr(__DIR__, 0, -1 - strlen(__NAMESPACE__)),
+                'namespace' => __NAMESPACE__, 'priority' => Application::PRIORITY_LOW, 'index' => 0]
         ));
     }
 

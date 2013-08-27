@@ -363,8 +363,11 @@ class Application
     {
         $dirs = $this->config('directory.app');
         if (! $dirs) $dirs = array();
+
+        // root (path - namespace)
+        $root = substr($path, 0, -1 - strlen($namespace));
         
-        $dirs[] = ['dir' => $path, 'namespace' => $namespace, 'priority' => $priority, 'index' => count($dirs)];
+        $dirs[] = ['dir' => $path, 'root' => $root, 'namespace' => $namespace, 'priority' => $priority, 'index' => count($dirs)];
         usort($dirs, function($a, $b) {
             if ($a['priority'] == $b['priority']) {
                 return $a['index'] < $b['index'] ? -1 : 1;

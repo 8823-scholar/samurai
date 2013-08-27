@@ -112,7 +112,7 @@ class Loader
         $class_path = str_replace('_', DS, $class_path) . '.php';
 
         foreach ($this->app->config('directory.app') as $app) {
-            $file = $app['dir'] . DS . $class_path;
+            $file = $app['root'] . DS . $class_path;
             if (file_exists($file)) return $file;
         }
         return null;

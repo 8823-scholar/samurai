@@ -1,6 +1,6 @@
 <?php
 
-namespace Samurai\Samurai\Spec\Component\Core;
+namespace Samurai\Samurai\Spec\Samurai\Samurai\Component\Core;
 
 use Samurai\Samurai\Component\Core\Accessor as CoreAccessor;
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
@@ -9,12 +9,12 @@ class AccessorSpec extends PHPSpecContext
 {
     public function let()
     {
-        $this->beAnInstanceOf('Samurai\Samurai\Spec\Component\Core\Accessor');
+        $this->beAnInstanceOf('Samurai\Samurai\Spec\Samurai\Samurai\Component\Core\Accessor');
     }
 
     public function it_is_not_initializable()
     {
-        $this->shouldHaveType('Samurai\Samurai\Spec\Component\Core\Accessor');
+        $this->shouldHaveType('Samurai\Samurai\Spec\Samurai\Samurai\Component\Core\Accessor');
     }
 
     public function it_is_enable_to_get_proptery()
