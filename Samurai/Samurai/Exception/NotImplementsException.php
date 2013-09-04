@@ -28,53 +28,18 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Console\Config\Renderer;
-
-use Samurai\Console\Application;
-use Samurai\Samurai\Component\Core\Loader;
+namespace Samurai\Samurai\Exception;
 
 /**
- * bootstrap of "Twig" renderer.
- *
- * twig engnine instance reference is "$engine".
+ * Not found Exception.
  *
  * @package     Samurai
- * @subpackage  Config.Renderer
+ * @subpackage  Exception
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-
-// get engine.
-$twig = $engine;
-
-
-// register autoloader.
-\Twig_Autoloader::register();
-
-
-// set directory.
-$loader = null;
-foreach ( Loader::getPaths(Application::config('directory.template'), null, Application::getControllerSpaces()) as $path ) {
-    if ( ! $loader ) {
-        $loader = new \Twig_Loader_Filesystem($path);
-    } else {
-        $loader->addPath($path);
-    }
+class NotImplementsException extends Exception
+{
 }
-if ( $loader ) {
-    foreach ( Loader::getPaths(Application::config('directory.layout'), null, Application::getControllerSpaces()) as $path ) {
-        $loader->addPath($path, 'layout');
-    }
-}
-
-
-// init.
-$twig->setLoader($loader);
-$twig->enableAutoReload();
-$twig->setCache(Loader::getPath(Application::config('directory.temp'), null, Application::getControllerSpaces()) . DS . 'twig');
-
-
-// remove escape for html.
-$twig->removeExtension('escaper');
 

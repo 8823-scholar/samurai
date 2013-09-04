@@ -361,7 +361,7 @@ class Application
      */
     public function addAppPath($path, $namespace, $priority = self::PRIORITY_LOW)
     {
-        $dirs = $this->config('directory.app');
+        $dirs = $this->config('directory.apps');
         if (! $dirs) $dirs = array();
 
         // root (path - namespace)
@@ -370,11 +370,12 @@ class Application
         $dirs[] = ['dir' => $path, 'root' => $root, 'namespace' => $namespace, 'priority' => $priority, 'index' => count($dirs)];
         usort($dirs, function($a, $b) {
             if ($a['priority'] == $b['priority']) {
-                return $a['index'] < $b['index'] ? -1 : 1;
+                return $a['index'] > $b['index'] ? -1 : 1;
             }
-            return $a['priority'] < $b['priority'] ? -1 : 1;
+            return $a['priority'] > $b['priority'] ? -1 : 1;
         });
-        $this->config('directory.app', $dirs);
+        $this->config('directory.apps', $dirs);
+        $this->config('directory.app', $dirs[0]['dir']);
 
         // register namespacer
         Namespacer::register($namespace, $path);

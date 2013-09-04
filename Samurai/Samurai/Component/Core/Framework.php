@@ -136,7 +136,7 @@ class Framework extends Raikiri\Object
     {
         $name = $this->app->config('container.dicon');
         $container = Raikiri\ContainerFactory::create();
-        foreach ($this->app->getLoader()->find($name) as $dicon) {
+        foreach ($this->app->getLoader()->find($name)->reverse() as $dicon) {
             $container->import($dicon);
         }
 

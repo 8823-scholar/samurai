@@ -30,7 +30,7 @@
 
 namespace Samurai\Samurai\Component\Task;
 
-use Samurai\Raikiri;
+use Samurai\Samurai\Exception\NotFoundException;
 
 /**
  * task processor.
@@ -41,8 +41,22 @@ use Samurai\Raikiri;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Processor extends Raikiri\Object
+class Processor
 {
+    /**
+     * task name separator
+     *
+     * @const   string
+     */
+    const SEPARATOR = ':';
+
+    /**
+     * @dependencies
+     */
+    public $Loader;
+    public $Container;
+
+
     /**
      * get task.
      *
@@ -50,14 +64,42 @@ class Processor extends Raikiri\Object
      *   namespace:some:do
      *
      * @access  public
-     * @param   string  $task
+     * @param   string  $name
      * @return  Task
      */
-    public function get($task)
+    public function get($name)
     {
-        $class_name = 'Task\\' . join('\\', array_map('ucfirst', explode(':', $task)));
-        $class_name = Loader::searchClass($class_name);
-        var_dump($class_name);
+        $names = explode(self::SEPARATOR, $name);
+        $method = array_pop($names);
+        $class_name = 'Task\\' . join('\\', array_map('ucfirst', $names)) . 'Task';
+        $class_path = $this->Loader->getPathByClass($class_name, false);
+        if ($class_path === null || ! $class_path->isExists()) throw new NotFoundException("No such task. -> {$name}");
+
+        require_once $class_path;
+        $class_name = $class_path->getClassName();
+        $task = new $class_name();
+        if (! $task->has($method)) throw new NotImplementsException("No such task. -> {$name}");
+        $this->Container->injectDependency($task);
+
+        return $task;
+    }
+
+
+    /**
+     * call task.
+     *
+     * @access  public
+     * @param   mixed   $name
+     */
+    public function execute($name, array $options = [])
+    {
+        $names = explode(self::SEPARATOR, $name);
+        $method = array_pop($names);
+
+        $task = $this->get($name);
+        $task->array2Options($options);
+
+        $task->$method();
     }
 }
 

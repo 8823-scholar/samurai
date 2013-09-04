@@ -144,5 +144,17 @@ class File extends \SplFileInfo
         $class_name = $this->getBasename(".{$this->getExtension()}");
         return "${namespace}\\{$class_name}";
     }
+
+
+    /**
+     * is file exists ?
+     *
+     * @access  public
+     * @return  boolean
+     */
+    public function isExists()
+    {
+        return $this->path && file_exists($this->path);
+    }
 }
 

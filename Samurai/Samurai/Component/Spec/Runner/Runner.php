@@ -174,20 +174,21 @@ abstract class Runner
             // when namespace
             if (! strpos($query, DS)) {
                 $q_ns = join('\\', array_map('ucfirst', explode(':', $query)));
-                return $file->appNamespace() === $q_ns;
+                if ($file->appNamespace() === $q_ns) return true;
             }
             // when file path
             elseif (is_dir($query) || is_file($query)) {
                 // is absolute path
                 if ($query[0] === '/') {
-                    return strpos($file->getRealPath(), $query) === 0;
+                    if (strpos($file->getRealPath(), $query) === 0) return true;
                 }
                 // is relational path.
                 else {
-                    return strpos($file->getRealPath(), getcwd() . DS . $query) === 0;
+                    if (strpos($file->getRealPath(), getcwd() . DS . $query) === 0) return true;
                 }
             }
         }
+        return false;
     }
 }
 

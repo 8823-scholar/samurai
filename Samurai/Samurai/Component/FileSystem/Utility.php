@@ -89,16 +89,31 @@ class Utility
                 if ($file->isWritable()) {
                     rmdir($file);
                 } else {
-                    throw new Samurai\Samurai\Exception("Can not delete this directory. -> {$file}");
+                    throw new Exception("Can not delete this directory. -> {$file}");
                 }
             } else {
                 if ($file->isWritable()) {
                     unlink($file);
                 } else {
-                    throw new Samurai\Samurai\Exception("Can not delete this file. -> {$file}");
+                    throw new Exception("Can not delete this file. -> {$file}");
                 }
             }
         }
+    }
+
+
+    /**
+     * put contents
+     *
+     * @access  public
+     * @param   string  $file
+     * @param   string  $contents
+     */
+    public function putContents($file, $contents)
+    {
+        $dir = dirname($file);
+        if (! file_exists($dir)) throw new Exception("Can not put contents, not exists dirctory. -> {$dir}");
+        //file_put_contents($file, $contents);
     }
 }
 

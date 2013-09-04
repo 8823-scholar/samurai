@@ -28,105 +28,121 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\FileSystem\Iterator;
+namespace Samurai\Samurai\Component\Task;
 
-use Samurai\Samurai\Component\FileSystem\File;
+use Samurai\Samurai\Component\Core\Accessor;
+use Samurai\Samurai\Component\Request\Request;
+use Samurai\Samurai\Exception\NotImplementsException;
 
 /**
- * simple file list iterator.
+ * Base task.
  *
  * @package     Samurai
- * @subpackage  Component.FileSystem
+ * @subpackage  Component.Task
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class SimpleListIterator implements IteratorAggregate
+class Task
 {
     /**
-     * listing files.
-     *
-     * @access  private
+     * @traits
      */
-    private $list = array();
+    use Accessor;
+
+    /**
+     * args
+     *
+     * @var     array
+     */
+    public $args = [];
+
+    /**
+     * options
+     *
+     * @var     array
+     */
+    public $options = [];
+
+    /**
+     * @dependencies
+     */
+    public $TaskProcessor;
+
 
 
     /**
-     * add file
+     * call other task
      *
      * @access  public
-     * @param   Samurai\Samurai\Component\FileSystem\File   $file
+     * @param   string  $name
+     * @param   array   $options
      */
-    public function add(File $file)
+    public function task($name, array $options = [])
     {
-        $this->list[] = $file;
+        $this->TaskProcessor->execute($name, $options);
     }
 
 
     /**
-     * append other iterator.
+     * array to options and args.
      *
      * @access  public
-     * @param   Samurai\Samurai\Component\FileSystem\Iterator\IteratorAggregate
+     * @param   array   $array
      */
-    public function append(IteratorAggregate $iterator)
+    public function array2Options(array $array)
     {
-        foreach ($iterator as $file) {
-            $this->add($file);
+        foreach ($array as $key => $value) {
+            switch (true) {
+                case $key === 'args':
+                    $this->args = array_merge($this->args, $value);
+                    break;
+                case is_integer($key):
+                    $this->args[] = $value;
+                    break;
+                default:
+                    $this->options[$key] = $value;
+                    break;
+            }
         }
     }
 
-
-
     /**
-     * get first element.
+     * Request component to options
      *
      * @access  public
-     * @return  Samurai\Samurai\Component\FileSystem\File
+     * @param   Samurai\Samurai\Component\Request\Request   $request
+     * @return  Samurai\Samurai\Component\Task\Task
      */
-    public function first()
+    public function request2Options(Request $request)
     {
-        return $this->list ? $this->list[0] : null;
+        $args = $request->getAll();
+        $this->array2Options($args);
+    }
+
+    /**
+     * get a option.
+     *
+     * @access  public
+     * @param   string  $key
+     * @return  mixed
+     */
+    public function getOption($key, $default = null)
+    {
+        return array_key_exists($key, $this->options) ? $this->options[$key] : $default;
     }
 
 
     /**
-     * get last element.
+     * has task method ?
      *
      * @access  public
-     * @return  Samurai\Samurai\Component\FileSystem\File
+     * @param   string  $do
+     * @return  boolean
      */
-    public function last()
+    public function has($do)
     {
-        return $this->list ? $this->list[count($this->list) -1] : null;
-    }
-
-
-    /**
-     * get reversed elements.
-     *
-     * @access  public
-     * @return  Samurai\Samurai\Component\FileSystem\Iterator\SimpleListIterator
-     */
-    public function reverse()
-    {
-        $iterator = new self();
-        foreach (array_reverse($this->list) as $file) {
-            $iterator->add($file);
-        }
-        return $iterator;
-    }
-
-
-    /**
-     * get iterator.
-     *
-     * @access  public
-     * @return  ArrayIterator
-     */
-    public function getIterator()
-    {
-        return new \ArrayIterator($this->list);
+        return method_exists($this, $do);
     }
 }
 

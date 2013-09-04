@@ -30,7 +30,7 @@ class ApplicationSpec extends PHPSpecContext
     public function it_add_path_wrapper_of_config()
     {
         $this->addAppPath(__DIR__, __NAMESPACE__, Application::PRIORITY_LOW);
-        $this->config('directory.app')->shouldReturn(array(
+        $this->config('directory.apps')->shouldReturn(array(
             ['dir' => __DIR__, 'root' => substr(__DIR__, 0, -1 - strlen(__NAMESPACE__)),
                 'namespace' => __NAMESPACE__, 'priority' => Application::PRIORITY_LOW, 'index' => 0]
         ));

@@ -104,16 +104,18 @@ class Loader
      *
      * @access  public
      * @param   string  $class
+     * @param   boolean $with_app_namespace
      * @return  string
      */
-    public function getPathByClass($class)
+    public function getPathByClass($class, $with_app_namespace = true)
     {
         $class_path = str_replace('\\', DS, $class);
         $class_path = str_replace('_', DS, $class_path) . '.php';
 
-        foreach ($this->app->config('directory.app') as $app) {
-            $file = $app['root'] . DS . $class_path;
-            if (file_exists($file)) return $file;
+        foreach ($this->app->config('directory.apps') as $app) {
+            $file = ($with_app_namespace ? $app['root'] : $app['dir']) . DS . $class_path;
+            $file = new FileSystem\File($file);
+            if ($file->isExists()) return $file;
         }
         return null;
     }
@@ -124,14 +126,23 @@ class Loader
      * file finder over application dirs.
      *
      * @access  public
-     * @return  array
-     * @todo    should be return some iterator aggregate...?
+     * @param   string  $glob
+     * @return  Samurai\Samurai\Component\FileSystem\Iterator\SimpleListIterator
      */
     public function find($glob)
     {
         $files = new FileSystem\Iterator\SimpleListIterator();
 
-        foreach ($this->app->config('directory.app') as $app) {
+        // is absolute path
+        if ($glob[0] === '/') {
+            $matches = glob($glob);
+            foreach ($matches as $path) {
+                $file = new FileSystem\File($path);
+                $files->add($file);
+            }
+        }
+
+        foreach ($this->app->config('directory.apps') as $app) {
             $matches = glob($app['dir'] . DS . $glob);
             foreach ($matches as $path) {
                 $file = new FileSystem\File($path);

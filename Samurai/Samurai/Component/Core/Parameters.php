@@ -119,8 +119,8 @@ class Parameters extends Raikiri\Object
     {
         $keys = explode('.', $key);
         $key_string = '';
-        foreach ( $keys as $i => $_key ) {
-            $key_string = $key_string . ( ( is_numeric($_key) || $_key === '' ) ? "[{$_key}]" : "['{$_key}']" );
+        foreach ($keys as $i => $_key) {
+            $key_string = $key_string . ((is_numeric($_key) || $_key === '') ? "[{$_key}]" : "['{$_key}']");
         }
         $script = sprintf('$this->_params%s = $value;', $key_string);
         eval($script);

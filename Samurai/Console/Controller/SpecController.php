@@ -113,7 +113,7 @@ class SpecController extends ConsoleController
         }
 
         // set workspace.
-        $workspace = $this->Loader->find('Temp')->last() . DS . 'spec';
+        $workspace = $this->Loader->findFirst('Temp') . DS . 'spec';
         $this->runner->setWorkspace($workspace);
     }
 

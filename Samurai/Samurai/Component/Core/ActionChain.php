@@ -99,10 +99,10 @@ class ActionChain extends Raikiri\Object
      */
     public function getCurrentAction()
     {
-        if ( ! isset($this->actions[$this->position]) ) return null;
+        if (! isset($this->actions[$this->position])) return null;
 
         $define = $this->actions[$this->position];
-        if ( $define['controller'] ) return $define;
+        if ($define['controller']) return $define;
 
         $controller = $this->getController($define['controller_name']);
         $define['controller'] = $controller;

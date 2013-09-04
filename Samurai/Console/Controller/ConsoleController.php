@@ -52,17 +52,15 @@ class ConsoleController extends SamuraiController
 
 
     /**
-     * task
+     * get a task.
      *
      * @access  public
-     * @param   string  $task
+     * @param   string  $name
      * @return  Samurai\Console\Task\Task
      */
-    public function task($task)
+    public function task($name, array $options = [])
     {
-        $task = $this->TaskProcessor->get($task);
-        if ( ! $task ) throw new NotFoundException('No such task. -> ' . $task);
-        var_dump($task);
+        $this->TaskProcessor->execute($name, $options);
     }
 
 
