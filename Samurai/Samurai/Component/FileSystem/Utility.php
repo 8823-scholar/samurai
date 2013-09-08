@@ -113,7 +113,7 @@ class Utility
     {
         $dir = dirname($file);
         if (! file_exists($dir)) throw new Exception("Can not put contents, not exists dirctory. -> {$dir}");
-        //file_put_contents($file, $contents);
+        file_put_contents($file, $contents);
     }
 }
 

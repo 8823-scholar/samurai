@@ -93,12 +93,13 @@ class Processor
      */
     public function execute($name, array $options = [])
     {
-        $names = explode(self::SEPARATOR, $name);
-        $method = array_pop($names);
+        if (is_string($name)) {
+            $names = explode(self::SEPARATOR, $name);
+            $method = array_pop($names);
+            $task = $this->get($name);
+        }
 
-        $task = $this->get($name);
         $task->array2Options($options);
-
         $task->$method();
     }
 }

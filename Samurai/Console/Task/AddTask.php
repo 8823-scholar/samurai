@@ -75,9 +75,8 @@ class AddTask extends Task
 
             $skeleton->assign('namespace', $spec_dir->getClassName() . '\\' . $namespace);
             $skeleton->assign('class', $class_name);
-            //var_dump($this->FileUtil);
-            //$this->FileUtil->mkdirP($spec_dir->getRealPath() . DS . dirname($arg));
-            //$this->FileUtil->putContents($spec_dir->getRealPath() . DS . dirname($arg) . DS . $class_name . 'Spec.php', $skeleton->render());
+            $this->FileUtil->mkdirP($spec_dir->getRealPath() . DS . dirname($arg));
+            $this->FileUtil->putContents($spec_dir->getRealPath() . DS . dirname($arg) . DS . $class_name . 'Spec.php', $skeleton->render());
         }
     }
 

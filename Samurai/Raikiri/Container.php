@@ -49,7 +49,7 @@ class Container
      * @access  private
      * @var     array
      */
-    private $_components = array();
+    private $components = array();
 
 
     /**
@@ -61,9 +61,9 @@ class Container
     public function import($dicon)
     {
         $defines = YAML::load($dicon);
-        foreach ( $defines as $name => $def ) {
+        foreach ($defines as $name => $def) {
             $define = $this->getComponentDefine($def);
-            $this->registerComponent($name, $define);
+            $this->register($name, $define);
         }
     }
 
@@ -75,9 +75,9 @@ class Container
      * @access  public
      * @param   string  $name
      */
-    public function hasComponent($name)
+    public function has($name)
     {
-        return isset($this->_components[$name]);
+        return isset($this->components[$name]);
     }
 
 
@@ -88,17 +88,17 @@ class Container
      * @param   string  $name
      * @param   object  $component
      */
-    public function registerComponent($name, $component)
+    public function register($name, $component)
     {
 
-        if ( $component instanceof ComponentDefine ) {
+        if ($component instanceof ComponentDefine) {
             $component->setContainer($this);
         }
-        elseif ( $component instanceof Object ) {
+        elseif ($component instanceof Object) {
             $component->setContainer($this);
         }
 
-        $this->_components[$name] = $component;
+        $this->components[$name] = $component;
     }
 
 
@@ -109,14 +109,14 @@ class Container
      * @param   string  $name
      * @return  object
      */
-    public function getComponent($name)
+    public function get($name)
     {
-        if ( ! $this->hasComponent($name) ) return null;
+        if (! $this->has($name)) return null;
 
-        $def = $this->_components[$name];
+        $def = $this->components[$name];
 
         // already initialized.
-        if ( ! $def instanceof ComponentDefine ) {
+        if (! $def instanceof ComponentDefine) {
             return $def;
         }
 
@@ -136,7 +136,7 @@ class Container
      */
     public function getComponentDefine($setting = array())
     {
-        if ( is_string($setting) ) {
+        if (is_string($setting)) {
             $setting = array('class' => $setting);
         }
         $define = new ComponentDefine($setting);
@@ -158,10 +158,10 @@ class Container
             return $var === null;
         };
         $members = array_keys(array_filter(get_object_vars($component), $nullFilter));
-        $names = array_keys($this->_components);
+        $names = array_keys($this->components);
         $members = array_intersect($members, $names);
-        foreach ( $members as $key ) {
-            $component->$key = $this->getComponent($key);
+        foreach ($members as $key) {
+            $component->$key = $this->get($key);
         }
     }
 }

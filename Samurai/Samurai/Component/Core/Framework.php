@@ -140,9 +140,9 @@ class Framework extends Raikiri\Object
             $container->import($dicon);
         }
 
-        $container->registerComponent('Framework', $this);
-        $container->registerComponent('Application', $this->app);
-        $container->registerComponent('Loader', $this->app->getLoader());
+        $container->register('Framework', $this);
+        $container->register('Application', $this->app);
+        $container->register('Loader', $this->app->getLoader());
         $container->injectDependency($this);
 
         $this->app->setContainer($container);

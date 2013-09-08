@@ -187,7 +187,7 @@ class Object
         // has dependency ?
         if ( $this->hasDep($key) ) {
             if ( $this->_deps[$key] === null ) {
-                $this->_deps[$key] = $this->container->getComponent($key);
+                $this->_deps[$key] = $this->container->get($key);
             }
             return $this->_deps[$key];
         }

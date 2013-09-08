@@ -58,7 +58,7 @@ class ContainerFactory
     public static function create()
     {
         $container = new Container();
-        $container->registerComponent('Container', $container);
+        $container->register('Container', $container);
         return $container;
     }
 

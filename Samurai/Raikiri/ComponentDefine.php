@@ -236,7 +236,7 @@ class ComponentDefine
         $args = array();
         foreach ( $array as $_key => $_val ) {
             if ( is_string($_val) && preg_match('/^\$([\w_]+)$/', $_val, $matches) ) {
-                $args[] = sprintf('Raikiri\\ContainerFactory::get()->getComponent("%s")', $matches[1]);
+                $args[] = sprintf('Raikiri\\ContainerFactory::get()->get("%s")', $matches[1]);
             } else {
                 $args[] = is_numeric($_key) ? sprintf('%s[%s]', $parent, $_key) : sprintf("%s['%s']", $parent, $_key) ;
             }   

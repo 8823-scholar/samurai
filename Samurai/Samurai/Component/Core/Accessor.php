@@ -106,6 +106,32 @@ trait Accessor
 
 
     /**
+     * set to property
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   mixed   $value
+     */
+    public function setProperty($key, $value)
+    {
+        $this->$key = $value;
+    }
+
+
+    /**
+     * get from property
+     *
+     * @access  public
+     * @param   string
+     * @return  mixed
+     */
+    public function getProperty($key)
+    {
+        return $this->hasProperty($key) ? $this->$key : null;
+    }
+
+
+    /**
      * has property ?
      *
      * @access  public

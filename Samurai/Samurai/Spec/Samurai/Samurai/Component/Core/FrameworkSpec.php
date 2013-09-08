@@ -8,8 +8,6 @@ use Samurai\Samurai\Component\Core\Loader;
 use Samurai\Samurai\Component\FileSystem\File;
 use Samurai\Raikiri\Container;
 
-use Prophecy\Argument;
-
 class FrameworkSpec extends PHPSpecContext
 {
     public function let(Application $app)
