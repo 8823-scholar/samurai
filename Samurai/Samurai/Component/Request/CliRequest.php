@@ -58,20 +58,20 @@ class CliRequest extends Request
     public function init()
     {
         $this->set('args', array());
-        if ( isset($_SERVER['argv']) ) {
+        if (isset($_SERVER['argv'])) {
             // first argument is script name.
             $args = $_SERVER['argv'];
             $script = array_shift($args);
             $this->script_name = $script;
 
             // parse options.
-            foreach ( $args as $arg ) {
+            foreach ($args as $arg) {
                 // is long option
                 // --foo
                 //   => foo=true
                 // --foo=bar
                 //   => foo=bar
-                if ( preg_match('/^--(..+)/', $arg, $matches) ) {
+                if (preg_match('/^--(..+)/', $arg, $matches)) {
                     $option = explode('=', $matches[1]);
                     $key = array_shift($option);
                     $value = $option ? join('=', $option) : true;
@@ -83,12 +83,12 @@ class CliRequest extends Request
                 //   => option.a=true, option.b=true, option.c=true
                 // -abc=foo
                 //   => option.a=true, option.b=true, option.c=foo
-                elseif ( preg_match('/^-(.+)/', $arg, $matches) ) {
+                elseif (preg_match('/^-(.+)/', $arg, $matches)) {
                     $option = $matches[1];
-                    for ( $i = 0; $i < strlen($option); $i++ ) {
+                    for ($i = 0; $i < strlen($option); $i++) {
                         $j = $i + 1;
                         $key = $option[$i];
-                        if ( isset($option[$j]) && $option[$j] === '=' ) {
+                        if (isset($option[$j]) && $option[$j] === '=') {
                             $value = substr($option, $j + 1);
                             $this->set('option.' . $key, $value);
                             break;
@@ -116,7 +116,7 @@ class CliRequest extends Request
      */
     public function add($key, $value)
     {
-        if ( ! isset($this->_params[$key]) ) {
+        if (! isset($this->_params[$key])) {
             $this->_params[$key] = array();
         }
         $this->_params[$key][] = $value;
@@ -134,7 +134,7 @@ class CliRequest extends Request
     public function get($key, $default = null)
     {
         $value = parent::get($key, $default);
-        if ( is_array($value) ) {
+        if (is_array($value)) {
             $value = array_shift($value);
         }
         return $value;

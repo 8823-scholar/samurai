@@ -49,8 +49,49 @@ class TaskController extends ConsoleController
      */
     public function execute()
     {
-        $task = $this->Request->get('args');
-        $this->task($task, $this->Request->getAll());
+        $request = $this->Request->getAll();
+        $task = $this->pickTaskName($request);
+        $options = $this->pickTaskOptions($request);
+
+        $this->task($task, $options);
+    }
+
+
+    /**
+     * pick task name from array.
+     *
+     * @access  private
+     * @param   array   $options
+     * @return  string
+     */
+    private function pickTaskName(array $options)
+    {
+        return isset($options['args']) ? array_shift($options['args']) : null;
+    }
+    
+    
+    /**
+     * pick task options from array.
+     *
+     * @access  private
+     * @param   array   $options
+     * @return  array
+     */
+    private function pickTaskOptions(array $options)
+    {
+        // exclude task name.
+        if (isset($options['args'])) {
+            array_shift($options['args']);
+        }
+
+        // array to string.
+        foreach ($options as $key => $value) {
+            if (is_array($value) && $key !== 'args') {
+                $options[$key] = array_pop($value);
+            }
+        }
+
+        return $options;
     }
 }
 

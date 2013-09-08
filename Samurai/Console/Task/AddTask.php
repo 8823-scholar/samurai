@@ -109,7 +109,7 @@ class AddTask extends Task
     {
         // has targeted.
         if ($dir = $this->getOption('app-dir')) {
-            return $dir;
+            return $dir[0] === '/' ? $dir : getcwd() . DS . $dir;
         }
         // or current dir.
         else {
