@@ -29,11 +29,11 @@ namespace Samurai\Console\Spec\Samurai\Samurai;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 
-class Sample extends PHPSpecContext
+class SampleSpec extends PHPSpecContext
 {
     public function it_is_initializable()
     {
-        $this->shouldHaveType('Samurai\Console\Spec\Samurai\Samurai\Sample');
+        $this->shouldHaveType('Samurai\Samurai\Sample');
     }
 }
 

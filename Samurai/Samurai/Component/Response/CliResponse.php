@@ -47,7 +47,7 @@ class CliResponse extends Response
      * @access  private
      * @var     HttpBody
      */
-    private $_body;
+    private $body;
 
 
     /**
@@ -63,7 +63,7 @@ class CliResponse extends Response
      */
     public function __construct()
     {
-        $this->_body = new HttpBody();
+        $this->body = new HttpBody();
     }
 
 
@@ -75,8 +75,8 @@ class CliResponse extends Response
      */
     public function setBody($body = null)
     {
-        $this->_body->setContent($body);
-        return $this->_body;
+        $this->body->setContent($body);
+        return $this->body;
     }
 
 
@@ -87,7 +87,7 @@ class CliResponse extends Response
      */
     public function execute()
     {
-        $this->_sendBody();
+        $this->sendBody();
     }
 
 
@@ -96,12 +96,23 @@ class CliResponse extends Response
      *
      * @access  private
      */
-    private function _sendBody()
+    private function sendBody()
     {
-        $content = $this->_body->getContent();
+        $content = $this->body->getContent();
         echo $content;
     }
 
+
+    /**
+     * send simple stdout.
+     *
+     * @access  public
+     * @param   string  $line
+     */
+    public function send($line)
+    {
+        echo $line . PHP_EOL;
+    }
 
 
 

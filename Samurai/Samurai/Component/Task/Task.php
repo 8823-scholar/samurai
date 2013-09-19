@@ -65,9 +65,29 @@ class Task
     public $options = [];
 
     /**
+     * do method.
+     *
+     * @var     string
+     */
+    public $do = null;
+
+    /**
      * @dependencies
      */
     public $TaskProcessor;
+
+
+    /**
+     * execute this task pre setted.
+     *
+     * @access  public
+     */
+    public function execute()
+    {
+        if (!$this->do) throw new \Samurai\Samurai\Exception\LogicException('preset task something do.');
+
+        $this->{$this->do}();
+    }
 
 
 
@@ -130,6 +150,50 @@ class Task
     public function getOption($key, $default = null)
     {
         return array_key_exists($key, $this->options) ? $this->options[$key] : $default;
+    }
+
+
+    /**
+     * get usage from doc comment.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getUsage($name = null)
+    {
+        $reflection = $this->getReflection();
+        if (! $name) $name = $this->do;
+        if (! $name || ! $reflection->hasMethod($name)) return '';
+
+        $method = $reflection->getMethod($name);
+        $comment = $method->getDocComment();
+        $lines = [];
+        foreach (preg_split('/\r\n|\n|\r/', $comment) as $line) {
+            $line = preg_replace('/^\s*?\*\s?/', '', $line);
+
+            // /** or */ is skip.
+            if (in_array($line, ['/**', '*/', '**/'])) continue;
+
+            // start char is "@" that is doc comment end signal.
+            if (preg_match('/^@\w+/', $line)) break;
+
+            $lines[] = $line;
+        }
+
+        return join(PHP_EOL, $lines);
+    }
+
+
+    /**
+     * get reflection instance.
+     *
+     * @access  public
+     * @return  Reflection
+     */
+    public function getReflection()
+    {
+        $reflection = new \ReflectionClass(get_class($this));
+        return $reflection;
     }
 
 

@@ -85,6 +85,24 @@ class File extends \SplFileInfo
     }
 
 
+    /**
+     * get path.
+     *
+     * @access  public
+     * @return  string
+     * @see     SplFileInfo::getPath
+     */
+    public function getPath()
+    {
+        $path = parent::getPath();
+
+        // resolve "./"
+        $path = str_replace('/./', '/', $path);
+
+        return $path;
+    }
+
+
 
     /**
      * app dir accessor.
@@ -139,10 +157,23 @@ class File extends \SplFileInfo
      */
     public function getClassName()
     {
-        $dir = substr($this->getPath(), strlen($this->rootDir()) + 1);
-        $namespace = str_replace(DS, '\\', $dir);
+        $namespace = $this->getNameSpace();
         $class_name = $this->getBasename(".{$this->getExtension()}");
         return "${namespace}\\{$class_name}";
+    }
+
+    /**
+     * get ruled namespace from path.
+     * (not real name space.)
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getNameSpace()
+    {
+        $dir = substr($this->getPath(), strlen($this->rootDir()) + 1);
+        $namespace = str_replace(DS, '\\', $dir);
+        return $namespace;
     }
 
 

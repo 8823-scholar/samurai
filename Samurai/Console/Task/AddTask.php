@@ -58,7 +58,7 @@ class AddTask extends Task
      * add a spec.
      *
      * [usage]
-     *   $ ./app add:spec Foo\Bar\Zoo
+     *   $ ./app add:spec Foo/Bar/Zoo
      *
      * @access  public
      */
@@ -73,8 +73,10 @@ class AddTask extends Task
             $class_name = basename($arg);
             $namespace = str_replace(DS, '\\', dirname($arg));
 
-            $skeleton->assign('namespace', $spec_dir->getClassName() . '\\' . $namespace);
+            $skeleton->assign('namespace', $namespace);
             $skeleton->assign('class', $class_name);
+            $skeleton->assign('spec_namespace', $spec_dir->getClassName() . '\\' . $namespace);
+            $skeleton->assign('spec_class', $class_name . 'Spec');
             $this->FileUtil->mkdirP($spec_dir->getRealPath() . DS . dirname($arg));
             $this->FileUtil->putContents($spec_dir->getRealPath() . DS . dirname($arg) . DS . $class_name . 'Spec.php', $skeleton->render());
         }

@@ -81,6 +81,7 @@ class SamuraiController extends Raikiri\Object
      * @dependencies
      */
     public $Request;
+    public $Response;
     public $Renderer;
     public $Application;
     public $Loader;

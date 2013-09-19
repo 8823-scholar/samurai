@@ -79,6 +79,7 @@ class Processor
         $class_name = $class_path->getClassName();
         $task = new $class_name();
         if (! $task->has($method)) throw new NotImplementsException("No such task. -> {$name}");
+        $task->setDo($method);
         $this->Container->injectDependency($task);
 
         return $task;

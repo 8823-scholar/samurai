@@ -80,8 +80,8 @@ class ConsoleController extends SamuraiController
     public function isUsage()
     {
         $options = array('help', 'usage', 'option.h');
-        foreach ( $options as $option ) {
-            if ( $this->Request->get($option) ) return true;
+        foreach ($options as $option) {
+            if ($this->Request->get($option)) return true;
         }
         return false;
     }

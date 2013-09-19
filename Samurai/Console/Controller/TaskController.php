@@ -53,7 +53,12 @@ class TaskController extends ConsoleController
         $task = $this->pickTaskName($request);
         $options = $this->pickTaskOptions($request);
 
-        $this->task($task, $options);
+        if ($this->isUsage()) {
+            $task = $this->TaskProcessor->get($task);
+            $this->Response->send($task->getUsage());
+        } else {
+            $this->task($task, $options);
+        }
     }
 
 
