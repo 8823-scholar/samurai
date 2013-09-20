@@ -68,17 +68,25 @@ class AddTask extends Task
         $spec_dir = $this->Loader->find($current . DS . $this->Application->config('directory.spec'))->first();
 
         foreach ($this->args as $arg) {
+            $path = $arg;
+            $dir = dirname($path);
+            if ($dir == '.') $dir = '';
+
             $skeleton = $this->getSkeleton('Spec');
             $base_dir = clone $spec_dir;
-            $class_name = basename($arg);
-            $namespace = str_replace(DS, '\\', dirname($arg));
+            $class_name = basename($path);
+            $namespace = str_replace(DS, '\\', $dir);
 
-            $skeleton->assign('namespace', $namespace);
+            $skeleton->assign('namespace', $namespace ? $namespace . '\\' : '');
             $skeleton->assign('class', $class_name);
-            $skeleton->assign('spec_namespace', $spec_dir->getClassName() . '\\' . $namespace);
+            $skeleton->assign('spec_namespace', $spec_dir->getClassName() . ($namespace ? '\\' . $namespace : ''));
             $skeleton->assign('spec_class', $class_name . 'Spec');
-            $this->FileUtil->mkdirP($spec_dir->getRealPath() . DS . dirname($arg));
-            $this->FileUtil->putContents($spec_dir->getRealPath() . DS . dirname($arg) . DS . $class_name . 'Spec.php', $skeleton->render());
+
+            $spec_file = $spec_dir->getRealPath() . DS . ($dir ? $dir . DS : '') . $class_name . 'Spec.php';
+            $this->FileUtil->mkdirP(dirname($spec_file));
+            $this->FileUtil->putContents($spec_file, $skeleton->render());
+
+            $this->sendMessage('created spec file. -> %s', $spec_file);
         }
     }
 

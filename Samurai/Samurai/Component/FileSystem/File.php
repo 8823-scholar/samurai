@@ -177,6 +177,19 @@ class File extends \SplFileInfo
     }
 
 
+
+    /**
+     * convert to string
+     *
+     * @access  public
+     * @return  string
+     */
+    public function toString()
+    {
+        return $this->__toString();
+    }
+
+
     /**
      * is file exists ?
      *

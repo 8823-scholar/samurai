@@ -72,6 +72,13 @@ class Task
     public $do = null;
 
     /**
+     * output bredge component.
+     *
+     * @access  public
+     */
+    public $output;
+
+    /**
      * @dependencies
      */
     public $TaskProcessor;
@@ -90,7 +97,6 @@ class Task
     }
 
 
-
     /**
      * call other task
      *
@@ -102,6 +108,23 @@ class Task
     {
         $this->TaskProcessor->execute($name, $options);
     }
+
+
+    /**
+     * send message to client.
+     *
+     * @access  public
+     * @param   string  $message
+     */
+    public function sendMessage()
+    {
+        if (! $this->output) return;
+
+        $args = func_get_args();
+        $message = call_user_func_array('sprintf', $args);
+        $this->output->send($message);
+    }
+
 
 
     /**

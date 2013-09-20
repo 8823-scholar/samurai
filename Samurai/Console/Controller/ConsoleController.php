@@ -60,9 +60,20 @@ class ConsoleController extends SamuraiController
      */
     public function task($name, array $options = [])
     {
+        $this->TaskProcessor->setOutput($this);
         $this->TaskProcessor->execute($name, $options);
     }
 
+
+    /**
+     * implements for task output.
+     *
+     * @access  public
+     */
+    public function send($message)
+    {
+        $this->Response->send($message);
+    }
 
 
 

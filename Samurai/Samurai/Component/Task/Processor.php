@@ -30,6 +30,7 @@
 
 namespace Samurai\Samurai\Component\Task;
 
+use Samurai\Samurai\Component\Core\Accessor;
 use Samurai\Samurai\Exception\NotFoundException;
 
 /**
@@ -49,6 +50,18 @@ class Processor
      * @const   string
      */
     const SEPARATOR = ':';
+    
+    /**
+     * @traits
+     */
+    use Accessor;
+
+    /**
+     * outputter.
+     *
+     * @var     Object
+     */
+    public $output;
 
     /**
      * @dependencies
@@ -80,6 +93,7 @@ class Processor
         $task = new $class_name();
         if (! $task->has($method)) throw new NotImplementsException("No such task. -> {$name}");
         $task->setDo($method);
+        $task->setOutput($this->output);
         $this->Container->injectDependency($task);
 
         return $task;
