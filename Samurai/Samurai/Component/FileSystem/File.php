@@ -94,12 +94,19 @@ class File extends \SplFileInfo
      */
     public function getPath()
     {
-        $path = parent::getPath();
+        return $this->path;
+    }
 
-        // resolve "./"
-        $path = str_replace('/./', '/', $path);
 
-        return $path;
+    /**
+     * get dirname
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getDirname()
+    {
+        return dirname($this->path);
     }
 
 
@@ -171,7 +178,7 @@ class File extends \SplFileInfo
      */
     public function getNameSpace()
     {
-        $dir = substr($this->getPath(), strlen($this->rootDir()) + 1);
+        $dir = substr($this->getDirname(), strlen($this->rootDir()) + 1);
         $namespace = str_replace(DS, '\\', $dir);
         return $namespace;
     }
