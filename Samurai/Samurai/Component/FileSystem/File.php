@@ -69,7 +69,7 @@ class File extends \SplFileInfo
     public function __construct($file_name)
     {
         parent::__construct($file_name);
-        $this->path = $this->getRealPath();
+        $this->path = $file_name;
     }
 
 

@@ -41,5 +41,15 @@ namespace Samurai\Samurai\Component\FileSystem;
  */
 class Directory extends File
 {
+    /**
+     * constructor
+     *
+     * @access  public
+     * @param   string  $file_name
+     */
+    public function __construct($file_name)
+    {
+        parent::__construct($file_name);
+    }
 }
 
