@@ -84,6 +84,8 @@ class Utility
         $finder = $this->Finder->create();
         $files = $finder->notRecursive()->find($dir);
         foreach ($files as $file) {
+            if (! $file->isExists()) continue;
+
             if ($file->isDir()) {
                 $this->rmdirR("{$file}/*");
                 if ($file->isWritable()) {

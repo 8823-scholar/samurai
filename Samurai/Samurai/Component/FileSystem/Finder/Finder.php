@@ -65,7 +65,7 @@ class Finder
      * @access  public
      * @var     string  $path
      */
-    public $paths = array();
+    public $paths = [];
 
     /**
      * find recursive ?
@@ -97,7 +97,7 @@ class Finder
      * @access  public
      * @var     array
      */
-    public $names = array();
+    public $names = [];
 
 
     /**
@@ -127,7 +127,7 @@ class Finder
         $iterator = $this->getIterator();
 
         // search in target paths
-        foreach ((array) $paths as $path) {
+        foreach ((array)$paths as $path) {
             $this->searchInPath($iterator, $path);
         }
 
@@ -142,9 +142,10 @@ class Finder
      * @param   Samurai\Samurai\Component\FileSystem\Iterator\IteratorAggregate $iterator
      * @param   string  $path
      * @param   Samurai\Samurai\Component\FileSystem\Directory  $parent
+     * @param   int     $depth
      * @return  array
      */
-    private function searchInPath(FileSystem\Iterator\IteratorAggregate $iterator, $path, FileSystem\Directory $parent = null)
+    private function searchInPath(FileSystem\Iterator\IteratorAggregate $iterator, $path, FileSystem\Directory $parent = null, $depth = 0)
     {
         // when exists.
         if (file_exists($path)) {
@@ -152,8 +153,8 @@ class Finder
                 $dir = new FileSystem\Directory($path);
                 if ($parent) $dir->setParent($parent);
                 if ($this->validate($dir)) $iterator->add($dir);
-                if ($this->recursive) {
-                    $this->searchInPath($iterator, "{$dir}/*", $dir);
+                if ($this->recursive || $depth < 1) {
+                    $this->searchInPath($iterator, "{$dir}/*", $dir, $depth + 1);
                 }
             } else {
                 $file = new FileSystem\File($path);
@@ -164,7 +165,7 @@ class Finder
         // when not exists, then glob.
         else {
             foreach (glob($path) as $file) {
-                $this->searchInPath($iterator, $file, $parent);
+                $this->searchInPath($iterator, $file, $parent, $depth);
             }
         }
     }

@@ -48,7 +48,7 @@ class SimpleListIterator implements IteratorAggregate
      *
      * @access  private
      */
-    private $list = array();
+    private $list = [];
 
 
     /**
@@ -127,6 +127,18 @@ class SimpleListIterator implements IteratorAggregate
     public function getIterator()
     {
         return new \ArrayIterator($this->list);
+    }
+
+
+    /**
+     * convert to array
+     *
+     * @access  public
+     * @return  array
+     */
+    public function toArray()
+    {
+        return $this->list;
     }
 }
 
