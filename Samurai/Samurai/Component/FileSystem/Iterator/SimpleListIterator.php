@@ -103,6 +103,18 @@ class SimpleListIterator implements IteratorAggregate
 
 
     /**
+     * get count of files.
+     *
+     * @access  public
+     * @return  int
+     */
+    public function size()
+    {
+        return count($this->list);
+    }
+
+
+    /**
      * get reversed elements.
      *
      * @access  public
