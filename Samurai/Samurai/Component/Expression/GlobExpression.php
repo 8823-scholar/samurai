@@ -60,7 +60,7 @@ class GlobExpression extends Expression
      */
     public function isMatch($value)
     {
-        return preg_match($this->getRegexPattern(), $value);
+        return (boolean) preg_match($this->getRegexPattern(), $value);
     }
     
     

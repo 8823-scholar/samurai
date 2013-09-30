@@ -28,10 +28,12 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Expression;
+namespace Samurai\Samurai\Component\Expression\Exception;
+
+use Samurai\Samurai\Exception\Exception;
 
 /**
- * Regexp expression class.
+ * Irregular format expression exception.
  *
  * @package     Samurai
  * @subpackage  Component.Expression
@@ -39,63 +41,7 @@ namespace Samurai\Samurai\Component\Expression;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class RegexExpression extends Expression
+class InvalidExpressionException extends Exception
 {
-    /**
-     * delimiter string
-     *
-     * @access  public
-     * @var     string
-     */
-    public $delimiter = '/';
-
-    /**
-     * regex options
-     *
-     * @access  public
-     * @var     string
-     */
-    public $options;
-
-
-    /**
-     * constructor
-     *
-     * @access  public
-     * @param   string  $value
-     */
-    public function __construct($value)
-    {
-        if (strlen($value) > 3 && preg_match('/(...+?)([imsxeADSUXJu]+)?$/', $value, $matches)) {
-            $s = substr($matches[1], 0, 1);
-            $e = substr($matches[1], -1);
-            if ($s !== $e || preg_match('/[a-z0-9\\s\\\\]/i', $s)) {
-                throw new Exception\InvalidExpressionException('invalid regex format.');
-            }
-            $this->value = substr($matches[1], 1, -1);
-            $this->delimiter = $s;
-            $this->options = isset($matches[2]) ? $matches[2] : '';
-        } else {
-            throw new Exception\InvalidExpressionException('invalid regex format.');
-        }
-    }
-    
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function isMatch($value)
-    {
-        return (boolean)preg_match($this->getRegexPattern(), $value);
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRegexPattern()
-    {
-        return "{$this->delimiter}{$this->value}{$this->delimiter}{$this->options}";
-    }
 }
 
