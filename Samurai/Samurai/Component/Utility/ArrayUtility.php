@@ -51,27 +51,27 @@ class ArrayUtility
     public function merge()
     {
         $marged = NULL;
-        foreach ( func_get_args() as $arg ) {
+        foreach (func_get_args() as $arg) {
             // first is override.
-            if ( $marged === null ) {
+            if ($marged === null) {
                 $marged = $arg;
 
             // when mismatch variable type, then override.
-            } elseif ( gettype($marged) !== gettype($arg) ) {
+            } elseif (gettype($marged) !== gettype($arg)) {
                 $marged = $arg;
 
             // when not array, then override.
-            } elseif ( ! is_array($arg) ) {
+            } elseif (! is_array($arg)) {
                 $marged = $arg;
 
             // when both array, then merge recursive.
             } else {
-                foreach ( $arg as $_key => $_val ) {
+                foreach ($arg as $_key => $_val) {
                     // when int key, then push.
-                    if( is_int($_key) ) {
+                    if(is_int($_key)) {
                         $marged[] = $_val;
                     // when not exists key, then override.
-                    } elseif( ! isset($marged[$_key]) ) {
+                    } elseif(! isset($marged[$_key])) {
                         $marged[$_key] = $_val;
                     // merge.
                     } else {
