@@ -71,7 +71,7 @@ class YAML
      */
     public static function dump($array)
     {
-        if ( self::enableSpyc() ) {
+        if (self::enableSpyc()) {
             return self::dumpBySpyc($array);
         } else {
             throw new Exception\NotFoundException('Not found YAML parser.');
@@ -101,7 +101,7 @@ class YAML
      */
     public static function loadBySpyc($file)
     {
-        if ( ! file_exists($file) ) return array();
+        if (! file_exists($file)) return array();
 
         $data = \Spyc::YAMLLoad($file);
         return $data;

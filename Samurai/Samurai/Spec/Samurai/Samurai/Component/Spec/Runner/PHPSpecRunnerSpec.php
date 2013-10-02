@@ -52,7 +52,7 @@ class PHPSpecRunnerSpec extends PHPSpecContext
 ---
 suites:
   main:
-    namespace:
+    namespace: ""
     spec_prefix: spec
     src_path: src
     spec_path: .
