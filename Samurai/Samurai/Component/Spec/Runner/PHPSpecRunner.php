@@ -52,6 +52,7 @@ class PHPSpecRunner extends Runner
      */
     public $Request;
     public $Application;
+    public $FileUtil;
 
     /**
      * {@inheritdoc}
@@ -59,6 +60,7 @@ class PHPSpecRunner extends Runner
     public function run()
     {
         // cd
+        $pwd = getcwd();
         chdir($this->getWorkspace());
 
         $input = new Input([$this->Request->getScriptName(), 'run',
@@ -87,6 +89,7 @@ class PHPSpecRunner extends Runner
         });
 
         $app->run($input);
+        chdir($pwd);
     }
 
 
@@ -99,7 +102,7 @@ class PHPSpecRunner extends Runner
 
         $suites = ['namespace' => '', 'spec_prefix' => 'spec', 'src_path' => 'src', 'spec_path' => '.'];
         $config = ['suites' => ['main' => $suites]];
-        file_put_contents($file, YAML::dump($config));
+        $this->FileUtil->putContents($file, YAML::dump($config));
     }
 
 

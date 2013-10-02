@@ -31,6 +31,7 @@
 namespace Samurai\Samurai\Component\Spec\Runner;
 
 use Samurai\Samurai\Component\FileSystem\File;
+use Samurai\Samurai\Component\Core\Accessor;
 
 /**
  * base runner
@@ -63,6 +64,11 @@ abstract class Runner
      * @dependencies
      */
     public $Finder;
+
+    /**
+     * @traits
+     */
+    use Accessor;
 
 
     /**
@@ -172,23 +178,17 @@ abstract class Runner
     {
         foreach ($queries as $query) {
             // when namespace
-            if (! strpos($query, DS)) {
-                $q_ns = join('\\', array_map('ucfirst', explode(':', $query)));
-                if ($file->appNamespace() === $q_ns) return true;
+            if (strpos($query, DS) === false) {
+                $q_ns = join('\\', explode(':', $query));
+                if (stripos($file->appNameSpace(), $q_ns) === 0) return true;
             }
             // when file path
             elseif (is_dir($query) || is_file($query)) {
-                // is absolute path
-                if ($query[0] === '/') {
-                    if (strpos($file->getRealPath(), $query) === 0) return true;
-                }
-                // is relational path.
-                else {
-                    if (strpos($file->getRealPath(), getcwd() . DS . $query) === 0) return true;
-                }
+                $q_file = new File($query);
+                if (strpos($file->getRealPath(), $q_file->getRealPath()) === 0) return true;
             }
         }
-        return false;
+        return $queries ? false : true;
     }
 }
 
