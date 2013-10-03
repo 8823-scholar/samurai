@@ -30,7 +30,7 @@
 
 namespace Samurai\Samurai\Component\Renderer;
 
-use Samurai\Raikiri;
+use Samurai\Samurai\Component\Core\Accessor;
 
 /**
  * Renderer abstract class.
@@ -41,7 +41,7 @@ use Samurai\Raikiri;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-abstract class Renderer extends Raikiri\Object
+abstract class Renderer
 {
     /**
      * renderer engine.
@@ -56,6 +56,11 @@ abstract class Renderer extends Raikiri\Object
      */
     public $Loader;
     public $Application;
+
+    /**
+     * @traits
+     */
+    use Accessor;
 
 
     /**
