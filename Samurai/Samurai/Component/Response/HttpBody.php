@@ -66,7 +66,7 @@ class HttpBody
      */
     public function __construct($content = null)
     {
-        if ( $content ) {
+        if ($content) {
             $this->setContent($content);
         }
     }
@@ -150,6 +150,16 @@ class HttpBody
     public function render($with_headers = false)
     {
         $contents = array();
+
+        // headers
+        $headers = $this->getHeaders();
+        if ($with_headers && $headers) {
+            foreach ($headers as $key => $value) {
+                $key = join('-', array_map('ucfirst', explode('-', $key)));
+                $contents[] = sprintf('%s: %s', $key, $value);
+            }
+            $contents[] = '';
+        }
 
         // content
         $contents[] = $this->content;

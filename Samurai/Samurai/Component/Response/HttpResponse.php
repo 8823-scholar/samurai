@@ -46,18 +46,18 @@ class HttpResponse extends Response
     /**
      * status code
      *
-     * @access  private
+     * @access  public
      * @var     int
      */
-    private $_status = 200;
+    public $status = 200;
 
     /**
      * top level body.
      *
-     * @access  private
+     * @access  publi
      * @var     HttpBody
      */
-    private $_body;
+    public $body;
 
     /**
      * status messages.
@@ -65,7 +65,7 @@ class HttpResponse extends Response
      * @access  public
      * @var     array
      */
-    public $status_messages = array(
+    public $status_messages = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing',
@@ -117,7 +117,7 @@ class HttpResponse extends Response
         506 => 'Variant Also Negotiates',
         507 => 'Insufficient Storage',
         510 => 'Not Extended',
-    );
+    ];
 
     /**
      * @dependencies
@@ -132,7 +132,7 @@ class HttpResponse extends Response
      */
     public function __construct()
     {
-        $this->_body = new HttpBody();
+        $this->body = new HttpBody();
     }
 
 
@@ -144,8 +144,36 @@ class HttpResponse extends Response
      */
     public function setStatus($code)
     {
-        $this->_status = $code;
+        $this->status = $code;
     }
+
+    /**
+     * get status code.
+     *
+     * @access  public
+     * @return  int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * get status message.
+     *
+     * @access  public
+     * @param   int|null    $status
+     * @return  string
+     */
+    public function getStatusMessage($status = null)
+    {
+        if (! $status) $status = $this->getStatus();
+
+        if (! $status || ! isset($this->status_messages[$status])) throw new \LogicException("No such status. -> {$status}");
+
+        return $this->status_messages[$status];
+    }
+
 
     /**
      * Set body.
@@ -155,12 +183,23 @@ class HttpResponse extends Response
      */
     public function setBody($body = null)
     {
-        if ( $body instanceof HttpBody ) {
-            $this->_body = $body;
+        if ($body instanceof HttpBody) {
+            $this->body = $body;
         } else {
-            $this->_body->setContent($body);
+            $this->body->setContent($body);
         }
-        return $this->_body;
+        return $this->body;
+    }
+
+    /**
+     * get body instance.
+     *
+     * @access  public
+     * @return  Samurai\Samurai\Component\Response\HttpBody
+     */
+    public function getBody()
+    {
+        return $this->body;
     }
 
 
@@ -173,7 +212,7 @@ class HttpResponse extends Response
      */
     public function setHeader($key, $value)
     {
-        $this->_body->setHeader($key, $value);
+        $this->body->setHeader($key, $value);
     }
 
 
@@ -190,9 +229,9 @@ class HttpResponse extends Response
         $this->setHeader('x-php-framework', 'Samurai Framework/' . Samurai::getVersion());
 
         // send headers.
-        $this->_sendStatus();
-        $this->_sendHeaders();
-        $this->_sendBody();
+        $this->sendStatus();
+        $this->sendHeaders();
+        $this->sendBody();
     }
 
 
@@ -201,14 +240,14 @@ class HttpResponse extends Response
      *
      * @access  private
      */
-    private function _sendStatus()
+    private function sendStatus()
     {
-        if ( headers_sent() ) return;
+        if (headers_sent()) return;
 
-        if ( isset($this->status_messages[$this->_status]) ) {
-            header(sprintf('HTTP/%s %d %s', $this->Request->getHttpVersion(), $this->_status, $this->status_messages[$this->_status]));
+        if (isset($this->status_messages[$this->status])) {
+            header(sprintf('HTTP/%s %d %s', $this->Request->getHttpVersion(), $this->status, $this->status_messages[$this->status]));
         } else {
-            header('Status: ' . $this->_status);
+            header('Status: ' . $this->status);
         }
     }
 
@@ -218,9 +257,9 @@ class HttpResponse extends Response
      *
      * @access  private
      */
-    private function _sendHeaders()
+    private function sendHeaders()
     {
-        foreach ( $this->_body->getHeaders() as $key => $value ) {
+        foreach ($this->body->getHeaders() as $key => $value) {
             $key = join('-', array_map('ucfirst', explode('-', $key)));
             header(sprintf('%s: %s', $key, $value));
         }
@@ -232,9 +271,9 @@ class HttpResponse extends Response
      *
      * @access  private
      */
-    private function _sendBody()
+    private function sendBody()
     {
-        $content = $this->_body->render();
+        $content = $this->body->render();
         echo $content;
     }
 
@@ -250,6 +289,19 @@ class HttpResponse extends Response
     public function isHttp()
     {
         return true;
+    }
+
+    /**
+     * is https ?
+     *
+     * @access  public
+     * @return  boolean
+     */
+    public function isHttps()
+    {
+        if (! isset($_SERVER['HTTPS'])) return false;
+
+        return ! $_SERVER['HTTPS'] || $_SERVER['HTTPS'] == 'off' ? false : true;
     }
 }
 

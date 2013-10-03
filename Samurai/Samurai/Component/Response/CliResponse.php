@@ -39,23 +39,8 @@ namespace Samurai\Samurai\Component\Response;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class CliResponse extends Response
+class CliResponse extends HttpResponse
 {
-    /**
-     * body.
-     *
-     * @access  private
-     * @var     HttpBody
-     */
-    private $body;
-
-
-    /**
-     * @dependencies
-     */
-    public $Request;
-
-
     /**
      * constructor
      *
@@ -63,20 +48,7 @@ class CliResponse extends Response
      */
     public function __construct()
     {
-        $this->body = new HttpBody();
-    }
-
-
-    /**
-     * Set body.
-     *
-     * @access  public
-     * @param   string  $body
-     */
-    public function setBody($body = null)
-    {
-        $this->body->setContent($body);
-        return $this->body;
+        parent::__construct();
     }
 
 
@@ -99,7 +71,7 @@ class CliResponse extends Response
     private function sendBody()
     {
         $content = $this->body->getContent();
-        echo $content;
+        $this->send($content);
     }
 
 
@@ -117,12 +89,17 @@ class CliResponse extends Response
 
 
     /**
-     * is http ?
-     *
-     * @access  public
-     * @return  boolean
+     * {@inheritdoc}
      */
     public function isHttp()
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isHttps()
     {
         return false;
     }
