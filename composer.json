@@ -25,7 +25,7 @@
     "require": {
         "spyc/spyc": "dev-master",
         "twig/twig": "1.*",
-        "phpspec/phpspec": "*@dev",
+        "8823-scholar/phpspec": "dev-master",
         "phpunit/phpunit": "3.7.*",
         "phpunit/phpunit-story": "*"
     },
@@ -46,6 +46,36 @@
                 },
                 "autoload": {
                     "files": ["Spyc.php"]
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "8823-scholar/phpspec",
+                "version": "dev-master",
+                "dist": {
+                    "url": "https://github.com/8823-scholar/phpspec/archive/issue/supports-query.zip",
+                    "type": "zip"
+                },
+                "source": {
+                    "url": "https://github.com/8823-scholar/phpspec.git",
+                    "type": "git",
+                    "reference": "issue/supports-query"
+                },
+                "require": {
+                    "php":                      ">=5.3.3",
+                    "phpspec/prophecy":         "~1.0.2",
+                    "phpspec/php-diff":         "~1.0.0",
+                    "symfony/console":          "~2.1",
+                    "symfony/event-dispatcher": "~2.1",
+                    "symfony/finder":           "~2.1",
+                    "symfony/yaml":             "~2.1"
+                },
+                "autoload": {
+                    "psr-0": {
+                        "PhpSpec": "src/"
+                    }
                 }
             }
         }

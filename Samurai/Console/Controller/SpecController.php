@@ -66,8 +66,6 @@ class SpecController extends ConsoleController
      * spec step is...
      *
      * 1. setup
-     * 2. copy to workspace.
-     * 3. initialize sandbox for spec.
      * 4. run spec.
      *
      * @access  public
@@ -77,8 +75,6 @@ class SpecController extends ConsoleController
         if ($this->isUsage()) return [self::FORWARD_ACTION, 'spec.usage'];
 
         $this->setup();
-        $this->copy2Workspace();
-        $this->initialize();
         $this->run();
     }
     
@@ -107,102 +103,21 @@ class SpecController extends ConsoleController
     {
         $this->runner = $this->SpecHelper->getRunner();
 
-        // set target spec.
-        foreach ($this->getTargetPaths() as $path) {
-            $this->runner->addTarget($path);
-        }
+        // search spec configuration file.
+        $config_file_name = $this->runner->getConfigurationFileName();
+        $dirs = explode(DS, getcwd());
+        $find = false;
+        do {
+            $workspace = join(DS, $dirs);
+            $config_file_path = $workspace . DS . $config_file_name;
+            if (file_exists($config_file_path) && is_file($config_file_path)) {
+                $find = true;
+                break;
+            }
+        } while (array_pop($dirs));
+        if (!$find) $workspace = getcwd();
 
-        // set workspace.
-        $workspace = $this->Loader->findFirst('Temp') . DS . 'spec';
         $this->runner->setWorkspace($workspace);
-    }
-
-
-    /**
-     * get target path.
-     *
-     * @access  private
-     * @return  array
-     */
-    private function getTargetPaths()
-    {
-        $paths = [];
-        foreach ($this->Loader->find($this->Application->config('directory.spec')) as $dir) {
-            $paths[] = $dir->getRealPath();
-        }
-        return $paths;
-    }
-
-
-    /**
-     * copy to workspace from target files.
-     *
-     * @access  private
-     */
-    private function copy2Workspace()
-    {
-        $this->truncateWorkspace();
-
-        // search spec files.
-        $queries = $this->Request->getAsArray('args', $this->Application->config('spec.default.namespaces'));
-        $files = $this->runner->searchSpecFiles($queries);
-        foreach ($files as $file) {
-            $this->generateSpecFile($file);
-        }
-    }
-
-    /**
-     * truncate workspace directory.
-     *
-     * @access  private
-     */
-    private function truncateWorkspace()
-    {
-        $workspace = $this->runner->getWorkspace();
-
-        // trush sweep
-        if (is_dir($workspace)) {
-            $this->FileUtil->rmdirR($workspace);
-        }
-
-        // make workspace
-        $this->FileUtil->mkdirP($workspace);
-    }
-
-    /**
-     * generate spec file.
-     *
-     * @access  private
-     * @param   Samurai\Samurai\Component\FileSystem\File   $file
-     */
-    private function generateSpecFile(File $file)
-    {
-        require_once $file->getRealPath();
-        $src_class_name = $file->getClassName();
-        $dst_name_space = $this->runner->validateNameSpace($file->appNameSpace(), $src_class_name);
-        $dst_class_name = $this->runner->validateClassName($file->appNameSpace(), $src_class_name);
-        $dst_class_file = $this->runner->validateClassFile($dst_name_space, $dst_class_name);
-
-        $workspace = $this->runner->getWorkspace();
-        $body = [];
-        $body[] = '<?php';
-        $body[] = "namespace {$dst_name_space};";
-        $body[] = "class {$dst_class_name} extends \\{$src_class_name} {}";
-        $body[] = '';
-        $this->FileUtil->mkdirP(dirname($dst_class_file));
-        file_put_contents($dst_class_file, join(PHP_EOL, $body));
-    }
-
-
-    /**
-     * initialize runner
-     *
-     * @access  private
-     */
-    private function initialize()
-    {
-        // generate runner configuration
-        $this->runner->generateConfigurationFile();
     }
 
 

@@ -64,7 +64,7 @@ class PHPSpecRunner extends Runner
         chdir($this->getWorkspace());
 
         $input = new Input([$this->Request->getScriptName(), 'run',
-                                            $this->getWorkspace() . DS . 'spec', '--verbose', '--ansi']);
+                                            $this->getWorkspace() . DS, '--verbose', '--ansi']);
 
         $app = new Application(\Samurai\Samurai\Samurai::getVersion());
 
@@ -96,73 +96,9 @@ class PHPSpecRunner extends Runner
     /**
      * {@inheritdoc}
      */
-    public function generateConfigurationFile()
+    public function getConfigurationFileName()
     {
-        $file = $this->getWorkspace() . DS . 'phpspec.yml';
-
-        $suites = ['namespace' => '', 'spec_prefix' => 'spec', 'src_path' => 'src', 'spec_path' => '.'];
-        $config = ['suites' => ['main' => $suites]];
-        $this->FileUtil->putContents($file, YAML::dump($config));
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function searchSpecFiles(array $queries = [])
-    {
-        $specfiles = new SimpleListIterator();
-        foreach ($this->targets as $target) {
-            $finder = $this->Finder->create();
-            $files = $finder->path($target)->fileOnly()->name("*Spec.php")->find();
-            foreach ($files as $file) {
-                if ($this->isMatch($file, $queries)) {
-                    $specfiles->add($file);
-                }
-            }
-        }
-
-        return $specfiles;
-    }
-
-
-    /**
-     * Ex. Foo\\Bar
-     *
-     * {@inheritdoc}
-     */
-    public function validateNameSpace($app_namespace, $src_class_name)
-    {
-        $class = substr($src_class_name, strlen($app_namespace) + 6);
-
-        $namespaces = ['spec'];
-        $namespaces = array_merge($namespaces, explode('\\', $class));
-        array_pop($namespaces);
-        return join('\\', $namespaces);
-    }
-
-    /**
-     * Ex. ZooSpec
-     *
-     * {@inheritdoc}
-     */
-    public function validateClassName($app_namespace, $src_class_name)
-    {
-        $class = substr($src_class_name, strlen($app_namespace) + 6);
-
-        $names = explode('\\', $class);
-        return array_pop($names);
-    }
-
-
-    /**
-     * Ex. FooBarZooSpec.php
-     *
-     * {@inheritdoc}
-     */
-    public function validateClassFile($namespace, $class_name)
-    {
-        return $this->getWorkspace() . DS . str_replace('\\', DS, $namespace) . DS . $class_name . '.php';
+        return 'phpspec.yml';
     }
 }
 

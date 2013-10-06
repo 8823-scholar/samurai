@@ -45,14 +45,6 @@ use Samurai\Samurai\Component\Core\Accessor;
 abstract class Runner
 {
     /**
-     * target path.
-     *
-     * @access  public
-     * @var     string
-     */
-    public $targets = array();
-
-    /**
      * workspace
      *
      * @access  public
@@ -69,18 +61,6 @@ abstract class Runner
      * @traits
      */
     use Accessor;
-
-
-    /**
-     * set target path.
-     *
-     * @access  public
-     * @param   string  $path
-     */
-    public function addTarget($path)
-    {
-        $this->targets[] = $path;
-    }
 
 
     /**
@@ -117,78 +97,11 @@ abstract class Runner
 
 
     /**
-     * generate configuration file.
+     * get configuration file.
      *
      * @access  public
-     */
-    abstract public function generateConfigurationFile();
-
-
-    /**
-     * search spec files in targets
-     *
-     * @access  public
-     * @param   array   $queries
-     * @return  Samurai\Samurai\Component\FileSystem\Iterator\IteratorAggregate
-     */
-    abstract public function searchSpecFiles(array $queries = []);
-
-
-    /**
-     * validate namespace.
-     *
-     * @access  public
-     * @param   string  $app_namespace
-     * @param   string  $src_class_name
      * @return  string
      */
-    abstract public function validateNameSpace($app_namespace, $src_class_name);
-
-
-    /**
-     * validate class name.
-     *
-     * @access  public
-     * @param   string  $app_namespace
-     * @param   string  $src_class_name
-     * @return  string
-     */
-    abstract public function validateClassName($app_namespace, $src_class_name);
-
-
-    /**
-     * validate class file from class name.
-     *
-     * @access  public
-     * @param   string  $namespace
-     * @param   string  $class_name
-     * @return  string
-     */
-    abstract public function validateClassFile($namespace, $class_name);
-
-
-    /**
-     * is match by queries.
-     *
-     * @access  public
-     * @param   Samurai\Samurai\Component\FileSystem\File   $file
-     * @param   array   $queries
-     */
-    public function isMatch(File $file, array $queries = [])
-    {
-        foreach ($queries as $query) {
-            // when namespace
-            if (strpos($query, DS) === false) {
-                $q_ns = join('\\', explode(':', $query));
-                if (stripos($file->appNameSpace(), $q_ns) === 0) return true;
-            }
-            // when file path
-            elseif (is_dir($query) || is_file($query)) {
-                $q_file = new File($query);
-                if (strpos($file->getRealPath(), $q_file->getRealPath()) === 0) return true;
-            }
-        }
-        return $queries ? false : true;
-    }
+    abstract public function getConfigurationFileName();
 }
 
