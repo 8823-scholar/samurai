@@ -118,6 +118,12 @@ class SpecController extends ConsoleController
         if (!$find) $workspace = getcwd();
 
         $this->runner->setWorkspace($workspace);
+
+        // has targets
+        $args = $this->Request->getAsArray('args');
+        foreach ($args as $arg) {
+            $this->runner->addTarget(realpath($arg));
+        }
     }
 
 

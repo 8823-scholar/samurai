@@ -11,4 +11,9 @@ suites:
         src_path: .
         spec_path: .
         spec_prefix: Samurai\Console\Spec
+    raikiri:
+        namespace:
+        src_path: .
+        spec_path: .
+        spec_prefix: Samurai\Raikiri\Spec
 

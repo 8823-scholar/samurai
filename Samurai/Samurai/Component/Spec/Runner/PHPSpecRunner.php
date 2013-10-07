@@ -52,7 +52,6 @@ class PHPSpecRunner extends Runner
      */
     public $Request;
     public $Application;
-    public $FileUtil;
 
     /**
      * {@inheritdoc}
@@ -63,9 +62,14 @@ class PHPSpecRunner extends Runner
         $pwd = getcwd();
         chdir($this->getWorkspace());
 
-        $input = new Input([$this->Request->getScriptName(), 'run',
-                                            $this->getWorkspace() . DS, '--verbose', '--ansi']);
-
+        $args = [];
+        $args[] = $this->Request->getScriptName();
+        $args[] = 'run';
+        $args[] = '--verbose';
+        foreach ($this->targets as $target) {
+            $args[] = $target;
+        }
+        $input = new Input($args);
         $app = new Application(\Samurai\Samurai\Samurai::getVersion());
 
         // override

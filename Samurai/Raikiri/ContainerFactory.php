@@ -46,7 +46,7 @@ class ContainerFactory
      * @access  private
      * @var     array
      */
-    private static $_containers = array();
+    private static $containers = array();
 
 
     /**
@@ -72,10 +72,10 @@ class ContainerFactory
      */
     public static function get($name = null)
     {
-        if ( $name === null ) {
-            $name = array_shift(array_keys(self::$_containers));
+        if ($name === null) {
+            $name = array_shift(array_keys(self::$containers));
         }
-        return self::$_containers[$name] ? self::$_containers[$name] : null;
+        return self::$containers[$name] ? self::$containers[$name] : null;
     }
 }
 

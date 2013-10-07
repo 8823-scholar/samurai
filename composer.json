@@ -23,32 +23,14 @@
         }
     },
     "require": {
-        "spyc/spyc": "dev-master",
+        "php": ">=5.4.0",
+        "mustangostang/spyc": "0.5.*@dev",
         "twig/twig": "1.*",
         "8823-scholar/phpspec": "dev-master",
         "phpunit/phpunit": "3.7.*",
         "phpunit/phpunit-story": "*"
     },
     "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "spyc/spyc",
-                "version": "dev-master",
-                "dist": {
-                    "url": "https://github.com/mustangostang/spyc/archive/master.zip",
-                    "type": "zip"
-                },
-                "source": {
-                    "url": "https://github.com/mustangostang/spyc.git",
-                    "type": "git",
-                    "reference": "master"
-                },
-                "autoload": {
-                    "files": ["Spyc.php"]
-                }
-            }
-        },
         {
             "type": "package",
             "package": {

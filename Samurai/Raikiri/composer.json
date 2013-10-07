@@ -1,0 +1,25 @@
+{
+    "name": "samurai/raikiri",
+    "description": "PHP DI Container component.",
+    "version": "0.0.1-dev",
+    "type": "library",
+    "keywords":["DI Container"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "KIUCHI Satoshinosuke",
+            "email": "scholar@hayabusa-lab.jp",
+            "homepage": "https://github.com/8823-scholar",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Samurai\\Raikiri": ""
+        }
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "samurai/samurai": "dev-feature/3.0"
+    }
+}

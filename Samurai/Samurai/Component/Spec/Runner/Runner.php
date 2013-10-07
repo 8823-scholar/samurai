@@ -53,6 +53,14 @@ abstract class Runner
     public $workspace = 'Temp/Spec';
 
     /**
+     * target path.
+     *
+     * @access  public
+     * @var     string
+     */
+    public $targets = [];
+
+    /**
      * @dependencies
      */
     public $Finder;
@@ -83,6 +91,18 @@ abstract class Runner
     public function getWorkspace()
     {
         return $this->workspace;
+    }
+
+
+    /**
+     * set target path.
+     *
+     * @access  public
+     * @param   string  $path
+     */
+    public function addTarget($path)
+    {
+        $this->targets[] = $path;
     }
 
 
