@@ -2,8 +2,8 @@
 formatter.name: progress
 suites:
     raikiri:
-        namespace: Samurai\Raikiri
-        src_path: .
-        spec_path: .
-        spec_prefix: Spec
+        namespace:      Samurai\Raikiri
+        src_path:       .
+        spec_path:      Spec
+        spec_namespace: Samurai\Raikiri\Spec
 

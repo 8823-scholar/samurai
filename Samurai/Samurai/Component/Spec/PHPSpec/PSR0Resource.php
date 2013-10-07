@@ -28,76 +28,62 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Console;
+namespace Samurai\Samurai\Component\Spec\PHPSpec;
 
-use Samurai\Samurai;
-
-// composer autoload
-$autoload_file = dirname(dirname(__DIR__)) . '/vendor/autoload.php';;
-if (file_exists($autoload_file)) {
-    require_once $autoload_file;
-}
-$autoload_file = dirname(dirname(dirname(dirname(dirname(__DIR__))))) . '/vendor/autoload.php';;
-if (file_exists($autoload_file)) {
-    require_once $autoload_file;
-}
+use PhpSpec\Locator\PSR0\PSR0Resource as PhpSpecPSR0Resource;
 
 /**
- * Application class.
+ * PHPSpec PSR0 Resource
  *
- * @package     Samurai.Console
+ * @package     Samurai
+ * @subpackage  Component.Spec.PHPSpec
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Application extends Samurai\Application
+class PSR0Resource extends PhpSpecPSR0Resource
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function configure()
-    {
-        parent::configure();
-        
-        // environment
-        $this->setEnv($this->getEnvFromEnvironmentVariables());
-
-        // application dir.
-        $this->addAppPath(__DIR__, __NAMESPACE__, self::PRIORITY_LOW + 1);
-        
-        // default spec namespaces
-        $this->config('spec.default.namespaces', ['samurai:samurai', 'samurai:console']);
-    }
-
-
-    /**
-     * configure from application console
-     *
-     * @access  public
-     * @param   Samurai\Application $app
-     */
-    public function inheritConfigure(Samurai\Application $app)
-    {
-        // environment
-        $app->setEnv($this->getEnvFromEnvironmentVariables());
-
-        // application dir.
-        $app->addAppPath(__DIR__, __NAMESPACE__, self::PRIORITY_LOW);
-    }
-
+    private $parts;
+    private $locator;
 
     /**
      * {@inheritdoc}
      */
-    protected function getEnvFromEnvironmentVariables()
+    public function __construct(array $parts, PSR0Locator $locator)
     {
-        // has request ?
-        $opts = getopt('', array('ENV:'));
-        if (isset($opts['ENV'])) {
-            return $opts['ENV'];
-        }
+        parent::__construct($parts, $locator);
 
-        return parent::getEnvFromEnvironmentVariables();
+        $this->parts = $parts;
+        $this->locator = $locator;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getSrcFilename()
+    {
+        $path = implode(DIRECTORY_SEPARATOR, $this->parts);
+        $path = substr($path, strlen($this->locator->getSrcNamespace()));
+        return $this->locator->getFullSrcPath() . $path . '.php';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSrcNamespace()
+    {
+        $nsParts = $this->parts;
+        array_pop($nsParts);
+
+        return rtrim(implode('\\', $nsParts), '\\');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSrcClassname()
+    {
+        return implode('\\', $this->parts);
     }
 }
 

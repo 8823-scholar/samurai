@@ -57,7 +57,6 @@ class SpecController extends ConsoleController
     public $SpecHelper;
     public $Loader;
     public $Application;
-    public $FileUtil;
 
 
     /**
@@ -103,6 +102,17 @@ class SpecController extends ConsoleController
     {
         $this->runner = $this->SpecHelper->getRunner();
 
+        $this->setupWorkspace();
+        $this->setupTargets();
+    }
+
+    /**
+     * Setup workspace.
+     *
+     * @access  private
+     */
+    private function setupWorkspace()
+    {
         // search spec configuration file.
         $config_file_name = $this->runner->getConfigurationFileName();
         $dirs = explode(DS, getcwd());
@@ -118,7 +128,15 @@ class SpecController extends ConsoleController
         if (!$find) $workspace = getcwd();
 
         $this->runner->setWorkspace($workspace);
+    }
 
+    /**
+     * Setup target.
+     *
+     * @access  private
+     */
+    private function setupTargets()
+    {
         // has targets
         $args = $this->Request->getAsArray('args');
         foreach ($args as $arg) {

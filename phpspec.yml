@@ -2,18 +2,18 @@
 formatter.name: progress
 suites:
     samurai:
+        src_path:       .
         namespace:
-        src_path: .
-        spec_path: .
-        spec_prefix: Samurai\Samurai\Spec
+        spec_path:      Samurai/Samurai/Spec
+        spec_namespace: Samurai\Samurai\Spec
     console:
+        src_path:       .
         namespace:
-        src_path: .
-        spec_path: .
-        spec_prefix: Samurai\Console\Spec
+        spec_path:      Samurai/Console/Spec
+        spec_namespace: Samurai\Console\Spec
     raikiri:
+        src_path:       .
         namespace:
-        src_path: .
-        spec_path: .
-        spec_prefix: Samurai\Raikiri\Spec
+        spec_path:      Samurai/Raikiri/Spec
+        spec_namespace: Samurai\Raikiri\Spec
 
