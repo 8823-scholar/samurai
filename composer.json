@@ -61,5 +61,10 @@
                 }
             }
         }
-    ]
+    ],
+    "extra": {
+        "branch-alias": {
+            "dev-feature/3.0": "3.0.x-dev"
+        }
+    }
 }

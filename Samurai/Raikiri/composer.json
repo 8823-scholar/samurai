@@ -20,6 +20,6 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "samurai/samurai": "dev-feature/3.0"
+        "samurai/samurai": "3.0.*@dev"
     }
 }
