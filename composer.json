@@ -1,7 +1,7 @@
 {
     "name": "samurai/samurai",
     "description": "PHP Fullstacked Framework made in JAPAN.",
-    "version": "3.0.0-dev",
+    "version": "3.0.x-dev",
     "type": "library",
     "keywords":["framework", "DI Container", "ORM"],
     "license": "MIT",
