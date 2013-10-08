@@ -1,0 +1,28 @@
+---
+# most standard type
+Standard: Samurai\Raikiri\Spec\Samurai\Raikiri\Standard
+
+# a little strict type
+Strict:
+    class: Samurai\Raikiri\Spec\Samurai\Raikiri\Strict
+
+# constructor has some arguments
+HasArguments:
+    class: Samurai\Raikiri\Spec\Samurai\Raikiri\HasArguments
+    args: [1, 2, $Standard]
+
+# prototype type (new instance per every time)
+Prototype:
+    class: Samurai\Raikiri\Spec\Samurai\Raikiri\Prototype
+    type: prototype
+
+# has initialize method
+HasInitializeMethod:
+    class: Samurai\Raikiri\Spec\Samurai\Raikiri\HasInitializeMethod
+    initMethod: initialize
+HasInitializeMethodWithArguments:
+    class: Samurai\Raikiri\Spec\Samurai\Raikiri\HasInitializeMethod
+    initMethod:
+        name: initializeWithArguments
+        args: [1, 2, $Standard]
+

@@ -55,10 +55,12 @@ class ContainerFactory
      * @access  public
      * @return  Container
      */
-    public static function create()
+    public static function create($name = null)
     {
-        $container = new Container();
+        $name = $name ? $name : self::generateName();
+        $container = new Container($name);
         $container->register('Container', $container);
+        self::$containers[$name] = $container;
         return $container;
     }
 
@@ -76,6 +78,18 @@ class ContainerFactory
             $name = array_shift(array_keys(self::$containers));
         }
         return self::$containers[$name] ? self::$containers[$name] : null;
+    }
+
+
+    /**
+     * Generate container name.
+     *
+     * @access  public
+     * @return  string
+     */
+    public static function generateName()
+    {
+        return uniqid();
     }
 }
 

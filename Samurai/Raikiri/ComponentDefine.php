@@ -111,7 +111,7 @@ class ComponentDefine
      * @access  private
      * @var     object
      */
-    private $_instance;
+    private $instance;
 
     /**
      * parent container.
@@ -119,7 +119,7 @@ class ComponentDefine
      * @access  private
      * @var     Container
      */
-    private $_container;
+    private $container;
 
     /**
      * const: type: singleton
@@ -144,16 +144,18 @@ class ComponentDefine
      */
     public function __construct(array $setting)
     {
-        foreach ( $setting as $key => $value ) {
-            switch ( $key ) {
+        foreach ($setting as $key => $value) {
+            switch ($key) {
                 case 'class':
-                case 'args':
                 case 'path':
                 case 'type':
-                    $this->$key = $value;
+                    $this->$key = (string)$value;
+                    break;
+                case 'args':
+                    $this->$key = (array)$value;
                     break;
                 case 'initMethod':
-                    if ( is_string($value) ) {
+                    if (is_string($value)) {
                         $this->init_method_name = $value;
                         $this->init_method_args = array();
                     } else {
@@ -166,8 +168,6 @@ class ComponentDefine
     }
 
 
-
-
     /**
      * set container
      *
@@ -176,7 +176,7 @@ class ComponentDefine
      */
     public function setContainer(Container $container)
     {
-        $this->_container = $container;
+        $this->container = $container;
     }
 
 
@@ -189,34 +189,36 @@ class ComponentDefine
      */
     public function getInstance()
     {
-        if ( $this->isSingleton() && $this->hasInstance() ) {
-            return $this->_instance;
+        if ($this->isSingleton() && $this->hasInstance()) {
+            return $this->instance;
         }
 
         // require path
-        if ( $this->path ) {
+        if ($this->path) {
             require_once $this->path;
         }
 
         // initialize
         $class = $this->class;
-        if ( $class[0] !== '\\' ) $class = '\\' . $class;
-        $script = sprintf('$instance = new %s(%s);', $class, $this->_array2ArgsWithInjectDependency('$this->args', $this->args));
+        if ($class[0] !== '\\') $class = '\\' . $class;
+        $script = sprintf('$instance = new %s(%s);', $class, $this->array2ArgsWithInjectDependency('$this->args', $this->args));
         eval($script);
 
-        if ( $this->isSingleton() ) {
-            $this->_instance = $instance;
+        if ($this->isSingleton()) {
+            $this->instance = $instance;
         }
-        if ( $instance instanceof Object ) {
-            $instance->setContainer($this->_container);
+        if ($instance instanceof Object && $this->container) {
+            $instance->setContainer($this->container);
         }
 
         // inject dependency
-        $this->_container->injectDependency($instance);
+        if ($this->container) {
+            $this->container->injectDependency($instance);
+        }
         
         // init method
-        if ( $this->hasInitMethod() ) {
-            $this->_callInitMethod($instance);
+        if ($this->hasInitMethod()) {
+            $this->callInitMethod($instance);
         }
 
         return $instance;
@@ -231,12 +233,12 @@ class ComponentDefine
      * @param   array   $array
      * @return  string
      */
-    private function _array2ArgsWithInjectDependency($parent, array $array = array())
+    private function array2ArgsWithInjectDependency($parent, array $array = array())
     {   
         $args = array();
-        foreach ( $array as $_key => $_val ) {
-            if ( is_string($_val) && preg_match('/^\$([\w_]+)$/', $_val, $matches) ) {
-                $args[] = sprintf('Raikiri\\ContainerFactory::get()->get("%s")', $matches[1]);
+        foreach ($array as $_key => $_val) {
+            if (is_string($_val) && preg_match('/^\$([\w_]+)$/', $_val, $matches)) {
+                $args[] = sprintf('$this->container->get("%s")', $matches[1]);
             } else {
                 $args[] = is_numeric($_key) ? sprintf('%s[%s]', $parent, $_key) : sprintf("%s['%s']", $parent, $_key) ;
             }   
@@ -252,9 +254,16 @@ class ComponentDefine
      * @access  private
      * @param   object  $instance
      */
-    private function _callInitMethod($instance)
+    private function callInitMethod($instance)
     {
-        call_user_func_array(array($instance, $this->init_method_name), $this->init_method_args);
+        $args = [];
+        foreach ($this->init_method_args as $arg) {
+            if (is_string($arg) && preg_match('/^\$([\w_]+)$/', $arg, $matches)) {
+                $arg = $this->container->get($matches[1]);
+            }
+            $args[] = $arg;
+        }
+        call_user_func_array(array($instance, $this->init_method_name), $args);
     }
 
 
@@ -268,7 +277,7 @@ class ComponentDefine
      */
     public function hasInstance()
     {
-        return $this->_instance !== null;
+        return $this->instance !== null;
     }
 
 

@@ -44,12 +44,44 @@ use Samurai\Samurai\Component\Core\YAML;
 class Container
 {
     /**
+     * name.
+     *
+     * @access  public
+     * @var     string
+     */
+    public $name;
+
+    /**
      * components
      *
      * @access  private
      * @var     array
      */
     private $components = array();
+
+
+    /**
+     * construct
+     *
+     * @access  public
+     * @param   string  $name
+     */
+    public function __construct($name)
+    {
+        $this->name = $name;
+    }
+
+
+    /**
+     * Get name.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
 
     /**
