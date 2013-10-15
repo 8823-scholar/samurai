@@ -63,7 +63,7 @@ class Entity
      * @access  protected
      * @var     array
      */
-    protected $_o_attributes = array();
+    protected $o_attributes = array();
 
     /**
      * exists in backend ?
@@ -86,7 +86,7 @@ class Entity
     {
         $this->setModel($model);
         $this->attributes = $attributes;
-        $this->_o_attributes = $attributes;
+        $this->o_attributes = $attributes;
         $this->exists = $exists;
     }
 
@@ -141,8 +141,8 @@ class Entity
         if ( ! $updated ) return $this->attributes;
 
         $attributes = array();
-        foreach ( $this->attributes as $key => $value ) {
-            if ( ! array_key_exists($key, $this->_o_attributes) || $value !== $this->_o_attributes[$key] ) {
+        foreach ($this->attributes as $key => $value) {
+            if (! array_key_exists($key, $this->o_attributes) || $value !== $this->o_attributes[$key]) {
                 $attributes[$key] = $value;
             }
         }
@@ -211,7 +211,7 @@ class Entity
     public function __get($key)
     {
         // has attributes ?
-        if ( array_key_exists($key, $this->attributes) ) {
+        if (array_key_exists($key, $this->attributes)) {
             return $this->attributes[$key];
         }
         return null;
@@ -241,19 +241,22 @@ class Entity
     public function __call($method, array $args)
     {
         // when getter.
-        if ( preg_match('/^get([A-Z]\w+)$/', $method, $matches) ) {
+        if (preg_match('/^get([A-Z]\w+)$/', $method, $matches)) {
             $names = preg_split('/(?=[A-Z])/', $matches[1]);
             array_shift($names);
             $key = strtolower(join('_', $names));
             return $this->$key;
             
         // when getter.
-        } elseif ( preg_match('/^set([A-Z]\w+)$/', $method, $matches) ) {
+        } elseif (preg_match('/^set([A-Z]\w+)$/', $method, $matches)) {
             $names = preg_split('/(?=[A-Z])/', $matches[1]);
             array_shift($names);
             $key = strtolower(join('_', $names));
             return $this->$key = array_shift($args);
         }
+
+        $class = get_class($this);
+        throw new \LogicException("No such method. -> {$class}::{$method}");
     }
 }
 

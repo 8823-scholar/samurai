@@ -1,0 +1,9 @@
+---
+formatter.name: progress
+suites:
+    onikiri:
+        namespace:      Samurai\Onikiri
+        src_path:       .
+        spec_path:      Spec
+        spec_namespace: Samurai\Onikiri\Spec
+
