@@ -66,6 +66,7 @@ class AddTask extends Task
     {
         $current = $this->getCurrentAppDir();
         $spec_dir = $this->Loader->find($current . DS . $this->Application->config('directory.spec'))->first();
+        $spec_dir->absolutize();
 
         foreach ($this->args as $arg) {
             $path = $arg;

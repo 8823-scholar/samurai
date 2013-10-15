@@ -6,9 +6,17 @@ use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 
 class FileSpec extends PHPSpecContext
 {
+    private $pwd;
+
     public function let()
     {
+        $this->pwd = getcwd();
         $this->beConstructedWith(__FILE__);
+    }
+
+    public function letgo()
+    {
+        chdir($this->pwd);
     }
 
     public function it_is_initializable()
@@ -33,6 +41,20 @@ class FileSpec extends PHPSpecContext
     public function it_get_filename()
     {
         $this->getFilename()->shouldBe(basename(__FILE__));
+    }
+
+
+    public function it_absolutizes_relational_path()
+    {
+        chdir(__DIR__);
+
+        $this->beConstructedWith('../FileSystem/./FileSpec.php');
+        $this->isExists()->shouldBe(true);
+        $this->getPath()->shouldBe('../FileSystem/./FileSpec.php');
+
+        // abolutize!
+        $this->absolutize();
+        $this->getPath()->shouldBe(__FILE__);
     }
 }
 

@@ -59,6 +59,14 @@ class File extends \SplFileInfo
      */
     public $parent;
 
+    /**
+     * current directory
+     *
+     * @access  public
+     * @var     string
+     */
+    public $cwd;
+
 
     /**
      * constructor
@@ -70,6 +78,7 @@ class File extends \SplFileInfo
     {
         parent::__construct($file_name);
         $this->path = $file_name;
+        $this->cwd = getcwd();
     }
 
 
@@ -194,6 +203,34 @@ class File extends \SplFileInfo
     public function toString()
     {
         return $this->__toString();
+    }
+
+
+    /**
+     * relational path to absolute path.
+     *
+     * @access  public
+     */
+    public function absolutize()
+    {
+        $new = [];
+        $path = $this->path;
+        if ($path[0] !== '/') $path = $this->cwd . DS . $this->path;
+        $paths = explode(DS, $path);
+        foreach ($paths as $p) {
+            switch ($p) {
+                case '.':
+                    break;
+                case '..':
+                    array_pop($new);
+                    if (!$new) $new[] = '';
+                    break;
+                default:
+                    $new[] = $p;
+                    break;
+            }
+        }
+        $this->path = join(DS, $new);
     }
 
 

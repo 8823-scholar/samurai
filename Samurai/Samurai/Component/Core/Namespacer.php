@@ -109,17 +109,18 @@ class Namespacer
     {
         // when relational path.
         if ($path[0] !== '/') return $path;
+        
+        $f = function($names, $count) {
+            for ($i = 0; $i < $count; $i++) {
+                array_pop($names);
+            }
+            return $names;
+        };
 
         $root = null;
         foreach (self::$namespaces as $p => $ns) {
-            if (strpos($path, $p) === 0) {
-                $f = function($names, $count) {
-                    for ($i = 0; $i < $count; $i++) {
-                        array_pop($names);
-                    }
-                    return $names;
-                };
-                $d = join(DS, $f(explode(DS, $p), count(explode('\\', $ns))));
+            $d = join(DS, $f(explode(DS, $p), count(explode('\\', $ns))));
+            if (strpos($path, $d) === 0) {
                 if ($root === null || strlen($root) < strlen($d)) $root = $d;
             }
         }
