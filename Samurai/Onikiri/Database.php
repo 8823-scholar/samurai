@@ -136,10 +136,10 @@ class Database
      * @access  public
      * @param   array   $setting
      */
-    public function __construct(array $setting)
+    public function __construct(array $setting = [])
     {
-        foreach ( $setting as $key => $value ) {
-            switch ( $key ) {
+        foreach ($setting as $key => $value) {
+            switch ($key) {
                 case 'driver':
                     $this->setDriver($value);
                     break;
@@ -159,7 +159,7 @@ class Database
                     $this->setPort($value);
                     break;
                 case 'slaves':
-                    foreach ( $value as $slave ) {
+                    foreach ($value as $slave) {
                         $this->addSlave($slave);
                     }
                     break;
@@ -188,7 +188,7 @@ class Database
      */
     public function getDriver()
     {
-        if ( $this->isSlave() ) {
+        if ($this->isSlave()) {
             return $this->_master->getDriver();
         }
         return $this->driver;
@@ -214,7 +214,7 @@ class Database
      */
     public function getUser()
     {
-        if ( $this->isSlave() && ! $this->user ) {
+        if ($this->isSlave() && ! $this->user) {
             return $this->_master->getUser();
         }
         return $this->user;
@@ -240,7 +240,7 @@ class Database
      */
     public function getPassword()
     {
-        if ( $this->isSlave() && ! $this->password ) {
+        if ($this->isSlave() && ! $this->password) {
             return $this->_master->getPassword();
         }
         return $this->password;
@@ -289,7 +289,7 @@ class Database
      */
     public function getPort()
     {
-        if ( $this->isSlave() && ! $this->port ) {
+        if ($this->isSlave() && ! $this->port) {
             return $this->_master->getPort();
         }
         return $this->port;
@@ -315,7 +315,7 @@ class Database
      */
     public function getDatabaseName()
     {
-        if ( $this->isSlave() && ! $this->database_name ) {
+        if ($this->isSlave() && ! $this->database_name) {
             return $this->_master->getDatabaseName();
         }
         return $this->database_name;
@@ -335,8 +335,27 @@ class Database
         $this->_slaves[] = $database;
     }
 
+    /**
+     * Clear slaves.
+     *
+     * @access  public
+     */
+    public function clearSlaves()
+    {
+        $this->_slaves = [];
+    }
+
+    /**
+     * Get all slaves.
+     *
+     * @access  public
+     * @return  array
+     */
+    public function getSlaves()
+    {
+        return $this->_slaves;
+    }
     
-   
     /**
      * pick a slave.
      *
@@ -345,7 +364,7 @@ class Database
      */
     public function pickSlave()
     {
-        if ( ! $this->hasSlave() ) return $this;
+        if (! $this->hasSlave()) return $this;
         return $this->_slaves[array_rand($this->_slaves)];
     }
 
