@@ -125,10 +125,10 @@ class Entities implements Iterator
     public function getByPosition($position)
     {
         // already has entity.
-        if ( isset($this->_entities[$position]) ) return $this->_entities[$position];
+        if (isset($this->_entities[$position])) return $this->_entities[$position];
         
         $row = $this->statement->fetch(Connection::FETCH_ASSOC, Connection::FETCH_ORI_ABS, $position);
-        if ( ! $row ) return null;
+        if (! $row) return null;
 
         $entity = $this->model->build($row, true);
         $this->_entities[$position] = $entity;

@@ -31,6 +31,7 @@
 namespace Samurai\Onikiri;
 
 use PDOStatement;
+use Samurai\Onikiri\Connection;
 
 /**
  * Statement (base is PDO)
@@ -64,7 +65,7 @@ class Statement extends PDOStatement
      *
      * @override
      */
-    public function bindValue($parameter, $value, $data_type = Statement::PARAM_STR)
+    public function bindValue($parameter, $value, $data_type = Connection::PARAM_STR)
     {
         // numbered holder to named holder.
         if (is_int($parameter)) {

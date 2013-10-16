@@ -48,7 +48,7 @@ class Connection extends PDO
      * @access  private
      * @var     int
      */
-    private $_count_numbered = 1;
+    private $count_numbered = 1;
 
 
     /**
@@ -66,14 +66,17 @@ class Connection extends PDO
      * For support number, named mixed placeholder.
      *
      * @override
+     * @see     PDO::prepare
      */
-    public function prepare($sql)
+    public function prepare($statement, $options = NULL)
     {
         // numbering placeholder to named placeholder.
-        $this->_count_numbered = 1;
-        $sql = preg_replace_callback('/(^|\s|,)?\?(,|\s|$)?/', array($this, '_replaceNumberedHolder'), $sql);
-        $sth = parent::prepare($sql);
+        $this->count_numbered = 1;
+        $sql = preg_replace_callback('/(^|\s|,)?\?(,|\s|$)?/', array($this, 'replaceNumberedHolder'), $statement);
+
+        $sth = parent::prepare($statement, $options);
         $sth->setConnection($this);
+
         return $sth;
     }
 
@@ -84,11 +87,11 @@ class Connection extends PDO
      * @param   array   $matches
      * @return  string
      */
-    private function _replaceNumberedHolder(array $matches)
+    private function replaceNumberedHolder(array $matches)
     {
-        $holder = ':numbered_holder_' . $this->_count_numbered;
-        $this->_count_numbered++;
-        return ( isset($matches[1]) ? $matches[1] : '' ) . $holder . ( isset($matches[2]) ? $matches[2] : '' );
+        $holder = ':numbered_holder_' . $this->count_numbered;
+        $this->count_numbered ++;
+        return (isset($matches[1]) ? $matches[1] : '') . $holder . (isset($matches[2]) ? $matches[2] : '');
     }
 }
 
