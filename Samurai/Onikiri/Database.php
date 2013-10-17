@@ -128,16 +128,27 @@ class Database
      */
     private $_master;
 
+    /**
+     * manager
+     *
+     * @access  public
+     * @var     Samurai\Onikiri\Manager
+     */
+    public $manager;
+
 
 
     /**
      * constructor.
      *
      * @access  public
+     * @param   Samurai\Onikiri\Manager $manager
      * @param   array   $setting
      */
-    public function __construct(array $setting = [])
+    public function __construct(Manager $manager, array $setting = [])
     {
+        $this->setManager($manager);
+
         foreach ($setting as $key => $value) {
             switch ($key) {
                 case 'driver':
@@ -169,6 +180,18 @@ class Database
 
 
     /**
+     * Set manager
+     *
+     * @access  public
+     * @param   Samurai\Onikiri\Manager $manager
+     */
+    public function setManager(Manager $manager)
+    {
+        $this->manager = $manager;
+    }
+
+
+    /**
      * Set driver
      *
      * @access  public
@@ -176,8 +199,7 @@ class Database
      */
     public function setDriver($name)
     {
-        $manager = Manager::singleton();
-        $this->driver = $manager->getDriver($name);
+        $this->driver = $this->manager->getDriver($name);
     }
 
     /**
@@ -330,7 +352,7 @@ class Database
      */
     public function addSlave(array $setting)
     {
-        $database = new Database($setting);
+        $database = new Database($this->manager, $setting);
         $database->setMaster($this);
         $this->_slaves[] = $database;
     }

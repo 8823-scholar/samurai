@@ -3,10 +3,11 @@
 namespace Samurai\Onikiri\Spec\Samurai\Onikiri;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
+use Samurai\Onikiri\Manager;
 
 class DatabaseSpec extends PHPSpecContext
 {
-    public function let()
+    public function let(Manager $m)
     {
         $config = [
             'driver' => 'mysql',
@@ -26,7 +27,7 @@ class DatabaseSpec extends PHPSpecContext
                 ],
             ],
         ];
-        $this->beConstructedWith($config);
+        $this->beConstructedWith($m, $config);
     }
 
     public function it_is_initializable()

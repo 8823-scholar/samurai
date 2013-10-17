@@ -43,14 +43,6 @@ use Samurai\Samurai\Component\Core\YAML;
 class Manager
 {
     /**
-     * instance.
-     *
-     * @access  private
-     * @var     Manager
-     */
-    private static $_instance;
-
-    /**
      * database configurations
      *
      * @access  private
@@ -70,28 +62,11 @@ class Manager
     /**
      * constructor
      *
-     * @access  private
-     */
-    private function __construct()
-    {
-    }
-
-
-    /**
-     * Get instance
-     *
      * @access  public
-     * @return  Samurai\Onikiri\Manager
      */
-    public static function singleton()
+    public function __construct()
     {
-        if ( ! self::$_instance ) {
-            self::$_instance = new Manager();
-        }
-        return self::$_instance;
     }
-
-
 
 
     /**
@@ -100,16 +75,15 @@ class Manager
      * @access  public
      * @param   string  $file
      */
-    public function importDatabase($file)
+    public function import($file)
     {
-        if ( ! file_exists($file) ) return;
+        if (! file_exists($file)) return;
 
         $settings = YAML::load($file);
-        foreach ( $settings as $alias => $setting ) {
-            $this->_databases[$alias] = new Database($setting);
+        foreach ($settings as $alias => $setting) {
+            $this->_databases[$alias] = new Database($this, $setting);
         }
     }
-
 
     /**
      * get database configuration.
@@ -122,7 +96,7 @@ class Manager
     public function getDatabase($alias, $target = Model::TARGET_MASTER)
     {
         $database = isset($this->_databases[$alias]) ? $this->_databases[$alias] : null;
-        if ( $target === Model::TARGET_SLAVE ) {
+        if ($target === Model::TARGET_SLAVE) {
             $database = $database->pickSlave();
         }
         return $database;
@@ -139,10 +113,10 @@ class Manager
     public function getDriver($name)
     {
         $class = '\\Samurai\\Onikiri\\Driver\\' . ucfirst($name) . 'Driver';
+        if (! class_exists($class)) throw new \InvalidArgumentException("No such driver. -> {$name}");
         $driver = new $class();
         return $driver;
     }
-
 
 
     /**
@@ -157,8 +131,6 @@ class Manager
         $database = $this->getDatabase($alias, $target);
         return $database->connect();
     }
-
-
 
 
     /**

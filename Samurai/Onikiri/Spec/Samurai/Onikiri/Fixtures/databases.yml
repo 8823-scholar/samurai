@@ -1,0 +1,15 @@
+---
+base:
+    driver: mysql
+    host: localhost.localdomain
+    user: some
+    pass: uhouho
+    database: foo
+
+admin:
+    driver: mysql
+    host: admin.localdomain
+    user: some
+    pass: uhouho
+    database: foo-admin
+

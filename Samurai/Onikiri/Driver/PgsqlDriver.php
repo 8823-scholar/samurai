@@ -28,41 +28,27 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Filter;
+namespace Samurai\Onikiri\Driver;
 
-use Samurai\Onikiri;
+use Samurai\Onikiri\Database;
+use Samurai\Onikiri\Connection;
 
 /**
- * Onikiri(O/R Mapper) filter.
+ * Driver for postgres.
  *
- * @package     Samurai
- * @subpackage  Filter
+ * @package     Onikiri
+ * @subpackage  Driver
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class OnikiriFilter extends Filter
+class PgsqlDriver extends Driver
 {
     /**
-     * @dependencies
+     * @implements
      */
-    public $Loader;
-    public $Application;
-
-
-    /**
-     * @override
-     */
-    public function prefilter()
+    public function connect(Database $database)
     {
-        parent::prefilter();
-
-        $manager = new Onikiri\Manager();
-
-        // load configuration.
-        // App/Config/Database/production.yml
-        $file = $this->Loader->find($this->Application->config('directory.config.database') . DS . $this->Application->getEnv() . '.yml')->first();
-        $manager->import($file);
     }
 }
 
