@@ -51,6 +51,14 @@ class Manager
     private $_databases = array();
 
     /**
+     * model classes file paths and namespaces
+     *
+     * @access  private
+     * @var     array
+     */
+    private $_model_spaces = [];
+
+    /**
      * transactions.
      *
      * @access  private
@@ -100,6 +108,30 @@ class Manager
             $database = $database->pickSlave();
         }
         return $database;
+    }
+
+
+    /**
+     * add model space.
+     *
+     * @access  public
+     * @param   string  $path
+     * @param   string  $namespace
+     */
+    public function addModelSpaces($path, $namespace)
+    {
+        $this->model_spaces[$path] = $namespace;
+    }
+
+    /**
+     * get all model spaces.
+     *
+     * @access  public
+     * @return  array
+     */
+    public function getModelSpaces()
+    {
+        return $this->model_spaces;
     }
 
 

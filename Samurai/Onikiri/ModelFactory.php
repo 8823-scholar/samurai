@@ -30,6 +30,8 @@
 
 namespace Samurai\Onikiri;
 
+use Samurai\Onikiri\Manager;
+
 /**
  * Model factory class.
  *
@@ -41,12 +43,12 @@ namespace Samurai\Onikiri;
 class ModelFactory
 {
     /**
-     * instance.
+     * manager
      *
-     * @access  private
-     * @var     ModelFactory
+     * @access  public
+     * @var     Samurai\Onikiri\Manager
      */
-    private static $_instance;
+    public $manager;
 
     /**
      * models
@@ -56,31 +58,17 @@ class ModelFactory
      */
     private $_models = array();
 
-
+    
     /**
      * constructor.
      *
-     * @access  private
-     */
-    private function __construct()
-    {
-    }
-
-
-    /**
-     * get instance.
-     *
      * @access  public
-     * @return  ModelFactory
+     * @param   Samurai\Onikiri\Manager $manager
      */
-    public static function singleton()
+    public function __construct(Manager $manager)
     {
-        if ( self::$_instance === null ) {
-            self::$_instance = new ModelFactory();
-        }
-        return self::$_instance;
+        $this->manager = $manager;
     }
-
 
 
     /**
@@ -92,8 +80,8 @@ class ModelFactory
      */
     public function get($name)
     {
-        if ( ! isset($this->_models[$name]) ) {
-            $this->_models[$name] = $this->createModel($name);
+        if (! isset($this->_models[$name])) {
+            $this->_models[$name] = $this->create($name);
         }
         return $this->_models[$name];
     }
@@ -106,14 +94,24 @@ class ModelFactory
      * @param   string  $name
      * @return  Model
      */
-    public function createModel($name)
+    public function create($name)
     {
         $names = preg_split('/(?=[A-Z])/', $name);
-        array_shift($names);
 
-        $class = '\\App\\Model\\' . join('\\', $names) . 'Model';
-        $model = new $class();
-        return $model;
+        foreach ($this->manager->getModelSpaces() as $path => $namespace) {
+            $file_path = $path . join(DS, $names) . 'Model.php';
+            $class_name = $namespace . join('\\', $names) . 'Model';
+            if (class_exists($class_name)) {
+                $model = new $class_name();
+                return $model;
+            } elseif (file_exists($file_path)) {
+                require_once $file_path;
+                $model = new $class_name();
+                return $model;
+            }
+        }
+
+        throw new \InvalidArgumentException("No such model. -> {$name}");
     }
 }
 

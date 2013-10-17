@@ -146,7 +146,7 @@ class Model
      */
     public function getEntityClass()
     {
-        if ( $this->entity_class ) return $this->entity_class;
+        if ($this->entity_class) return $this->entity_class;
         
         // Blog\ArticlesModel -> Blog\ArticlesEntity
         $class = get_class($this);
