@@ -11,6 +11,16 @@ suites:
         namespace:
         spec_path:      Samurai/Console/Spec
         spec_namespace: Samurai\Console\Spec
+    onikiri:
+        src_path:       .
+        namespace:
+        spec_path:      Samurai/Onikiri/Spec
+        spec_namespace: Samurai\Onikiri\Spec
+    onikiri-tamahagane:
+        src_path:       .
+        namespace:
+        spec_path:      Samurai/Onikiri/TamaHagane/Spec
+        spec_namespace: Samurai\Onikiri\TamaHagane\Spec
     raikiri:
         src_path:       .
         namespace:
