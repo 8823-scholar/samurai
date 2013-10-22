@@ -28,7 +28,9 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri;
+namespace Samurai\Onikiri\TamaHagane;
+
+use Samurai\Onikiri\Manager;
 
 /**
  * Database configuration and entity;

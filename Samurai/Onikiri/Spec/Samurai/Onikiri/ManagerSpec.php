@@ -29,20 +29,20 @@ class ManagerSpec extends PHPSpecContext
         $this->import($config);
 
         $database = $this->getDatabase('admin');
-        $database->shouldHaveType('Samurai\Onikiri\Database');
+        $database->shouldHaveType('Samurai\Onikiri\TamaHagane\Database');
     }
 
 
     public function it_gets_driver()
     {
         $driver = $this->getDriver('mysql');
-        $driver->shouldHaveType('Samurai\Onikiri\Driver\MysqlDriver');
+        $driver->shouldHaveType('Samurai\Onikiri\TamaHagane\Driver\MysqlDriver');
         
         $driver = $this->getDriver('sqlite');
-        $driver->shouldHaveType('Samurai\Onikiri\Driver\SqliteDriver');
+        $driver->shouldHaveType('Samurai\Onikiri\TamaHagane\Driver\SqliteDriver');
         
         $driver = $this->getDriver('pgsql');
-        $driver->shouldHaveType('Samurai\Onikiri\Driver\PgsqlDriver');
+        $driver->shouldHaveType('Samurai\Onikiri\TamaHagane\Driver\PgsqlDriver');
     }
 
     public function it_throws_exception_when_no_exists_driver()

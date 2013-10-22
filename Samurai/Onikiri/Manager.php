@@ -31,6 +31,7 @@
 namespace Samurai\Onikiri;
 
 use Samurai\Samurai\Component\Core\YAML;
+use Samurai\Onikiri\TamaHagane\Database;
 
 /**
  * Onikiri Manager.
@@ -144,7 +145,7 @@ class Manager
      */
     public function getDriver($name)
     {
-        $class = '\\Samurai\\Onikiri\\Driver\\' . ucfirst($name) . 'Driver';
+        $class = '\\Samurai\\Onikiri\\TamaHagane\\Driver\\' . ucfirst($name) . 'Driver';
         if (! class_exists($class)) throw new \InvalidArgumentException("No such driver. -> {$name}");
         $driver = new $class();
         return $driver;

@@ -28,13 +28,13 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\Driver;
+namespace Samurai\Onikiri\TamaHagane\Driver;
 
-use Samurai\Onikiri\Database;
-use Samurai\Onikiri\Connection;
+use Samurai\Onikiri\TamaHagane\Database;
+use Samurai\Onikiri\TamaHagane\Connection;
 
 /**
- * Driver for sqlite.
+ * Driver for postgres.
  *
  * @package     Onikiri
  * @subpackage  Driver
@@ -42,7 +42,7 @@ use Samurai\Onikiri\Connection;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class SqliteDriver extends Driver
+class PgsqlDriver extends Driver
 {
     /**
      * @implements

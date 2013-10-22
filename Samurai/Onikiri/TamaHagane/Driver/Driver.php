@@ -23,19 +23,17 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * @package     Onikiri
- * @subpackage  Driver
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\Driver;
+namespace Samurai\Onikiri\TamaHagane\Driver;
 
-use Samurai\Onikiri\Database;
-use Samurai\Onikiri\Connection;
+use Samurai\Onikiri\TamaHagane\Database;
 
 /**
- * Driver for mysql class.
+ * base driver class.
  *
  * @package     Onikiri
  * @subpackage  Driver
@@ -43,40 +41,15 @@ use Samurai\Onikiri\Connection;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class MysqlDriver extends Driver
+abstract class Driver
 {
     /**
-     * @implements
+     * connect to backend.
+     *
+     * @access  public
+     * @param   Samurai\Onikiri\TamaHagane\Database    $database
+     * @return  Samurai\Onikiri\TamaHagane\Connection
      */
-    public function connect(Database $database)
-    {
-        $dsn = $this->makeDsn($database);
-        $con = new Connection($dsn, $database->getUser(), $database->getPassword(), $database->getOptions());
-        return $con;
-    }
-
-
-    /**
-     * @implements
-     */
-    public function makeDsn(Database $database)
-    {
-        $dsn = 'mysql:';
-        $info = array();
-
-        // database name
-        $info[] = 'dbname=' . $database->getDatabaseName();
-
-        // host name
-        $info[] = 'host=' . $database->getHostName();
-
-        // port
-        if ( $port = $database->getPort() ) {
-            $info[] = 'port=' . $port;
-        }
-
-        $dsn = $dsn . join(';', $info);
-        return $dsn;
-    }
+    abstract public function connect(Database $database);
 }
 

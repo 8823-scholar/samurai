@@ -28,10 +28,10 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri;
+namespace Samurai\Onikiri\TamaHagane;
 
 use PDOStatement;
-use Samurai\Onikiri\Connection;
+use Samurai\Onikiri\TamaHagane\Connection;
 
 /**
  * Statement (base is PDO)

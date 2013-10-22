@@ -1,6 +1,6 @@
 <?php
 
-namespace Samurai\Onikiri\Spec\Samurai\Onikiri;
+namespace Samurai\Onikiri\Spec\Samurai\Onikiri\TamaHagane;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 use Samurai\Onikiri\Manager;
@@ -32,7 +32,7 @@ class DatabaseSpec extends PHPSpecContext
 
     public function it_is_initializable()
     {
-        $this->shouldHaveType('Samurai\Onikiri\Database');
+        $this->shouldHaveType('Samurai\Onikiri\TamaHagane\Database');
     }
 
 
@@ -107,7 +107,7 @@ class DatabaseSpec extends PHPSpecContext
     public function it_picks_slave()
     {
         $slave = $this->pickSlave();
-        $slave->shouldHaveType('Samurai\Onikiri\Database');
+        $slave->shouldHaveType('Samurai\Onikiri\TamaHagane\Database');
         $slave->isSlave()->shouldBe(true);
     }
 

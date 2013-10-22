@@ -30,6 +30,9 @@
 
 namespace Samurai\Onikiri;
 
+use Samurai\Onikiri\TamaHagane\Statement;
+use Samurai\Onikiri\TamaHagane\Connection;
+
 /**
  * model.
  *
@@ -124,7 +127,7 @@ class Model
      */
     public function getTableName()
     {
-        if ( $this->table_name ) return $this->table_name;
+        if ($this->table_name) return $this->table_name;
 
         // Blog\Articles -> blog_articles
         $class = explode('\\', get_class($this));
