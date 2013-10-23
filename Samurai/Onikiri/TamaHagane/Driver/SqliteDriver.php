@@ -49,6 +49,25 @@ class SqliteDriver extends Driver
      */
     public function connect(Database $database)
     {
+        $dsn = $this->makeDsn($database);
+        $con = new Connection($dsn);
+        return $con;
+    }
+    
+    
+    /**
+     * @implements
+     */
+    public function makeDsn(Database $database)
+    {
+        $dsn = 'sqlite:';
+        $info = array();
+
+        // database name
+        $info[] = $database->getDatabaseName();
+
+        $dsn = $dsn . join(';', $info);
+        return $dsn;
     }
 }
 

@@ -2,7 +2,6 @@
 
 namespace Samurai\Onikiri\TamaHagane\Spec\Samurai\Onikiri\TamaHagane\Driver;
 
-use Samurai\Onikiri\Manager;
 use Samurai\Onikiri\TamaHagane\Database;
 use PhpSpec\Exception\Example\PendingException;
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
