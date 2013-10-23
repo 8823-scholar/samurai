@@ -49,6 +49,33 @@ class PgsqlDriver extends Driver
      */
     public function connect(Database $database)
     {
+        $dsn = $this->makeDsn($database);
+        $con = new Connection($dsn, $database->getUser(), $database->getPassword(), $database->getOptions());
+        return $con;
+    }
+    
+    
+    /**
+     * @implements
+     */
+    public function makeDsn(Database $database)
+    {
+        $dsn = 'pgsql:';
+        $info = array();
+
+        // database name
+        $info[] = 'dbname=' . $database->getDatabaseName();
+
+        // host name
+        $info[] = 'host=' . $database->getHostName();
+
+        // port
+        if ($port = $database->getPort()) {
+            $info[] = 'port=' . $port;
+        }
+
+        $dsn = $dsn . join(';', $info);
+        return $dsn;
     }
 }
 
