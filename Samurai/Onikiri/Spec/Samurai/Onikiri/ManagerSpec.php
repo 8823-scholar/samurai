@@ -32,22 +32,5 @@ class ManagerSpec extends PHPSpecContext
         $database->shouldHaveType('Samurai\Onikiri\TamaHagane\Database');
     }
 
-
-    public function it_gets_driver()
-    {
-        $driver = $this->getDriver('mysql');
-        $driver->shouldHaveType('Samurai\Onikiri\TamaHagane\Driver\MysqlDriver');
-        
-        $driver = $this->getDriver('sqlite');
-        $driver->shouldHaveType('Samurai\Onikiri\TamaHagane\Driver\SqliteDriver');
-        
-        $driver = $this->getDriver('pgsql');
-        $driver->shouldHaveType('Samurai\Onikiri\TamaHagane\Driver\PgsqlDriver');
-    }
-
-    public function it_throws_exception_when_no_exists_driver()
-    {
-        $this->shouldThrow('InvalidArgumentException')->duringGetDriver('whosql');
-    }
 }
 

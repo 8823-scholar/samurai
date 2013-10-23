@@ -30,8 +30,6 @@
 
 namespace Samurai\Onikiri\TamaHagane;
 
-use Samurai\Onikiri\Manager;
-
 /**
  * Database configuration and entity;
  *
@@ -46,7 +44,7 @@ class Database
      * driver
      *
      * @access  public
-     * @var     Driver\Driver
+     * @var     Samurai\Onikiri\TamaHagane\Driver\Driver
      */
     public $driver;
 
@@ -130,27 +128,15 @@ class Database
      */
     private $_master;
 
-    /**
-     * manager
-     *
-     * @access  public
-     * @var     Samurai\Onikiri\Manager
-     */
-    public $manager;
-
-
 
     /**
      * constructor.
      *
      * @access  public
-     * @param   Samurai\Onikiri\Manager $manager
      * @param   array   $setting
      */
-    public function __construct(Manager $manager, array $setting = [])
+    public function __construct(array $setting = [])
     {
-        $this->setManager($manager);
-
         foreach ($setting as $key => $value) {
             switch ($key) {
                 case 'driver':
@@ -182,18 +168,6 @@ class Database
 
 
     /**
-     * Set manager
-     *
-     * @access  public
-     * @param   Samurai\Onikiri\Manager $manager
-     */
-    public function setManager(Manager $manager)
-    {
-        $this->manager = $manager;
-    }
-
-
-    /**
      * Set driver
      *
      * @access  public
@@ -201,7 +175,11 @@ class Database
      */
     public function setDriver($name)
     {
-        $this->driver = $this->manager->getDriver($name);
+        $class = '\\Samurai\\Onikiri\\TamaHagane\\Driver\\' . ucfirst($name) . 'Driver';
+        if (! class_exists($class)) throw new \InvalidArgumentException("No such driver. -> {$name}");
+        
+        $driver = new $class();
+        $this->driver = $driver;
     }
 
     /**
@@ -354,7 +332,7 @@ class Database
      */
     public function addSlave(array $setting)
     {
-        $database = new Database($this->manager, $setting);
+        $database = new Database($setting);
         $database->setMaster($this);
         $this->_slaves[] = $database;
     }

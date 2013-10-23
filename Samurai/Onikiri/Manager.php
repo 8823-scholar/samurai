@@ -136,21 +136,6 @@ class Manager
     }
 
 
-    /**
-     * get driver.
-     *
-     * @access  public
-     * @param   string  $name
-     * @return  Driver\Driver
-     */
-    public function getDriver($name)
-    {
-        $class = '\\Samurai\\Onikiri\\TamaHagane\\Driver\\' . ucfirst($name) . 'Driver';
-        if (! class_exists($class)) throw new \InvalidArgumentException("No such driver. -> {$name}");
-        $driver = new $class();
-        return $driver;
-    }
-
 
     /**
      * connect to backend.

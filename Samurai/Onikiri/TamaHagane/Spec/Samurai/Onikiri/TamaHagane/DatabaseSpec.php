@@ -3,11 +3,10 @@
 namespace Samurai\Onikiri\TamaHagane\Spec\Samurai\Onikiri\TamaHagane;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
-use Samurai\Onikiri\Manager;
 
 class DatabaseSpec extends PHPSpecContext
 {
-    public function let(Manager $m)
+    public function let()
     {
         $config = [
             'driver' => 'mysql',
@@ -27,12 +26,36 @@ class DatabaseSpec extends PHPSpecContext
                 ],
             ],
         ];
-        $this->beConstructedWith($m, $config);
+        $this->beConstructedWith($config);
     }
 
     public function it_is_initializable()
     {
         $this->shouldHaveType('Samurai\Onikiri\TamaHagane\Database');
+    }
+
+
+    public function it_gets_driver_mysql()
+    {
+        $this->setDriver('mysql');
+        $this->getDriver()->shouldHaveType('Samurai\Onikiri\TamaHagane\Driver\MysqlDriver');
+    }
+    
+    public function it_gets_driver_sqlite()
+    {
+        $this->setDriver('sqlite');
+        $this->getDriver()->shouldHaveType('Samurai\Onikiri\TamaHagane\Driver\SqliteDriver');
+    }
+    
+    public function it_gets_driver_pgsql()
+    {
+        $this->setDriver('pgsql');
+        $this->getDriver()->shouldHaveType('Samurai\Onikiri\TamaHagane\Driver\PgsqlDriver');
+    }
+
+    public function it_throws_exception_when_no_exists_driver()
+    {
+        $this->shouldThrow('InvalidArgumentException')->duringSetDriver('whosql');
     }
 
 
