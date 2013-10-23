@@ -71,7 +71,7 @@ class MysqlDriver extends Driver
         $info[] = 'host=' . $database->getHostName();
 
         // port
-        if ( $port = $database->getPort() ) {
+        if ($port = $database->getPort()) {
             $info[] = 'port=' . $port;
         }
 

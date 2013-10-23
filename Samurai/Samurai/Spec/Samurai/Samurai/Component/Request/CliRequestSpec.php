@@ -50,5 +50,21 @@ class CliRequestSpec extends PHPSpecContext
         // restore
         $_SERVER['argv'] = $argv;
     }
+
+    public function it_gets_environment_variable()
+    {
+        $value = $this->getEnv('SAMURAI_SPEC_FOO_BAR_ZOO');
+        $value->shouldBe(null);
+
+        $value = $this->getEnv('SAMURAI_SPEC_FOO_BAR_ZOO', 'HOGE');
+        $value->shouldBe('HOGE');
+
+        putenv('SAMURAI_SPEC_FOO_BAR_ZOO=HAGE');
+        $value = $this->getEnv('SAMURAI_SPEC_FOO_BAR_ZOO');
+        $value->shouldBe('HAGE');
+
+        // clean
+        putenv('SAMURAI_SPEC_FOO_BAR_ZOO=');
+    }
 }
 

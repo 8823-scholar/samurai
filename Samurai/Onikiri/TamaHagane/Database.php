@@ -102,7 +102,7 @@ class Database
      * connection
      *
      * @access  public
-     * @var     Connection
+     * @var     Samurai\Onikiri\TamaHagane\Connection
      */
     public $connection;
 
@@ -110,7 +110,7 @@ class Database
      * connection of slave
      *
      * @access  public
-     * @var     Connection
+     * @var     Samurai\Onikiri\TamaHagane\Connection
      */
     public $connection_slave;
 
@@ -126,7 +126,7 @@ class Database
      * master (if slave only.)
      *
      * @access  private
-     * @var     Samurai\Onikiri\Database
+     * @var     Samurai\Onikiri\TamaHagane\Database
      */
     private $_master;
 

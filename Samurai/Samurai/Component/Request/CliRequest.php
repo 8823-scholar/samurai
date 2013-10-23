@@ -180,5 +180,19 @@ class CliRequest extends Request
     {
         return $this->script_name;
     }
+
+
+    /**
+     * Get environment variable.
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   string  $default
+     */
+    public function getEnv($key, $default = null)
+    {
+        $value = getenv($key);
+        return $value === false ? $default : $value;
+    }
 }
 
