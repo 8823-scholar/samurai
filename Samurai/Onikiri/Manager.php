@@ -90,7 +90,7 @@ class Manager
 
         $settings = YAML::load($file);
         foreach ($settings as $alias => $setting) {
-            $this->_databases[$alias] = new Database($this, $setting);
+            $this->_databases[$alias] = new Database($setting);
         }
     }
 
