@@ -25,3 +25,6 @@ before_script:
 script:
     - Samurai/Console/app spec
 
+after_script:
+    - vendor/bin/coveralls
+

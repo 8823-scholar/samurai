@@ -82,13 +82,13 @@ class CliRouter extends Router
     public function routing()
     {
         // has dispatch.
-        if ( $action = $this->getDispatchAction() ) {
+        if ($action = $this->getDispatchAction()) {
             return new Rule\MatchRule(array('action' => $action));
         }
 
         // default rule.
         $path = '/';
-        if ( $this->_default && $this->_default->match($path) ) {
+        if ($this->_default && $this->_default->match($path)) {
             return $this->_default;
         }
     }
@@ -106,7 +106,7 @@ class CliRouter extends Router
     {
         $args = $this->Request->getAsArray('args');
         $arg = array_shift($args);
-        if ( preg_match('/^(\w+\.\w+)$/', $arg, $matches) ) {
+        if (preg_match('/^(\w+\.\w+)$/', $arg, $matches)) {
             $action = $matches[1];
             return $action;
         }
