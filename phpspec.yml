@@ -2,28 +2,25 @@
 formatter.name: progress
 suites:
     samurai:
-        src_path:       .
-        namespace:
-        spec_path:      Samurai/Samurai/Spec
-        spec_namespace: Samurai\Samurai\Spec
+        src_path: .
+        spec_path: .
+        spec_prefix: Samurai\Samurai\Spec
     console:
-        src_path:       .
-        namespace:
-        spec_path:      Samurai/Console/Spec
-        spec_namespace: Samurai\Console\Spec
+        src_path: .
+        spec_path: .
+        spec_prefix: Samurai\Console\Spec
     onikiri:
-        src_path:       .
-        namespace:
-        spec_path:      Samurai/Onikiri/Spec
-        spec_namespace: Samurai\Onikiri\Spec
+        src_path: .
+        spec_path: .
+        spec_prefix: Samurai\Onikiri\Spec
     onikiri-tamahagane:
-        src_path:       .
-        namespace:
-        spec_path:      Samurai/Onikiri/TamaHagane/Spec
-        spec_namespace: Samurai\Onikiri\TamaHagane\Spec
+        src_path: .
+        spec_path: .
+        spec_prefix: Samurai\Onikiri\TamaHagane\Spec
     raikiri:
-        src_path:       .
-        namespace:
-        spec_path:      Samurai/Raikiri/Spec
-        spec_namespace: Samurai\Raikiri\Spec
+        src_path: .
+        spec_path: .
+        spec_prefix: Samurai\Raikiri\Spec
+extensions:
+    - PhpSpec\Extension\CodeCoverageExtension
 
