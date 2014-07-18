@@ -17,6 +17,7 @@ branches:
         - feature/3.0
 
 before_script:
+    - phpenv config-add .travis/php.ini
     - composer self-update
     - composer install
     - mysql -e 'CREATE DATABASE app'
@@ -26,5 +27,5 @@ script:
     - Samurai/Console/app spec
 
 after_script:
-    - vendor/bin/coveralls
+    - vendor/bin/coveralls -v
 

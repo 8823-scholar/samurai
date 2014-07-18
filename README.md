@@ -1,6 +1,9 @@
 Samurai Framework
 ==================================================
 
+[![Build Status](https://travis-ci.org/8823-scholar/samurai.svg?branch=feature%2F3.0)](https://travis-ci.org/8823-scholar/samurai)
+[![Coverage Status](https://coveralls.io/repos/8823-scholar/samurai/badge.png?branch=feature%2F3.0)](https://coveralls.io/r/8823-scholar/samurai?branch=feature%2F3.0)
+
 ## About "侍" (Samurai)
 
 Samurai is PHP fullstacked framework, made in Japan.
