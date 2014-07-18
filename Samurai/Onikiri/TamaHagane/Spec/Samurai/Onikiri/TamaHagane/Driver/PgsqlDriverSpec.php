@@ -3,7 +3,7 @@
 namespace Samurai\Onikiri\TamaHagane\Spec\Samurai\Onikiri\TamaHagane\Driver;
 
 use Samurai\Onikiri\TamaHagane\Database;
-use PhpSpec\Exception\Example\PendingException;
+use PhpSpec\Exception\Example\SkippingException;
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 
 class PgsqlDriverSpec extends PHPSpecContext
@@ -24,10 +24,10 @@ class PgsqlDriverSpec extends PHPSpecContext
         $host = $this->Request->getEnv('ONIKIRI_SPEC_PGSQL_HOST', 'localhost');
         $port = $this->Request->getEnv('ONIKIRI_SPEC_PGSQL_PORT', 5432);
         $database = $this->Request->getEnv('ONIKIRI_SPEC_PGSQL_DATABASE');
-        if (! $user) throw new PendingException('Set env "ONIKIRI_SPEC_PGSQL_USER"');
-        if (! $host) throw new PendingException('Set env "ONIKIRI_SPEC_PGSQL_HOST"');
-        if (! $port) throw new PendingException('Set env "ONIKIRI_SPEC_PGSQL_PORT"');
-        if (! $database) throw new PendingException('Set env "ONIKIRI_SPEC_PGSQL_DATABASE"');
+        if (! $user) throw new SkippingException('Set env "ONIKIRI_SPEC_PGSQL_USER"');
+        if (! $host) throw new SkippingException('Set env "ONIKIRI_SPEC_PGSQL_HOST"');
+        if (! $port) throw new SkippingException('Set env "ONIKIRI_SPEC_PGSQL_PORT"');
+        if (! $database) throw new SkippingException('Set env "ONIKIRI_SPEC_PGSQL_DATABASE"');
 
         $d->getUser()->willReturn($user);
         $d->getPassword()->willReturn($pass);
