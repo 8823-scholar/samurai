@@ -122,7 +122,6 @@ class Container
      */
     public function register($name, $component)
     {
-
         if ($component instanceof ComponentDefine) {
             $component->setContainer($this);
         }
@@ -147,6 +146,13 @@ class Container
 
         $def = $this->components[$name];
 
+        // closuer
+        if ($def instanceof \Closure) {
+            $instance = $def($this);
+            $this->components[$name] = $instance;
+            return $instance;
+        }
+        
         // already initialized.
         if (! $def instanceof ComponentDefine) {
             return $def;

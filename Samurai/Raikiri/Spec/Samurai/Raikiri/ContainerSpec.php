@@ -85,6 +85,19 @@ class ContainerSpec extends PHPSpecContext
         $strict = $this->get('Strict');
         $strict->Standard->shouldBe($this->get('Standard'));
     }
+
+
+    public function it_registers_closure()
+    {
+        $arg1 = 1;
+        $arg2 = 2;
+        $this->register('some.closuer', function($c) use($arg1, $arg2) {
+            $instance = new HasInitializeMethod();
+            $instance->initializeWithArguments($arg1, $arg2, $c->get('Standard'));
+            return $instance;
+        });
+        $this->get('some.closuer')->shouldHaveType('Samurai\Raikiri\Spec\Samurai\Raikiri\HasInitializeMethod');
+    }
 }
 
 
