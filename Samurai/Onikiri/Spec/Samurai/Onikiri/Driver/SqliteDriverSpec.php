@@ -1,8 +1,8 @@
 <?php
 
-namespace Samurai\Onikiri\TamaHagane\Spec\Samurai\Onikiri\TamaHagane\Driver;
+namespace Samurai\Onikiri\Spec\Samurai\Onikiri\Driver;
 
-use Samurai\Onikiri\TamaHagane\Database;
+use Samurai\Onikiri\Database;
 use PhpSpec\Exception\Example\SkippingException;
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 
@@ -10,7 +10,7 @@ class SqliteDriverSpec extends PHPSpecContext
 {
     public function it_is_initializable()
     {
-        $this->shouldHaveType('Samurai\Onikiri\TamaHagane\Driver\SqliteDriver');
+        $this->shouldHaveType('Samurai\Onikiri\Driver\SqliteDriver');
     }
     
     
@@ -20,7 +20,7 @@ class SqliteDriverSpec extends PHPSpecContext
         $d->getOptions()->willReturn([]);
 
         $connection = $this->connect($d);
-        $connection->shouldHaveType('Samurai\Onikiri\TamaHagane\Connection');
+        $connection->shouldHaveType('Samurai\Onikiri\Connection');
         $connection->shouldHaveType('PDO');
     }
 }

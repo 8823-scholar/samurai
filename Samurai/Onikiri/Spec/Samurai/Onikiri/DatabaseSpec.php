@@ -1,6 +1,6 @@
 <?php
 
-namespace Samurai\Onikiri\TamaHagane\Spec\Samurai\Onikiri\TamaHagane;
+namespace Samurai\Onikiri\Spec\Samurai\Onikiri;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 
@@ -31,26 +31,26 @@ class DatabaseSpec extends PHPSpecContext
 
     public function it_is_initializable()
     {
-        $this->shouldHaveType('Samurai\Onikiri\TamaHagane\Database');
+        $this->shouldHaveType('Samurai\Onikiri\Database');
     }
 
 
     public function it_gets_driver_mysql()
     {
         $this->setDriver('mysql');
-        $this->getDriver()->shouldHaveType('Samurai\Onikiri\TamaHagane\Driver\MysqlDriver');
+        $this->getDriver()->shouldHaveType('Samurai\Onikiri\Driver\MysqlDriver');
     }
     
     public function it_gets_driver_sqlite()
     {
         $this->setDriver('sqlite');
-        $this->getDriver()->shouldHaveType('Samurai\Onikiri\TamaHagane\Driver\SqliteDriver');
+        $this->getDriver()->shouldHaveType('Samurai\Onikiri\Driver\SqliteDriver');
     }
     
     public function it_gets_driver_pgsql()
     {
         $this->setDriver('pgsql');
-        $this->getDriver()->shouldHaveType('Samurai\Onikiri\TamaHagane\Driver\PgsqlDriver');
+        $this->getDriver()->shouldHaveType('Samurai\Onikiri\Driver\PgsqlDriver');
     }
 
     public function it_throws_exception_when_no_exists_driver()
@@ -130,7 +130,7 @@ class DatabaseSpec extends PHPSpecContext
     public function it_picks_slave()
     {
         $slave = $this->pickSlave();
-        $slave->shouldHaveType('Samurai\Onikiri\TamaHagane\Database');
+        $slave->shouldHaveType('Samurai\Onikiri\Database');
         $slave->isSlave()->shouldBe(true);
     }
 

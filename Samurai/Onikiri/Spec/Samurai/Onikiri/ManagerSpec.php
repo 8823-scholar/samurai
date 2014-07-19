@@ -29,7 +29,7 @@ class ManagerSpec extends PHPSpecContext
         $this->import($config);
 
         $database = $this->getDatabase('admin');
-        $database->shouldHaveType('Samurai\Onikiri\TamaHagane\Database');
+        $database->shouldHaveType('Samurai\Onikiri\Database');
     }
 
 }

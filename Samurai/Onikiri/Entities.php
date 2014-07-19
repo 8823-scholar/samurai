@@ -31,8 +31,8 @@
 namespace Samurai\Onikiri;
 
 use Iterator;
-use Samurai\Onikiri\TamaHagane\Statement;
-use Samurai\Onikiri\TamaHagane\Connection;
+use Samurai\Onikiri\Statement;
+use Samurai\Onikiri\Connection;
 
 /**
  * Entities class.

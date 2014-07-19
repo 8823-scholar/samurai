@@ -22,52 +22,76 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Samurai
+ * @package     Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\TamaHagane\Driver;
+namespace Samurai\Onikiri;
 
-use Samurai\Onikiri\TamaHagane\Database;
-use Samurai\Onikiri\TamaHagane\Connection;
+use PDO;
 
 /**
- * Driver for sqlite.
+ * Connection (base is PDO)
  *
  * @package     Onikiri
- * @subpackage  Driver
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class SqliteDriver extends Driver
+class Connection extends PDO
 {
     /**
-     * @implements
+     * count of number holder.
+     *
+     * @access  private
+     * @var     int
      */
-    public function connect(Database $database)
-    {
-        $dsn = $this->makeDsn($database);
-        $con = new Connection($dsn);
-        return $con;
-    }
-    
-    
+    private $count_numbered = 1;
+
+
     /**
-     * @implements
+     * @override
      */
-    public function makeDsn(Database $database)
+    public function __construct($dsn, $user = null, $password = null, array $options = array())
     {
-        $dsn = 'sqlite:';
-        $info = array();
+        parent::__construct($dsn, $user, $password, $options);
+        $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('\\Samurai\\Onikiri\\Statement', array()));
+        $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
 
-        // database name
-        $info[] = $database->getDatabaseName();
 
-        $dsn = $dsn . join(';', $info);
-        return $dsn;
+    /**
+     * For support number, named mixed placeholder.
+     *
+     * @override
+     * @see     PDO::prepare
+     */
+    public function prepare($statement, $options = NULL)
+    {
+        // numbering placeholder to named placeholder.
+        $this->count_numbered = 1;
+        $sql = preg_replace_callback('/(^|\s|,)?\?(,|\s|$)?/', array($this, 'replaceNumberedHolder'), $statement);
+
+        $sth = parent::prepare($statement, $options);
+        $sth->setConnection($this);
+
+        return $sth;
+    }
+
+    /**
+     * replace numbered(?) holder.
+     *
+     * @access  private
+     * @param   array   $matches
+     * @return  string
+     */
+    private function replaceNumberedHolder(array $matches)
+    {
+        $holder = ':numbered_holder_' . $this->count_numbered;
+        $this->count_numbered ++;
+        return (isset($matches[1]) ? $matches[1] : '') . $holder . (isset($matches[2]) ? $matches[2] : '');
     }
 }
 

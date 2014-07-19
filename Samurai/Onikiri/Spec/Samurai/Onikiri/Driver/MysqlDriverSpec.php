@@ -1,8 +1,8 @@
 <?php
 
-namespace Samurai\Onikiri\TamaHagane\Spec\Samurai\Onikiri\TamaHagane\Driver;
+namespace Samurai\Onikiri\Spec\Samurai\Onikiri\Driver;
 
-use Samurai\Onikiri\TamaHagane\Database;
+use Samurai\Onikiri\Database;
 use PhpSpec\Exception\Example\SkippingException;
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 
@@ -13,7 +13,7 @@ class MysqlDriverSpec extends PHPSpecContext
 
     public function it_is_initializable(Database $d)
     {
-        $this->shouldHaveType('Samurai\Onikiri\TamaHagane\Driver\MysqlDriver');
+        $this->shouldHaveType('Samurai\Onikiri\Driver\MysqlDriver');
     }
 
 
@@ -37,7 +37,7 @@ class MysqlDriverSpec extends PHPSpecContext
         $d->getOptions()->willReturn([]);
 
         $connection = $this->connect($d);
-        $connection->shouldHaveType('Samurai\Onikiri\TamaHagane\Connection');
+        $connection->shouldHaveType('Samurai\Onikiri\Connection');
         $connection->shouldHaveType('PDO');
     }
 }

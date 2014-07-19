@@ -28,7 +28,7 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\TamaHagane;
+namespace Samurai\Onikiri;
 
 /**
  * Database configuration and entity;
@@ -44,7 +44,7 @@ class Database
      * driver
      *
      * @access  public
-     * @var     Samurai\Onikiri\TamaHagane\Driver\Driver
+     * @var     Samurai\Onikiri\Driver\Driver
      */
     public $driver;
 
@@ -100,7 +100,7 @@ class Database
      * connection
      *
      * @access  public
-     * @var     Samurai\Onikiri\TamaHagane\Connection
+     * @var     Samurai\Onikiri\Connection
      */
     public $connection;
 
@@ -108,7 +108,7 @@ class Database
      * connection of slave
      *
      * @access  public
-     * @var     Samurai\Onikiri\TamaHagane\Connection
+     * @var     Samurai\Onikiri\Connection
      */
     public $connection_slave;
 
@@ -124,7 +124,7 @@ class Database
      * master (if slave only.)
      *
      * @access  private
-     * @var     Samurai\Onikiri\TamaHagane\Database
+     * @var     Samurai\Onikiri\Database
      */
     private $_master;
 
@@ -175,7 +175,7 @@ class Database
      */
     public function setDriver($name)
     {
-        $class = '\\Samurai\\Onikiri\\TamaHagane\\Driver\\' . ucfirst($name) . 'Driver';
+        $class = '\\Samurai\\Onikiri\\Driver\\' . ucfirst($name) . 'Driver';
         if (! class_exists($class)) throw new \InvalidArgumentException("No such driver. -> {$name}");
         
         $driver = new $class();

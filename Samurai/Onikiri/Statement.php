@@ -22,60 +22,105 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Samurai
+ * @package     Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\TamaHagane\Driver;
+namespace Samurai\Onikiri;
 
-use Samurai\Onikiri\TamaHagane\Database;
-use Samurai\Onikiri\TamaHagane\Connection;
+use PDOStatement;
+use Samurai\Onikiri\Connection;
 
 /**
- * Driver for postgres.
+ * Statement (base is PDO)
  *
  * @package     Onikiri
- * @subpackage  Driver
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class PgsqlDriver extends Driver
+class Statement extends PDOStatement
 {
     /**
-     * @implements
+     * connection.
+     *
+     * @access  public
+     * @var     Connection
      */
-    public function connect(Database $database)
-    {
-        $dsn = $this->makeDsn($database);
-        $con = new Connection($dsn, $database->getUser(), $database->getPassword(), $database->getOptions());
-        return $con;
-    }
-    
-    
+    public $connection;
+
+
     /**
-     * @implements
+     * @override
      */
-    public function makeDsn(Database $database)
+    private function __construct()
     {
-        $dsn = 'pgsql:';
-        $info = array();
+    }
 
-        // database name
-        $info[] = 'dbname=' . $database->getDatabaseName();
 
-        // host name
-        $info[] = 'host=' . $database->getHostName();
-
-        // port
-        if ($port = $database->getPort()) {
-            $info[] = 'port=' . $port;
+    /**
+     * For support number, named mixed placeholder.
+     *
+     * @override
+     */
+    public function bindValue($parameter, $value, $data_type = Connection::PARAM_STR)
+    {
+        // numbered holder to named holder.
+        if (is_int($parameter)) {
+            $parameter = ':numbered_holder_' . $parameter;
         }
+        return parent::bindValue($parameter, $value, $data_type);
+    }
 
-        $dsn = $dsn . join(';', $info);
-        return $dsn;
+
+
+    /**
+     * Set connection.
+     *
+     * @access  public
+     * @param   Connection  $onnection
+     */
+    public function setConnection(Connection $connection)
+    {
+        $this->connection = $connection;
+    }
+
+    /**
+     * Get connection.
+     *
+     * @access  public
+     * @return  Connection
+     */
+    public function getConnection()
+    {
+        return $this->connection;
+    }
+
+
+    /**
+     * get last insert id.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function lastInsertId()
+    {
+        return $this->connection->lastInsertId();
+    }
+
+
+
+    /**
+     * is success ?
+     *
+     * @access  public
+     * @return  boolean
+     */
+    public function isSuccess()
+    {
+        return $this->errorCode() === '00000';
     }
 }
 

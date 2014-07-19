@@ -28,70 +28,28 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\TamaHagane;
+namespace Samurai\Onikiri\Driver;
 
-use PDO;
+use Samurai\Onikiri\Database;
 
 /**
- * Connection (base is PDO)
+ * base driver class.
  *
  * @package     Onikiri
+ * @subpackage  Driver
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Connection extends PDO
+abstract class Driver
 {
     /**
-     * count of number holder.
+     * connect to backend.
      *
-     * @access  private
-     * @var     int
+     * @access  public
+     * @param   Samurai\Onikiri\Database    $database
+     * @return  Samurai\Onikiri\Connection
      */
-    private $count_numbered = 1;
-
-
-    /**
-     * @override
-     */
-    public function __construct($dsn, $user = null, $password = null, array $options = array())
-    {
-        parent::__construct($dsn, $user, $password, $options);
-        $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('\\Samurai\\Onikiri\\TamaHagane\\Statement', array()));
-        $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    }
-
-
-    /**
-     * For support number, named mixed placeholder.
-     *
-     * @override
-     * @see     PDO::prepare
-     */
-    public function prepare($statement, $options = NULL)
-    {
-        // numbering placeholder to named placeholder.
-        $this->count_numbered = 1;
-        $sql = preg_replace_callback('/(^|\s|,)?\?(,|\s|$)?/', array($this, 'replaceNumberedHolder'), $statement);
-
-        $sth = parent::prepare($statement, $options);
-        $sth->setConnection($this);
-
-        return $sth;
-    }
-
-    /**
-     * replace numbered(?) holder.
-     *
-     * @access  private
-     * @param   array   $matches
-     * @return  string
-     */
-    private function replaceNumberedHolder(array $matches)
-    {
-        $holder = ':numbered_holder_' . $this->count_numbered;
-        $this->count_numbered ++;
-        return (isset($matches[1]) ? $matches[1] : '') . $holder . (isset($matches[2]) ? $matches[2] : '');
-    }
+    abstract public function connect(Database $database);
 }
 

@@ -22,18 +22,19 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Onikiri
+ * @package     Samurai
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\TamaHagane\Driver;
+namespace Samurai\Onikiri\Driver;
 
-use Samurai\Onikiri\TamaHagane\Database;
+use Samurai\Onikiri\Database;
+use Samurai\Onikiri\Connection;
 
 /**
- * base driver class.
+ * Driver for postgres.
  *
  * @package     Onikiri
  * @subpackage  Driver
@@ -41,15 +42,40 @@ use Samurai\Onikiri\TamaHagane\Database;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-abstract class Driver
+class PgsqlDriver extends Driver
 {
     /**
-     * connect to backend.
-     *
-     * @access  public
-     * @param   Samurai\Onikiri\TamaHagane\Database    $database
-     * @return  Samurai\Onikiri\TamaHagane\Connection
+     * @implements
      */
-    abstract public function connect(Database $database);
+    public function connect(Database $database)
+    {
+        $dsn = $this->makeDsn($database);
+        $con = new Connection($dsn, $database->getUser(), $database->getPassword(), $database->getOptions());
+        return $con;
+    }
+    
+    
+    /**
+     * @implements
+     */
+    public function makeDsn(Database $database)
+    {
+        $dsn = 'pgsql:';
+        $info = array();
+
+        // database name
+        $info[] = 'dbname=' . $database->getDatabaseName();
+
+        // host name
+        $info[] = 'host=' . $database->getHostName();
+
+        // port
+        if ($port = $database->getPort()) {
+            $info[] = 'port=' . $port;
+        }
+
+        $dsn = $dsn . join(';', $info);
+        return $dsn;
+    }
 }
 

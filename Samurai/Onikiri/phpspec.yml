@@ -6,9 +6,4 @@ suites:
         src_path:       .
         spec_path:      Spec
         spec_namespace: Samurai\Onikiri\Spec
-    onikiri-tamahagane:
-        namespace:      Samurai\Onikiri\TamaHagane
-        src_path:       TamaHagane
-        spec_path:      TamaHagane/Spec
-        spec_namespace: Samurai\Onikiri\TamaHagane\Spec
 

@@ -29,10 +29,10 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\TamaHagane\Driver;
+namespace Samurai\Onikiri\Driver;
 
-use Samurai\Onikiri\TamaHagane\Database;
-use Samurai\Onikiri\TamaHagane\Connection;
+use Samurai\Onikiri\Database;
+use Samurai\Onikiri\Connection;
 
 /**
  * Driver for mysql class.

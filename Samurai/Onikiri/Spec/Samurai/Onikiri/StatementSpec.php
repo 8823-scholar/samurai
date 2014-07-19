@@ -1,6 +1,6 @@
 <?php
 
-namespace Samurai\Onikiri\TamaHagane\Spec\Samurai\Onikiri\TamaHagane;
+namespace Samurai\Onikiri\Spec\Samurai\Onikiri;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 

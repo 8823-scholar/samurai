@@ -22,105 +22,52 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Onikiri
+ * @package     Samurai
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\TamaHagane;
+namespace Samurai\Onikiri\Driver;
 
-use PDOStatement;
-use Samurai\Onikiri\TamaHagane\Connection;
+use Samurai\Onikiri\Database;
+use Samurai\Onikiri\Connection;
 
 /**
- * Statement (base is PDO)
+ * Driver for sqlite.
  *
  * @package     Onikiri
+ * @subpackage  Driver
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Statement extends PDOStatement
+class SqliteDriver extends Driver
 {
     /**
-     * connection.
-     *
-     * @access  public
-     * @var     Connection
+     * @implements
      */
-    public $connection;
-
-
-    /**
-     * @override
-     */
-    private function __construct()
+    public function connect(Database $database)
     {
+        $dsn = $this->makeDsn($database);
+        $con = new Connection($dsn);
+        return $con;
     }
-
-
+    
+    
     /**
-     * For support number, named mixed placeholder.
-     *
-     * @override
+     * @implements
      */
-    public function bindValue($parameter, $value, $data_type = Connection::PARAM_STR)
+    public function makeDsn(Database $database)
     {
-        // numbered holder to named holder.
-        if (is_int($parameter)) {
-            $parameter = ':numbered_holder_' . $parameter;
-        }
-        return parent::bindValue($parameter, $value, $data_type);
-    }
+        $dsn = 'sqlite:';
+        $info = array();
 
+        // database name
+        $info[] = $database->getDatabaseName();
 
-
-    /**
-     * Set connection.
-     *
-     * @access  public
-     * @param   Connection  $onnection
-     */
-    public function setConnection(Connection $connection)
-    {
-        $this->connection = $connection;
-    }
-
-    /**
-     * Get connection.
-     *
-     * @access  public
-     * @return  Connection
-     */
-    public function getConnection()
-    {
-        return $this->connection;
-    }
-
-
-    /**
-     * get last insert id.
-     *
-     * @access  public
-     * @return  string
-     */
-    public function lastInsertId()
-    {
-        return $this->connection->lastInsertId();
-    }
-
-
-
-    /**
-     * is success ?
-     *
-     * @access  public
-     * @return  boolean
-     */
-    public function isSuccess()
-    {
-        return $this->errorCode() === '00000';
+        $dsn = $dsn . join(';', $info);
+        return $dsn;
     }
 }
 

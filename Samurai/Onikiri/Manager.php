@@ -31,7 +31,7 @@
 namespace Samurai\Onikiri;
 
 use Samurai\Samurai\Component\Core\YAML;
-use Samurai\Onikiri\TamaHagane\Database;
+use Samurai\Onikiri\Database;
 
 /**
  * Onikiri Manager.

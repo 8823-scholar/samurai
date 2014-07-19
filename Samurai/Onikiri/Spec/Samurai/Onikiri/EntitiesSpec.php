@@ -5,8 +5,8 @@ namespace Samurai\Onikiri\Spec\Samurai\Onikiri;
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 use Samurai\Onikiri\Model;
 use Samurai\Onikiri\Entity;
-use Samurai\Onikiri\TamaHagane\Statement;
-use Samurai\Onikiri\TamaHagane\Connection;
+use Samurai\Onikiri\Statement;
+use Samurai\Onikiri\Connection;
 
 class EntitiesSpec extends PHPSpecContext
 {
