@@ -33,7 +33,7 @@ namespace Samurai\Samurai\Component\Core;
 use Samurai\Samurai\Component\Core\YAML;
 use Samurai\Samurai\Controller\SamuraiController;
 use Samurai\Samurai\Exception;
-use Samurai\Raikiri;
+use Samurai\Raikiri\DependencyInjectable;
 
 /**
  * Filter chaining class.
@@ -44,7 +44,7 @@ use Samurai\Raikiri;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class FilterChain extends Raikiri\Object
+class FilterChain
 {
     /**
      * controller
@@ -95,11 +95,10 @@ class FilterChain extends Raikiri\Object
     public $has_action_filter = false;
 
     /**
-     * @dependencies
+     * @traits
      */
-    public $Request;
-    public $ArrayUtil;
-    public $Container;
+    use Accessor;
+    use DependencyInjectable;
 
 
     /**

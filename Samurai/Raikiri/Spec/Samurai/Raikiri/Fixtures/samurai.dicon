@@ -26,3 +26,6 @@ HasInitializeMethodWithArguments:
         name: initializeWithArguments
         args: [1, 2, $Standard]
 
+# injectable
+Injectable: Samurai\Raikiri\Spec\Samurai\Raikiri\Injectable
+

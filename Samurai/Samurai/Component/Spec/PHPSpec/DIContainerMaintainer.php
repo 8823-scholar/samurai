@@ -34,6 +34,9 @@ class DIContainerMaintainer implements MaintainerInterface
     {
         // di container injection.
         $obj = $context->getWrappedObject();
+        if (method_exists($obj, 'setContainer')) {
+            $obj->setContainer($this->Container);
+        }
         $this->Container->injectDependency($obj);
         $this->Container->injectDependency($context);
     }

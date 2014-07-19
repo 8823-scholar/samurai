@@ -30,7 +30,7 @@
 
 namespace Samurai\Samurai\Component\Routing;
 
-use Samurai\Raikiri;
+use Samurai\Raikiri\DependencyInjectable;
 use Samurai\Samurai\Component\Core\YAML;
 
 /**
@@ -44,7 +44,7 @@ use Samurai\Samurai\Component\Core\YAML;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Router extends Raikiri\Object
+class Router
 {
     /**
      * root routing.
@@ -71,9 +71,9 @@ class Router extends Raikiri\Object
     protected $_rules = array();
 
     /**
-     * @dependencies
+     * @traits
      */
-    public $Request;
+    use DependencyInjectable;
 
 
     /**
@@ -83,8 +83,6 @@ class Router extends Raikiri\Object
      */
     public function __construct()
     {
-        parent::__construct();
-
         $this->_default = new Rule\DefaultRule();
     }
 

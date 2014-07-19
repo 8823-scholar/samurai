@@ -31,7 +31,8 @@
 namespace Samurai\Samurai\Component\Core;
 
 use Samurai\Samurai\Application;
-use Samurai\Raikiri;
+use Samurai\Raikiri\DependencyInjectable;
+use Samurai\Raikiri\ContainerFactory;
 use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Config;
 
@@ -44,7 +45,7 @@ use Samurai\Samurai\Config;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Framework extends Raikiri\Object
+class Framework
 {
     /**
      * application instance
@@ -55,14 +56,10 @@ class Framework extends Raikiri\Object
     public $app;
 
     /**
-     * @dependencies
+     * @traits
      */
-    public $Router;
-    public $ActionChain;
-    public $FilterChain;
-    public $Response;
+    use DependencyInjectable;
 
-     
     /**
      * constructor
      *
@@ -71,7 +68,6 @@ class Framework extends Raikiri\Object
      */
     public function __construct(Application $app)
     {
-        parent::__construct();
         $this->app = $app;
     }
 
@@ -135,7 +131,7 @@ class Framework extends Raikiri\Object
     private function initContainer()
     {
         $name = $this->app->config('container.dicon');
-        $container = Raikiri\ContainerFactory::create();
+        $container = ContainerFactory::create();
         foreach ($this->app->getLoader()->find($name)->reverse() as $dicon) {
             $container->import($dicon);
         }
@@ -143,8 +139,8 @@ class Framework extends Raikiri\Object
         $container->register('Framework', $this);
         $container->register('Application', $this->app);
         $container->register('Loader', $this->app->getLoader());
-        $container->injectDependency($this);
 
+        $this->setContainer($container);
         $this->app->setContainer($container);
     }
 

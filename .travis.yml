@@ -6,7 +6,6 @@ php:
 env:
     global:
         - secure: "luTz9xgNoZ6XyJIpBBFqq6DBM/kvn315FEyRVmU6L3nyaNChbNF1sFYfV8MIpGHYZESBoomy0URcVGyBkURGzjg1Hk016RcztYO9LS01Isi9u2ZqjuchzBFA9Qo/I7F5kblqYB7l0qV5nxMkx9CUbHBUbMcJ4SSBs6aftjp/bFM="
-    matrix:
         - ONIKIRI_SPEC_MYSQL_USER="root" ONIKIRI_SPEC_MYSQL_DATABASE="app"
         - ONIKIRI_SPEC_PGSQL_USER="postgres" ONIKIRI_SPEC_PGSQL_DATABASE="app"
 

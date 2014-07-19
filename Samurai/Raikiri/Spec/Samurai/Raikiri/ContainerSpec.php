@@ -3,6 +3,7 @@
 namespace Samurai\Raikiri\Spec\Samurai\Raikiri;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
+use Samurai\Raikiri\DependencyInjectable;
 
 class ContainerSpec extends PHPSpecContext
 {
@@ -74,6 +75,12 @@ class ContainerSpec extends PHPSpecContext
     }
 
 
+    public function it_has_container_get_from_container()
+    {
+        $component = $this->get('Injectable');
+        $component->getContainer()->shouldHaveType('Samurai\Raikiri\Container');
+    }
+
     public function it_gets_component_define()
     {
         $this->getComponentDefine()->shouldHaveType('Samurai\Raikiri\ComponentDefine');
@@ -139,5 +146,10 @@ class HasInitializeMethod
     {
         $this->standard = $standard;
     }
+}
+
+class Injectable
+{
+    use DependencyInjectable;
 }
 

@@ -31,7 +31,7 @@
 namespace Samurai\Samurai\Controller;
 
 use App\Application;
-use Samurai\Raikiri;
+use Samurai\Raikiri\DependencyInjectable;
 use Samurai\Samurai\Config;
 use Samurai\Samurai\Component\Core\Loader;
 
@@ -44,7 +44,7 @@ use Samurai\Samurai\Component\Core\Loader;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class SamuraiController extends Raikiri\Object
+class SamuraiController
 {
     /**
      * name
@@ -76,16 +76,10 @@ class SamuraiController extends Raikiri\Object
      */
     const LOCATION = 'location';
 
-
     /**
-     * @dependencies
+     * @traits
      */
-    public $Request;
-    public $Response;
-    public $Renderer;
-    public $Application;
-    public $Loader;
-
+    use DependencyInjectable;
 
 
     /**

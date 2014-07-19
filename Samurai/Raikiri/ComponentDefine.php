@@ -122,28 +122,29 @@ class ComponentDefine
     private $container;
 
     /**
-     * const: type: singleton
+     * const: types
      *
      * @const   string
      */
     const TYPE_SINGLETON = 'singleton';
-
-    /**
-     * const: type: prototype
-     *
-     * @const   string
-     */
     const TYPE_PROTOTYPE = 'prototype';
+    const TYPE_CLOSURE = 'closure';
 
 
     /**
      * constructor
      *
      * @access  public
-     * @param   array   $setting
+     * @param   array|Closure   $setting
      */
-    public function __construct(array $setting)
+    public function __construct($setting)
     {
+        if ($setting instanceof \Closure) {
+            $this->class = $setting;
+            $this->type = self::TYPE_CLOSURE;
+            return;
+        }
+
         foreach ($setting as $key => $value) {
             switch ($key) {
                 case 'class':
@@ -199,18 +200,23 @@ class ComponentDefine
         }
 
         // initialize
-        $class = $this->class;
-        if ($class[0] !== '\\') $class = '\\' . $class;
-        $script = sprintf('$instance = new %s(%s);', $class, $this->array2ArgsWithInjectDependency('$this->args', $this->args));
-        eval($script);
+        if ($this->isClosure()) {
+            $closure = $this->class;
+            $instance = $closure($this->container);
+        } else {
+            $class = $this->class;
+            if ($class[0] !== '\\') $class = '\\' . $class;
+            $script = sprintf('$instance = new %s(%s);', $class, $this->array2ArgsWithInjectDependency('$this->args', $this->args));
+            eval($script);
+        }
 
         if ($this->isSingleton()) {
             $this->instance = $instance;
         }
-        if ($instance instanceof Object && $this->container) {
+        if ($this->container && method_exists($instance, 'setContainer')) {
             $instance->setContainer($this->container);
         }
-
+        
         // inject dependency
         if ($this->container) {
             $this->container->injectDependency($instance);
@@ -272,7 +278,6 @@ class ComponentDefine
     /**
      * has instance ?
      *
-     * @access  public
      * @return  boolean
      */
     public function hasInstance()
@@ -284,24 +289,33 @@ class ComponentDefine
     /**
      * is singleton type ?
      *
-     * @access  public
      * @return  boolean
      */
     public function isSingleton()
     {
-        return $this->type === self::TYPE_SINGLETON;
+        return $this->type === self::TYPE_SINGLETON || $this->type === self::TYPE_CLOSURE;
     }
 
     /**
      * is prototype type ?
      *
-     * @access  public
      * @return  boolean
      */
     public function isPrototype()
     {
         return $this->type === self::TYPE_PROTOTYPE;
     }
+
+    /**
+     * is closuer ?
+     *
+     * @return  boolean
+     */
+    public function isClosure()
+    {
+        return $this->type === self::TYPE_CLOSURE;
+    }
+
 
     /**
      * has init method ?

@@ -30,7 +30,7 @@
 
 namespace Samurai\Samurai\Component\Core;
 
-use Samurai\Raikiri;
+use Samurai\Raikiri\DependencyInjectable;
 
 /**
  * get, set parameters.
@@ -41,7 +41,7 @@ use Samurai\Raikiri;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Parameters extends Raikiri\Object
+class Parameters
 {
     /**
      * parameters
@@ -52,9 +52,9 @@ class Parameters extends Raikiri\Object
     protected $_params = array();
     
     /**
-     * @dependencies
+     * @traits
      */
-    public $ArrayUtil;
+    use DependencyInjectable;
 
 
     /**

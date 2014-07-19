@@ -33,7 +33,7 @@ namespace Samurai\Samurai\Component\Core;
 use App\Application;
 use Samurai\Samurai\Samurai;
 use Samurai\Samurai\Exception\NotFoundException;
-use Samurai\Raikiri;
+use Samurai\Raikiri\DependencyInjectable;
 
 /**
  * Action chaining class.
@@ -44,7 +44,7 @@ use Samurai\Raikiri;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class ActionChain extends Raikiri\Object
+class ActionChain
 {
     /**
      * stacked actions
@@ -63,11 +63,9 @@ class ActionChain extends Raikiri\Object
     public $position = 0;
 
     /**
-     * @dependencies
+     * @traits
      */
-    public $Application;
-    public $Container;
-    public $Loader;
+    use DependencyInjectable;
 
 
     /**
@@ -129,6 +127,7 @@ class ActionChain extends Raikiri\Object
         if ($file) {
             $class = $file->getClassName();
             $controller = new $class();
+            $controller->setContainer($this->Container);
             $this->Container->injectDependency($controller);
             $controller->setName($name);
             return $controller;
