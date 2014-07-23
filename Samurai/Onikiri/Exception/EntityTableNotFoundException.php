@@ -28,46 +28,18 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Spec\Context;
-
-use PhpSpec\ObjectBehavior;
+namespace Samurai\Onikiri\Exception;
 
 /**
- * PHPSpec text cace context.
+ * not found entity table.
  *
- * @package     Samurai
- * @subpackage  Component.Spec
+ * @package     Samurai.Onikiri
+ * @subpackage  Exception
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class PHPSpecContext extends ObjectBehavior
+class EntityTableNotFoundException extends \Exception
 {
-    /**
-     * samurai di-container
-     *
-     * @var     Samurai\Raikiri\Container
-     */
-    protected $__container;
-
-    /**
-     * set container.
-     *
-     * @param   Samurai\Raikiri\Container   $container
-     */
-    public function __setContainer(Container $container)
-    {
-        $this->__container = $container;
-    }
-
-    /**
-     * get container
-     *
-     * @return  Samurai\Raikiri\Container
-     */
-    public function __getContainer()
-    {
-        return $this->__container;
-    }
 }
 

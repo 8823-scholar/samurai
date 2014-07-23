@@ -140,6 +140,7 @@ class DatabaseSpec extends PHPSpecContext
 
         $slave = $this->pickSlave();
         $slave->shouldBe($this);
+        $slave->isSlave()->shouldBe(false);
     }
 
     public function it_picked_slave_inherit_from_master()

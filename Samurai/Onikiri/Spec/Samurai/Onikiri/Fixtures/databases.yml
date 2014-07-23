@@ -5,6 +5,9 @@ base:
     user: some
     pass: uhouho
     database: foo
+    slaves:
+        - host: slave1.localdomain
+        - host: slave2.localdomain
 
 admin:
     driver: mysql
@@ -12,4 +15,9 @@ admin:
     user: some
     pass: uhouho
     database: foo-admin
+    slaves:
+        - host: slave1.localdomain
+          weight: 10
+        - host: slave2.localdomain
+          weight: 5
 

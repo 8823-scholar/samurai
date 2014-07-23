@@ -28,46 +28,62 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Spec\Context;
-
-use PhpSpec\ObjectBehavior;
+namespace Samurai\Onikiri;
 
 /**
- * PHPSpec text cace context.
  *
- * @package     Samurai
- * @subpackage  Component.Spec
+ * @package     Samurai.Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class PHPSpecContext extends ObjectBehavior
+class Onikiri
 {
     /**
-     * samurai di-container
+     * config
      *
-     * @var     Samurai\Raikiri\Container
+     * @var     Samurai\Onikiri\Configuration
      */
-    protected $__container;
+    public $config;
+
 
     /**
-     * set container.
+     * configure
      *
-     * @param   Samurai\Raikiri\Container   $container
+     * @return  Samurai\Onikiri\Configuration
      */
-    public function __setContainer(Container $container)
+    public function configure()
     {
-        $this->__container = $container;
+        $this->config = new Configuration();
+
+        $this->config->setNamingStrategy(new Mapping\DefaultNamingStrategy());
+
+        return $this->config;
     }
 
+
     /**
-     * get container
+     * get model instance
      *
-     * @return  Samurai\Raikiri\Container
+     * User -> UserTable.php
+     * UserArticle -> UserArticleTable.php
+     *
+     * @param   string  $alias
+     * @return  Samurai\Onikiri\EntityTable
+     * @throws  Samurai\Onikiri\Exception\EntityTableNotFoundException
      */
-    public function __getContainer()
+    public function getTable($alias)
     {
-        return $this->__container;
+        $class_name = $this->config->getNamingStrategy()->aliasToTableClassName($alias);
+        foreach ($this->config->getModelDirs() as $dir) {
+            $file_name = sprintf('%s/%s.php', $dir['dir'], $class_name);
+            $class_full_name  = sprintf('%s\\%s', $dir['namespace'], $class_name);
+            if (file_exists($file_name)) {
+                require_once $file_name;
+                return new $class_full_name();
+            }
+        }
+        throw new Exception\EntityTableNotFoundException();
     }
 }
 

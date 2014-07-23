@@ -8,9 +8,6 @@ use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 
 class MysqlDriverSpec extends PHPSpecContext
 {
-    public $Request;
-
-
     public function it_is_initializable(Database $d)
     {
         $this->shouldHaveType('Samurai\Onikiri\Driver\MysqlDriver');
@@ -19,11 +16,13 @@ class MysqlDriverSpec extends PHPSpecContext
 
     public function it_connects_to_mysql(Database $d)
     {
-        $user = $this->Request->getEnv('ONIKIRI_SPEC_MYSQL_USER');
-        $pass = $this->Request->getEnv('ONIKIRI_SPEC_MYSQL_PASS', '');
-        $host = $this->Request->getEnv('ONIKIRI_SPEC_MYSQL_HOST', 'localhost');
-        $port = $this->Request->getEnv('ONIKIRI_SPEC_MYSQL_PORT', 3306);
-        $database = $this->Request->getEnv('ONIKIRI_SPEC_MYSQL_DATABASE');
+        $request = $this->__getContainer()->get('Request');
+
+        $user = $request->getEnv('ONIKIRI_SPEC_MYSQL_USER');
+        $pass = $request->getEnv('ONIKIRI_SPEC_MYSQL_PASS', '');
+        $host = $request->getEnv('ONIKIRI_SPEC_MYSQL_HOST', 'localhost');
+        $port = $request->getEnv('ONIKIRI_SPEC_MYSQL_PORT', 3306);
+        $database = $request->getEnv('ONIKIRI_SPEC_MYSQL_DATABASE');
         if (! $user) throw new SkippingException('Set env "ONIKIRI_SPEC_MYSQL_USER"');
         if (! $host) throw new SkippingException('Set env "ONIKIRI_SPEC_MYSQL_HOST"');
         if (! $port) throw new SkippingException('Set env "ONIKIRI_SPEC_MYSQL_PORT"');
@@ -38,7 +37,6 @@ class MysqlDriverSpec extends PHPSpecContext
 
         $connection = $this->connect($d);
         $connection->shouldHaveType('Samurai\Onikiri\Connection');
-        $connection->shouldHaveType('PDO');
     }
 }
 

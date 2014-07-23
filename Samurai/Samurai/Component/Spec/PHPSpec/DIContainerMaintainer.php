@@ -33,6 +33,8 @@ class DIContainerMaintainer implements MaintainerInterface
     public function prepare(ExampleNode $example, SpecificationInterface $context, MatcherManager $matchers, CollaboratorManager $collaborators)
     {
         // di container injection.
+        $context->__setContainer($this->Container);
+
         $obj = $context->getWrappedObject();
         if (method_exists($obj, 'setContainer')) {
             $obj->setContainer($this->Container);

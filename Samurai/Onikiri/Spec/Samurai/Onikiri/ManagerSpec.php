@@ -30,6 +30,7 @@ class ManagerSpec extends PHPSpecContext
 
         $database = $this->getDatabase('admin');
         $database->shouldHaveType('Samurai\Onikiri\Database');
+        $database->getHostName()->shouldBe('admin.localdomain');
     }
 
 }

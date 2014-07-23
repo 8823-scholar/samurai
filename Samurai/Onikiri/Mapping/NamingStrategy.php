@@ -28,46 +28,25 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Spec\Context;
-
-use PhpSpec\ObjectBehavior;
+namespace Samurai\Onikiri\Mapping;
 
 /**
- * PHPSpec text cace context.
+ * naming strategy interface.
  *
- * @package     Samurai
- * @subpackage  Component.Spec
+ * @package     Samurai.Onikiri
+ * @subpackage  Mapping
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class PHPSpecContext extends ObjectBehavior
+interface NamingStrategy
 {
     /**
-     * samurai di-container
+     * convert to class name from alias.
      *
-     * @var     Samurai\Raikiri\Container
+     * @param   string  $alias
+     * @return  string
      */
-    protected $__container;
-
-    /**
-     * set container.
-     *
-     * @param   Samurai\Raikiri\Container   $container
-     */
-    public function __setContainer(Container $container)
-    {
-        $this->__container = $container;
-    }
-
-    /**
-     * get container
-     *
-     * @return  Samurai\Raikiri\Container
-     */
-    public function __getContainer()
-    {
-        return $this->__container;
-    }
+    public function aliasToTableClassName($alias);
 }
 

@@ -28,46 +28,19 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Spec\Context;
-
-use PhpSpec\ObjectBehavior;
+namespace Samurai\Onikiri;
 
 /**
- * PHPSpec text cace context.
+ * entity repository table.
  *
- * @package     Samurai
- * @subpackage  Component.Spec
+ * EntityTable is relational to database table.
+ *
+ * @package     Samurai.Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class PHPSpecContext extends ObjectBehavior
+class EntityTable
 {
-    /**
-     * samurai di-container
-     *
-     * @var     Samurai\Raikiri\Container
-     */
-    protected $__container;
-
-    /**
-     * set container.
-     *
-     * @param   Samurai\Raikiri\Container   $container
-     */
-    public function __setContainer(Container $container)
-    {
-        $this->__container = $container;
-    }
-
-    /**
-     * get container
-     *
-     * @return  Samurai\Raikiri\Container
-     */
-    public function __getContainer()
-    {
-        return $this->__container;
-    }
 }
 

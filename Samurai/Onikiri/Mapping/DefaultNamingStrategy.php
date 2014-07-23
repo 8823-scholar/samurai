@@ -28,46 +28,29 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Spec\Context;
-
-use PhpSpec\ObjectBehavior;
+namespace Samurai\Onikiri\Mapping;
 
 /**
- * PHPSpec text cace context.
+ * name strategy class.
  *
- * @package     Samurai
- * @subpackage  Component.Spec
+ * @package     Samurai.Onikiri
+ * @subpackage  Mapping
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class PHPSpecContext extends ObjectBehavior
+class DefaultNamingStrategy implements NamingStrategy
 {
     /**
-     * samurai di-container
+     * user -> UserTable
+     * USER -> UserTable
+     * user_posts -> UserPostsTable
      *
-     * @var     Samurai\Raikiri\Container
+     * {@inheritdoc}
      */
-    protected $__container;
-
-    /**
-     * set container.
-     *
-     * @param   Samurai\Raikiri\Container   $container
-     */
-    public function __setContainer(Container $container)
+    public function aliasToTableClassName($alias)
     {
-        $this->__container = $container;
-    }
-
-    /**
-     * get container
-     *
-     * @return  Samurai\Raikiri\Container
-     */
-    public function __getContainer()
-    {
-        return $this->__container;
+        return join('', array_map('ucfirst', array_map('strtolower', explode('_', $alias)))) . 'Table';
     }
 }
 

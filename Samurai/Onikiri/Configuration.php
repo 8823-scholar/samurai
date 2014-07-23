@@ -28,46 +28,78 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Spec\Context;
-
-use PhpSpec\ObjectBehavior;
+namespace Samurai\Onikiri;
 
 /**
- * PHPSpec text cace context.
+ * Onikiri configurations.
  *
- * @package     Samurai
- * @subpackage  Component.Spec
+ * @package     Samurai.Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class PHPSpecContext extends ObjectBehavior
+class Configuration
 {
     /**
-     * samurai di-container
+     * model contained directory.
      *
-     * @var     Samurai\Raikiri\Container
+     * @var     array
      */
-    protected $__container;
+    public $model_dirs = [];
 
     /**
-     * set container.
+     * naming strategy.
      *
-     * @param   Samurai\Raikiri\Container   $container
+     * @var     Samurai\Onikiri\Mapping\NamingStrategy
      */
-    public function __setContainer(Container $container)
+    public $naming_strategy;
+
+
+    /**
+     * add model directory
+     *
+     * @param   string  $dir
+     * @param   string  $namespace
+     */
+    public function addModelDir($dir, $namespace)
     {
-        $this->__container = $container;
+        $this->model_dirs[$dir] = $namespace;
+    }
+
+
+    /**
+     * get model directories
+     *
+     * @return  array
+     */
+    public function getModelDirs()
+    {
+        $dirs = [];
+        foreach ($this->model_dirs as $dir => $namespace) {
+            $dirs[] = ['dir' => $dir, 'namespace' => $namespace];
+        }
+        return $dirs;
+    }
+
+
+    /**
+     * set naming strategy instance
+     *
+     * @param   Samurai\Onikiri\Mapping\NamingStrategy  $namingStrategy
+     */
+    public function setNamingStrategy(Mapping\DefaultNamingStrategy $namingStrategy)
+    {
+        $this->naming_strategy = $namingStrategy;
     }
 
     /**
-     * get container
+     * get naming strategy
      *
-     * @return  Samurai\Raikiri\Container
+     * @return  Samurai\Onikiri\Mapping\NamingStrategy
      */
-    public function __getContainer()
+    public function getNamingStrategy()
     {
-        return $this->__container;
+        return $this->naming_strategy;
     }
 }
 

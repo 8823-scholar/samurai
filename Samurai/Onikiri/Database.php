@@ -435,5 +435,5 @@ class Database
     {
         return $this->_master !== null;
     }
-}
 
+}
