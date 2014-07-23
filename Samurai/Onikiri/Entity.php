@@ -33,8 +33,7 @@ namespace Samurai\Onikiri;
 /**
  * Entity class.
  *
- * @package     Onikiri
- * @subpackage  Entity
+ * @package     Samurai.Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
@@ -42,17 +41,15 @@ namespace Samurai\Onikiri;
 class Entity
 {
     /**
-     * Model.
+     * table
      *
-     * @access  public
-     * @var     Model
+     * @var     EntityTable
      */
-    public $model;
+    public $table;
 
     /**
      * attributes
      *
-     * @access  public
      * @var     array
      */
     public $attributes = array();
@@ -60,7 +57,6 @@ class Entity
     /**
      * original attributes.
      *
-     * @access  protected
      * @var     array
      */
     protected $o_attributes = array();
@@ -68,7 +64,6 @@ class Entity
     /**
      * exists in backend ?
      *
-     * @access  public
      * @var     boolean
      */
     public $exists = false;
@@ -77,68 +72,58 @@ class Entity
     /**
      * constructor.
      *
-     * @access  public
-     * @param   Model   $model
-     * @param   array   $attributes
-     * @param   boolean $exists
+     * @param   EntityTable $table
+     * @param   array       $attributes
+     * @param   boolean     $exists
      */
-    public function __construct(Model $model, array $attributes = array(), $exists = false)
+    public function __construct(EntityTable $table, $attributes = [], $exists = false)
     {
-        $this->setModel($model);
-        $this->attributes = $attributes;
-        $this->o_attributes = $attributes;
+        $this->setTable($table);
+        $this->attributes = (array)$attributes;
+        $this->o_attributes = (array)$attributes;
         $this->exists = $exists;
     }
 
 
     /**
-     * Set model.
+     * set table
      *
-     * @access  public
-     * @param   Model   $model
+     * @param   EntityTable $table
      */
-    public function setModel(Model $model)
+    public function setTable(EntityTable $table)
     {
-        $this->model = $model;
+        $this->table = $table;
     }
-
-
 
 
     /**
      * save entity.
      *
-     * @access  public
      * @param   array   $attributes
      */
     public function save($attributes = array())
     {
-        $this->model->save($this, $attributes);
+        $this->table->save($this, $attributes);
     }
 
 
     /**
      * destroy entity.
-     *
-     * @access  public
      */
     public function destroy()
     {
-        $this->model->destroy($this);
+        $this->table->destroy($this);
     }
-
-
 
 
     /**
      * get attributes.
      *
-     * @access  public
      * @return  array
      */
     public function getAttributes($updated = false)
     {
-        if ( ! $updated ) return $this->attributes;
+        if (! $updated) return $this->attributes;
 
         $attributes = array();
         foreach ($this->attributes as $key => $value) {
@@ -153,31 +138,27 @@ class Entity
     /**
      * Get primary value.
      *
-     * @access  public
      * @return  mixed
      */
     public function getPrimaryValue()
     {
-        return $this->{$this->model->getPrimaryKey()};
+        return $this->{$this->table->getPrimaryKey()};
     }
 
     /**
      * Set primary value.
      *
-     * @access  public
      * @param   mixed   $value
      */
     public function setPrimaryValue($value)
     {
-        $this->{$this->model->getPrimaryKey()} = $value;
+        $this->{$this->table->getPrimaryKey()} = $value;
     }
-
 
 
     /**
      * convert to Array
      *
-     * @access  public
      * @return  array
      */
     public function toArray()
@@ -186,11 +167,9 @@ class Entity
     }
 
 
-
     /**
      * is new record ?
      *
-     * @access  public
      * @return  boolean
      */
     public function isNew()
@@ -199,12 +178,9 @@ class Entity
     }
 
 
-
-
     /**
      * magick method for get.
      *
-     * @access  public
      * @param   string  $key
      * @return  mixed
      */

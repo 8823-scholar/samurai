@@ -3,14 +3,14 @@
 namespace Samurai\Onikiri\Spec\Samurai\Onikiri;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
-use Samurai\Onikiri\Model;
+use Samurai\Onikiri\EntityTable;
 
 class EntitySpec extends PHPSpecContext
 {
-    public function let(Model $m)
+    public function let(EntityTable $t)
     {
-        $m->getPrimaryKey()->willReturn('id');
-        $this->beConstructedWith($m, ['id' => 11, 'name' => 'KIUCHI Satoshinosuke', 'gender' => 'male', 'some_key' => 'foobarzoo']);
+        $t->getPrimaryKey()->willReturn('id');
+        $this->beConstructedWith($t, ['id' => 11, 'name' => 'KIUCHI Satoshinosuke', 'gender' => 'male', 'some_key' => 'foobarzoo']);
     }
 
     public function it_is_initializable()
@@ -59,19 +59,19 @@ class EntitySpec extends PHPSpecContext
         $this->getPrimaryValue()->shouldBe(11);
     }
 
-    public function it_sets_primary_value(Model $m)
+    public function it_sets_primary_value()
     {
         $this->setPrimaryValue(13);
         $this->getPrimaryValue()->shouldBe(13);
     }
 
 
-    public function it_is_new(Model $m)
+    public function it_is_new(EntityTable $t)
     {
-        $this->beConstructedWith($m, $this->getAttributes()->getWrappedObject(), false);
+        $this->beConstructedWith($t, $this->getAttributes()->getWrappedObject(), false);
         $this->isNew()->shouldBe(true);
 
-        $this->beConstructedWith($m, $this->getAttributes()->getWrappedObject(), true);
+        $this->beConstructedWith($t, $this->getAttributes()->getWrappedObject(), true);
         $this->isNew()->shouldBe(false);
     }
 
@@ -81,25 +81,26 @@ class EntitySpec extends PHPSpecContext
         $this->toArray()->shouldBe($this->getAttributes());
     }
 
-
-    public function it_saves(Model $m)
+    /*
+    public function it_saves(EntityTable $t)
     {
-        $m->save($this, [])->shouldBeCalled();
+        $t->save($this, [])->shouldBeCalled();
         $this->save();
     }
 
-    public function it_saves_with_attributes(Model $m)
+    public function it_saves_with_attributes(EntityTable $t)
     {
-        $m->save($this, ['name' => 'Minka Lee'])->shouldBeCalled();
+        $t->save($this, ['name' => 'Minka Lee'])->shouldBeCalled();
         $this->save(['name' => 'Minka Lee']);
     }
 
 
-    public function it_destroies(Model $m)
+    public function it_destroies(EntityTable $t)
     {
-        $m->destroy($this)->shouldBeCalled();
+        $t->destroy($this)->shouldBeCalled();
         $this->destroy();
     }
+     */
 
 
     public function it_calls_no_exists_method()

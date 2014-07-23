@@ -10,6 +10,7 @@ use Samurai\Onikiri\Connection;
 
 class EntitiesSpec extends PHPSpecContext
 {
+    /*
     public function let(Model $m, Statement $s)
     {
         $this->beConstructedWith($m, $s);
@@ -61,5 +62,6 @@ class EntitiesSpec extends PHPSpecContext
         $current = $this->current();
         $current->shouldHaveType('Samurai\Onikiri\Entity');
     }
+     */
 }
 

@@ -42,5 +42,105 @@ namespace Samurai\Onikiri;
  */
 class EntityTable
 {
+    /**
+     * table name
+     *
+     * @var     string
+     */
+    public $table_name;
+    
+    /**
+     * entity class name.
+     *
+     * @var     string
+     */
+    public $entity_class;
+
+    /**
+     * primary key name.
+     *
+     * @var     string
+     */
+    public $primary_key = 'id';
+
+
+    /**
+     * get table name.
+     *
+     * User -> user
+     * UserArticleTable -> user_article
+     *
+     * @return  string
+     */
+    public function getTableName()
+    {
+        if ($this->table_name) return $this->table_name;
+
+        $tmp = explode('\\', get_class($this));
+        $class = array_pop($tmp);
+        $names = preg_split('/(?=[A-Z])/', $class);
+        array_shift($names);
+        array_pop($names);
+        return strtolower(join('_', $names));
+    }
+
+    /**
+     * set table name.
+     *
+     * @param   string  $name
+     */
+    public function setTableName($name)
+    {
+        $this->table_name = $name;
+    }
+
+
+    /**
+     * get primary key.
+     *
+     * @return  string
+     */
+    public function getPrimaryKey()
+    {
+        return $this->primary_key;
+    }
+
+    /**
+     * set primary key.
+     *
+     * @param   string  $key
+     */
+    public function setPrimaryKey($key)
+    {
+        $this->primary_key = $key;
+    }
+    
+    
+    /**
+     * get entity class.
+     *
+     * UserTable -> User
+     * UserArticleTable -> UserArticle
+     *
+     * @return  string
+     */
+    public function getEntityClass()
+    {
+        if ($this->entity_class) return $this->entity_class;
+        
+        $class = get_class($this);
+        $class = preg_replace('/Table$/', '', $class);
+        return $class;
+    }
+
+    /**
+     * set entity class.
+     *
+     * @param   string  $class
+     */
+    public function setEntityClass($class)
+    {
+        $this->entity_class = $class;
+    }
 }
 
