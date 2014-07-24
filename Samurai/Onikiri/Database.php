@@ -127,6 +127,15 @@ class Database
      * @var     Samurai\Onikiri\Database
      */
     private $_master;
+    
+    /**
+     * target constants
+     *
+     * @const   string
+     */
+    const TARGET_AUTO = 'auto';
+    const TARGET_MASTER = 'master';
+    const TARGET_SLAVE = 'slave';
 
 
     /**
@@ -396,12 +405,9 @@ class Database
     }
 
 
-
-
     /**
      * connect to backend.
      *
-     * @access  public
      * @return  Connection
      */
     public function connect()
@@ -411,12 +417,9 @@ class Database
     }
 
 
-
-
     /**
      * has slaves ?
      *
-     * @access  public
      * @return  boolean
      */
     public function hasSlave()
@@ -428,12 +431,10 @@ class Database
     /**
      * is slave ?
      *
-     * @access  public
      * @return  boolean
      */
     public function isSlave()
     {
         return $this->_master !== null;
     }
-
 }

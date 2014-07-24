@@ -233,12 +233,12 @@ class Model
      */
     public function save(Entity $entity, $attributes = array())
     {
-        foreach ( $attributes as $key => $value ) {
+        foreach ($attributes as $key => $value) {
             $entity->$key = $value;
         }
 
         // when new record.
-        if ( $entity->isNew() ) {
+        if ($entity->isNew()) {
             $new = $this->create($entity->toArray());
             $entity->exists = true;
             $entity->setPrimaryValue($new->getPrimaryValue());
@@ -247,7 +247,7 @@ class Model
         // when update.
         else {
             $attributes = $entity->getAttributes(true);
-            if ( ! $attributes ) return;
+            if (! $attributes ) return;
 
             return $this->update($attributes, $entity->getPrimaryValue());
         }

@@ -2,7 +2,8 @@
 
 namespace Samurai\Onikiri\Spec\Samurai\Onikiri;
 
-use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
+use Samurai\Onikiri\Spec\PHPSpecContext;
+use PhpSpec\Exception\Example\SkippingException;
 
 class DatabaseSpec extends PHPSpecContext
 {
@@ -162,6 +163,14 @@ class DatabaseSpec extends PHPSpecContext
     {
         $slave = $this->pickSlave();
         $slave->isSlave()->shouldBe(true);
+    }
+
+    
+    public function it_connects_to_database()
+    {
+        $this->_setMySQLDefinitionFromEnv($this);
+        $connection = $this->connect();
+        $connection->shouldHaveType('Samurai\Onikiri\Connection');
     }
 }
 

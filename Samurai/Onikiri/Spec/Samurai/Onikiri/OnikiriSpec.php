@@ -20,6 +20,26 @@ class OnikiriSpec extends PHPSpecContext
         $config = $this->configure();
         $config->shouldHaveType('Samurai\Onikiri\Configuration');
     }
+    
+    public function it_imports_database_configuration_file()
+    {
+        $config = __DIR__ . '/Fixtures/databases.yml';
+        $this->import($config);
+
+        $database = $this->getDatabase('base');
+        $database->getUser()->shouldBe('some');
+        $database->getHostName()->shouldBe('localhost.localdomain');
+    }
+
+    public function it_gets_database_instance()
+    {
+        $config = __DIR__ . '/Fixtures/databases.yml';
+        $this->import($config);
+
+        $database = $this->getDatabase('admin');
+        $database->shouldHaveType('Samurai\Onikiri\Database');
+        $database->getHostName()->shouldBe('admin.localdomain');
+    }
 
     public function it_gets_table_instance()
     {

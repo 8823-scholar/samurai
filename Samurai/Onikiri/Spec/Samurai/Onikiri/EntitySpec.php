@@ -81,7 +81,6 @@ class EntitySpec extends PHPSpecContext
         $this->toArray()->shouldBe($this->getAttributes());
     }
 
-    /*
     public function it_saves(EntityTable $t)
     {
         $t->save($this, [])->shouldBeCalled();
@@ -100,7 +99,6 @@ class EntitySpec extends PHPSpecContext
         $t->destroy($this)->shouldBeCalled();
         $this->destroy();
     }
-     */
 
 
     public function it_calls_no_exists_method()

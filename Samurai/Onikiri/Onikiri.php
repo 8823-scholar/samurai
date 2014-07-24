@@ -30,6 +30,8 @@
 
 namespace Samurai\Onikiri;
 
+use Samurai\Samurai\Component\Core\YAML;
+
 /**
  *
  * @package     Samurai.Onikiri
@@ -45,6 +47,13 @@ class Onikiri
      * @var     Samurai\Onikiri\Configuration
      */
     public $config;
+    
+    /**
+     * database configurations
+     *
+     * @var     array
+     */
+    private $_databases = array();
 
 
     /**
@@ -59,6 +68,39 @@ class Onikiri
         $this->config->setNamingStrategy(new Mapping\DefaultNamingStrategy());
 
         return $this->config;
+    }
+    
+    
+    /**
+     * import database configurations
+     *
+     * @param   string  $file
+     */
+    public function import($file)
+    {
+        if (! file_exists($file)) return;
+
+        $settings = YAML::load($file);
+        foreach ($settings as $alias => $setting) {
+            $this->_databases[$alias] = new Database($setting);
+        }
+    }
+    
+    
+    /**
+     * get database configuration.
+     *
+     * @param   string  $alias
+     * @param   string  $target
+     * @return  Database
+     */
+    public function getDatabase($alias, $target = Database::TARGET_MASTER)
+    {
+        $database = isset($this->_databases[$alias]) ? $this->_databases[$alias] : null;
+        if ($target === Database::TARGET_SLAVE) {
+            $database = $database->pickSlave();
+        }
+        return $database;
     }
 
 
@@ -80,10 +122,23 @@ class Onikiri
             $class_full_name  = sprintf('%s\\%s', $dir['namespace'], $class_name);
             if (file_exists($file_name)) {
                 require_once $file_name;
-                return new $class_full_name();
+                return new $class_full_name($this);
             }
         }
         throw new Exception\EntityTableNotFoundException();
+    }
+    
+    
+    /**
+     * connect to backend.
+     *
+     * @param   string  $alias
+     * @param   string  $target
+     */
+    public function establishConnection($alias, $target = Database::TARGET_MASTER)
+    {
+        $database = $this->getDatabase($alias, $target);
+        return $database->connect();
     }
 }
 

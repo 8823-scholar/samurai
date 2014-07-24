@@ -142,7 +142,7 @@ class Entity
      */
     public function getPrimaryValue()
     {
-        return $this->{$this->table->getPrimaryKey()};
+        return $this->attributes[$this->table->getPrimaryKey()];
     }
 
     /**
@@ -152,7 +152,7 @@ class Entity
      */
     public function setPrimaryValue($value)
     {
-        $this->{$this->table->getPrimaryKey()} = $value;
+        $this->attributes[$this->table->getPrimaryKey()] = $value;
     }
 
 
