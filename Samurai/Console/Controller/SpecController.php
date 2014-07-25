@@ -104,6 +104,11 @@ class SpecController extends ConsoleController
 
         $this->setupWorkspace();
         $this->setupTargets();
+
+        // call initializers
+        foreach ($this->Application->config('spec.initializers.*') as $initializer) {
+            $initializer($this->Application);
+        }
     }
 
     /**

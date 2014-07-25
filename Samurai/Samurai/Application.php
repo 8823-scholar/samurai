@@ -31,6 +31,7 @@
 namespace Samurai\Samurai;
 
 use Samurai\Raikiri;
+use Samurai\Raikiri\DependencyInjectable;
 use Samurai\Samurai\Component\Core\Loader;
 use Samurai\Samurai\Component\Core\Namespacer;
 
@@ -86,12 +87,9 @@ class Application
     public $loader;
 
     /**
-     * container
-     *
-     * @access  public
-     * @var     Samurai\Raikiri\Container
+     * @traits
      */
-    public $container;
+    use DependencyInjectable;
 
     /**
      * ENV: development
@@ -347,7 +345,18 @@ class Application
             }
         }
 
-        return array_key_exists($key, $this->config) ? $this->config[$key] : null;
+        if (substr($key, -1) === '*') {
+            $config = [];
+            $key_quoted = preg_quote(substr($key, 0, -1), '/');
+            foreach ($this->config as $_key => $_val) {
+                if (preg_match("/^{$key_quoted}.*/", $_key)) {
+                    $config[$_key] = $_val;
+                }
+            }
+            return $config;
+        } else {
+            return array_key_exists($key, $this->config) ? $this->config[$key] : null;
+        }
     }
 
 
@@ -392,30 +401,6 @@ class Application
     {
         $this->config('date.timezone', $zone);
         date_default_timezone_set($zone);
-    }
-
-
-
-    /**
-     * Set DI Container.
-     *
-     * @access  public
-     * @param   Samurai\Raikiri\Container   $container
-     */
-    public function setContainer(Raikiri\Container $container)
-    {
-        $this->container = $container;
-    }
-
-    /**
-     * Get DI Container.
-     *
-     * @access  public
-     * @return  Samurai\Raikiri\Container
-     */
-    public function getContainer()
-    {
-        return $this->container;
     }
 
 

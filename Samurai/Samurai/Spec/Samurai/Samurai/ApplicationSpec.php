@@ -27,6 +27,18 @@ class ApplicationSpec extends PHPSpecContext
         $this->config('directory.somes')->shouldReturn(['/path/some1', '/path/some2']);
     }
 
+    public function it_gets_config_as_array()
+    {
+        $this->config('directory.foo', '/path/to/foo');
+        $this->config('directory.bar', '/path/to/bar');
+        $this->config('directory.zoo', '/path/to/zoo');
+        $this->config('directory.*')->shouldBe([
+            'directory.foo' => '/path/to/foo',
+            'directory.bar' => '/path/to/bar',
+            'directory.zoo' => '/path/to/zoo',
+        ]);
+    }
+
     public function it_add_path_wrapper_of_config()
     {
         $this->addAppPath(__DIR__, __NAMESPACE__, Application::PRIORITY_LOW);

@@ -33,6 +33,7 @@ namespace Samurai\Samurai\Component\Spec\Runner;
 use Samurai\Samurai\Component\FileSystem\Iterator\SimpleListIterator;
 use Samurai\Samurai\Component\Core\YAML;
 use Samurai\Samurai\Component\Spec\PHPSpec\Input;
+use Samurai\Samurai\Component\Spec\PHPSpec\ApplicationMaintainer;
 use Samurai\Samurai\Component\Spec\PHPSpec\DIContainerMaintainer;
 use Samurai\Samurai\Component\Spec\PHPSpec\PSR0Locator;
 use PhpSpec\Console\Application;
@@ -84,6 +85,14 @@ class PHPSpecRunner extends Runner
             );
         });
 
+        $container->set('runner.maintainers.application', function($c) {
+            $maintainer = new ApplicationMaintainer(
+                $c->get('formatter.presenter'),
+                $c->get('unwrapper')
+            );
+            $maintainer->Container = $c->get('samurai.container');
+            return $maintainer;
+        });
         $container->set('runner.maintainers.dicontainer', function($c) {
             $maintainer = new DIContainerMaintainer(
                 $c->get('formatter.presenter'),

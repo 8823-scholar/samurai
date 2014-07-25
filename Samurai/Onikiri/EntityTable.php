@@ -354,16 +354,16 @@ class EntityTable
         // bind params
         foreach($params as $key => $value){
             $type = Connection::PARAM_STR;
-            if ( is_null($value) ) {
+            if (is_null($value)) {
                 $type = Connection::PARAM_NULL;
-            } elseif ( is_int($value) ) {
+            } elseif (is_int($value)) {
                 $type = Connection::PARAM_INT;
-            } elseif ( is_bool($value) ) {
+            } elseif (is_bool($value)) {
                 $type = Connection::PARAM_BOOL;
-            } elseif ( is_resource($value) ) {
+            } elseif (is_resource($value)) {
                 $type = Connection::PARAM_LOB;
             }
-            if ( is_int($key) ) {
+            if (is_int($key)) {
                 $sth->bindValue($key + 1, $value, $type);
             } else {
                 $sth->bindValue($key, $value, $type);

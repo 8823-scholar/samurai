@@ -67,6 +67,16 @@ trait DependencyInjectable
         return $this->container;
     }
 
+    /**
+     * get container alias.
+     *
+     * @return  Samurai\Raikiri\Container
+     */
+    public function getRaikiri()
+    {
+        return $this->getContainer();
+    }
+
 
     /**
      * auto injection resolve.

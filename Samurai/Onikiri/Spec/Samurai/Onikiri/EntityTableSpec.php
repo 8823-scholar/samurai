@@ -2,7 +2,7 @@
 
 namespace Samurai\Onikiri\Spec\Samurai\Onikiri;
 
-use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
+use Samurai\Onikiri\Spec\PHPSpecContext;
 use Samurai\Onikiri\Onikiri;
 use Samurai\Onikiri\Database;
 use Samurai\Onikiri\Connection;
@@ -12,7 +12,6 @@ class EntityTableSpec extends PHPSpecContext
     public function let(Onikiri $oni)
     {
         $this->beConstructedWith($oni);
-        $oni->establishConnection()->willReturn('Samurai\Onikiri\Connection');
     }
 
     public function it_gets_onikiri_instance()
@@ -97,8 +96,25 @@ class EntityTableSpec extends PHPSpecContext
         $con->shouldHaveType('Samurai\Onikiri\Connection');
     }
 
-    public function it_is_most_standard_simple_query_execute()
+    public function it_is_most_standard_simple_query_execute(Onikiri $oni)
     {
+        $this->_setMySQLDatabase();
+        $con = new Connection(
+            $this->_spec_driver->makeDsn($this->_spec_database),
+            $this->_spec_database->getUser(),
+            $this->_spec_database->getPassword()
+        );
+        $oni->establishConnection($this->getDatabase(), Database::TARGET_AUTO)->willReturn($con);
+
+        $sql = file_get_contents(__DIR__ . '/Fixtures/create.tables.entitytable.sql');
+        $result = $con->query($sql);
+        unset($result);
+
+        $sql = "SELECT * FROM spec_samurai_onikiri_entity_table WHERE name = :name;";
+        $params = [':name' => 'Satoshinosuke'];
+        $result = $this->query($sql, $params);
+        $result->shouldHaveType('Samurai\Onikiri\Statement');
+        $result->fetch(\PDO::FETCH_OBJ)->name->shouldBe('Satoshinosuke');
     }
 
 

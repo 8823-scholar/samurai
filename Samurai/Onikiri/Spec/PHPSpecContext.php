@@ -31,7 +31,11 @@
 namespace Samurai\Onikiri\Spec;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext as SamuraiPHPSpecContext;
+use Samurai\Onikiri\Driver\MysqlDriver;
+use Samurai\Onikiri\Driver\PgsqlDriver;
+use Samurai\Onikiri\Driver\SqliteDriver;
 use Samurai\Onikiri\Database;
+use PhpSpec\Exception\Example\SkippingException;
 
 /**
  * PHPSpecContext for onikiri
@@ -44,25 +48,41 @@ use Samurai\Onikiri\Database;
  */
 class PHPSpecContext extends SamuraiPHPSpecContext
 {
+    protected $_spec_driver;
+    protected $_spec_database;
+    
+    protected function _setMySQLDatabase()
+    {
+        $this->_spec_driver = new MysqlDriver();
+        $this->_spec_database = new Database($this->_getMySQLDefinition());
+    }
+
+    protected function _getMySQLDefinition()
+    {
+        $app = $this->__getContainer()->get('Application');
+        if (! $app->config('spec.mysql.database.defined'))
+            throw new SkippingException('Set env "ONIKIRI_SPEC_MYSQL_(USER|PASS|HOST|PORT|DATABASE)"');
+
+        $difinition = [
+            'driver' => 'mysql',
+            'user' => $app->config('spec.mysql.database.user'),
+            'pass' => $app->config('spec.mysql.database.pass'),
+            'host' => $app->config('spec.mysql.database.host'),
+            'port' => $app->config('spec.mysql.database.port'),
+            'database' => $app->config('spec.mysql.database.name'),
+        ];
+        return $difinition;
+    }
+
     protected function _setMySQLDefinitionFromEnv(Database $d)
     {
-        $request = $this->__getContainer()->get('Request');
+        $difinition = $this->_getMySQLDefinition();
 
-        $user = $request->getEnv('ONIKIRI_SPEC_MYSQL_USER');
-        $pass = $request->getEnv('ONIKIRI_SPEC_MYSQL_PASS', '');
-        $host = $request->getEnv('ONIKIRI_SPEC_MYSQL_HOST', 'localhost');
-        $port = $request->getEnv('ONIKIRI_SPEC_MYSQL_PORT', 3306);
-        $database = $request->getEnv('ONIKIRI_SPEC_MYSQL_DATABASE');
-        if (! $user) throw new SkippingException('Set env "ONIKIRI_SPEC_MYSQL_USER"');
-        if (! $host) throw new SkippingException('Set env "ONIKIRI_SPEC_MYSQL_HOST"');
-        if (! $port) throw new SkippingException('Set env "ONIKIRI_SPEC_MYSQL_PORT"');
-        if (! $database) throw new SkippingException('Set env "ONIKIRI_SPEC_MYSQL_DATABASE"');
-
-        $d->setUser($user);
-        $d->setPassword($pass);
-        $d->setHostName($host);
-        $d->setPort($port);
-        $d->setDatabaseName($database);
+        $d->setUser($difinition['user']);
+        $d->setPassword($difinition['pass']);
+        $d->setHostName($difinition['host']);
+        $d->setPort($difinition['port']);
+        $d->setDatabaseName($difinition['database']);
     }
 }
 

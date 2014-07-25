@@ -8,7 +8,7 @@ use PhpSpec\SpecificationInterface;
 use PhpSpec\Runner\MatcherManager;
 use PhpSpec\Runner\CollaboratorManager;
 
-class DIContainerMaintainer implements MaintainerInterface
+class ApplicationMaintainer implements MaintainerInterface
 {
     /**
      * samurai di container.
@@ -31,12 +31,10 @@ class DIContainerMaintainer implements MaintainerInterface
      */
     public function prepare(ExampleNode $example, SpecificationInterface $context, MatcherManager $matchers, CollaboratorManager $collaborators)
     {
-        $obj = $context->getWrappedObject();
-        if (method_exists($obj, 'setContainer')) {
-            $obj->setContainer($this->Container);
+        // di container injection.
+        if ($context instanceof \Samurai\Samurai\Component\Spec\Context\PHPSpecContext) {
+            $context->__setContainer($this->Container);
         }
-        $this->Container->injectDependency($obj);
-        $this->Container->injectDependency($context);
     }
 
 
@@ -53,7 +51,7 @@ class DIContainerMaintainer implements MaintainerInterface
      */
     public function getPriority()
     {
-        return 5;
+        return 15;
     }
 }
 
