@@ -22,7 +22,7 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  *
- * @package     Onikiri
+ * @package     Samurai
  * @copyright   2007-2013, Samurai Framework Project
  * @link        http://samurai-fw.org/
  * @license     http://opensource.org/licenses/MIT
@@ -30,68 +30,96 @@
 
 namespace Samurai\Onikiri;
 
-use PDO;
+use Samurai\Onikiri\Exception\TransactionFailedException;
 
 /**
- * Connection (base is PDO)
+ * Transaction
  *
- * @package     Onikiri
+ * @package     Samurai.Onikiri
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Connection extends PDO
+class Transaction
 {
     /**
-     * count of number holder.
+     * valid ?
      *
-     * @access  private
-     * @var     int
+     * @var     boolean
      */
-    private $count_numbered = 0;
+    protected $_valid = true;
+
+    /**
+     * begin ?
+     *
+     * @var     boolean
+     */
+    protected $_begin = false;
+
+    /**
+     * connection
+     *
+     * @var     Samurai\Onikiri\Connection
+     */
+    protected $_connection;
 
 
     /**
-     * @override
+     * get connection
+     *
+     * @return  Samurai\Onikiri\Connection
      */
-    public function __construct($dsn, $user = null, $password = null, array $options = array())
+    public function getConnection()
     {
-        parent::__construct($dsn, $user, $password, $options);
-        $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('\\Samurai\\Onikiri\\Statement', array()));
-        $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $this->_connection;
+    }
+
+    /**
+     * set connection
+     *
+     * @param   Samurai\Onikiri\Connection  $connection
+     */
+    public function setConnection(Connection $connection)
+    {
+        $this->_connection = $connection;
     }
 
 
     /**
-     * For support number, named mixed placeholder.
-     *
-     * @override
-     * @see     PDO::prepare
+     * begin transaction
      */
-    public function prepare($statement, $options = NULL)
+    public function begin()
     {
-        // numbering placeholder to named placeholder.
-        $statement = preg_replace_callback('/(^|\s|,)?\?(,|\s|$)?/', array($this, 'replaceNumberedHolder'), $statement);
+        if ($this->_begin) return;
 
-        $sth = parent::prepare($statement, $options);
-        $sth->setConnection($this);
-        $this->count_numbered = 0;
-
-        return $sth;
+        $connection = $this->getConnection();
+        $connection->beginTransaction();
+        $this->_begin = true;
     }
 
     /**
-     * replace numbered(?) holder.
+     * rollback transaction
      *
-     * @access  private
-     * @param   array   $matches
-     * @return  string
+     * @throw   Samurai\Onikiri\Exception\TransactionFailedException
      */
-    private function replaceNumberedHolder(array $matches)
+    public function rollback($message = null)
     {
-        $holder = ':numbered_holder_' . $this->count_numbered;
-        $this->count_numbered ++;
-        return (isset($matches[1]) ? $matches[1] : '') . $holder . (isset($matches[2]) ? $matches[2] : '');
+        $connection = $this->getConnection();
+        $connection->rollback();
+
+        $this->_valid = false;
+        throw new TransactionFailedException($message ? $message : 'failed to transaction.');
+    }
+
+
+    /**
+     * is valid ?
+     *
+     * @return  boolean
+     */
+    public function isValid()
+    {
+        return $this->_valid;
     }
 }
 

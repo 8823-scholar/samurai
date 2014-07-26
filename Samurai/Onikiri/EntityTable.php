@@ -30,9 +30,6 @@
 
 namespace Samurai\Onikiri;
 
-use Samurai\Onikiri\Connection;
-use Samurai\Onikiri\Database;
-
 /**
  * entity repository table.
  *
@@ -79,6 +76,11 @@ class EntityTable
      * @var     Samurai\Onikiri\Onikiri
      */
     public $onikiri;
+
+    /**
+     * @traits
+     */
+    use TransactionHolder;
 
 
     /**
@@ -363,11 +365,7 @@ class EntityTable
             } elseif (is_resource($value)) {
                 $type = Connection::PARAM_LOB;
             }
-            if (is_int($key)) {
-                $sth->bindValue($key + 1, $value, $type);
-            } else {
-                $sth->bindValue($key, $value, $type);
-            }
+            $sth->bindValue($key, $value, $type);
         }
 
         $result = $sth->execute();
@@ -383,12 +381,22 @@ class EntityTable
      */
     public function establishConnection($target = Database::TARGET_AUTO)
     {
+        // tx
+        $tx = $this->getTx();
+        if ($tx && $tx->isValid()) $target = Database::TARGET_MASTER;
+
         /*
         if ($target === Database::TARGET_AUTO) {
             $target = $this->inTx() ? Database::TARGET_MASTER : Database::TARGET_SLAVE;
         }
          */
-        return $this->getOnikiri()->establishConnection($this->database, $target);
+        $connection = $this->getOnikiri()->establishConnection($this->database, $target);
+        if ($tx && $tx->isValid()) {
+            $tx->setConnection($connection);
+            $tx->begin();
+        }
+
+        return $connection;
     }
     
     

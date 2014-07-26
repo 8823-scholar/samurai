@@ -55,6 +55,13 @@ class Onikiri
      */
     private $_databases = array();
 
+    /**
+     * transaction
+     *
+     * @var     Samurai\Onikiri\Transaction
+     */
+    private $_tx;
+
 
     /**
      * configure
@@ -139,6 +146,19 @@ class Onikiri
     {
         $database = $this->getDatabase($alias, $target);
         return $database->connect();
+    }
+
+
+    /**
+     * get transaction instance
+     *
+     * @return  Samurai\Onikiri\Transaction
+     */
+    public function getTx()
+    {
+        if ($this->_tx) return $this->_tx;
+
+        return $this->_tx = new Transaction();
     }
 }
 

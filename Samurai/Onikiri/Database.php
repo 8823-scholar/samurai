@@ -105,14 +105,6 @@ class Database
     public $connection;
 
     /**
-     * connection of slave
-     *
-     * @access  public
-     * @var     Samurai\Onikiri\Connection
-     */
-    public $connection_slave;
-
-    /**
      * slaves
      *
      * @access  private
@@ -412,8 +404,18 @@ class Database
      */
     public function connect()
     {
+        if ($this->connection) return $this->connection;
+
         $driver = $this->getDriver();
-        return $driver->connect($this);
+        return $this->connection = $driver->connect($this);
+    }
+
+    /**
+     * disconnect from backend.
+     */
+    public function disconnect()
+    {
+        $this->connection = null;
     }
 
 
@@ -427,7 +429,6 @@ class Database
         return count($this->_slaves) > 0;
     }
 
-
     /**
      * is slave ?
      *
@@ -435,6 +436,16 @@ class Database
      */
     public function isSlave()
     {
-        return $this->_master !== null;
+        return ! $this->isMaster();
+    }
+
+    /**
+     * is master ?
+     *
+     * @return  boolean
+     */
+    public function isMaster()
+    {
+        return $this->_master === null;
     }
 }

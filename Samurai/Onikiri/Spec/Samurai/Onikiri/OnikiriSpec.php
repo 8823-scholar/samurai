@@ -57,5 +57,11 @@ class OnikiriSpec extends PHPSpecContext
 
         $this->shouldThrow('Samurai\\Onikiri\\Exception\\EntityTableNotFoundException')->duringGetTable('Foo');
     }
+
+
+    public function it_gets_transaction()
+    {
+        $this->getTx()->shouldHaveType('Samurai\Onikiri\Transaction');
+    }
 }
 
