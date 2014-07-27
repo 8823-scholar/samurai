@@ -28,13 +28,13 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\Condition;
+namespace Samurai\Onikiri\Criteria;
 
 /**
  * Order condition class.
  *
- * @package     Onikiri
- * @subpackage  Condition
+ * @package     Samurai.Onikiri
+ * @subpackage  Criteria
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
@@ -75,18 +75,17 @@ class OrderCondition extends BaseCondition
     /**
      * convert to SQL
      *
-     * @access  public
      * @return  string
      */
     public function toSQL()
     {
-        if ( ! $this->has() ) return '';
+        if (! $this->has()) return '';
 
-        $sql = array();
+        $sql = [];
         $sql[] = 'ORDER BY';
 
         $sub = array();
-        foreach ( $this->conditions as $condition ) {
+        foreach ($this->conditions as $condition) {
             $sub[] = $condition;
         }
         $sql[] = join(', ', $sub);

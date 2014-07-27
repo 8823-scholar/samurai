@@ -95,6 +95,7 @@ class Criteria
         $this->setTable($table);
 
         $this->where = new WhereCondition($this);
+        $this->order = new OrderCondition($this);
     }
 
 
@@ -169,6 +170,20 @@ class Criteria
         return call_user_func_array(array($this->where, 'andNotBetween'), func_get_args());
     }
 
+    
+    /**
+     * order
+     *
+     * @param   string  $value
+     * @param   array   $params
+     * @return  Samurai\Onikiri\Criteria\Criteria
+     */
+    public function orderBy($value, array $params = [])
+    {
+        $this->order->set($value, $params);
+        return $this;
+    }
+
 
     /**
      * bind params
@@ -179,11 +194,7 @@ class Criteria
     public function bind(array $params)
     {
         foreach ($params as $key => $value) {
-            if (is_string($key)) {
-                $this->params[$key] = $value;
-            } else {
-                $this->params[] = $value;
-            }
+            $this->addParam($value, $key);
         }
         return $this;
     }
@@ -212,7 +223,7 @@ class Criteria
     {
         return $this->params;
     }
-    
+
     
     /**
      * Set limit.
@@ -249,6 +260,30 @@ class Criteria
         $offset = $this->limit * ($page - 1);
         $this->offset($offset);
         return $this;
+    }
+    
+    
+    /**
+     * import from other criteria.
+     *
+     * @param   Samurai\Onikiri\Criteria|Samurai\Onikiri\Criteria\WhereCondition    $criteria
+     */
+    public function import($criteria)
+    {
+        if ($criteria instanceof WhereCondition) {
+            $criteria = $criteria->parent;
+        }
+        if ($criteria instanceof Criteria) {
+            if ($criteria->where->has()) {
+                $this->where->conditions = array_merge($this->where->conditions, $criteria->where->conditions);
+            }
+            if ($criteria->order->has()) {
+                $this->order->conditions = $criteria->order->conditions;
+                $this->order->params = $criteria->order->params;
+            }
+            if ($criteria->limit !== null) $this->limit($criteria->limit);
+            if ($criteria->offset !== null) $this->offset($criteria->offset);
+        }
     }
 
 
@@ -287,20 +322,6 @@ class Criteria
         return $this->group;
     }
 
-
-    /**
-     * order
-     *
-     * @access  public
-     */
-    public function orderBy()
-    {
-        $args = func_get_args();
-        while ( $arg = array_shift($args) ) {
-            $this->order->add($arg);
-        }
-        return $this->order;
-    }
 
     /**
      * order by field.
@@ -368,11 +389,14 @@ class Criteria
         $sql[] = 'SELECT *';
         $sql[] = 'FROM ' . $this->table->getTableName();
         $sql[] = $this->where->toSQL();
+        $this->bind($this->where->getParams());
+        if ($this->order->has()) {
+            $sql[] = $this->order->toSQL();
+            $this->bind($this->order->getParams());
+        }
         /*
         $sql[] = $this->group->toSQL();
         $this->appendParams($this->group->getParams());
-        $sql[] = $this->order->toSQL();
-        $this->appendParams($this->order->getParams());
          */
 
         if ($this->limit !== null) {
@@ -408,6 +432,7 @@ class Criteria
         }
         $sql[] = join(', ', $setts);
         $sql[] = $this->where->toSQL();
+        $this->bind($this->where->getParams());
 
         return join(' ', $sql);
     }
@@ -448,8 +473,27 @@ class Criteria
         
         $sql[] = sprintf('DELETE FROM %s', $this->table->getTableName());
         $sql[] = $this->where->toSQL();
+        $this->bind($this->where->getParams());
 
         return join(' ', $sql);
+    }
+
+
+    /**
+     * bridge to EntityTable
+     * (scopes)
+     *
+     * @param   string  $method
+     * @param   array   $args
+     */
+    public function __call($method, array $args)
+    {
+        $scope = call_user_func_array([$this->table, $method], $args);
+        if ($scope instanceof Criteria || $scope instanceof WhereCondition) {
+            $this->import($scope);
+            return $this;
+        }
+        return $scope;
     }
 }
 

@@ -207,6 +207,17 @@ class EntityTable
 
 
     /**
+     * get scope defines
+     *
+     * @return  array
+     */
+    public function scopes()
+    {
+        return [];
+    }
+
+
+    /**
      * find by id or criteria.
      * return first entity.
      *
@@ -496,7 +507,10 @@ class EntityTable
      */
     public function __call($method, array $args = array())
     {
-        if (preg_match('/^findBy(.+)$/', $method, $matches)) {
+        $scopes = $this->scopes();
+        if (array_key_exists($method, $scopes)) {
+            return $scopes[$method];
+        } elseif (preg_match('/^findBy(.+)$/', $method, $matches)) {
             $column = strtolower($matches[1]);
             return $this->find("{$column} = ?", array_shift($args));
         } elseif (preg_match('/^findAllBy(.+)$/', $method, $matches)) {

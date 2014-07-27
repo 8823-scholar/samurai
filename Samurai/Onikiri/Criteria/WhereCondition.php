@@ -74,7 +74,7 @@ class WhereCondition extends BaseCondition
         if ($params && ! is_array($params)) $params = [$params];
 
         $value = new WhereConditionValue($this, $value, $params);
-        $this->conditions[] = $value;
+        $this->add($value);
 
         return $this;
     }
@@ -91,7 +91,7 @@ class WhereCondition extends BaseCondition
 
         $value = array_pop($this->conditions);
         $value->not();
-        $this->conditions[] = $value;
+        $this->add($value);
 
         return $this;
     }
@@ -111,7 +111,7 @@ class WhereCondition extends BaseCondition
 
         $value = new WhereConditionValue($this, $value, $params);
         $value->chain_by = WhereCondition::CHAIN_BY_OR;
-        $this->conditions[] = $value;
+        $this->add($value);
 
         return $this;
     }
@@ -128,7 +128,7 @@ class WhereCondition extends BaseCondition
 
         $value = array_pop($this->conditions);
         $value->not();
-        $this->conditions[] = $value;
+        $this->add($value);
 
         return $this;
     }
@@ -252,7 +252,7 @@ class WhereCondition extends BaseCondition
      */
     public function toSQL()
     {
-        $sql = array();
+        $sql = [];
 
         $sql[] = 'WHERE';
 

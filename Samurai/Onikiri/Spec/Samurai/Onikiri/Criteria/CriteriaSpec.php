@@ -87,12 +87,18 @@ class CriteriaSpec extends PHPSpecContext
         $this->toSQL()->shouldBe('SELECT * FROM foo WHERE (id BETWEEN ? AND ?) OR (id BETWEEN ? AND ?)');
         $this->getParams()->shouldBe([1, 10, 20, 50]);
     }
-    
+
     public function it_is_where_notbetween_condition_directly()
     {
         $this->whereNotBetween('id', 1, 10);
         $this->toSQL()->shouldBe('SELECT * FROM foo WHERE (id NOT BETWEEN ? AND ?)');
         $this->getParams()->shouldBe([1, 10]);
+    }
+
+    public function it_is_order_condition()
+    {
+        $this->orderBy('created_at DESC');
+        $this->toSQL()->shouldBe('SELECT * FROM foo WHERE 1 ORDER BY created_at DESC');
     }
 
     public function it_is_limit_condition()

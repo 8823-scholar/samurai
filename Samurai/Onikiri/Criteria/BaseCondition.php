@@ -53,14 +53,14 @@ abstract class BaseCondition
      *
      * @var     array
      */
-    public $conditions = array();
+    public $conditions = [];
 
     /**
      * params
      *
      * @var     array
      */
-    public $params = array();
+    public $params = [];
 
 
     /**
@@ -77,23 +77,20 @@ abstract class BaseCondition
     /**
      * make SQL.
      *
-     * @access  public
      * @return  string
      */
     abstract public function toSQL();
     
     
-    
     /**
      * Set
      *
-     * @access  public
-     * @param   string  $table
+     * @param   string  $condition
      */
-    public function set($table)
+    public function set($condition, array $params = [])
     {
-        $this->conditions = array();
-        $this->add($table);
+        $this->conditions = [];
+        $this->add($condition);
         return $this;
     }
 
@@ -102,28 +99,52 @@ abstract class BaseCondition
      * add.
      *
      * @access  public
-     * @param   string  $table
+     * @param   string  $condition
      */
-    public function add($table)
+    public function add($condition, array $params = [])
     {
-        $this->conditions[] = $table;
+        $this->conditions[] = $condition;
         return $this;
     }
 
 
     /**
+     * bind
+     *
+     * @param   array   $params
+     */
+    public function bind(array $params)
+    {
+        foreach ($params as $key => $value) {
+            $this->addParam($value, $key);
+        }
+        return $this;
+    }
+
+    /**
+     * add params
+     *
+     * @param   mixed   $value
+     * @param   mixed   $key
+     */
+    public function addParam($value, $key = null)
+    {
+        if ($key === null || is_int($key)) {
+            $this->params[] = $value;
+        } else {
+            $this->params[$key] = $value;
+        }
+    }
+
+    /**
      * get params
      *
-     * @access  public
      * @return  array
      */
     public function getParams()
     {
         return $this->params;
     }
-
-
-
 
 
     /**
@@ -136,8 +157,6 @@ abstract class BaseCondition
     {
         return count($this->conditions) > 0;
     }
-
-
 
 
     /**

@@ -192,6 +192,49 @@ class EntityTableSpec extends PHPSpecContext
     }
 
 
+    public function it_is_scope_method(Connection $con, Statement $stm)
+    {
+        $con->prepare('SELECT * FROM entity WHERE (category = ?) ORDER BY created_at DESC LIMIT ?')->willReturn($stm);
+        $stm->execute()->shouldBeCalled();
+        $stm->bindValue(0, 'book', Connection::PARAM_STR)->shouldBeCalled();
+        $stm->bindValue(1, 10, Connection::PARAM_INT)->shouldBeCalled();
+        $stm->fetchAll(Connection::FETCH_ASSOC)->willReturn([
+            ['id' => 1, 'name' => 'secret of cat', 'category' => 'book', 'created_at' => 1234],
+            ['id' => 2, 'name' => 'secret of dog', 'category' => 'book', 'created_at' => 1232],
+        ]);
+
+        $this->scopeNewest()->where('category = ?', 'book')->findAll();
+    }
+    public function scopeNewest()
+    {
+        return $this->criteria()->orderBy('created_at DESC')->limit(10);
+    }
+
+    /*
+    public function it_is_scopes_method(Connection $con, Statement $stm)
+    {
+        $con->prepare('SELECT * FROM entity WHERE (preregist = ?) AND (category = ?) ORDER BY created_at DESC LIMIT ?')->willReturn($stm);
+        $stm->execute()->shouldBeCalled();
+        $stm->bindValue(0, 1, Connection::PARAM_INT)->shouldBeCalled();
+        $stm->bindValue(1, 'book', Connection::PARAM_STR)->shouldBeCalled();
+        $stm->bindValue(2, 10, Connection::PARAM_INT)->shouldBeCalled();
+        $stm->fetchAll(Connection::FETCH_ASSOC)->willReturn([
+            ['id' => 1, 'name' => 'secret of cat', 'category' => 'book', 'created_at' => 1234],
+            ['id' => 2, 'name' => 'secret of dog', 'category' => 'book', 'created_at' => 1232],
+        ]);
+
+        $this->onlyPreregist()->newest()->where('category = ?', 'book')->findAll();
+    }
+    public function scopes()
+    {
+        return [
+            'onlyPreregist' => $this->creteria()->where('preregist = ?', 1),
+            'newest' => $this->creteria()->orderBy('created_at DESC')->limit(10),
+        ];
+    }
+     */
+
+
     public function it_saves_exists_entity(Connection $con, Statement $stm)
     {
         $con->prepare('SELECT * FROM entity WHERE (id = ?) LIMIT ?')->willReturn($stm);

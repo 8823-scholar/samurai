@@ -116,7 +116,7 @@ class WhereConditionValue
         if ($this->negative) $sql[] = '!';
 
         $sql[] = '(' . $this->value . ')';
-        $this->parent->parent->bind($this->params);
+        $this->parent->bind($this->params);
 
         return join(' ', $sql);
     }
