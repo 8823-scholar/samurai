@@ -81,6 +81,17 @@ class Entities implements Iterator
 
 
     /**
+     * get size.
+     *
+     * @return  int
+     */
+    public function size()
+    {
+        return count($this->_entities);
+    }
+
+
+    /**
      * get by position.
      *
      * @param   int     $position
@@ -93,15 +104,40 @@ class Entities implements Iterator
 
 
     /**
+     * fetch.
+     *
+     * @return  Samurai\Onikiri\Entity
+     */
+    public function fetch()
+    {
+        $entity = $this->current();
+        if ($this->valid()) {
+            $this->next();
+        } else {
+            $this->rewind();
+        }
+        return $entity;
+    }
+
+    /**
      * get first entity.
      *
-     * @return  Entity
+     * @return  Samurai\Onikiri\Entity
      */
     public function first()
     {
         return $this->getByPosition(0);
     }
 
+    /**
+     * get last entity
+     *
+     * @return  Samurai\Onikiri\Entity
+     */
+    public function last()
+    {
+        return $this->getByPosition($this->size() - 1);
+    }
 
 
     /**

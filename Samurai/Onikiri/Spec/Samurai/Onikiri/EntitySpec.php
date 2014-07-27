@@ -66,13 +66,13 @@ class EntitySpec extends PHPSpecContext
     }
 
 
-    public function it_is_new(EntityTable $t)
+    public function it_is_exists(EntityTable $t)
     {
         $this->beConstructedWith($t, $this->getAttributes()->getWrappedObject(), false);
-        $this->isNew()->shouldBe(true);
+        $this->isExists()->shouldBe(false);
 
         $this->beConstructedWith($t, $this->getAttributes()->getWrappedObject(), true);
-        $this->isNew()->shouldBe(false);
+        $this->isExists()->shouldBe(true);
     }
 
 

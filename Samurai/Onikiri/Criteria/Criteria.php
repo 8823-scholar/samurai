@@ -316,58 +316,43 @@ class Criteria
 
 
 
-
-
-
     /**
-     * import from array.
+     * bridge to table find.
      *
-     * @access  public
-     * @param   array   $condition
-     */
-    public function import(array $condition = array())
-    {
-        foreach ( $condition as $key => $value ) {
-            switch ( strtolower($key) ) {
-                case 'where':
-                    call_user_func_array(array($this->where, 'add'), $value);
-                    break;
-                case 'group':
-                    $this->groupBy($value);
-                    break;
-                case 'order':
-                    $this->orderBy($value);
-                    break;
-            }
-        }
-    }
-
-
-
-
-    /**
-     * bridge to model find.
-     *
-     * @access  public
      * @return  Samurai\Onikiri\Entity
      */
     public function find()
     {
-        return $this->model->find($this);
+        return $this->table->find($this);
     }
 
     /**
-     * bridge to model findAll
+     * bridge to table findAll
      *
-     * @access  public
      * @return  Samurai\Onikiri\Entities
      */
     public function findAll()
     {
-        return $this->model->findAll($this);
+        return $this->table->findAll($this);
     }
 
+    /**
+     * bridge to table update
+     *
+     * @param   array   $attributes
+     */
+    public function update($attributes = [])
+    {
+        return $this->table->update($attributes, $this);
+    }
 
+    /**
+     * bridge to table delete
+     */
+    public function delete()
+    {
+        return $this->table->delete($this);
+    }
 
 
     /**
@@ -412,22 +397,20 @@ class Criteria
      */
     public function toUpdateSQL($attributes = array())
     {
-        $sql = array();
-        $this->params = array();
+        $sql = [];
+        $this->params = [];
         
-        $sql[] = sprintf('UPDATE %s SET', $this->model->getTableName());
-        $setts = array();
-        foreach ( $attributes as $key => $value ) {
+        $sql[] = sprintf('UPDATE %s SET', $this->table->getTableName());
+        $setts = [];
+        foreach ($attributes as $key => $value) {
             $setts[] = sprintf('%s = ?', $key);
             $this->addParam($value);
         }
         $sql[] = join(', ', $setts);
         $sql[] = $this->where->toSQL();
-        $this->appendParams($this->where->getParams());
 
         return join(' ', $sql);
     }
-    
     
     /**
      * convert to insert SQL.
@@ -442,50 +425,31 @@ class Criteria
         
         $sql[] = sprintf('INSERT INTO %s', $this->table->getTableName());
         $keys = [];
-        $values = array();
+        $values = [];
         foreach ($attributes as $key => $value) {
             $keys[] = $key;
             $values[] = '?';
             $this->addParam($value);
         }
         $sql[] = '(' . join(', ', $keys) . ')';
-        $sql[] = 'VALUES (' . join(', ', $values) . ');';
+        $sql[] = 'VALUES (' . join(', ', $values) . ')';
         return join(' ', $sql);
     }
-    
     
     /**
      * convert to delete SQL.
      *
-     * @access  public
      * @return  string
      */
     public function toDeleteSQL()
     {
-        $sql = array();
-        $this->params = array();
+        $sql = [];
+        $this->params = [];
         
-        $sql[] = sprintf('DELETE FROM %s', $this->model->getTableName());
+        $sql[] = sprintf('DELETE FROM %s', $this->table->getTableName());
         $sql[] = $this->where->toSQL();
-        $this->appendParams($this->where->getParams());
 
         return join(' ', $sql);
-    }
-
-
-
-    /**
-     * generate bind key.
-     *
-     * @access  public
-     * @param   string  $key
-     * @return  string
-     */
-    public function makeBindKey($key = null)
-    {
-        $bind = ( $key ? $key : '' );
-        $bind = $bind . md5(uniqid());
-        return $bind;
     }
 }
 

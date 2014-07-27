@@ -172,9 +172,9 @@ class Entity
      *
      * @return  boolean
      */
-    public function isNew()
+    public function isExists()
     {
-        return ! $this->exists;
+        return $this->exists;
     }
 
 

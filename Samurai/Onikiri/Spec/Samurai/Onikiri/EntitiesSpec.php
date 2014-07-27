@@ -3,18 +3,14 @@
 namespace Samurai\Onikiri\Spec\Samurai\Onikiri;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
-use Samurai\Onikiri\Model;
 use Samurai\Onikiri\Entity;
-use Samurai\Onikiri\Statement;
+use Samurai\Onikiri\EntityTable;
 use Samurai\Onikiri\Connection;
 
 class EntitiesSpec extends PHPSpecContext
 {
-    /*
-    public function let(Model $m, Statement $s)
+    public function let(EntityTable $e)
     {
-        $this->beConstructedWith($m, $s);
-        
         $fixtures = [
             ['id' => 1, 'name' => 'KIUCHI Satoshinosuke'],
             ['id' => 2, 'name' => 'Minka Lee'],
@@ -23,18 +19,14 @@ class EntitiesSpec extends PHPSpecContext
             ['id' => 5, 'name' => 'HATSUNE Miku'],
         ];
         foreach ($fixtures as $position => $fixture) {
-            $s->fetch(Connection::FETCH_ASSOC, Connection::FETCH_ORI_ABS, $position)->willReturn($fixture);
-            $m->build($fixture, true)->willReturn(new Entity($m->getWrappedObject(), $fixture, true));
+            $this->add(new Entity($e->getWrappedObject(), $fixture, true));
         }
-        $s->fetch(Connection::FETCH_ASSOC, Connection::FETCH_ORI_ABS, $position + 1)->willReturn(null);
-        $s->fetch(Connection::FETCH_ASSOC, Connection::FETCH_ORI_ABS, 10)->willReturn(null);
     }
 
 
-    public function it_is_initializable(Model $m)
+    public function it_is_initializable()
     {
         $this->shouldHaveType('Samurai\Onikiri\Entities');
-        $this->model->shouldBe($m);
     }
 
 
@@ -55,6 +47,15 @@ class EntitiesSpec extends PHPSpecContext
         $entity->getName()->shouldBe('KIUCHI Satoshinosuke');
     }
 
+    public function it_is_fetch()
+    {
+        $entity = $this->fetch();
+        $entity->getName()->shouldBe('KIUCHI Satoshinosuke');
+
+        $entity = $this->fetch();
+        $entity->getName()->shouldBe('Minka Lee');
+    }
+
 
     public function it_is_foreachable()
     {
@@ -62,6 +63,5 @@ class EntitiesSpec extends PHPSpecContext
         $current = $this->current();
         $current->shouldHaveType('Samurai\Onikiri\Entity');
     }
-     */
 }
 

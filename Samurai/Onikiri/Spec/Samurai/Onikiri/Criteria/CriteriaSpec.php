@@ -117,11 +117,50 @@ class CriteriaSpec extends PHPSpecContext
     }
 
 
+    public function it_bredges_to_talbe_find(EntityTable $t)
+    {
+        $t->find($this)->shouldBeCalled();
+        $this->where('id = ? AND name = ?', [1, 'Satoshinosuke'])->find();
+    }
+    
+    public function it_bredges_to_talbe_findAll(EntityTable $t)
+    {
+        $t->findAll($this)->shouldBeCalled();
+        $this->where('id = ? AND name = ?', [1, 'Satoshinosuke'])->findAll();
+    }
+
+    public function it_bredges_to_talbe_update(EntityTable $t)
+    {
+        $t->update(['name' => 'Kiuchi Satoshinosuke'], $this)->shouldBeCalled();
+        $this->where('id = ? AND name = ?', [1, 'Satoshinosuke'])->update(['name' => 'Kiuchi Satoshinosuke']);
+    }
+    
+    public function it_bredges_to_talbe_delete(EntityTable $t)
+    {
+        $t->delete($this)->shouldBeCalled();
+        $this->where('id = ? AND name = ?', [1, 'Satoshinosuke'])->delete();
+    }
+
+
     public function it_converts_to_insert_sql()
     {
         $this->toInsertSQL(['name' => 'Satoshinosuke', 'lover' => 'Minka'])
-            ->shouldBe("INSERT INTO foo (name, lover) VALUES (?, ?);");
+            ->shouldBe("INSERT INTO foo (name, lover) VALUES (?, ?)");
         $this->getParams()->shouldBe(['Satoshinosuke', 'Minka']);
+    }
+    
+    public function it_converts_to_update_sql()
+    {
+        $this->where('id = ?', 1)->toUpdateSQL(['name' => 'Satoshinosuke', 'lover' => 'Minka'])
+            ->shouldBe("UPDATE foo SET name = ?, lover = ? WHERE (id = ?)");
+        $this->getParams()->shouldBe(['Satoshinosuke', 'Minka', 1]);
+    }
+    
+    public function it_converts_to_delete_sql()
+    {
+        $this->where('id = ?', 1)->toDeleteSQL()
+            ->shouldBe("DELETE FROM foo WHERE (id = ?)");
+        $this->getParams()->shouldBe([1]);
     }
 }
 

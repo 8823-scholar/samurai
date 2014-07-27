@@ -286,7 +286,7 @@ class EntityTable
         }
 
         // when new record.
-        if ($entity->isNew()) {
+        if (! $entity->isExists()) {
             // TODO: custom primary value handler.
             $new = $this->create($entity->toArray());
             $entity->exists = true;
@@ -310,11 +310,9 @@ class EntityTable
      */
     public function destroy(Entity $entity)
     {
-        /*
-        if (! $entity->isNew()) {
+        if ($entity->isExists()) {
             $this->delete($entity->getPrimaryValue());
         }
-         */
     }
     
     
@@ -322,50 +320,48 @@ class EntityTable
      * create.
      *
      * @param   array   $attributes
-     * @return  Entity
+     * @return  Samurai\Onikiri\Entity
      */
     public function create($attributes = array())
     {
         $entity = $this->build($attributes);
 
         // to SQL.
-        $cri = $this->criteria();
-        $sql = $cri->toInsertSQL($attributes);
+        $criteria = $this->criteria();
+        $sql = $criteria->toInsertSQL($attributes);
 
         // query.
-        /*
-        $sth = $this->query($sql, $cri->getParams());
+        $sth = $this->query($sql, $criteria->getParams(), Database::TARGET_MASTER);
         if ($sth->isSuccess()) {
             $entity->exists = true;
             $entity->setPrimaryValue($sth->lastInsertId());
             return $entity;
         }
-         */
     }
     
     
     /**
-     * update by condition.
+     * update by criteria.
+     *
+     * $table->update(['name' => 'Kiuchi'], 'id = ?', 1);
+     * $table->update(['name' => 'Kiuchi'], $criteria);
      *
      * @param   array   attributes
-     * @param   mixed   conditions
+     * @param   mixed   criteria
      */
     public function update()
     {
-        /*
-        // convert to condition.
+        // convert to criteria.
         $args = func_get_args();
         $attributes = array_shift($args);
-        $cond = call_user_func_array(array($this, 'toCondition'), $args);
+        $criteria = call_user_func_array(array($this, 'argsToCriteria'), $args);
 
         // to SQL.
-        $sql = $cond->toUpdateSQL($attributes);
-        var_dump($sql, $cond->getParams());
+        $sql = $criteria->toUpdateSQL($attributes);
 
         // query.
-        $sth = $this->query($sql, $cond->getParams());
+        $sth = $this->query($sql, $criteria->getParams(), Database::TARGET_MASTER);
         return $sth->isSuccess();
-         */
     }
     
     
@@ -377,19 +373,15 @@ class EntityTable
      */
     public function delete()
     {
-        /*
-        // convert to condition.
-        $args = func_get_args();
-        $cond = call_user_func_array(array($this, 'toCondition'), $args);
+        // convert to criteria.
+        $criteria = call_user_func_array(array($this, 'argsToCriteria'), func_get_args());
 
         // to SQL.
-        $sql = $cond->toDeleteSQL();
-        var_dump($sql, $cond->getParams());
+        $sql = $criteria->toDeleteSQL();
 
         // query.
-        $sth = $this->query($sql, $cond->getParams());
+        $sth = $this->query($sql, $criteria->getParams(), Database::TARGET_MASTER);
         return $sth->isSuccess();
-         */
     }
     
     
@@ -489,6 +481,28 @@ class EntityTable
         }
         
         return $criteria;
+    }
+    
+    
+    /**
+     * magick method.
+     *
+     * findBy*
+     * findAllBy*
+     *
+     * @param   string  $method
+     * @param   array   $args
+     * @return  mixed
+     */
+    public function __call($method, array $args = array())
+    {
+        if (preg_match('/^findBy(.+)$/', $method, $matches)) {
+            $column = strtolower($matches[1]);
+            return $this->find("{$column} = ?", array_shift($args));
+        } elseif (preg_match('/^findAllBy(.+)$/', $method, $matches)) {
+            $column = strtolower($matches[1]);
+            return $this->findAll("{$column} = ?", array_shift($args));
+        }
     }
 }
 

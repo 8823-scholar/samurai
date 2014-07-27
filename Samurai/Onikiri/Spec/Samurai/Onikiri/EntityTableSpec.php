@@ -134,6 +134,120 @@ class EntityTableSpec extends PHPSpecContext
 
         $entity = $this->find(1);
         $entity->shouldHaveType('Samurai\Onikiri\Entity');
+        $entity->getName()->shouldBe('kaneda');
+    }
+
+    public function it_finds_first_record_by_magicmethod(Connection $con, Statement $stm)
+    {
+        $con->prepare('SELECT * FROM entity WHERE (name = ?) LIMIT ?')->willReturn($stm);
+        $stm->execute()->shouldBeCalled();
+        $stm->bindValue(0, 'kaneda', Connection::PARAM_STR)->shouldBeCalled();
+        $stm->bindValue(1, 1, Connection::PARAM_INT)->shouldBeCalled();
+        $stm->fetchAll(Connection::FETCH_ASSOC)->willReturn([
+            ['name' => 'kaneda', 'mail' => 'kaneda@akira.jp']
+        ]);
+
+        $entity = $this->findByName('kaneda');
+        $entity->shouldHaveType('Samurai\Onikiri\Entity');
+        $entity->getName()->shouldBe('kaneda');
+    }
+
+    public function it_finds_all_records(Connection $con, Statement $stm)
+    {
+        $con->prepare('SELECT * FROM entity WHERE 1')->willReturn($stm);
+        $stm->execute()->shouldBeCalled();
+        $stm->fetchAll(Connection::FETCH_ASSOC)->willReturn([
+            ['name' => 'kaneda', 'mail' => 'kaneda@akira.jp'],
+            ['name' => 'tetsuo', 'mail' => 'tetsuo@akira.jp'],
+        ]);
+
+        $entities = $this->findAll();
+        $entities->shouldHaveType('Samurai\Onikiri\Entities');
+        $entities->size()->shouldBe(2);
+
+        $entity = $entities->fetch();
+        $entity->getName()->shouldBe('kaneda');
+        $entity = $entities->fetch();
+        $entity->getName()->shouldBe('tetsuo');
+    }
+    
+    public function it_finds_all_records_by_magicmethod(Connection $con, Statement $stm)
+    {
+        $con->prepare('SELECT * FROM entity WHERE (name = ?)')->willReturn($stm);
+        $stm->execute()->shouldBeCalled();
+        $stm->bindValue(0, 'kaneda', Connection::PARAM_STR)->shouldBeCalled();
+        $stm->fetchAll(Connection::FETCH_ASSOC)->willReturn([
+            ['name' => 'kaneda', 'mail' => 'kaneda1@akira.jp'],
+            ['name' => 'kaneda', 'mail' => 'kaneda2@akira.jp'],
+        ]);
+
+        $entities = $this->findAllByName('kaneda');
+        $entities->shouldHaveType('Samurai\Onikiri\Entities');
+        $entities->size()->shouldBe(2);
+
+        $entity = $entities->fetch();
+        $entity->getMail()->shouldBe('kaneda1@akira.jp');
+        $entity = $entities->fetch();
+        $entity->getMail()->shouldBe('kaneda2@akira.jp');
+    }
+
+
+    public function it_saves_exists_entity(Connection $con, Statement $stm)
+    {
+        $con->prepare('SELECT * FROM entity WHERE (id = ?) LIMIT ?')->willReturn($stm);
+        $stm->execute()->shouldBeCalled();
+        $stm->bindValue(0, 1, Connection::PARAM_INT)->shouldBeCalled();
+        $stm->bindValue(1, 1, Connection::PARAM_INT)->shouldBeCalled();
+        $stm->fetchAll(Connection::FETCH_ASSOC)->willReturn([
+            ['id' => 1, 'name' => 'kaneda', 'mail' => 'kaneda1@akira.jp'],
+        ]);
+
+        $entity = $this->find(1);
+        $entity->getName()->shouldBe('kaneda');
+
+
+        $con->prepare('UPDATE entity SET name = ? WHERE (id = ?)')->willReturn($stm);
+        $stm->bindValue(0, 'kaneda shotaro', Connection::PARAM_STR)->shouldBeCalled();
+        $stm->bindValue(1, 1, Connection::PARAM_INT)->shouldBeCalled();
+        $stm->isSuccess()->willReturn(true);
+        $this->save($entity, ['name' => 'kaneda shotaro']);
+        $entity->getName()->shouldBe('kaneda shotaro');
+    }
+    
+    public function it_saves_notexists_entity(Connection $con, Statement $stm)
+    {
+        $entity = $this->build(['name' => 'kaneda', 'mail' => 'kaneda@akira.jp']);
+        $entity->getName()->shouldBe('kaneda');
+
+        $con->prepare('INSERT INTO entity (name, mail) VALUES (?, ?)')->willReturn($stm);
+        $stm->bindValue(0, 'kaneda', Connection::PARAM_STR)->shouldBeCalled();
+        $stm->bindValue(1, 'kaneda@akira.jp', Connection::PARAM_STR)->shouldBeCalled();
+        $stm->execute()->shouldBeCalled();
+        $stm->isSuccess()->willReturn(true);
+        $stm->lastInsertId()->willReturn(2);
+        $this->save($entity);
+        $entity->isExists()->shouldBe(true);
+    }
+    
+
+    public function it_deletes_entity(Connection $con, Statement $stm)
+    {
+        $con->prepare('SELECT * FROM entity WHERE (id = ?) LIMIT ?')->willReturn($stm);
+        $stm->execute()->shouldBeCalled();
+        $stm->bindValue(0, 1, Connection::PARAM_INT)->shouldBeCalled();
+        $stm->bindValue(1, 1, Connection::PARAM_INT)->shouldBeCalled();
+        $stm->fetchAll(Connection::FETCH_ASSOC)->willReturn([
+            ['id' => 1, 'name' => 'kaneda', 'mail' => 'kaneda1@akira.jp'],
+        ]);
+
+        $entity = $this->find(1);
+        $entity->getName()->shouldBe('kaneda');
+
+
+        $con->prepare('DELETE FROM entity WHERE (id = ?)')->willReturn($stm);
+        $stm->bindValue(0, 1, Connection::PARAM_INT)->shouldBeCalled();
+        $stm->isSuccess()->willReturn(true);
+        $this->destroy($entity);
     }
 
 
@@ -198,13 +312,5 @@ class EntityTableSpec extends PHPSpecContext
         }
         unset($con);
     }
-
-
-    /*
-    public function it_creates_record()
-    {
-    }
-     */
-
 }
 
