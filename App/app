@@ -49,7 +49,6 @@ require __DIR__ . '/Console/Application.php';
 $app = new Application();
 $app->bootstrap();
 
-
 // execute.
 $framework = new Framework($app);
 $framework->execute();

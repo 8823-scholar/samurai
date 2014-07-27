@@ -57,6 +57,7 @@ class Application extends Samurai\Application
         
         // application root dir.
         $this->config('directory.root', dirname(__DIR__));
+        $this->config('directory.document_root', __DIR__ . '/Web');
 
         // application dir.
         $this->addAppPath(__DIR__, __NAMESPACE__, self::PRIORITY_HIGH);

@@ -43,11 +43,15 @@ use Samurai\Samurai\Component\Core\Framework;
  * @license     http://opensource.org/licenses/MIT
  */
 
+if (php_sapi_name() === 'cli-server') {
+    $file = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['SCRIPT_NAME'];
+    if (preg_match('/\.(gif|png|jpg|jpeg|ico|mp4|webm)$/i', $file) && file_exists($file)) return false;
+}
+
 // bootstrap.
 require dirname(__DIR__) . '/Application.php';
 $app = new Application();
 $app->bootstrap();
-
 
 // execute.
 $framework = new Framework($app);

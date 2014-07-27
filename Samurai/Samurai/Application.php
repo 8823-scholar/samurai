@@ -68,7 +68,7 @@ class Application
      * @access  public
      * @var     array
      */
-    public $config = array();
+    public $config = [];
 
     /**
      * booted ?

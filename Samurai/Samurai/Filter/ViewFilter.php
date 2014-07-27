@@ -69,6 +69,7 @@ class ViewFilter extends Filter
     public $ActionChain;
     public $Renderer;
     public $Response;
+    public $Application;
 
 
     /**
@@ -115,7 +116,7 @@ class ViewFilter extends Filter
         $result = $this->Renderer->render($template);
         $this->Response->setBody($result);
         if ( $this->Response->isHttp() ) {
-            $this->Response->setHeader('content-type', sprintf('text/html; charset=%s', Application::config('encoding.output')));
+            $this->Response->setHeader('content-type', sprintf('text/html; charset=%s', $this->Application->config('encoding.output')));
         }
     }
 

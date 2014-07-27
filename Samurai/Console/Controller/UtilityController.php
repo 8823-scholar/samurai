@@ -63,6 +63,11 @@ class UtilityController extends ConsoleController
             return [self::FORWARD_ACTION, 'utility.usage'];
         }
 
+        // start server.
+        if ($arg === 's') {
+            return [self::FORWARD_ACTION, 'utility.server'];
+        }
+
         // task execute.
         if ($this->isTask($arg)) {
             return [self::FORWARD_ACTION, 'task.execute'];
@@ -102,6 +107,16 @@ class UtilityController extends ConsoleController
         $this->assign('state', Samurai::getState());
         $this->assign('script', './app');   // TODO: $this->Request->getScript()
         return self::VIEW_TEMPLATE;
+    }
+
+
+    /**
+     * start server action.
+     */
+    public function server()
+    {
+        chdir($this->Application->config('directory.document_root'));
+        passthru(sprintf('php -S localhost:%s index.php', $this->Request->get('port', 8888)));
     }
 
 

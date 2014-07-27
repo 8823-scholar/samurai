@@ -52,7 +52,7 @@ class DefaultRule extends Rule
 
         // more population pattern.
         // /:controller/:action
-        if ( preg_match('|^/(\w+)/(\w+)/?$|', $path, $matches) ) {
+        if (preg_match('|^/(\w+)/(\w+)/?$|', $path, $matches)) {
             $this->setController($matches[1]);
             $this->setAction($matches[2]);
             return true;
@@ -61,16 +61,16 @@ class DefaultRule extends Rule
         // has id, or nested controller ?
         // /:controller/:action/:id
         // /:controller/:controller/:action
-        if ( count($paths) > 2 ) {
+        if (count($paths) > 2) {
             $action = array_pop($paths);
 
             // has format.
-            if ( preg_match('/^(\w+)\.(\w+)$/', $action, $matches) ) {
+            if (preg_match('/^(\w+)\.(\w+)$/', $action, $matches)) {
                 $action = $matches[1];
                 $this->setFormat($matches[2]);
             }
 
-            if ( is_numeric($action) ) {
+            if (is_numeric($action)) {
                 $this->setParam('id', $action);
                 $action = array_pop($paths);
             }

@@ -98,9 +98,9 @@ class Router
     {
         $rules = YAML::load($file);
 
-        foreach ( $rules as $rule ) {
+        foreach ($rules as $rule) {
             list($key, $value) = each($rule);
-            switch ( $key ) {
+            switch ($key) {
                 case 'root':
                     $this->setRoot($value);
                     break;
@@ -150,18 +150,18 @@ class Router
     public function routing()
     {
         // has dispatch.
-        if ( $action = $this->getDispatchAction() ) {
+        if ($action = $this->getDispatchAction()) {
             return new Rule\MatchRule(array('action' => $action));
         }
 
         // root rule.
         $path = $this->Request->getPath();
-        if ( $this->_root && $this->_root->match($path) ) {
+        if ($this->_root && $this->_root->match($path)) {
             return $this->_root;
         }
 
         // default rule.
-        if ( $this->_default && $this->_default->match($path) ) {
+        if ($this->_default && $this->_default->match($path)) {
             return $this->_default;
         }
     }
@@ -179,8 +179,8 @@ class Router
     public function getDispatchAction()
     {
         $params = $this->Request->getAll();
-        foreach ( array_keys($params) as $key ) {
-            if ( preg_match('/^dispatch-(.+)/', $key, $matches) ) {
+        foreach (array_keys($params) as $key) {
+            if (preg_match('/^dispatch-(.+)/', $key, $matches)) {
                 $action = str_replace('-', '.', $matches[1]);
                 return $action;
             }
