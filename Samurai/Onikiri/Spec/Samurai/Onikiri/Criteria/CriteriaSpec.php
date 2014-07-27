@@ -94,11 +94,35 @@ class CriteriaSpec extends PHPSpecContext
         $this->toSQL()->shouldBe('SELECT * FROM foo WHERE (id NOT BETWEEN ? AND ?)');
         $this->getParams()->shouldBe([1, 10]);
     }
+    
+    public function it_is_columns_condition()
+    {
+        $this->columns('id', 'name');
+        $this->toSQL()->shouldBe('SELECT id, name FROM foo WHERE 1');
+    }
+    
+    public function it_is_group_condition()
+    {
+        $this->groupBy('category');
+        $this->toSQL()->shouldBe('SELECT * FROM foo WHERE 1 GROUP BY category');
+    }
+    public function it_is_having_condition()
+    {
+        $this->groupBy('category')->having('COUNT(1) > ?', 1);
+        $this->toSQL()->shouldBe('SELECT * FROM foo WHERE 1 GROUP BY category HAVING (COUNT(1) > ?)');
+    }
 
     public function it_is_order_condition()
     {
         $this->orderBy('created_at DESC');
         $this->toSQL()->shouldBe('SELECT * FROM foo WHERE 1 ORDER BY created_at DESC');
+    }
+    
+    public function it_is_order_condition_by_field()
+    {
+        $this->orderByField('category', ['category1', 'category2', 'category3']);
+        $this->toSQL()->shouldBe('SELECT * FROM foo WHERE 1 ORDER BY FIELD(category, ?, ?, ?)');
+        $this->getParams()->shouldBe(['category1', 'category2', 'category3']);
     }
 
     public function it_is_limit_condition()

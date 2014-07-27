@@ -28,33 +28,36 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\Condition;
+namespace Samurai\Onikiri\Criteria;
 
 /**
- * Where Condition's "LIKE" value.
+ * having condition class.
  *
- * @package     Onikiri
- * @subpackage  Condition
+ * @package     Samurai.Onikiri
+ * @subpackage  Criteria
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class WhereLikeValue extends WhereValue
+class HavingCondition extends WhereCondition
 {
     /**
-     * convert to SQL.
+     * convert to SQL
      *
      * @access  public
      * @return  string
      */
     public function toSQL()
     {
-        $sql = array();
+        if (! $this->has()) return '';
 
-        $sql[] = $this->key;
-        $sql[] = $this->negative ? 'NOT LIKE' : 'LIKE';
-        $sql[] = '?';
-        $this->parent->parent->addParam($this->value);
+        $sql = [];
+        $sql[] = 'HAVING';
+
+        foreach ($this->conditions as $index => $value) {
+            if ( $index > 0 ) $sql[] = $value->chain_by;
+            $sql[] = $value->toSQL();
+        }
 
         return join(' ', $sql);
     }

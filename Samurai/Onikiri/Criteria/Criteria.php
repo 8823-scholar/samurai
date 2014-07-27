@@ -63,11 +63,39 @@ class Criteria
     public $table;
 
     /**
+     * columns condition
+     *
+     * @var     Samurai\Onikiri\Criteria\ColumnsCondition
+     */
+    public $columns;
+
+    /**
      * where condition
      *
      * @var     Samurai\Onikiri\Criteria\WhereCondition
      */
     public $where;
+
+    /**
+     * order condition
+     *
+     * @var     Samurai\Onikiri\Criteria\OrderCondition
+     */
+    public $order;
+
+    /**
+     * group condition
+     *
+     * @var     Samurai\Onikiri\Criteria\GroupCondition
+     */
+    public $group;
+
+    /**
+     * having condition
+     *
+     * @var     Samurai\Onikiri\Criteria\HavingCondition
+     */
+    public $having;
 
     /**
      * limit condition.
@@ -94,8 +122,11 @@ class Criteria
     {
         $this->setTable($table);
 
+        $this->columns = new ColumnsCondition($this);
         $this->where = new WhereCondition($this);
         $this->order = new OrderCondition($this);
+        $this->group = new GroupCondition($this);
+        $this->having = new HavingCondition($this);
     }
 
 
@@ -120,6 +151,20 @@ class Criteria
     }
     
     
+    /**
+     * columns
+     *
+     * @return  Samurai\Onikiri\Criteria\Criteria
+     */
+    public function columns()
+    {
+        $args = func_get_args();
+        while ($arg = array_shift($args)) {
+            $this->columns->add($arg);
+        }
+        return $this;
+    }
+
     /**
      * where
      *
@@ -183,7 +228,44 @@ class Criteria
         $this->order->set($value, $params);
         return $this;
     }
+    
+    /**
+     * order by field.
+     *
+     * @param   string  $column
+     * @param   array   $params
+     * @return  Samurai\Onikiri\Criteria\Criteria
+     */
+    public function orderByField($column, array $params = [])
+    {
+        $this->order->addByField($column, $params);
+        return $this;
+    }
 
+    /**
+     * group
+     *
+     * @return  Samurai\Onikiri\Criteria\Criteria
+     */
+    public function groupBy()
+    {
+        $args = func_get_args();
+        while ($arg = array_shift($args)) {
+            $this->group->add($arg);
+        }
+        return $this;
+    }
+    
+    /**
+     * having
+     *
+     * @return  Samurai\Onikiri\Criteria\Criteria
+     */
+    public function having()
+    {
+        call_user_func_array(array($this->having, 'andAdd'), func_get_args());
+        return $this;
+    }
 
     /**
      * bind params
@@ -287,56 +369,6 @@ class Criteria
     }
 
 
-
-
-
-
-    /**
-     * select
-     *
-     * @access  public
-     */
-    public function select()
-    {
-        $args = func_get_args();
-        while ( $arg = array_shift($args) ) {
-            $this->select->add($arg);
-        }
-        return $this->select;
-    }
-
-
-
-
-    /**
-     * group
-     *
-     * @access  public
-     */
-    public function groupBy()
-    {
-        $args = func_get_args();
-        while ( $arg = array_shift($args) ) {
-            $this->group->add($arg);
-        }
-        return $this->group;
-    }
-
-
-    /**
-     * order by field.
-     *
-     * @access  public
-     */
-    public function orderByField()
-    {
-        call_user_func_array(array($this->order, 'addByField'), func_get_args());
-        return $this->order;
-    }
-
-
-
-
     /**
      * bridge to table find.
      *
@@ -386,18 +418,24 @@ class Criteria
         $sql = [];
         $this->params = [];
 
-        $sql[] = 'SELECT *';
+        $sql[] = 'SELECT';
+        $sql[] = $this->columns->toSQL();
+        $this->bind($this->columns->getParams());
         $sql[] = 'FROM ' . $this->table->getTableName();
         $sql[] = $this->where->toSQL();
         $this->bind($this->where->getParams());
+        if ($this->group->has()) {
+            $sql[] = $this->group->toSQL();
+            $this->bind($this->order->getParams());
+        }
+        if ($this->having->has()) {
+            $sql[] = $this->having->toSQL();
+            $this->bind($this->having->getParams());
+        }
         if ($this->order->has()) {
             $sql[] = $this->order->toSQL();
             $this->bind($this->order->getParams());
         }
-        /*
-        $sql[] = $this->group->toSQL();
-        $this->appendParams($this->group->getParams());
-         */
 
         if ($this->limit !== null) {
             $sql[] = 'LIMIT ?';

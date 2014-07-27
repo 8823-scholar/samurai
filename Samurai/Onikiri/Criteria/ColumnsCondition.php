@@ -28,18 +28,18 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\Condition;
+namespace Samurai\Onikiri\Criteria;
 
 /**
- * From condition class.
+ * columns condition class.
  *
- * @package     Onikiri
- * @subpackage  Condition
+ * @package     Samurai.Onikiri
+ * @subpackage  Criteria
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class FromCondition extends BaseCondition
+class ColumnsCondition extends BaseCondition
 {
     /**
      * convert to SQL
@@ -49,16 +49,9 @@ class FromCondition extends BaseCondition
      */
     public function toSQL()
     {
-        $sql = array();
-        $sql[] = 'FROM';
+        if (! $this->has()) return '*';
 
-        $sub = array();
-        foreach ( $this->conditions as $condition ) {
-            $sub[] = $condition;
-        }
-        $sql[] = join(', ', $sub);
-
-        return join(' ', $sql);
+        return join(', ', $this->conditions);
     }
 }
 
