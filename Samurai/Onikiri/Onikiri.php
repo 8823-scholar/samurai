@@ -156,7 +156,7 @@ class Onikiri
      */
     public function getTx()
     {
-        if ($this->_tx) return $this->_tx;
+        if ($this->_tx && $this->_tx->isValid()) return $this->_tx;
 
         return $this->_tx = new Transaction();
     }

@@ -169,11 +169,9 @@ class Model
      *
      * 1. $model->find($id);
      * 2. $model->find('name = ?', $name);
-     * 3. $model->find('name = ? and gender = ?', $name, $gender);
      * 4. $model->find('name = ? and gender = ?', [$name, $gender]);
-     * 5. $model->find('name = :name and gender = :gender', ['name' => $name, 'gender' => $gender]);
-     * 6. $model->find(['where' => ['name = ?', $name], 'order' => 'id']);
-     * 7. $model->find($cond);
+     * 5. $model->find('name = :name and gender = :gender', [':name' => $name, ':gender' => $gender]);
+     * 7. $model->find($criteria);
      *
      * @access  public
      * @return  Entity

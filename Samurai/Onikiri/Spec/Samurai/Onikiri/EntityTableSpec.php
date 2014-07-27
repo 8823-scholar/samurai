@@ -6,13 +6,15 @@ use Samurai\Onikiri\Spec\PHPSpecContext;
 use Samurai\Onikiri\Onikiri;
 use Samurai\Onikiri\Database;
 use Samurai\Onikiri\Connection;
+use Samurai\Onikiri\Statement;
 use Samurai\Onikiri\Transaction;
 
 class EntityTableSpec extends PHPSpecContext
 {
-    public function let(Onikiri $oni)
+    public function let(Onikiri $oni, Connection $con)
     {
         $this->beConstructedWith($oni);
+        $oni->establishConnection($this->getDatabase(), Database::TARGET_MASTER)->willReturn($con);
     }
 
     public function it_gets_onikiri_instance()
@@ -91,7 +93,7 @@ class EntityTableSpec extends PHPSpecContext
 
     public function it_establishes_conection_to_database(Onikiri $oni, Connection $c)
     {
-        $oni->establishConnection($this->getDatabase(), Database::TARGET_AUTO)->shouldBeCalled()->willReturn($c);
+        $oni->establishConnection($this->getDatabase(), Database::TARGET_MASTER)->shouldBeCalled()->willReturn($c);
 
         $con = $this->establishConnection();
         $con->shouldHaveType('Samurai\Onikiri\Connection');
@@ -105,7 +107,7 @@ class EntityTableSpec extends PHPSpecContext
             $this->_spec_database->getUser(),
             $this->_spec_database->getPassword()
         );
-        $oni->establishConnection($this->getDatabase(), Database::TARGET_AUTO)->willReturn($con);
+        $oni->establishConnection($this->getDatabase(), Database::TARGET_MASTER)->willReturn($con);
 
         $sql = file_get_contents(__DIR__ . '/Fixtures/create.tables.entitytable.sql');
         $result = $con->query($sql);
@@ -118,8 +120,24 @@ class EntityTableSpec extends PHPSpecContext
         $result->fetch(\PDO::FETCH_OBJ)->name->shouldBe('Satoshinosuke');
         unset($con);
     }
+    
+    
+    public function it_finds_first_record(Connection $con, Statement $stm)
+    {
+        $con->prepare('SELECT * FROM entity WHERE (id = ?) LIMIT ?')->willReturn($stm);
+        $stm->execute()->shouldBeCalled();
+        $stm->bindValue(0, 1, Connection::PARAM_INT)->shouldBeCalled();
+        $stm->bindValue(1, 1, Connection::PARAM_INT)->shouldBeCalled();
+        $stm->fetchAll(Connection::FETCH_ASSOC)->willReturn([
+            ['name' => 'kaneda', 'mail' => 'kaneda@akira.jp']
+        ]);
 
-    public function it_is_simple_transaction(Onikiri $oni)
+        $entity = $this->find(1);
+        $entity->shouldHaveType('Samurai\Onikiri\Entity');
+    }
+
+
+    public function it_is_transaction_commit(Onikiri $oni)
     {
         $this->_setMySQLDatabase();
         $con = new Connection(
@@ -127,7 +145,36 @@ class EntityTableSpec extends PHPSpecContext
             $this->_spec_database->getUser(),
             $this->_spec_database->getPassword()
         );
-        $oni->establishConnection($this->getDatabase(), Database::TARGET_AUTO)->willReturn($con);
+        $oni->establishConnection($this->getDatabase(), Database::TARGET_MASTER)->willReturn($con);
+
+        $sql = file_get_contents(__DIR__ . '/Fixtures/create.tables.entitytable.sql');
+        $result = $con->query($sql);
+        unset($result);
+
+        $tx = new Transaction();
+        $this->setTx($tx);
+        $sql = "INSERT INTO spec_samurai_onikiri_entity_table (name, mail) VALUES (?, ?);";
+        $params = ['Kaneda', 'kaneda@akira.jp'];
+        $this->query($sql, $params);
+        $tx->commit();
+
+        $sql = "SELECT * FROM spec_samurai_onikiri_entity_table WHERE name = :name;";
+        $params = [':name' => 'Kaneda'];
+        $result = $this->query($sql, $params);
+        $result->shouldHaveType('Samurai\Onikiri\Statement');
+        $result->fetch(\PDO::FETCH_OBJ)->name->shouldBe('Kaneda');
+
+        unset($con);
+    }
+
+    public function it_is_transaction_rollback(Onikiri $oni)
+    {
+        $this->_setMySQLDatabase();
+        $con = new Connection(
+            $this->_spec_driver->makeDsn($this->_spec_database),
+            $this->_spec_database->getUser(),
+            $this->_spec_database->getPassword()
+        );
         $oni->establishConnection($this->getDatabase(), Database::TARGET_MASTER)->willReturn($con);
 
         $sql = file_get_contents(__DIR__ . '/Fixtures/create.tables.entitytable.sql');
@@ -149,6 +196,7 @@ class EntityTableSpec extends PHPSpecContext
             $result->shouldHaveType('Samurai\Onikiri\Statement');
             $result->fetch(\PDO::FETCH_OBJ)->shouldBe(false);
         }
+        unset($con);
     }
 
 
@@ -158,11 +206,5 @@ class EntityTableSpec extends PHPSpecContext
     }
      */
 
-
-    /*
-    public function it_finds_first_record()
-    {
-    }
-     */
 }
 

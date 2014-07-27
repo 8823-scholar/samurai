@@ -28,132 +28,97 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\Condition;
+namespace Samurai\Onikiri\Criteria;
 
 /**
- * Base condition.
+ * Where Condition's value.
  *
- * @package     Onikiri
- * @subpackage  Condition
+ * @package     Samurai.Onikiri
+ * @subpackage  Criteria
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-abstract class BaseCondition
+class WhereConditionValue
 {
     /**
-     * parent.
+     * value
      *
-     * @access  public
-     * @var     Samurai\Onikiri\Condition\Condition
+     * @var     string
      */
-    public $parent;
-    
+    public $value;
+
     /**
-     * conditions
+     * negative
      *
-     * @access  public
-     * @var     array
+     * @var     boolean
      */
-    public $conditions = array();
+    public $negative = false;
+
+    /**
+     * chain by.
+     *
+     * @var     string
+     */
+    public $chain_by = WhereCondition::CHAIN_BY_AND;
 
     /**
      * params
      *
-     * @access  public
      * @var     array
      */
-    public $params = array();
+    public $params = [];
 
-
+    /**
+     * parent.
+     *
+     * @var     Samurai\Onikiri\Criteria\WhereCondition
+     */
+    public $parent;
 
 
     /**
-     * constructor
+     * constructor.
      *
-     * @access  public
-     * @param   Samurai\Onikiri\Condition\Condition $parent
+     * @param   WhereCondition  $where
+     * @param   string          $value
+     * @param   array           $params
      */
-    public function __construct(Condition $parent)
+    public function __construct(WhereCondition $where, $value, array $params = [])
     {
-        $this->parent = $parent;
+        $this->parent = $where;
+        $this->value = $value;
+        $this->params = $params;
     }
 
 
     /**
-     * make SQL.
+     * negative flag on.
+     *
+     * @access  public
+     */
+    public function not()
+    {
+        $this->negative = true;
+    }
+
+
+    /**
+     * convert to SQL.
      *
      * @access  public
      * @return  string
      */
-    abstract public function toSQL();
-    
-    
-    
-    /**
-     * Set
-     *
-     * @access  public
-     * @param   string  $table
-     */
-    public function set($table)
+    public function toSQL()
     {
-        $this->conditions = array();
-        $this->add($table);
-        return $this;
-    }
+        $sql = [];
 
+        if ($this->negative) $sql[] = '!';
 
-    /**
-     * add.
-     *
-     * @access  public
-     * @param   string  $table
-     */
-    public function add($table)
-    {
-        $this->conditions[] = $table;
-        return $this;
-    }
+        $sql[] = '(' . $this->value . ')';
+        $this->parent->parent->bind($this->params);
 
-
-    /**
-     * get params
-     *
-     * @access  public
-     * @return  array
-     */
-    public function getParams()
-    {
-        return $this->params;
-    }
-
-
-
-
-
-    /**
-     * has conditions ?
-     *
-     * @access  public
-     * @return  boolean
-     */
-    public function has()
-    {
-        return count($this->conditions) > 0;
-    }
-
-
-
-
-    /**
-     * magick method for bridge to parent.
-     *
-     * @access  public
-     */
-    public function __call($method, array $args)
-    {
-        return call_user_func_array(array($this->parent, $method), $args);
+        return join(' ', $sql);
     }
 }
 

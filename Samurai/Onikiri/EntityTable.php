@@ -204,6 +204,58 @@ class EntityTable
     {
         $this->database = $alias;
     }
+
+
+    /**
+     * find by id or criteria.
+     * return first entity.
+     *
+     * supported syntax:
+     *
+     * 1. $model->find($id);
+     * 2. $model->find('name = ?', $name);
+     * 3. $model->find('name = ? and gender = ?', [$name, $gender]);
+     * 4. $model->find('name = :name and gender = :gender', [':name' => $name, ':gender' => $gender]);
+     * 5. $model->find($criteria);
+     *
+     * @return  Samurai\Onikiri\Entity
+     */
+    public function find()
+    {
+        // convert to criteria.
+        $criteria = call_user_func_array(array($this, 'argsToCriteria'), func_get_args());
+        $criteria->limit(1);
+
+        // find.
+        $entities = $this->findAll($criteria);
+        return $entities->first();
+    }
+    
+    /**
+     * find by criteria.
+     * return all entities.
+     *
+     * @return  Samurai\Onikiri\Entity
+     */
+    public function findAll()
+    {
+        // convert to criteria.
+        $criteria = call_user_func_array(array($this, 'argsToCriteria'), func_get_args());
+
+        // to SQL.
+        $sql = $criteria->toSQL();
+
+        // query
+        $sth = $this->query($sql, $criteria->getParams());
+
+        // to entoties
+        $entities = new Entities($this);
+        foreach ($sth->fetchAll(Connection::FETCH_ASSOC) as $row) {
+            $entities->add($this->build($row, true));
+        }
+
+        return $entities;
+    }
     
     
     /**
@@ -346,12 +398,13 @@ class EntityTable
      *
      * @param   string  $sql
      * @param   array   $params
+     * @param   string  $target
      * @return  Samurai\Onikiri\Statement
      */
-    public function query($sql, array $params = [])
+    public function query($sql, array $params = [], $target = Database::TARGET_MASTER)
     {
-        $con = $this->establishConnection();
-        $sth = $con->prepare($sql, [Connection::ATTR_CURSOR => Connection::CURSOR_SCROLL]);
+        $con = $this->establishConnection($target);
+        $sth = $con->prepare($sql);
 
         // bind params
         foreach($params as $key => $value){
@@ -379,17 +432,12 @@ class EntityTable
      * @param   string  $target
      * @return  Samurai\Onikiri\Connection
      */
-    public function establishConnection($target = Database::TARGET_AUTO)
+    public function establishConnection($target = Database::TARGET_MASTER)
     {
         // tx
         $tx = $this->getTx();
         if ($tx && $tx->isValid()) $target = Database::TARGET_MASTER;
 
-        /*
-        if ($target === Database::TARGET_AUTO) {
-            $target = $this->inTx() ? Database::TARGET_MASTER : Database::TARGET_SLAVE;
-        }
-         */
         $connection = $this->getOnikiri()->establishConnection($this->database, $target);
         if ($tx && $tx->isValid()) {
             $tx->setConnection($connection);
@@ -410,6 +458,37 @@ class EntityTable
         $cri = new Criteria\Criteria($this);
         $cri->setTable($this);
         return $cri;
+    }
+    
+    /**
+     * args convert to criteria.
+     *
+     * @access  public
+     * @param   mixed   $args
+     * @return  Samurai\Onikiri\Criteria\Criteria
+     */
+    public function argsToCriteria()
+    {
+        $args = func_get_args();
+        $first = array_shift($args);
+        $criteria = $this->criteria();
+
+        // already converted.
+        if ($first instanceof Criteria\Criteria) {
+            return $first;
+        }
+
+        // first argument is int ? then it's id.
+        if (is_numeric($first)) {
+            $criteria->where(sprintf('%s = ?', $this->getPrimaryKey()), $first);
+
+        // first argument is string ? then simple where.
+        } elseif(is_string($first)) {
+            array_unshift($args, $first);
+            call_user_func_array(array($criteria, 'where'), $args);
+        }
+        
+        return $criteria;
     }
 }
 

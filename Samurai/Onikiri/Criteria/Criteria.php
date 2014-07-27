@@ -35,7 +35,7 @@ use Samurai\Onikiri\EntityTable;
 /**
  * Onikiri criteria class.
  *
- * $criteria->select('hoge');
+ * $criteria->columns('hoge', 'foo');
  * $criteria->where->add('name = ?', $name);
  * $criteria->orderBy('id DESC');
  * $criteria->groupBy('gender');
@@ -56,11 +56,32 @@ class Criteria
     public $params = array();
 
     /**
-     * Model
+     * EntityTable instance
      *
      * @var     Samurai\Onikiri\EntityTable
      */
     public $table;
+
+    /**
+     * where condition
+     *
+     * @var     Samurai\Onikiri\Criteria\WhereCondition
+     */
+    public $where;
+
+    /**
+     * limit condition.
+     *
+     * @var     int
+     */
+    public $limit;
+
+    /**
+     * offset condition.
+     *
+     * @var     int
+     */
+    public $offset;
 
 
     /**
@@ -72,6 +93,8 @@ class Criteria
     public function __construct(EntityTable $table)
     {
         $this->setTable($table);
+
+        $this->where = new WhereCondition($this);
     }
 
 
@@ -94,6 +117,140 @@ class Criteria
     {
         return $this->table;
     }
+    
+    
+    /**
+     * where
+     *
+     * @return  Samurai\Onikiri\Criteria\WhereCondition
+     */
+    public function where()
+    {
+        return call_user_func_array(array($this->where, 'andAdd'), func_get_args());
+    }
+
+    /**
+     * where in
+     *
+     * @return  Samurai\Onikiri\Criteria\WhereCondition
+     */
+    public function whereIn()
+    {
+        return call_user_func_array(array($this->where, 'andIn'), func_get_args());
+    }
+
+    /**
+     * where not in
+     *
+     * @return  Samurai\Onikiri\Criteria\WhereCondition
+     */
+    public function whereNotIn()
+    {
+        return call_user_func_array(array($this->where, 'andNotIn'), func_get_args());
+    }
+    
+    /**
+     * where between
+     *
+     * @return  Samurai\Onikiri\Criteria\WhereCondition
+     */
+    public function whereBetween()
+    {
+        return call_user_func_array(array($this->where, 'andBetween'), func_get_args());
+    }
+
+    /**
+     * where not between
+     *
+     * @return  Samurai\Onikiri\Criteria\WhereCondition
+     */
+    public function whereNotBetween()
+    {
+        return call_user_func_array(array($this->where, 'andNotBetween'), func_get_args());
+    }
+
+
+    /**
+     * bind params
+     *
+     * @param   array   $params
+     * @return  Samurai\Onikiri\Criteria
+     */
+    public function bind(array $params)
+    {
+        foreach ($params as $key => $value) {
+            if (is_string($key)) {
+                $this->params[$key] = $value;
+            } else {
+                $this->params[] = $value;
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * add param
+     *
+     * @param   mixed   $value
+     * @param   string  $key
+     */
+    public function addParam($value, $key = null)
+    {
+        if ($key !== null && ! is_numeric($key)) {
+            $this->params[$key] = $value;
+        } else {
+            $this->params[] = $value;
+        }
+    }
+
+    /**
+     * get all params.
+     *
+     * @return  array
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+    
+    
+    /**
+     * Set limit.
+     *
+     * @param   int     $limit
+     * @return  Samurai\Onikiri\Criteria\Criteria
+     */
+    public function limit($limit)
+    {
+        $this->limit = $limit;
+        return $this;
+    }
+
+    /**
+     * Set offset.
+     *
+     * @param   int     $offset
+     * @return  Samurai\Onikiri\Criteria\Criteria
+     */
+    public function offset($offset)
+    {
+        $this->offset = $offset;
+        return $this;
+    }
+
+    /**
+     * Set page.
+     *
+     * @param   int     $page
+     */
+    public function page($page)
+    {
+        if (! $this->limit) return;
+        $offset = $this->limit * ($page - 1);
+        $this->offset($offset);
+        return $this;
+    }
+
 
 
 
@@ -113,30 +270,7 @@ class Criteria
         return $this->select;
     }
 
-    /**
-     * from
-     *
-     * @access  public
-     */
-    public function from()
-    {
-        $args = func_get_args();
-        while ( $arg = array_shift($args) ) {
-            $this->from->add($arg);
-        }
-        return $this->from;
-    }
 
-
-    /**
-     * where
-     *
-     * @access  public
-     */
-    public function where()
-    {
-        return call_user_func_array(array($this->where, 'add'), func_get_args());
-    }
 
 
     /**
@@ -182,83 +316,6 @@ class Criteria
 
 
 
-
-    /**
-     * Set limit.
-     *
-     * @access  public
-     * @param   int     $limit
-     * @return  Condition
-     */
-    public function limit($limit)
-    {
-        $this->limit = $limit;
-        return $this;
-    }
-
-
-    /**
-     * Set offset.
-     *
-     * @access  public
-     * @param   int     $offset
-     * @return  Condition
-     */
-    public function offset($offset)
-    {
-        $this->offset = $offset;
-        return $this;
-    }
-
-    /**
-     * Set page.
-     *
-     * @access  public
-     * @param   int     $page
-     */
-    public function page($page)
-    {
-        $offset = $this->limit * ( $page - 1 );
-        $this->offset($offset);
-        return $this;
-    }
-
-
-    /**
-     * get all params.
-     *
-     * @return  array
-     */
-    public function getParams()
-    {
-        return $this->params;
-    }
-
-    /**
-     * add param
-     *
-     * @param   mixed   $value
-     * @param   string  $key
-     */
-    public function addParam($value, $key = null)
-    {
-        if ( $key !== null && ! is_numeric($key) ) {
-            $this->params[$key] = $value;
-        } else {
-            $this->params[] = $value;
-        }
-    }
-
-    /**
-     * append params
-     *
-     * @access  public
-     * @param   array   $params
-     */
-    public function appendParams(array $params = array())
-    {
-        $this->params = array_merge($this->params, $params);
-    }
 
 
 
@@ -316,29 +373,28 @@ class Criteria
     /**
      * convert to SQL.
      *
-     * @access  public
      * @return  string
      */
     public function toSQL()
     {
-        $sql = array();
-        $this->params = array();
+        $sql = [];
+        $this->params = [];
 
-        $sql[] = $this->select->toSQL();
-        $sql[] = $this->from->toSQL();
+        $sql[] = 'SELECT *';
+        $sql[] = 'FROM ' . $this->table->getTableName();
         $sql[] = $this->where->toSQL();
-        $this->appendParams($this->where->getParams());
+        /*
         $sql[] = $this->group->toSQL();
         $this->appendParams($this->group->getParams());
         $sql[] = $this->order->toSQL();
         $this->appendParams($this->order->getParams());
+         */
 
-        // TODO: Make by helper.
-        if ( $this->limit !== null ) {
+        if ($this->limit !== null) {
             $sql[] = 'LIMIT ?';
             $this->params[] = $this->limit;
         }
-        if ( $this->offset !== null ) {
+        if ($this->offset !== null) {
             $sql[] = 'OFFSET ?';
             $this->params[] = $this->offset;
         }

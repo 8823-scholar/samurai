@@ -28,127 +28,126 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\Condition;
+namespace Samurai\Onikiri\Criteria;
 
 /**
- * Where Condition's value.
+ * Base condition.
  *
- * @package     Onikiri
- * @subpackage  Condition
+ * @package     Samurai.Onikiri
+ * @subpackage  Criteria
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class WhereValue
+abstract class BaseCondition
 {
-    /**
-     * key
-     *
-     * @access  public
-     * @param   string
-     */
-    public $key;
-
-    /**
-     * value
-     *
-     * @access  public
-     * @param   mixed
-     */
-    public $value;
-
-    /**
-     * negative
-     *
-     * @access  public
-     * @param   boolean
-     */
-    public $negative = false;
-
-    /**
-     * chain by.
-     *
-     * @access  public
-     * @param   string
-     */
-    public $chain_by = WhereCondition::CHAIN_BY_AND;
-
     /**
      * parent.
      *
-     * @access  public
-     * @var     Samurai\Onikiri\Condition\Condition
+     * @var     Samurai\Onikiri\Criteria\Condition
      */
     public $parent;
+    
+    /**
+     * conditions
+     *
+     * @var     array
+     */
+    public $conditions = array();
+
+    /**
+     * params
+     *
+     * @var     array
+     */
+    public $params = array();
 
 
     /**
-     * constructor.
+     * constructor
      *
-     * @access  public
-     * @param   WhereCondition  $where
-     * @param   string          $key
-     * @param   mixed           $value
+     * @param   Samurai\Onikiri\Criteria\Criteria   $parent
      */
-    public function __construct(WhereCondition $where, $key, $value)
+    public function __construct(Criteria $parent)
     {
-        $this->parent = $where;
-        $this->key = $key;
-        $this->value = $value;
+        $this->parent = $parent;
     }
 
 
     /**
-     * negative flag on.
-     *
-     * @access  public
-     */
-    public function not()
-    {
-        $this->negative = true;
-    }
-
-
-
-    /**
-     * convert to SQL.
+     * make SQL.
      *
      * @access  public
      * @return  string
      */
-    public function toSQL()
+    abstract public function toSQL();
+    
+    
+    
+    /**
+     * Set
+     *
+     * @access  public
+     * @param   string  $table
+     */
+    public function set($table)
     {
-        $sql = array();
+        $this->conditions = array();
+        $this->add($table);
+        return $this;
+    }
 
-        if ( $this->key ) {
-            $sql[] = $this->key;
-        }
 
-        // when NULL
-        if ( $this->value === null ) {
-            $sql[] = $this->negative ? 'IS NOT NULL' : 'IS NULL';
-        }
+    /**
+     * add.
+     *
+     * @access  public
+     * @param   string  $table
+     */
+    public function add($table)
+    {
+        $this->conditions[] = $table;
+        return $this;
+    }
 
-        // when array
-        elseif ( is_array($this->value) ) {
-            $sql[] = $this->negative ? 'NOT IN (' : 'IN (';
-            $sub = array();
-            foreach ( $this->value as $value ) {
-                $sub[] = '?';
-                $this->parent->parent->addParam($value);
-            }
-            $sql[] = join(', ', $sub);
-            $sql[] = ')';
-        }
 
-        // normal.
-        else {
-            $sql[] = $this->negative ? '<>' : '=';
-            $sql[] = '?';
-            $this->parent->parent->addParam($this->value);
-        }
+    /**
+     * get params
+     *
+     * @access  public
+     * @return  array
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
 
-        return join(' ', $sql);
+
+
+
+
+    /**
+     * has conditions ?
+     *
+     * @access  public
+     * @return  boolean
+     */
+    public function has()
+    {
+        return count($this->conditions) > 0;
+    }
+
+
+
+
+    /**
+     * magick method for bridge to parent.
+     *
+     * @access  public
+     */
+    public function __call($method, array $args)
+    {
+        return call_user_func_array(array($this->parent, $method), $args);
     }
 }
 

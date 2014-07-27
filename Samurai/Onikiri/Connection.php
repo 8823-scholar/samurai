@@ -68,7 +68,7 @@ class Connection extends PDO
      * @override
      * @see     PDO::prepare
      */
-    public function prepare($statement, $options = NULL)
+    public function prepare($statement, $options = [])
     {
         // numbering placeholder to named placeholder.
         $statement = preg_replace_callback('/(^|\s|,)?\?(,|\s|$)?/', array($this, 'replaceNumberedHolder'), $statement);

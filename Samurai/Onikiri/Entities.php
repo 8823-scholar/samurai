@@ -46,25 +46,8 @@ use Samurai\Onikiri\Connection;
 class Entities implements Iterator
 {
     /**
-     * Model.
-     *
-     * @access  public
-     * @var     Model
-     */
-    public $model;
-
-    /**
-     * Statement.
-     *
-     * @access  public
-     * @var     Statement
-     */
-    public $statement;
-
-    /**
      * entities cache.
      *
-     * @access  private
      * @var     array
      */
     private $_entities = array();
@@ -72,7 +55,6 @@ class Entities implements Iterator
     /**
      * position.
      *
-     * @access  private
      * @var     int
      */
     private $_position = 0;
@@ -81,67 +63,38 @@ class Entities implements Iterator
     /**
      * constructor.
      *
-     * @access  public
-     * @param   Model       $model
-     * @param   Statement   $statement
      */
-    public function __construct(Model $model, Statement $statement)
+    public function __construct()
     {
-        $this->setModel($model);
-        $this->setStatement($statement);
     }
 
 
     /**
-     * Set model.
+     * add entity.
      *
-     * @access  public
-     * @param   Model   $model
+     * @param   Samurai\Onikiri\Entity  $entity
      */
-    public function setModel(Model $model)
+    public function add(Entity $entity)
     {
-        $this->model = $model;
+        $this->_entities[] = $entity;
     }
-
-
-    /**
-     * Set statement.
-     *
-     * @access  public
-     * @param   Statement   $statement
-     */
-    public function setStatement(Statement $statement)
-    {
-        $this->statement = $statement;
-    }
-
 
 
     /**
      * get by position.
      *
-     * @access  public
      * @param   int     $position
-     * @return  Entity
+     * @return  Samurai\Onikiri\Entity
      */
     public function getByPosition($position)
     {
-        // already has entity.
-        if (isset($this->_entities[$position])) return $this->_entities[$position];
-        
-        $row = $this->statement->fetch(Connection::FETCH_ASSOC, Connection::FETCH_ORI_ABS, $position);
-        if (! $row) return null;
-
-        $entity = $this->model->build($row, true);
-        $this->_entities[$position] = $entity;
-        return $entity;
+        return isset($this->_entities[$position]) ? $this->_entities[$position] : null;
     }
 
 
     /**
      * get first entity.
      *
-     * @access  public
      * @return  Entity
      */
     public function first()
@@ -188,8 +141,7 @@ class Entities implements Iterator
      */
     public function valid()
     {
-        $entity = $this->getByPosition($this->_position);
-        return $entity ? true : false;
+        return isset($this->_entities[$this->_position]);
     }
 }
 

@@ -98,6 +98,19 @@ class Transaction
     }
 
     /**
+     * commit transaction
+     */
+    public function commit()
+    {
+        if (! $this->_begin) throw new TransactionFailedException('not began transaction.');
+
+        $connection = $this->getConnection();
+        $connection->commit();
+
+        $this->_valid = false;
+    }
+
+    /**
      * rollback transaction
      *
      * @throw   Samurai\Onikiri\Exception\TransactionFailedException
