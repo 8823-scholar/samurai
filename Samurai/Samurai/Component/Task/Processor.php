@@ -66,7 +66,7 @@ class Processor
     /**
      * @dependencies
      */
-    public $Loader;
+    public $loader;
     public $Container;
 
 
@@ -85,7 +85,7 @@ class Processor
         $names = explode(self::SEPARATOR, $name);
         $method = array_pop($names);
         $class_name = 'Task\\' . join('\\', array_map('ucfirst', $names)) . 'Task';
-        $class_path = $this->Loader->getPathByClass($class_name, false);
+        $class_path = $this->loader->getPathByClass($class_name, false);
         if ($class_path === null || ! $class_path->isExists()) throw new NotFoundException("No such task. -> {$name}");
 
         require_once $class_path;

@@ -123,7 +123,7 @@ class SamuraiController
         $base = 'Controller';
         $filters = array();
         while ( $name = array_shift($names) ) {
-            $filter = $this->Loader->find($base . DS . 'filter.yml')->first();
+            $filter = $this->loader->find($base . DS . 'filter.yml')->first();
             if ($filter) $filters[] = $filter;
 
             // when has rest.
@@ -132,7 +132,7 @@ class SamuraiController
 
             // when last.
             } else {
-                $filter = $this->Loader->find($base . DS . $name . '.filter.yml')->first();
+                $filter = $this->loader->find($base . DS . $name . '.filter.yml')->first();
                 if ($filter) $filters[] = $filter;
             }
         }

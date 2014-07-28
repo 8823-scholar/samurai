@@ -136,9 +136,9 @@ class Framework
             $container->import($dicon);
         }
 
-        $container->register('Framework', $this);
+        $container->register('framework', $this);
         $container->register('application', $this->app);
-        $container->register('Loader', $this->app->getLoader());
+        $container->register('loader', $this->app->getLoader());
 
         $this->setContainer($container);
         $this->app->setContainer($container);

@@ -51,7 +51,7 @@ class AddTask extends Task
      */
     public $FileUtil;
     public $application;
-    public $Loader;
+    public $loader;
 
 
     /**
@@ -65,7 +65,7 @@ class AddTask extends Task
     public function spec()
     {
         $current = $this->getCurrentAppDir();
-        $spec_dir = $this->Loader->find($current . DS . $this->application->config('directory.spec'))->first();
+        $spec_dir = $this->loader->find($current . DS . $this->application->config('directory.spec'))->first();
         $spec_dir->absolutize();
 
         foreach ($this->args as $arg) {
@@ -103,7 +103,7 @@ class AddTask extends Task
      */
     public function getSkeleton($name)
     {
-        $file = $this->Loader->find($this->application->config('directory.skeleton') . DS . $name . 'Skeleton.php.twig')->first();
+        $file = $this->loader->find($this->application->config('directory.skeleton') . DS . $name . 'Skeleton.php.twig')->first();
         $skeleton = new Skeleton($file);
         return $skeleton;
     }

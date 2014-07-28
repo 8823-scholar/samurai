@@ -55,7 +55,7 @@ class SpecController extends ConsoleController
      * @dependencies
      */
     public $SpecHelper;
-    public $Loader;
+    public $loader;
     public $application;
 
 

@@ -54,7 +54,7 @@ abstract class Renderer
     /**
      * @dependencies
      */
-    public $Loader;
+    public $loader;
     public $application;
 
     /**

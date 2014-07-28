@@ -11,7 +11,7 @@ class FilterChainSpec extends PHPSpecContext
     /**
      * @dependencies
      */
-    public $Loader;
+    public $loader;
 
 
     public function it_is_initializable()
@@ -41,7 +41,7 @@ class FilterChainSpec extends PHPSpecContext
     public function it_build_filter_chain(SamuraiController $c)
     {
         $filters = [];
-        foreach ($this->Loader->find('Controller/filter.yml') as $filter) {
+        foreach ($this->loader->find('Controller/filter.yml') as $filter) {
             $filters[] = $filter;
         }
         $c->getFilters()->willReturn($filters);
@@ -57,7 +57,7 @@ class FilterChainSpec extends PHPSpecContext
 
     public function it_loads_filter(SamuraiController $c)
     {
-        $filter = $this->Loader->findFirst('Controller/filter.yml');
+        $filter = $this->loader->findFirst('Controller/filter.yml');
         if (is_null($filter)) throw new \Exception('Not found filter.');
 
         $c->getFilterKey('execute')->willReturn('foo.execute');
@@ -75,7 +75,7 @@ class FilterChainSpec extends PHPSpecContext
 
     public function it_gets_current_filter(SamuraiController $c)
     {
-        $filter = $this->Loader->findFirst('Controller/filter.yml');
+        $filter = $this->loader->findFirst('Controller/filter.yml');
         if (is_null($filter)) throw new \Exception('Not found filter.');
 
         $c->getFilterKey('execute')->willReturn('foo.execute');
@@ -99,7 +99,7 @@ class FilterChainSpec extends PHPSpecContext
 
     public function it_is_filterchain(SamuraiController $c)
     {
-        $filter = $this->Loader->findFirst('Controller/filter.yml');
+        $filter = $this->loader->findFirst('Controller/filter.yml');
         if (is_null($filter)) throw new \Exception('Not found filter.');
 
         $c->getFilterKey('execute')->willReturn('foo.execute');

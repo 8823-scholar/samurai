@@ -123,7 +123,7 @@ class ActionChain
         array_unshift($names, 'Controller');
         $base = join(DS, array_map('ucfirst', $names)) . 'Controller.php';
 
-        $file = $this->Loader->findFirst($base);
+        $file = $this->loader->findFirst($base);
         if ($file) {
             $class = $file->getClassName();
             $controller = new $class();

@@ -10,7 +10,7 @@ class AddTaskSpec extends PHPSpecContext
     /**
      * @dependencies
      */
-    public $Loader;
+    public $loader;
     public $application;
 
 
@@ -40,7 +40,7 @@ class SampleSpec extends PHPSpecContext
 
 EOL;
         $current = $this->getCurrentAppDir()->getWrappedObject();
-        $spec_dir = $this->Loader->find($current . DS . $this->application->config('directory.spec'))->first();
+        $spec_dir = $this->loader->find($current . DS . $this->application->config('directory.spec'))->first();
         $FileUtil->mkdirP($spec_dir . '/Samurai/Samurai')->willReturn(null);
         $FileUtil->putContents($spec_dir . '/Samurai/Samurai/SampleSpec.php', $contents)->willReturn(null);
         $this->setProperty('FileUtil', $FileUtil);
@@ -69,7 +69,7 @@ class SampleSpec extends PHPSpecContext
 
 EOL;
         $current = $this->getCurrentAppDir()->getWrappedObject();
-        $spec_dir = $this->Loader->find($current . DS . $this->application->config('directory.spec'))->first();
+        $spec_dir = $this->loader->find($current . DS . $this->application->config('directory.spec'))->first();
         $FileUtil->mkdirP($spec_dir->toString())->willReturn(null);
         $FileUtil->putContents($spec_dir . '/SampleSpec.php', $contents)->willReturn(null);
         $this->setProperty('FileUtil', $FileUtil);
