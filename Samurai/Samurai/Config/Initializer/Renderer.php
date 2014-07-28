@@ -113,6 +113,9 @@ class Renderer extends Initializer
             $filter = new \Twig_Extension_Escaper(true);
             $twig->addExtension($filter);
         }
+
+        // configurations assign.
+        $renderer->set('config', $app->configHierarchical());
     }
 }
 

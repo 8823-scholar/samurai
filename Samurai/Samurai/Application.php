@@ -359,6 +359,31 @@ class Application
         }
     }
 
+    /**
+     * get config hierarchical splited by dot.
+     *
+     * @return  array
+     */
+    public function configHierarchical($key = null)
+    {
+        $config = [];
+        $all = $this->config($key);
+        if (! is_array($all)) $all = array($key => $all);
+        foreach ($all as $_key => $_val) {
+            $keys = explode('.', $_key);
+            $value = &$config;
+            while ($key = array_shift($keys)) {
+                if ($keys) {
+                    if (! isset($value[$key])) $value[$key] = [];
+                    $value = &$value[$key];
+                } else {
+                    $value[$key] = $_val;
+                }
+            }
+        }
+        return $config;
+    }
+
 
     /**
      * add application path.

@@ -39,6 +39,33 @@ class ApplicationSpec extends PHPSpecContext
         ]);
     }
 
+    public function it_gets_config_as_hierarchical()
+    {
+        $this->config('app.title', 'samurai 7');
+        $this->config('app.phrase.param1', 'attack');
+        $this->config('app.phrase.param2', 'deffence');
+        $this->config('directory.foo', '/path/to/foo');
+        $this->config('directory.bar', '/path/to/bar');
+        $this->config('directory.zoo', '/path/to/zoo');
+        $this->configHierarchical()->shouldBe([
+            'app' => [
+                'title' => 'samurai 7',
+                'phrase' => ['param1' => 'attack', 'param2' => 'deffence'],
+            ],
+            'directory' => [
+                'foo' => '/path/to/foo',
+                'bar' => '/path/to/bar',
+                'zoo' => '/path/to/zoo',
+            ],
+        ]);
+        $this->configHierarchical('app.*')->shouldBe([
+            'app' => [
+                'title' => 'samurai 7',
+                'phrase' => ['param1' => 'attack', 'param2' => 'deffence'],
+            ]
+        ]);
+    }
+
     public function it_add_path_wrapper_of_config()
     {
         $this->addAppPath(__DIR__, __NAMESPACE__, Application::PRIORITY_LOW);
