@@ -30,7 +30,7 @@
 
 namespace Samurai\Samurai\Filter;
 
-use Samurai\Onikiri;
+use Samurai\Onikiri\Onikiri;
 
 /**
  * Onikiri(O/R Mapper) filter.
@@ -44,10 +44,9 @@ use Samurai\Onikiri;
 class OnikiriFilter extends Filter
 {
     /**
-     * @dependencies
+     * initialized ?
      */
-    public $Loader;
-    public $Application;
+    private static $_initialized = false;
 
 
     /**
@@ -56,13 +55,22 @@ class OnikiriFilter extends Filter
     public function prefilter()
     {
         parent::prefilter();
+        if (self::$_initialized) return;
 
-        $manager = new Onikiri\Manager();
+        $onikiri = new Onikiri();
+        $config = $onikiri->configure();
+
+        // register model directory.
+        foreach ($this->Loader->find($this->Application->config('directory.model')) as $dir) {
+            $config->addModelDir($dir->toString(), $dir->getNameSpace());
+        }
 
         // load configuration.
-        // App/Config/Database/production.yml
+        // App/Config/Database/[env].yml
         $file = $this->Loader->find($this->Application->config('directory.config.database') . DS . $this->Application->getEnv() . '.yml')->first();
-        $manager->import($file);
+        if ($file) $onikiri->import($file);
+
+        self::$_initialized = true;
     }
 }
 

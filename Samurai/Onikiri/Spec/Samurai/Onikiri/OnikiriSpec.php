@@ -50,6 +50,16 @@ class OnikiriSpec extends PHPSpecContext
         $userTable->shouldHaveType(__NAMESPACE__ . '\\Fixtures\\UserTable');
     }
 
+    public function it_gets_table_instance_as_factory()
+    {
+        $config = $this->configure();
+        $config->addModelDir(__DIR__ . '/Fixtures', __NAMESPACE__ . '\\Fixtures');
+
+        $t1 = $this->getTable('User');
+        $t2 = $this->getTable('User');
+        $t1->shouldBe($t2);
+    }
+
     public function it_throws_entity_table_not_found_exception_when_not_exists_alias()
     {
         $config = $this->configure();

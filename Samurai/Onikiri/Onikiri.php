@@ -53,7 +53,14 @@ class Onikiri
      *
      * @var     array
      */
-    private $_databases = array();
+    private $_databases = [];
+
+    /**
+     * table instances
+     *
+     * @var     array
+     */
+    private $_table_factory = [];
 
     /**
      * transaction
@@ -123,13 +130,18 @@ class Onikiri
      */
     public function getTable($alias)
     {
+        // has factory ?
+        if (isset($this->_table_factory[$alias])) return $this->_table_factory[$alias];
+
         $class_name = $this->config->getNamingStrategy()->aliasToTableClassName($alias);
         foreach ($this->config->getModelDirs() as $dir) {
             $file_name = sprintf('%s/%s.php', $dir['dir'], $class_name);
             $class_full_name  = sprintf('%s\\%s', $dir['namespace'], $class_name);
             if (file_exists($file_name)) {
                 require_once $file_name;
-                return new $class_full_name($this);
+                $table = new $class_full_name($this);
+                $this->_table_factory[$alias] = $table;
+                return $table;
             }
         }
         throw new Exception\EntityTableNotFoundException();

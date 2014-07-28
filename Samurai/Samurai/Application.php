@@ -182,6 +182,7 @@ class Application
         $this->config('directory.config.routing', 'Config/Routing');
         $this->config('directory.config.database', 'Config/Database');
         $this->config('directory.config.renderer', 'Config/Renderer');
+        $this->config('directory.model', 'Model');
         $this->config('directory.layout', 'View/Layout');
         $this->config('directory.template', 'View/Content');
         $this->config('directory.locale', 'Locale');

@@ -295,7 +295,8 @@ class FilterChain
             throw new Exception\NotFoundException('No such filter. -> ' . $name);
         }
         
-        $this->Container->injectDependency($filter);
+        $filter->setContainer($this->container);
+        $this->container->injectDependency($filter);
         return $filter;
     }
 

@@ -30,6 +30,8 @@
 
 namespace Samurai\Samurai\Filter;
 
+use Samurai\Raikiri\DependencyInjectable;
+
 /**
  * Filter class.
  *
@@ -42,9 +44,9 @@ namespace Samurai\Samurai\Filter;
 class Filter
 {
     /**
-     * @dependencies
+     * @traits
      */
-    public $FilterChain;
+    use DependencyInjectable;
 
 
     /**
@@ -116,13 +118,12 @@ class Filter
     /**
      * set all attributes
      *
-     * @access  public
      * @param   array   $attributes
      * @param   boolean $force
      */
     public function setAttributes($attributes, $force = false)
     {
-        if ( $force ) {
+        if ($force) {
             $this->attributes = $attributes;
         } else {
             $this->attributes = array_merge($this->attributes, $attributes);
@@ -133,7 +134,6 @@ class Filter
     /**
      * get attribute.
      *
-     * @access  public
      * @param   string  $key
      * @param   mixed   $default
      */
@@ -145,7 +145,6 @@ class Filter
     /**
      * get self name.
      *
-     * @access  public
      * @return  string
      */
     public function getName()
