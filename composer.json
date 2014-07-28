@@ -24,10 +24,10 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "mustangostang/spyc": "0.5.*",
+        "mustangostang/spyc": "0.5.*@dev",
         "twig/twig": "1.*",
-        "phpspec/phpspec": "2.1.*",
-        "henrikbjorn/phpspec-code-coverage" : "1.0.*",
+        "phpspec/phpspec": "2.1.*@dev",
+        "henrikbjorn/phpspec-code-coverage" : "1.0.*@dev",
         "satooshi/php-coveralls": "dev-master"
     },
     "repositories": [
