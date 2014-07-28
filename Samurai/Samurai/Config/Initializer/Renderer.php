@@ -51,9 +51,11 @@ class Renderer extends Initializer
     public function configure(Application $app)
     {
         $app->config('renderer.name', 'twig');
-        $app->config('renderer.initialize.callback', array($this, 'initialize'));
         $app->config('renderer.auto_reload', true);
         $app->config('renderer.auto_escape_html', true);
+        $app->config('renderer.initializers.default', function(Application $app, SamuraiRenderer $renderer) {
+            $this->initialize($app, $renderer);
+        });
     }
 
 
@@ -88,7 +90,7 @@ class Renderer extends Initializer
         // set directory.
         $twig_loader = null;
         foreach ($app->loader->find($app->config('directory.template')) as $dir) {
-            if ( ! $twig_loader ) {
+            if (! $twig_loader) {
                 $twig_loader = new \Twig_Loader_Filesystem($dir->getRealPath());
             } else {
                 $twig_loader->addPath($dir->getRealPath());

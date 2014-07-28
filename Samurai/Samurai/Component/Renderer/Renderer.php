@@ -73,9 +73,8 @@ abstract class Renderer
         $this->engine = $this->initEngine();
 
         // bootstap callback.
-        $callback = $this->Application->config('renderer.initialize.callback');
-        if ($callback) {
-            $callback[0]->{$callback[1]}($this->Application, $this);
+        foreach ($this->Application->config('renderer.initializers.*') as $initializer) {
+            $initializer($this->Application, $this);
         }
     }
 
