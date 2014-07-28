@@ -61,13 +61,13 @@ class OnikiriFilter extends Filter
         $config = $onikiri->configure();
 
         // register model directory.
-        foreach ($this->Loader->find($this->Application->config('directory.model')) as $dir) {
+        foreach ($this->Loader->find($this->application->config('directory.model')) as $dir) {
             $config->addModelDir($dir->toString(), $dir->getNameSpace());
         }
 
         // load configuration.
         // App/Config/Database/[env].yml
-        $file = $this->Loader->find($this->Application->config('directory.config.database') . DS . $this->Application->getEnv() . '.yml')->first();
+        $file = $this->Loader->find($this->application->config('directory.config.database') . DS . $this->application->getEnv() . '.yml')->first();
         if ($file) $onikiri->import($file);
 
         self::$_initialized = true;

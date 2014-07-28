@@ -115,7 +115,7 @@ class UtilityController extends ConsoleController
      */
     public function server()
     {
-        chdir($this->Application->config('directory.document_root'));
+        chdir($this->application->config('directory.document_root'));
         passthru(sprintf('php -S localhost:%s index.php', $this->Request->get('port', 8888)));
     }
 

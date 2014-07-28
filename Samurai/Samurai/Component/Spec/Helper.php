@@ -44,7 +44,7 @@ class Helper
     /**
      * @dependencies
      */
-    public $Application;
+    public $application;
 
 
     /**
@@ -57,7 +57,7 @@ class Helper
     public function getRunner()
     {
         $runner = new Runner\PHPSpecRunner();
-        $this->Application->getContainer()->injectDependency($runner);
+        $this->application->getContainer()->injectDependency($runner);
         return $runner;
     }
 }

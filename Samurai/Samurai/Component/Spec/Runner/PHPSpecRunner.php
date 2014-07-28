@@ -53,7 +53,7 @@ class PHPSpecRunner extends Runner
      * @dependencies
      */
     public $Request;
-    public $Application;
+    public $application;
 
     /**
      * {@inheritdoc}
@@ -76,7 +76,7 @@ class PHPSpecRunner extends Runner
 
         // override
         $container = $app->getContainer();
-        $container->set('samurai.container', $this->Application->getContainer());
+        $container->set('samurai.container', $this->application->getContainer());
 
         $container->setShared('runner.specification', function($c) {
             return new PHPSpecSpecificationRunner(

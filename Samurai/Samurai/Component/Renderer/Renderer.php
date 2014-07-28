@@ -55,7 +55,7 @@ abstract class Renderer
      * @dependencies
      */
     public $Loader;
-    public $Application;
+    public $application;
 
     /**
      * @traits
@@ -73,8 +73,8 @@ abstract class Renderer
         $this->engine = $this->initEngine();
 
         // bootstap callback.
-        foreach ($this->Application->config('renderer.initializers.*') as $initializer) {
-            $initializer($this->Application, $this);
+        foreach ($this->application->config('renderer.initializers.*') as $initializer) {
+            $initializer($this->application, $this);
         }
     }
 

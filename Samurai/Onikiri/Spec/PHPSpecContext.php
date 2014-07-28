@@ -59,7 +59,7 @@ class PHPSpecContext extends SamuraiPHPSpecContext
 
     protected function _getMySQLDefinition()
     {
-        $app = $this->__getContainer()->get('Application');
+        $app = $this->__getContainer()->get('application');
         if (! $app->config('spec.mysql.database.defined'))
             throw new SkippingException('Set env "ONIKIRI_SPEC_MYSQL_(USER|PASS|HOST|PORT|DATABASE)"');
 

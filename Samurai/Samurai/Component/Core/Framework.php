@@ -137,7 +137,7 @@ class Framework
         }
 
         $container->register('Framework', $this);
-        $container->register('Application', $this->app);
+        $container->register('application', $this->app);
         $container->register('Loader', $this->app->getLoader());
 
         $this->setContainer($container);

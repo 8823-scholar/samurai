@@ -56,7 +56,7 @@ class SpecController extends ConsoleController
      */
     public $SpecHelper;
     public $Loader;
-    public $Application;
+    public $application;
 
 
     /**
@@ -106,8 +106,8 @@ class SpecController extends ConsoleController
         $this->setupTargets();
 
         // call initializers
-        foreach ($this->Application->config('spec.initializers.*') as $initializer) {
-            $initializer($this->Application);
+        foreach ($this->application->config('spec.initializers.*') as $initializer) {
+            $initializer($this->application);
         }
     }
 

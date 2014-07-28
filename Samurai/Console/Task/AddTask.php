@@ -50,7 +50,7 @@ class AddTask extends Task
      * @dependencies
      */
     public $FileUtil;
-    public $Application;
+    public $application;
     public $Loader;
 
 
@@ -65,7 +65,7 @@ class AddTask extends Task
     public function spec()
     {
         $current = $this->getCurrentAppDir();
-        $spec_dir = $this->Loader->find($current . DS . $this->Application->config('directory.spec'))->first();
+        $spec_dir = $this->Loader->find($current . DS . $this->application->config('directory.spec'))->first();
         $spec_dir->absolutize();
 
         foreach ($this->args as $arg) {
@@ -103,7 +103,7 @@ class AddTask extends Task
      */
     public function getSkeleton($name)
     {
-        $file = $this->Loader->find($this->Application->config('directory.skeleton') . DS . $name . 'Skeleton.php.twig')->first();
+        $file = $this->Loader->find($this->application->config('directory.skeleton') . DS . $name . 'Skeleton.php.twig')->first();
         $skeleton = new Skeleton($file);
         return $skeleton;
     }
@@ -126,7 +126,7 @@ class AddTask extends Task
         else {
             $current = getcwd();
             $default = null;
-            foreach ($this->Application->config('directory.apps') as $app) {
+            foreach ($this->application->config('directory.apps') as $app) {
                 if (strpos($current, $app['dir']) === 0) return $app['dir'];
                 if (! $default) $default = $app['dir'];
             }
