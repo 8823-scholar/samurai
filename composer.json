@@ -28,7 +28,7 @@
         "twig/twig": "1.*",
         "phpspec/phpspec": "2.1.*@dev",
         "henrikbjorn/phpspec-code-coverage" : "1.0.*@dev",
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "0.7.*@dev"
     },
     "repositories": [
         {
