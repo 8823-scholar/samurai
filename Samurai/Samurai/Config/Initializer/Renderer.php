@@ -109,9 +109,8 @@ class Renderer extends Initializer
         if ($app->config('renderer.auto_reload')) $twig->enableAutoReload();
 
         // default escape.
-        if ($app->config('renderer.auto_escape_html')) {
-            $filter = new \Twig_Extension_Escaper(true);
-            $twig->addExtension($filter);
+        if (! $app->config('renderer.auto_escape_html')) {
+            $twig->removeExtension('escaper');
         }
 
         // configurations assign.
