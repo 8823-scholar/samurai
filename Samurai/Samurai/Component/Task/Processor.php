@@ -32,6 +32,7 @@ namespace Samurai\Samurai\Component\Task;
 
 use Samurai\Samurai\Component\Core\Accessor;
 use Samurai\Samurai\Exception\NotFoundException;
+use Samurai\Raikiri\DependencyInjectable;
 
 /**
  * task processor.
@@ -55,6 +56,7 @@ class Processor
      * @traits
      */
     use Accessor;
+    use DependencyInjectable;
 
     /**
      * outputter.
@@ -62,12 +64,6 @@ class Processor
      * @var     Object
      */
     public $output;
-
-    /**
-     * @dependencies
-     */
-    public $loader;
-    public $Container;
 
 
     /**
@@ -94,7 +90,7 @@ class Processor
         if (! $task->has($method)) throw new NotImplementsException("No such task. -> {$name}");
         $task->setDo($method);
         $task->setOutput($this->output);
-        $this->Container->injectDependency($task);
+        $this->container->injectDependency($task);
 
         return $task;
     }

@@ -42,12 +42,6 @@ namespace Samurai\Samurai\Filter;
 class ActionFilter extends Filter
 {
     /**
-     * @dependencies
-     */
-    public $actionChain;
-
-
-    /**
      * @override
      */
     public function prefilter()

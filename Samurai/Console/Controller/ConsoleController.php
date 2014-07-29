@@ -46,12 +46,6 @@ use Samurai\Console\Exception\Task\NotFoundException;
 class ConsoleController extends SamuraiController
 {
     /**
-     * @dependencies
-     */
-    public $taskProcessor;
-
-
-    /**
      * get a task.
      *
      * @access  public

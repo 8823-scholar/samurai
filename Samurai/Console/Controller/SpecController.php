@@ -51,13 +51,6 @@ class SpecController extends ConsoleController
      */
     public $runner;
 
-    /**
-     * @dependencies
-     */
-    public $specHelper;
-    public $loader;
-    public $application;
-
 
     /**
      * execute spec files.

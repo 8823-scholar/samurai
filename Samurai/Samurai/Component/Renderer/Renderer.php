@@ -31,6 +31,7 @@
 namespace Samurai\Samurai\Component\Renderer;
 
 use Samurai\Samurai\Component\Core\Accessor;
+use Samurai\Raikiri\DependencyInjectable;
 
 /**
  * Renderer abstract class.
@@ -52,15 +53,10 @@ abstract class Renderer
     protected $engine;
 
     /**
-     * @dependencies
-     */
-    public $loader;
-    public $application;
-
-    /**
      * @traits
      */
     use Accessor;
+    use DependencyInjectable;
 
 
     /**
