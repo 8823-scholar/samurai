@@ -42,10 +42,6 @@ namespace Samurai\Samurai\Component\Request;
 class HttpRequest extends Request
 {
     /**
-     * @dependencies
-     */
-
-    /**
      * headers
      *
      * @access  public
@@ -120,6 +116,17 @@ class HttpRequest extends Request
         }
     }
 
+
+
+    /**
+     * get path.
+     *
+     * @return  string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
 
 
     /**

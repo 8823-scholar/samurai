@@ -30,10 +30,10 @@
 
 namespace Samurai\Samurai\Component\Routing\Rule;
 
+use Samurai\Samurai\Component\Routing\Exception\InvalidArgumentException;
+
 /**
- * Routing Rule "Match"
- *
- * matching routing rule.
+ * Routing Rule "Not Found"
  *
  * @package     Samurai
  * @subpackage  Component.Routing
@@ -41,38 +41,19 @@ namespace Samurai\Samurai\Component\Routing\Rule;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class MatchRule extends Rule
+class NotFoundRule extends Rule
 {
     /**
      * constructor
      */
-    public function __construct($rule)
+    public function __construct($rule = 'error.notFound')
     {
-        foreach ($rule as $key => $value) {
-            switch ($key) {
-                case 'as':
-                    $this->setName($value);
-                    break;
-                case 'controller':
-                    $this->setController($value);
-                    break;
-                case 'action':
-                    $this->setAction($value);
-                    break;
-                default:
-                    // when numeric key, then path
-                    if (is_numeric($key)) {
-                        $this->setPath($value);
-                    // else key is path, and value is action
-                    } else {
-                        $this->setPath($key);
-                        $this->setAction($value);
-                    }
-                    break;
-            }
+        $this->setAction($rule);
+
+        if (! $this->getController() || ! $this->getAction()) {
+            throw new InvalidArgumentException();
         }
     }
-
 
 
     /**

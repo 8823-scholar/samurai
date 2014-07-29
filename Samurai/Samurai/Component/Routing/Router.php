@@ -164,6 +164,8 @@ class Router
         if ($this->_default && $this->_default->match($path)) {
             return $this->_default;
         }
+
+        return new Rule\NotFoundRule();
     }
 
 

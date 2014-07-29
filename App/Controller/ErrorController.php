@@ -28,59 +28,25 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Routing\Rule;
+namespace App\Controller;
 
 /**
- * Routing Rule "Match"
+ * Error Controller.
  *
- * matching routing rule.
- *
- * @package     Samurai
- * @subpackage  Component.Routing
+ * @package     App
+ * @subpackage  Controller
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class MatchRule extends Rule
+class ErrorController extends AppController
 {
     /**
-     * constructor
+     * not found handeler
      */
-    public function __construct($rule)
+    public function notFound()
     {
-        foreach ($rule as $key => $value) {
-            switch ($key) {
-                case 'as':
-                    $this->setName($value);
-                    break;
-                case 'controller':
-                    $this->setController($value);
-                    break;
-                case 'action':
-                    $this->setAction($value);
-                    break;
-                default:
-                    // when numeric key, then path
-                    if (is_numeric($key)) {
-                        $this->setPath($value);
-                    // else key is path, and value is action
-                    } else {
-                        $this->setPath($key);
-                        $this->setAction($value);
-                    }
-                    break;
-            }
-        }
-    }
-
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function match($path)
-    {
-        return false;
+        return self::VIEW_TEMPLATE;
     }
 }
 

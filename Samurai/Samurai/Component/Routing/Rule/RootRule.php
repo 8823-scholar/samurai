@@ -30,6 +30,8 @@
 
 namespace Samurai\Samurai\Component\Routing\Rule;
 
+use Samurai\Samurai\Component\Routing\Exception\InvalidArgumentException;
+
 /**
  * Routing Rule "Root"
  *
@@ -45,18 +47,20 @@ class RootRule extends Rule
 {
     /**
      * constructor
-     *
-     * @access  public
      */
     public function __construct($rule)
     {
         $this->setAction($rule);
+
+        if (! $this->getController() || ! $this->getAction()) {
+            throw new InvalidArgumentException();
+        }
     }
 
 
 
     /**
-     * @implements
+     * {@inheritdoc}
      */
     public function match($path)
     {

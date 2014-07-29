@@ -42,13 +42,13 @@ namespace Samurai\Samurai\Component\Routing\Rule;
 class DefaultRule extends Rule
 {
     /**
-     * @implements
+     * {@inheritdoc}
      */
     public function match($path)
     {
         $paths = explode(DS, $path);
         array_shift($paths);
-        if ( count($paths) < 2 ) return false;
+        if (count($paths) < 2) return false;
 
         // more population pattern.
         // /:controller/:action
@@ -67,11 +67,11 @@ class DefaultRule extends Rule
             // has format.
             if (preg_match('/^(\w+)\.(\w+)$/', $action, $matches)) {
                 $action = $matches[1];
-                $this->setFormat($matches[2]);
+                $this->setParam('format', $matches[2]);
             }
 
             if (is_numeric($action)) {
-                $this->setParam('id', $action);
+                $this->setParam('id', (int)$action);
                 $action = array_pop($paths);
             }
             $controller = join('_', $paths);

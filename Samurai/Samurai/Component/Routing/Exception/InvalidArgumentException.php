@@ -28,12 +28,10 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Routing\Rule;
+namespace Samurai\Samurai\Component\Routing\Exception;
 
 /**
- * Routing Rule "Match"
- *
- * matching routing rule.
+ * invalid arguments exception
  *
  * @package     Samurai
  * @subpackage  Component.Routing
@@ -41,46 +39,7 @@ namespace Samurai\Samurai\Component\Routing\Rule;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class MatchRule extends Rule
+class InvalidArgumentException extends \InvalidArgumentException
 {
-    /**
-     * constructor
-     */
-    public function __construct($rule)
-    {
-        foreach ($rule as $key => $value) {
-            switch ($key) {
-                case 'as':
-                    $this->setName($value);
-                    break;
-                case 'controller':
-                    $this->setController($value);
-                    break;
-                case 'action':
-                    $this->setAction($value);
-                    break;
-                default:
-                    // when numeric key, then path
-                    if (is_numeric($key)) {
-                        $this->setPath($value);
-                    // else key is path, and value is action
-                    } else {
-                        $this->setPath($key);
-                        $this->setAction($value);
-                    }
-                    break;
-            }
-        }
-    }
-
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function match($path)
-    {
-        return false;
-    }
 }
 

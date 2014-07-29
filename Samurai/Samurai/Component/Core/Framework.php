@@ -164,6 +164,7 @@ class Framework
 
         // routing.
         $rule = $this->router->routing();
+        $this->request->import($rule->getParams());
 
         // add action chain.
         $this->actionChain->addAction($rule->getController(), $rule->getAction());

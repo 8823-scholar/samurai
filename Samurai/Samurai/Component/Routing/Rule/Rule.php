@@ -44,7 +44,6 @@ abstract class Rule
     /**
      * name
      *
-     * @access  public
      * @var     string
      */
     public $name;
@@ -52,7 +51,6 @@ abstract class Rule
     /**
      * controller
      *
-     * @access  public
      * @var     string
      */
     public $controller;
@@ -60,7 +58,6 @@ abstract class Rule
     /**
      * action
      *
-     * @access  public
      * @var     string
      */
     public $action;
@@ -68,32 +65,21 @@ abstract class Rule
     /**
      * path
      *
-     * @access  public
      * @var     string
      */
     public $path;
 
     /**
-     * format
-     *
-     * @access  public
-     * @var     string
-     */
-    public $format;
-
-    /**
      * params
      *
-     * @access  public
      * @var     array
      */
-    public $params = array();
+    public $params = [];
 
 
     /**
      * Set name.
      *
-     * @access  public
      * @param   string  $name
      */
     public function setName($name)
@@ -105,7 +91,6 @@ abstract class Rule
     /**
      * Set controller.
      *
-     * @access  public
      * @param   string  $controller
      */
     public function setController($controller)
@@ -117,7 +102,6 @@ abstract class Rule
     /**
      * Get Controller
      *
-     * @access  public
      * @return  string
      */
     public function getController()
@@ -130,13 +114,12 @@ abstract class Rule
      *
      * format with controller: controller.action
      *
-     * @access  public
      * @param   string  $action
      */
     public function setAction($action)
     {
         $names = explode('.', $action);
-        if ( count($names) > 1 ) {
+        if (count($names) > 1) {
             $controller = array_shift($names);
             $action = array_shift($names);
             $this->setController($controller);
@@ -150,7 +133,6 @@ abstract class Rule
     /**
      * Get action
      *
-     * @access  public
      * @return  string
      */
     public function getAction()
@@ -161,7 +143,6 @@ abstract class Rule
     /**
      * Set path.
      *
-     * @access  public
      * @param   string  $path
      */
     public function setPath($path)
@@ -175,7 +156,7 @@ abstract class Rule
             $format = $matches[2];
             $parts[] = $filename;
             $this->path = join(DS, $parts);
-            $this->setFormat($format);
+            $this->setParam('format', $format);
 
         // no format
         } else {
@@ -185,21 +166,8 @@ abstract class Rule
 
 
     /**
-     * Set format.
-     *
-     * @access  public
-     * @param   string  $format
-     */
-    public function setFormat($format)
-    {
-        $this->format = $format;
-    }
-
-
-    /**
      * Set params
      *
-     * @access  public
      * @param   string  $key
      * @param   string  $value
      */
@@ -208,11 +176,20 @@ abstract class Rule
         $this->params[$key] = $value;
     }
 
+    /**
+     * get params
+     *
+     * @return  array
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+
 
     /**
      * matching to path.
      *
-     * @access  public
      * @param   string  $path
      * @return  boolean
      */
