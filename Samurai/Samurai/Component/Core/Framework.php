@@ -143,6 +143,11 @@ class Framework
 
         $this->setContainer($container);
         $this->app->setContainer($container);
+
+        // callback
+        foreach ((array)$this->app->config('container.callback.initialized') as $callback) {
+            $callback($container);
+        }
     }
 
 

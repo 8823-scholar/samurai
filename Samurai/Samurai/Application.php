@@ -256,7 +256,6 @@ class Application
     /**
      * set env.
      *
-     * @access  public
      * @param   string  $env
      */
     public function setEnv($env)
@@ -271,7 +270,6 @@ class Application
     /**
      * get env
      *
-     * @access  public
      * @return  string
      */
     public function getEnv()
@@ -283,19 +281,17 @@ class Application
     /**
      * get env from environment variables.
      *
-     * @access  protected
+     * return   string
      */
     protected function getEnvFromEnvironmentVariables()
     {
         // has env ?
-        if ( $env = getenv('SAMURAI_ENV') ) {
+        if ($env = getenv('SAMURAI_ENV')) {
             return $env;
         }
 
         return self::ENV_DEVELOPMENT;
     }
-    
-    
     
 
 

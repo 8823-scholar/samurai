@@ -28,49 +28,45 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Filter;
+namespace App\Config\Initializer;
 
+use Samurai\Samurai\Application as SamuraiApplication;
+use Samurai\Samurai\Component\Core\Initializer;
 use Samurai\Onikiri\Onikiri;
 
 /**
- * Onikiri(O/R Mapper) filter.
+ * database initializer.
  *
  * @package     Samurai
- * @subpackage  Filter
+ * @subpackage  Config.Initializer
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class OnikiriFilter extends Filter
+class Database extends Initializer
 {
     /**
-     * initialized ?
+     * {@inheritdoc}
      */
-    private static $_initialized = false;
-
-
-    /**
-     * @override
-     */
-    public function prefilter()
+    public function configure(SamuraiApplication $app)
     {
-        parent::prefilter();
-        if (self::$_initialized) return;
+        $app->config('container.callback.initialized.', function($c) use ($app) {
+            $onikiri = new Onikiri();
+            $config = $onikiri->configure();
 
-        $onikiri = new Onikiri();
-        $config = $onikiri->configure();
+            // register model directory.
+            $loader = $app->getLoader();
+            foreach ($loader->find($app->config('directory.model')) as $dir) {
+                $config->addModelDir($dir->toString(), $dir->getNameSpace());
+            }
 
-        // register model directory.
-        foreach ($this->loader->find($this->application->config('directory.model')) as $dir) {
-            $config->addModelDir($dir->toString(), $dir->getNameSpace());
-        }
+            // load configuration.
+            // App/Config/Database/[env].yml
+            $file = $loader->find($app->config('directory.config.database') . DS . $app->getEnv() . '.yml')->first();
+            if ($file) $onikiri->import($file);
 
-        // load configuration.
-        // App/Config/Database/[env].yml
-        $file = $this->loader->find($this->application->config('directory.config.database') . DS . $this->application->getEnv() . '.yml')->first();
-        if ($file) $onikiri->import($file);
-
-        self::$_initialized = true;
+            $c->register('onikiri', $onikiri);
+        });
     }
 }
 
