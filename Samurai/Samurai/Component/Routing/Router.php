@@ -161,6 +161,16 @@ class Router
             $route = $this->_root;
         }
 
+        // match rule.
+        if (! $route) {
+            foreach ($this->_rules as $rule) {
+                if ($rule->match($path)) {
+                    $route = $rule;
+                    break;
+                }
+            }
+        }
+
         // default rule.
         if (! $route && $this->_default && $this->_default->match($path)) {
             $route = $this->_default;
