@@ -150,22 +150,27 @@ class Router
     public function routing()
     {
         // has dispatch.
+        $route = null;
         if ($action = $this->getDispatchAction()) {
-            return new Rule\MatchRule(array('action' => $action));
+            $route = new Rule\MatchRule(array('action' => $action));
         }
 
         // root rule.
         $path = $this->request->getPath();
-        if ($this->_root && $this->_root->match($path)) {
-            return $this->_root;
+        if (! $route && $this->_root && $this->_root->match($path)) {
+            $route = $this->_root;
         }
 
         // default rule.
-        if ($this->_default && $this->_default->match($path)) {
-            return $this->_default;
+        if (! $route && $this->_default && $this->_default->match($path)) {
+            $route = $this->_default;
         }
 
-        return new Rule\NotFoundRule();
+        // not found
+        if (! $route || ! $this->isActionExists($route)) {
+            $route = new Rule\NotFoundRule();
+        }
+        return $route;
     }
 
 
@@ -187,6 +192,18 @@ class Router
                 return $action;
             }
         }
+    }
+
+
+    /**
+     * is exists targeted action ?
+     *
+     * @param   Samurai\Samurai\Component\Routing\Rule\Rule
+     * @return  boolean
+     */
+    public function isActionExists(Rule\Rule $rule)
+    {
+        return $this->actionChain->existsController($rule->getController(), $rule->getAction());
     }
 }
 

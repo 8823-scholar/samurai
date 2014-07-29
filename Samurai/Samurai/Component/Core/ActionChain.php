@@ -139,6 +139,30 @@ class ActionChain
 
 
     /**
+     * has controller ?
+     *
+     * @param   string  $name
+     * @param   string  $action
+     * @return  boolean
+     */
+    public function existsController($name, $action = null)
+    {
+        $names = explode('_', $name);
+        array_unshift($names, 'Controller');
+        $base = join(DS, array_map('ucfirst', $names)) . 'Controller.php';
+
+        $file = $this->loader->findFirst($base);
+        if ($file) {
+            $class = $file->getClassName();
+            if (! $action && class_exists($class)) return true;
+            if (method_exists($class, $action)) return true;
+        }
+
+        return false;
+    }
+
+
+    /**
      * Set current action result.
      *
      * @access  public

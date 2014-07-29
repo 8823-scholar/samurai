@@ -39,7 +39,7 @@ namespace App\Controller;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class DefaultController extends AppController
+class RootController extends AppController
 {
     /**
      * index action.

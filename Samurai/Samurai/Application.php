@@ -179,7 +179,7 @@ class Application
 
         // set directory names.
         $this->config('directory.config.samurai', 'Config/Samurai');
-        $this->config('directory.config.routing', 'Config/Routing');
+        $this->config('directory.config.routing', 'Config/App');
         $this->config('directory.config.database', 'Config/Database');
         $this->config('directory.config.renderer', 'Config/Renderer');
         $this->config('directory.model', 'Model');

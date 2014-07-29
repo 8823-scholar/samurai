@@ -30,8 +30,8 @@
 #
 # routing configulation.
 #
+# - match: { /photo/:id.jpg: photo.show, as: photo_show }
+#
 
-- root: default.index
-
-- match: { /photo/:id.jpg: photo.show, as: photo_show }
+- root: root.index
 
