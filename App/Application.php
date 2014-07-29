@@ -61,6 +61,9 @@ class Application extends Samurai\Application
 
         // application dir.
         $this->addAppPath(__DIR__, __NAMESPACE__, self::PRIORITY_HIGH);
+
+        // dicontainer
+        $this->config('container.dicon.', 'Config/App/samurai.dicon');
     }
 }
 

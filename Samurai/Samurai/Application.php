@@ -192,7 +192,7 @@ class Application
         $this->config('directory.temp', 'Temp');
         
         // main dicon
-        $this->config('container.dicon', 'Config/Samurai/samurai.dicon');
+        $this->config('container.dicon.', 'Config/Samurai/samurai.dicon');
 
         // set encodings.
         $this->config('encoding.input', 'UTF-8');

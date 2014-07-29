@@ -130,10 +130,11 @@ class Framework
      */
     private function initContainer()
     {
-        $name = $this->app->config('container.dicon');
+        $dicons = (array)$this->app->config('container.dicon');
         $container = ContainerFactory::create();
-        foreach ($this->app->getLoader()->find($name)->reverse() as $dicon) {
-            $container->import($dicon);
+        foreach ($dicons as $dicon) {
+            $file = $this->app->getLoader()->find($dicon)->first();
+            $container->import($file);
         }
 
         $container->register('framework', $this);

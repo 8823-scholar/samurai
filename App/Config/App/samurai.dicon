@@ -1,0 +1,24 @@
+#
+# samurai.dicon for application
+#
+# example
+#
+# # simple
+# alias: ClassName
+#
+# # has init method
+# alias:
+#     class: ClassName
+#     initMethod: methodName
+#
+# # has constructor args
+# alias:
+#     class: ClassName
+#     args: ['foo', 'bar']
+#
+# # not singleton
+# alias:
+#     class: ClassName
+#     type: prototype
+#
+

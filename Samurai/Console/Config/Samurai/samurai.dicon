@@ -35,6 +35,18 @@ response: Samurai\Samurai\Component\Response\CliResponse
 
 router: Samurai\Samurai\Component\Routing\CliRouter
 
+actionChain: Samurai\Samurai\Component\Core\ActionChain
+
+filterChain: Samurai\Samurai\Component\Core\FilterChain
+
+renderer:
+    class: Samurai\Samurai\Component\Renderer\TwigRenderer
+    initMethod: initialize
+
+finder: Samurai\Samurai\Component\FileSystem\Finder\Finder
+
+arrayUtil: Samurai\Samurai\Component\Utility\ArrayUtility
+
 taskProcessor: Samurai\Samurai\Component\Task\Processor
 
 specHelper: Samurai\Samurai\Component\Spec\Helper
