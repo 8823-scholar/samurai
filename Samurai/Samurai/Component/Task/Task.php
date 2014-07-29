@@ -81,7 +81,7 @@ class Task
     /**
      * @dependencies
      */
-    public $TaskProcessor;
+    public $taskProcessor;
 
 
     /**
@@ -106,7 +106,7 @@ class Task
      */
     public function task($name, array $options = [])
     {
-        $this->TaskProcessor->execute($name, $options);
+        $this->taskProcessor->execute($name, $options);
     }
 
 

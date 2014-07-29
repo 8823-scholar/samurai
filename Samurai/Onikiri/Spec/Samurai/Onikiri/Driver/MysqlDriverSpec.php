@@ -16,7 +16,7 @@ class MysqlDriverSpec extends PHPSpecContext
 
     public function it_connects_to_mysql(Database $d)
     {
-        $request = $this->__getContainer()->get('Request');
+        $request = $this->__getContainer()->get('request');
 
         $user = $request->getEnv('ONIKIRI_SPEC_MYSQL_USER');
         $pass = $request->getEnv('ONIKIRI_SPEC_MYSQL_PASS', '');

@@ -51,10 +51,10 @@ class UtilityController extends ConsoleController
      */
     public function locator()
     {
-        $arg = $this->Request->get('args');
+        $arg = $this->request->get('args');
 
         // show version.
-        if ($this->Request->get('option.v') || $this->Request->get('version')) {
+        if ($this->request->get('option.v') || $this->request->get('version')) {
             return [self::FORWARD_ACTION, 'utility.version'];
         }
 
@@ -75,9 +75,9 @@ class UtilityController extends ConsoleController
 
         // action execute.
         // exclude first argument, because this is command name.
-        $args = $this->Request->getAsArray('args');
+        $args = $this->request->getAsArray('args');
         array_shift($args);
-        $this->Request->set('args', $args);
+        $this->request->set('args', $args);
         return [self::FORWARD_ACTION, $this->completionActionArg($arg)];
     }
 
@@ -105,7 +105,7 @@ class UtilityController extends ConsoleController
     {
         $this->assign('version', Samurai::getVersion());
         $this->assign('state', Samurai::getState());
-        $this->assign('script', './app');   // TODO: $this->Request->getScript()
+        $this->assign('script', './app');   // TODO: $this->request->getScript()
         return self::VIEW_TEMPLATE;
     }
 
@@ -116,7 +116,7 @@ class UtilityController extends ConsoleController
     public function server()
     {
         chdir($this->application->config('directory.document_root'));
-        passthru(sprintf('php -S localhost:%s index.php', $this->Request->get('port', 8888)));
+        passthru(sprintf('php -S localhost:%s index.php', $this->request->get('port', 8888)));
     }
 
 

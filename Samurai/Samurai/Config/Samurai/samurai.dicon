@@ -27,7 +27,7 @@
 # @license     http://opensource.org/licenses/MIT
 #
 
-Request:
+request:
     class: Samurai\Samurai\Component\Request\HttpRequest
     initMethod: init
 

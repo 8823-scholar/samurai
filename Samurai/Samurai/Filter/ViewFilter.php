@@ -68,7 +68,7 @@ class ViewFilter extends Filter
      */
     public $ActionChain;
     public $Renderer;
-    public $Response;
+    public $response;
     public $application;
 
 
@@ -105,7 +105,7 @@ class ViewFilter extends Filter
     {
         // when no template, auto generate template path.
         // View/Content/[controller]/[action].html.twig
-        if ( ! $template ) {
+        if (! $template) {
             $def = $this->ActionChain->getCurrentAction();
             $controller = join(DS, array_map('ucfirst', explode('_', $def['controller_name'])));
             $action = $def['action'];
@@ -114,9 +114,9 @@ class ViewFilter extends Filter
 
         // rendering by renderer.
         $result = $this->Renderer->render($template);
-        $this->Response->setBody($result);
-        if ( $this->Response->isHttp() ) {
-            $this->Response->setHeader('content-type', sprintf('text/html; charset=%s', $this->application->config('encoding.output')));
+        $this->response->setBody($result);
+        if ($this->response->isHttp()) {
+            $this->response->setHeader('content-type', sprintf('text/html; charset=%s', $this->application->config('encoding.output')));
         }
     }
 

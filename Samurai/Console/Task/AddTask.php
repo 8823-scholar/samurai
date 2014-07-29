@@ -49,7 +49,7 @@ class AddTask extends Task
     /**
      * @dependencies
      */
-    public $FileUtil;
+    public $fileUtil;
     public $application;
     public $loader;
 
@@ -84,8 +84,8 @@ class AddTask extends Task
             $skeleton->assign('spec_class', $class_name . 'Spec');
 
             $spec_file = $spec_dir->getRealPath() . DS . ($dir ? $dir . DS : '') . $class_name . 'Spec.php';
-            $this->FileUtil->mkdirP(dirname($spec_file));
-            $this->FileUtil->putContents($spec_file, $skeleton->render());
+            $this->fileUtil->mkdirP(dirname($spec_file));
+            $this->fileUtil->putContents($spec_file, $skeleton->render());
 
             $this->sendMessage('created spec file. -> %s', $spec_file);
         }

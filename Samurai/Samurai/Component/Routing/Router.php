@@ -155,7 +155,7 @@ class Router
         }
 
         // root rule.
-        $path = $this->Request->getPath();
+        $path = $this->request->getPath();
         if ($this->_root && $this->_root->match($path)) {
             return $this->_root;
         }
@@ -178,7 +178,7 @@ class Router
      */
     public function getDispatchAction()
     {
-        $params = $this->Request->getAll();
+        $params = $this->request->getAll();
         foreach (array_keys($params) as $key) {
             if (preg_match('/^dispatch-(.+)/', $key, $matches)) {
                 $action = str_replace('-', '.', $matches[1]);

@@ -52,7 +52,7 @@ class PHPSpecRunner extends Runner
     /**
      * @dependencies
      */
-    public $Request;
+    public $request;
     public $application;
 
     /**
@@ -65,7 +65,7 @@ class PHPSpecRunner extends Runner
         chdir($this->getWorkspace());
 
         $args = [];
-        $args[] = $this->Request->getScriptName();
+        $args[] = $this->request->getScriptName();
         $args[] = 'run';
         $args[] = '--verbose';
         foreach ($this->targets as $target) {

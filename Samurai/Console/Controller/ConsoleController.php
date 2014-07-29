@@ -48,7 +48,7 @@ class ConsoleController extends SamuraiController
     /**
      * @dependencies
      */
-    public $TaskProcessor;
+    public $taskProcessor;
 
 
     /**
@@ -60,8 +60,8 @@ class ConsoleController extends SamuraiController
      */
     public function task($name, array $options = [])
     {
-        $this->TaskProcessor->setOutput($this);
-        $this->TaskProcessor->execute($name, $options);
+        $this->taskProcessor->setOutput($this);
+        $this->taskProcessor->execute($name, $options);
     }
 
 
@@ -72,7 +72,7 @@ class ConsoleController extends SamuraiController
      */
     public function send($message)
     {
-        $this->Response->send($message);
+        $this->response->send($message);
     }
 
 
@@ -92,7 +92,7 @@ class ConsoleController extends SamuraiController
     {
         $options = array('help', 'usage', 'option.h');
         foreach ($options as $option) {
-            if ($this->Request->get($option)) return true;
+            if ($this->request->get($option)) return true;
         }
         return false;
     }

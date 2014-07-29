@@ -104,7 +104,7 @@ class CliRouter extends Router
      */
     public function getDispatchAction()
     {
-        $args = $this->Request->getAsArray('args');
+        $args = $this->request->getAsArray('args');
         $arg = array_shift($args);
         if (preg_match('/^(\w+\.\w+)$/', $arg, $matches)) {
             $action = $matches[1];

@@ -122,7 +122,7 @@ class HttpResponse extends Response
     /**
      * @dependencies
      */
-    public $Request;
+    public $request;
 
 
     /**
@@ -245,7 +245,7 @@ class HttpResponse extends Response
         if (headers_sent()) return;
 
         if (isset($this->status_messages[$this->status])) {
-            header(sprintf('HTTP/%s %d %s', $this->Request->getHttpVersion(), $this->status, $this->status_messages[$this->status]));
+            header(sprintf('HTTP/%s %d %s', $this->request->getHttpVersion(), $this->status, $this->status_messages[$this->status]));
         } else {
             header('Status: ' . $this->status);
         }

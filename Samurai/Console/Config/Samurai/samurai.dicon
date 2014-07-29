@@ -27,17 +27,17 @@
 # @license     http://opensource.org/licenses/MIT
 #
 
-Request:
+request:
     class: Samurai\Samurai\Component\Request\CliRequest
     initMethod: init
 
-Response: Samurai\Samurai\Component\Response\CliResponse
+response: Samurai\Samurai\Component\Response\CliResponse
 
-Router: Samurai\Samurai\Component\Routing\CliRouter
+router: Samurai\Samurai\Component\Routing\CliRouter
 
-TaskProcessor: Samurai\Samurai\Component\Task\Processor
+taskProcessor: Samurai\Samurai\Component\Task\Processor
 
-SpecHelper: Samurai\Samurai\Component\Spec\Helper
+specHelper: Samurai\Samurai\Component\Spec\Helper
 
-FileUtil: Samurai\Samurai\Component\FileSystem\Utility
+fileUtil: Samurai\Samurai\Component\FileSystem\Utility
 

@@ -54,7 +54,7 @@ class SpecController extends ConsoleController
     /**
      * @dependencies
      */
-    public $SpecHelper;
+    public $specHelper;
     public $loader;
     public $application;
 
@@ -85,7 +85,7 @@ class SpecController extends ConsoleController
      */
     public function usage()
     {
-        $this->assign('script', './app');   // TODO: $this->Request->getScript()
+        $this->assign('script', './app');   // TODO: $this->request->getScript()
         return self::VIEW_TEMPLATE;
     }
 
@@ -100,7 +100,7 @@ class SpecController extends ConsoleController
      */
     private function setup()
     {
-        $this->runner = $this->SpecHelper->getRunner();
+        $this->runner = $this->specHelper->getRunner();
 
         $this->setupWorkspace();
         $this->setupTargets();
@@ -143,7 +143,7 @@ class SpecController extends ConsoleController
     private function setupTargets()
     {
         // has targets
-        $args = $this->Request->getAsArray('args');
+        $args = $this->request->getAsArray('args');
         foreach ($args as $arg) {
             $this->runner->addTarget(realpath($arg));
         }

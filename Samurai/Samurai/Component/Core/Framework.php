@@ -106,7 +106,7 @@ class Framework
         }
 
         // response.
-        $this->Response->execute();
+        $this->response->execute();
     }
 
 
@@ -154,10 +154,10 @@ class Framework
     {
         // import.
         $file = $this->app->getLoader()->findFirst($this->app->config('directory.config.routing') . DS . 'routes.yml');
-        $this->Router->import($file);
+        $this->router->import($file);
 
         // routing.
-        $rule = $this->Router->routing();
+        $rule = $this->router->routing();
 
         // add action chain.
         $this->ActionChain->addAction($rule->getController(), $rule->getAction());
