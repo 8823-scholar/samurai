@@ -50,5 +50,16 @@ abstract class Initializer
      * @param   Samurai\Samurai\Application $app
      */
     abstract public function configure(Application $app);
+
+
+    /**
+     * get priority
+     *
+     * @return  int
+     */
+    public function getPriority()
+    {
+        return 10;
+    }
 }
 

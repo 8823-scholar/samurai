@@ -222,11 +222,19 @@ class Application
      */
     protected function initializers()
     {
-        $initializers = $this->loader->find('Config/Initializer/*.php');
-        foreach ($initializers as $file) {
+        $initializers = [];
+        $initializer_files = $this->loader->find('Config/Initializer/*.php');
+        foreach ($initializer_files as $file) {
             require_once $file->getRealPath();
             $class = $file->getClassName();
-            $initializer = new $class();
+            $initializers[] = new $class();
+        }
+
+        // sort by priority
+        usort($initializers, function ($a, $b) { return $b->getPriority() - $a->getPriority(); });
+
+        // call initializer
+        foreach ($initializers as $initializer) {
             $initializer->configure($this);
         }
     }
