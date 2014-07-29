@@ -87,6 +87,14 @@ class TwigRenderer extends Renderer
         $this->variables[$name] = $value;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function setComponent($name, $component)
+    {
+        $this->getEngine()->addGlobal($name, $component);
+    }
+
 
     /**
      * @implements

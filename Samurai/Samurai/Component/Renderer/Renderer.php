@@ -47,7 +47,6 @@ abstract class Renderer
     /**
      * renderer engine.
      *
-     * @access  protected
      * @var     object
      */
     protected $engine;
@@ -61,8 +60,6 @@ abstract class Renderer
 
     /**
      * initialize method.
-     *
-     * @access  public
      */
     public function initialize()
     {
@@ -79,7 +76,6 @@ abstract class Renderer
     /**
      * get engine.
      *
-     * @access  public
      * @return  object
      */
     public function getEngine()
@@ -91,7 +87,6 @@ abstract class Renderer
     /**
      * initialize engine.
      *
-     * @access  public
      * @return  object
      */
     abstract public function initEngine();
@@ -100,7 +95,6 @@ abstract class Renderer
     /**
      * get suffix (template extension)
      *
-     * @access  public
      * @return  string
      */
     abstract public function getSuffix();
@@ -109,17 +103,23 @@ abstract class Renderer
     /**
      * variable assign to engine.
      *
-     * @access  public
      * @param   string  $name
      * @param   mixed   $value
      */
     abstract public function set($name, $value);
 
+    /**
+     * helper object register to engine.
+     *
+     * @param   string  $name
+     * @param   object  $component
+     */
+    abstract public function setComponent($name, $component);
+
 
     /**
      * rendering template trigger.
      *
-     * @access  public
      * @param   string  $template
      * @return  string
      */
