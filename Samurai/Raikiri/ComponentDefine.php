@@ -57,7 +57,6 @@ class ComponentDefine
     /**
      * class name
      *
-     * @access  public
      * @var     string
      */
     public $class;
@@ -65,7 +64,6 @@ class ComponentDefine
     /**
      * file path
      *
-     * @access  public
      * @var     string
      */
     public $path;
@@ -73,7 +71,6 @@ class ComponentDefine
     /**
      * constructor args
      *
-     * @access  public
      * @var     array
      */
     public $args = array();
@@ -81,7 +78,6 @@ class ComponentDefine
     /**
      * init method name
      *
-     * @access  public
      * @var     string
      */
     public $init_method_name;
@@ -89,7 +85,6 @@ class ComponentDefine
     /**
      * init method args
      *
-     * @access  public
      * @var     array
      */
     public $init_method_args = array();
@@ -100,7 +95,6 @@ class ComponentDefine
      * singleton: unique instance. (default)
      * prototype: generate for every get from the di container.
      *
-     * @access  public
      * @var     string
      */
     public $type = self::TYPE_SINGLETON;
@@ -108,7 +102,6 @@ class ComponentDefine
     /**
      * instance
      *
-     * @access  private
      * @var     object
      */
     private $instance;
@@ -116,7 +109,6 @@ class ComponentDefine
     /**
      * parent container.
      *
-     * @access  private
      * @var     Container
      */
     private $container;
@@ -172,12 +164,21 @@ class ComponentDefine
     /**
      * set container
      *
-     * @access  public
-     * @param   Container   $container
+     * @param   Samurai\Raikiri\Container   $container
      */
     public function setContainer(Container $container)
     {
         $this->container = $container;
+    }
+
+    /**
+     * get container
+     *
+     * @return  Samurai\Raikiri\Container
+     */
+    public function getContainer()
+    {
+        return $this->container;
     }
 
 

@@ -87,6 +87,16 @@ abstract class Rule
         $this->name = $name;
     }
 
+    /**
+     * get name.
+     *
+     * @return  string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
 
     /**
      * Set controller.
@@ -162,6 +172,16 @@ abstract class Rule
         } else {
             $this->path = $path;
         }
+    }
+
+    /**
+     * get path
+     *
+     * @return  string
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 
 

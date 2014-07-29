@@ -80,6 +80,10 @@ class MatchRule extends Rule
      */
     public function match($path)
     {
+        $regex = preg_quote($this->getPath(), '@');
+        if (preg_match("@^{$regex}@", $path)) {
+            return true;
+        }
         return false;
     }
 }

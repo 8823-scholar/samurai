@@ -18,27 +18,20 @@ class MatchRuleSpec extends PHPSpecContext
 
 
     /**
-     * match:
-     *     as: login
-     *     - /login
-     *     controller: user
-     *     action: login
+     * match: { /login: user.login, as login }
      */
     public function it_is_match_standard()
     {
         $this->beConstructedWith([
-            '/logn',
+            '/login' => 'user.login',
             'as' => 'login',
-            'contoller' => 'user',
-            'action' => 'login',
         ]);
-        /*
+
         $this->match('/login')->shouldBe(true);
 
         $this->getName()->shouldBe('login');
         $this->getController()->shouldBe('user');
         $this->getAction()->shouldBe('login');
-         */
     }
 }
 
