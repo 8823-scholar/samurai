@@ -49,7 +49,6 @@ class SamuraiController
     /**
      * name
      *
-     * @access  public
      * @var     string
      */
     public $name = '';
@@ -98,7 +97,6 @@ class SamuraiController
     /**
      * assign variable to renderer.
      *
-     * @access  public
      * @param   string  $name
      * @param   mixed   $value
      */
@@ -122,12 +120,12 @@ class SamuraiController
         $names = explode('_', $this->name);
         $base = 'Controller';
         $filters = array();
-        while ( $name = array_shift($names) ) {
+        while ($name = array_shift($names)) {
             $filter = $this->loader->find($base . DS . 'filter.yml')->first();
             if ($filter) $filters[] = $filter;
 
             // when has rest.
-            if ( count($names) > 0 ) {
+            if (count($names) > 0) {
                 $base = $base . DS . ucfirst($name);
 
             // when last.
@@ -144,7 +142,6 @@ class SamuraiController
     /**
      * Get filter key
      *
-     * @access  public
      * @param   string  $action
      * @return  string
      */
@@ -166,7 +163,6 @@ class SamuraiController
     /**
      * Get base dir.
      *
-     * @access  public
      * @return  string
      */
     public function getBaseDir()
@@ -176,7 +172,7 @@ class SamuraiController
 
         // APP
         $app_dir = dirname(Config\APP_DIR);
-        if ( $app_dir . DS . $path ) {
+        if ($app_dir . DS . $path) {
             return $app_dir;
         }
 
@@ -184,17 +180,12 @@ class SamuraiController
     }
 
 
-
     /**
-     * Get dicon files.
-     *
-     * @access  public
-     * @return  array
+     * before renderer
      */
-    public function getDiconFiles()
+    public function beforeRenderer()
     {
-        var_dump(__FILE__);
-        var_dump($this->getBaseDir());
+        $this->renderer->set('now', time());
     }
 }
 

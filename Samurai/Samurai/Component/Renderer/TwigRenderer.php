@@ -57,7 +57,7 @@ class TwigRenderer extends Renderer
      * @access  public
      * @var     array
      */
-    public $variables = array();
+    public $variables = [];
 
 
     /**

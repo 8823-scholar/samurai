@@ -72,10 +72,10 @@ class ViewFilter extends Filter
 
         $result = $this->_getResult();
         $data = $this->_getResultData();
-        if ( ! $result ) return;
+        if (! $result) return;
 
         // what do ?
-        switch ( $result ) {
+        switch ($result) {
             case self::VIEW_TEMPLATE:
                 $this->_renderTemplate($data);
                 break;
@@ -96,14 +96,15 @@ class ViewFilter extends Filter
     {
         // when no template, auto generate template path.
         // View/Content/[controller]/[action].html.twig
+        $def = $this->actionChain->getCurrentAction();
         if (! $template) {
-            $def = $this->actionChain->getCurrentAction();
             $controller = join(DS, array_map('ucfirst', explode('_', $def['controller_name'])));
             $action = $def['action'];
             $template = sprintf('%s/%s.%s', $controller, $action, $this->renderer->getSuffix());
         }
 
         // rendering by renderer.
+        $def['controller']->beforeRenderer();
         $result = $this->renderer->render($template);
         $this->response->setBody($result);
         if ($this->response->isHttp()) {
