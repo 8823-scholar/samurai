@@ -64,15 +64,6 @@ class ViewFilter extends Filter
 
 
     /**
-     * @dependencies
-     */
-    public $ActionChain;
-    public $Renderer;
-    public $response;
-    public $application;
-
-
-    /**
      * @override
      */
     public function postfilter()
@@ -106,14 +97,14 @@ class ViewFilter extends Filter
         // when no template, auto generate template path.
         // View/Content/[controller]/[action].html.twig
         if (! $template) {
-            $def = $this->ActionChain->getCurrentAction();
+            $def = $this->actionChain->getCurrentAction();
             $controller = join(DS, array_map('ucfirst', explode('_', $def['controller_name'])));
             $action = $def['action'];
-            $template = sprintf('%s/%s.%s', $controller, $action, $this->Renderer->getSuffix());
+            $template = sprintf('%s/%s.%s', $controller, $action, $this->renderer->getSuffix());
         }
 
         // rendering by renderer.
-        $result = $this->Renderer->render($template);
+        $result = $this->renderer->render($template);
         $this->response->setBody($result);
         if ($this->response->isHttp()) {
             $this->response->setHeader('content-type', sprintf('text/html; charset=%s', $this->application->config('encoding.output')));
@@ -130,7 +121,7 @@ class ViewFilter extends Filter
      */
     private function _forwardAction($action)
     {
-        $this->ActionChain->addAction($action);
+        $this->actionChain->addAction($action);
     }
 
 
@@ -145,7 +136,7 @@ class ViewFilter extends Filter
      */
     private function _getResult()
     {
-        $def = $this->ActionChain->getCurrentAction();
+        $def = $this->actionChain->getCurrentAction();
         $result = $def['result'];
         if ( ! $result ) {
             return null;
@@ -166,7 +157,7 @@ class ViewFilter extends Filter
      */
     private function _getResultData()
     {
-        $def = $this->ActionChain->getCurrentAction();
+        $def = $this->actionChain->getCurrentAction();
         $result = $def['result'];
         if ( is_string($result) ) {
             return null;

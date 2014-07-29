@@ -93,16 +93,16 @@ class Framework
         $this->routing();
 
         // action chain.
-        while ($action = $this->ActionChain->getCurrentAction()) {
+        while ($action = $this->actionChain->getCurrentAction()) {
 
             // clear.
-            $this->FilterChain->clear();
+            $this->filterChain->clear();
 
-            $this->FilterChain->setAction($action['controller'], $action['action']);
-            $this->FilterChain->build();
-            $this->FilterChain->execute();
+            $this->filterChain->setAction($action['controller'], $action['action']);
+            $this->filterChain->build();
+            $this->filterChain->execute();
 
-            $this->ActionChain->next();
+            $this->actionChain->next();
         }
 
         // response.
@@ -160,7 +160,7 @@ class Framework
         $rule = $this->router->routing();
 
         // add action chain.
-        $this->ActionChain->addAction($rule->getController(), $rule->getAction());
+        $this->actionChain->addAction($rule->getController(), $rule->getAction());
     }
 }
 

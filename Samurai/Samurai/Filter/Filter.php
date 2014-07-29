@@ -95,8 +95,8 @@ class Filter
      */
     public function chainFilter()
     {
-        $this->FilterChain->next();
-        $this->FilterChain->execute();
+        $this->filterChain->next();
+        $this->filterChain->execute();
     }
 
 

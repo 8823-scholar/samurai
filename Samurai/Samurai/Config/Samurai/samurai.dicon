@@ -31,19 +31,19 @@ request:
     class: Samurai\Samurai\Component\Request\HttpRequest
     initMethod: init
 
-Response: Samurai\Samurai\Component\Response\HttpResponse
+response: Samurai\Samurai\Component\Response\HttpResponse
 
-Router: Samurai\Samurai\Component\Routing\Router
+router: Samurai\Samurai\Component\Routing\Router
 
-ActionChain: Samurai\Samurai\Component\Core\ActionChain
+actionChain: Samurai\Samurai\Component\Core\ActionChain
 
-FilterChain: Samurai\Samurai\Component\Core\FilterChain
+filterChain: Samurai\Samurai\Component\Core\FilterChain
 
-Renderer:
+renderer:
     class: Samurai\Samurai\Component\Renderer\TwigRenderer
     initMethod: initialize
 
-Finder: Samurai\Samurai\Component\FileSystem\Finder\Finder
+finder: Samurai\Samurai\Component\FileSystem\Finder\Finder
 
-ArrayUtil: Samurai\Samurai\Component\Utility\ArrayUtility
+arrayUtil: Samurai\Samurai\Component\Utility\ArrayUtility
 

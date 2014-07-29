@@ -104,7 +104,7 @@ class SamuraiController
      */
     public function assign($name, $value)
     {
-        $this->Renderer->set($name, $value);
+        $this->renderer->set($name, $value);
     }
 
 

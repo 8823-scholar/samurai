@@ -63,7 +63,7 @@ abstract class Runner
     /**
      * @dependencies
      */
-    public $Finder;
+    public $finder;
 
     /**
      * @traits

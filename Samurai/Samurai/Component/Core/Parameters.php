@@ -65,7 +65,7 @@ class Parameters
      */
     public function import(array $data)
     {
-        $this->_params = $this->ArrayUtil->merge($this->_params, $data);
+        $this->_params = $this->arrayUtil->merge($this->_params, $data);
     }
 
 

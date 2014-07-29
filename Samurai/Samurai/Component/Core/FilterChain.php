@@ -212,7 +212,7 @@ class FilterChain
 
         // register.
         if (isset($this->filters[$alias])) {
-            $this->filters[$alias]['attributes'] = $this->ArrayUtil->merge($this->filters[$alias]['attributes'], $attributes);
+            $this->filters[$alias]['attributes'] = $this->arrayUtil->merge($this->filters[$alias]['attributes'], $attributes);
         } else {
             $this->filter_names[] = $alias;
             $this->filters[$alias] = array('name' => $filter, 'attributes' => (array)$attributes);

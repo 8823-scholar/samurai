@@ -44,7 +44,7 @@ class ActionFilter extends Filter
     /**
      * @dependencies
      */
-    public $ActionChain;
+    public $actionChain;
 
 
     /**
@@ -54,14 +54,14 @@ class ActionFilter extends Filter
     {
         parent::prefilter();
 
-        $actionDef = $this->ActionChain->getCurrentAction();
-        //$ErrorList = $this->ActionChain->getCurrentErrorList();
+        $actionDef = $this->actionChain->getCurrentAction();
+        //$ErrorList = $this->actionChain->getCurrentErrorList();
 
         // TODO: When has error, execute
         $controller = $actionDef['controller'];
         $action = $actionDef['action'];
         $result = $controller->$action();
-        $this->ActionChain->setCurrentResult($result);
+        $this->actionChain->setCurrentResult($result);
     }
 }
 

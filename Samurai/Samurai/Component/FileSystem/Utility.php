@@ -46,7 +46,7 @@ class Utility
     /**
      * @dependencies
      */
-    public $Finder;
+    public $finder;
 
 
     /**
@@ -81,7 +81,7 @@ class Utility
      */
     public function rmdirR($dir)
     {
-        $finder = $this->Finder->create();
+        $finder = $this->finder->create();
         $files = $finder->notRecursive()->find($dir);
         foreach ($files as $file) {
             if (! $file->isExists()) continue;
