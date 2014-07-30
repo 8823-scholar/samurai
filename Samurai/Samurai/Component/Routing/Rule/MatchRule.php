@@ -80,8 +80,39 @@ class MatchRule extends Rule
      */
     public function match($path)
     {
-        $regex = preg_quote($this->getPath(), '@');
-        if (preg_match("@^{$regex}@", $path)) {
+        // parse
+        $regexp = [];
+        $params = [];
+        $elements = explode('/', $this->getPath());
+        foreach ($elements as $i => $element) {
+            if (trim($element) === '') continue;
+
+            if(preg_match('/^:([a-z_]+)$/i', $element, $matches)){
+                $regexp[] = '(?:/([^/]+))';
+                $params[] = $matches[1];
+            } elseif(preg_match('/^\*$/', $element, $matches)){
+                $regexp[] = '(?:/.*)';
+            } else {
+                $regexp[] = '/' . preg_quote($element, '|');
+            }
+        }
+
+        // suffix
+        if ($format = $this->getParam('format')) {
+            if(preg_match('/^:([a-z\.]+)$/i', $format, $matches)){
+                $regexp[] = '(?:\.([a-z\.]+))';
+                $params[] = $matches[1];
+            }
+        }
+
+        $regexp = sprintf('|^%s|', join('', $regexp));
+        if (preg_match($regexp, $path, $matches)) {
+
+            array_shift($matches);
+            foreach ($matches as $i => $value) {
+                $this->setParam($params[$i], urldecode($value));
+            }
+
             return true;
         }
         return false;

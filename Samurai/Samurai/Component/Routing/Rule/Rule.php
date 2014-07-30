@@ -161,7 +161,7 @@ abstract class Rule
         $filename = array_pop($parts);
 
         // with format.
-        if ( preg_match('/^(.+?)\.(.+)$/', $filename, $matches) ) {
+        if (preg_match('/^(.+?)\.(.+)$/', $filename, $matches)) {
             $filename = $matches[1];
             $format = $matches[2];
             $parts[] = $filename;
@@ -194,6 +194,17 @@ abstract class Rule
     public function setParam($key, $value)
     {
         $this->params[$key] = $value;
+    }
+
+    /**
+     * get param
+     *
+     * @param   string  $key
+     * @return  mixed
+     */
+    public function getParam($key)
+    {
+        return isset($this->params[$key]) ? $this->params[$key] : null;
     }
 
     /**

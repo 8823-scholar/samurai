@@ -45,7 +45,7 @@ use Samurai\Samurai\Component\Core\Framework;
 
 if (php_sapi_name() === 'cli-server') {
     $file = $_SERVER['DOCUMENT_ROOT'] . $_SERVER['SCRIPT_NAME'];
-    if (preg_match('/\.(gif|png|jpg|jpeg|ico|mp4|webm)$/i', $file) && file_exists($file)) return false;
+    if (preg_match('/\.(gif|png|jpg|jpeg|ico|mp4|webm|css|js)$/i', $file) && file_exists($file)) return false;
 }
 
 // bootstrap.

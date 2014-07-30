@@ -271,6 +271,7 @@ class Application
         if (! $env) $env = self::ENV_DEVELOPMENT;
 
         $this->env = $env;
+        $this->config('env', $this->env);
         return $this->getEnv();
     }
 
