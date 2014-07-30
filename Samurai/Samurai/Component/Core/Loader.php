@@ -142,7 +142,7 @@ class Loader
             }
 
             if (! $files->size() && $not_exists) {
-                $files->add(new FileSystem\File($path));
+                $files->add(new FileSystem\File($glob));
             }
 
             return $files;
@@ -150,7 +150,7 @@ class Loader
 
         $first = null;
         foreach ($this->app->config('directory.apps') as $app) {
-            if (! $first) $first = $app['dir'] . $glob;
+            if (! $first) $first = $app['dir'] . DS . $glob;
 
             $matches = glob($app['dir'] . DS . $glob);
             foreach ($matches as $path) {
