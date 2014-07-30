@@ -125,11 +125,11 @@ class Loader
     /**
      * file finder over application dirs.
      *
-     * @access  public
      * @param   string  $glob
+     * @param   boolean $not_exists
      * @return  Samurai\Samurai\Component\FileSystem\Iterator\SimpleListIterator
      */
-    public function find($glob)
+    public function find($glob, $not_exists = false)
     {
         $files = new FileSystem\Iterator\SimpleListIterator();
 
@@ -140,14 +140,27 @@ class Loader
                 $file = new FileSystem\File($path);
                 $files->add($file);
             }
+
+            if (! $files->size() && $not_exists) {
+                $files->add(new FileSystem\File($path));
+            }
+
+            return $files;
         }
 
+        $first = null;
         foreach ($this->app->config('directory.apps') as $app) {
+            if (! $first) $first = $app['dir'] . $glob;
+
             $matches = glob($app['dir'] . DS . $glob);
             foreach ($matches as $path) {
                 $file = new FileSystem\File($path);
                 $files->add($file);
             }
+        }
+        
+        if (! $files->size() && $not_exists) {
+            $files->add(new FileSystem\File($first));
         }
 
         return $files;
@@ -157,12 +170,13 @@ class Loader
     /**
      * find and get first element.
      *
-     * @access  public
+     * @param   string  $blob
+     * @param   boolean $not_exists
      * @return  Samurai\Samurai\Component\FileSystem\File
      */
-    public function findFirst($glob)
+    public function findFirst($glob, $not_exists = false)
     {
-        $files = $this->find($glob);
+        $files = $this->find($glob, $not_exists);
         return $files->first();
     }
 

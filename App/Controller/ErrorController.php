@@ -46,6 +46,7 @@ class ErrorController extends AppController
      */
     public function notFound()
     {
+        $this->response->setStatus(404);
         return self::VIEW_TEMPLATE;
     }
 }
