@@ -67,6 +67,18 @@ class ErrorList
     }
 
     /**
+     * get type.
+     *
+     * if multipule return last type.
+     *
+     * @return  string
+     */
+    public function getType()
+    {
+        return $this->types ? $this->types[count($this->types) - 1] : null;
+    }
+
+    /**
      * has type ?
      *
      * @param   string  $type

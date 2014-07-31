@@ -51,12 +51,12 @@ class ActionFilter extends Filter
         parent::prefilter();
 
         $actionDef = $this->actionChain->getCurrentAction();
-        //$ErrorList = $this->actionChain->getCurrentErrorList();
+        $errorList = $this->actionChain->getCurrentErrorList();
 
         // TODO: When has error, execute
         $controller = $actionDef['controller'];
         $action = $actionDef['action'];
-        $result = $this->_callAction($controller, $action);
+        $result = $this->_callAction($controller, $action, $errorList->getType());
         $this->actionChain->setCurrentResult($result);
     }
 
@@ -66,12 +66,20 @@ class ActionFilter extends Filter
      *
      * @param   Samurai\Samurai\Controller\SamuraiController    $controller
      * @param   string  $action
+     * @param   string  $error
      * @return  mixed
      */
-    private function _callAction(SamuraiController $controller, $action)
+    private function _callAction(SamuraiController $controller, $action, $error)
     {
         $method = $action . 'Action';
-        return $controller->$method();
+        if ($error) {
+            $method = $action . ucfirst($error) . 'Action';
+        }
+        if (method_exists($controller, $method)) {
+            return $controller->$method();
+        } else {
+            return $error;
+        }
     }
 }
 

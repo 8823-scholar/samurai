@@ -25,6 +25,13 @@ class ErrorListSpec extends PHPSpecContext
         $this->hasType('invalidDevice')->shouldBe(false);
     }
 
+    public function it_gets_type()
+    {
+        $this->setType('auth');
+        $this->setType('invalidInput');
+        $this->getType()->shouldBe('invalidInput');
+    }
+
     public function it_adds_error()
     {
         $this->add('foo', 'yes, i am.');
