@@ -130,7 +130,7 @@ class Container
         if ($component instanceof ComponentDefine) {
             $component->setContainer($this);
         }
-        elseif ($component instanceof Object) {
+        elseif (method_exists($component, 'raikiri')) {
             $component->setContainer($this);
         }
 
