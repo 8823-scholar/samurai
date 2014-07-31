@@ -72,7 +72,8 @@ class WhereCondition extends BaseCondition
         $value = array_shift($args);
 
         $params = [];
-        while ($param = array_shift($args)) {
+        while ($args) {
+            $param = array_shift($args);
             if (is_array($param)) {
                 $params = array_merge($params, $param);
             } else {
@@ -114,7 +115,8 @@ class WhereCondition extends BaseCondition
         $value = array_shift($args);
         
         $params = [];
-        while ($param = array_shift($args)) {
+        while ($args) {
+            $param = array_shift($args);
             if (is_array($param)) {
                 $params = array_merge($params, $param);
             } else {
