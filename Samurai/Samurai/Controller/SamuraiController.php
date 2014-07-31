@@ -118,10 +118,10 @@ class SamuraiController
         $filters = [];
 
         $names = explode('_', $this->name);
-        $base = 'Controller';
-        $filters = array();
+        $base = '';
+        $filters = [];
         while ($name = array_shift($names)) {
-            $filter = $this->loader->find($base . DS . 'filter.yml')->first();
+            $filter = $this->_searchInControllerDir($base, 'filter.yml');
             if ($filter) $filters[] = $filter;
 
             // when has rest.
@@ -130,7 +130,7 @@ class SamuraiController
 
             // when last.
             } else {
-                $filter = $this->loader->find($base . DS . $name . '.filter.yml')->first();
+                $filter = $this->_searchInControllerDir($base, "{$name}.filter.yml");
                 if ($filter) $filters[] = $filter;
             }
         }
@@ -209,6 +209,23 @@ class SamuraiController
     public function beforeRenderer()
     {
         $this->renderer->set('now', time());
+    }
+
+
+    /**
+     * search in controller dirs
+     *
+     * @param   string  $base_dir
+     * @param   string  $file_name
+     * @return  Samurai\Samurai\Component\FileSystem\Finder\Iterator\Iterator
+     */
+    private function _searchInControllerDir($base_dir, $file_name)
+    {
+        $dirs = $this->application->getControllerDirectories();
+        foreach ($dirs as $dir) {
+            $filter = $this->finder->path($dir . $base_dir)->name($file_name)->find()->first();
+            if ($filter) return $filter;
+        }
     }
 }
 

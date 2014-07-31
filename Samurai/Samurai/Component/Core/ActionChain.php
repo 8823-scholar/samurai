@@ -121,16 +121,16 @@ class ActionChain
     {
         $names = explode('_', $name);
         array_unshift($names, 'Controller');
-        $base = join(DS, array_map('ucfirst', $names)) . 'Controller.php';
 
-        $file = $this->loader->findFirst($base);
-        if ($file) {
-            $class = $file->getClassName();
-            $controller = new $class();
-            $controller->setContainer($this->Container);
-            $this->Container->injectDependency($controller);
-            $controller->setName($name);
-            return $controller;
+        foreach ($this->application->config('controller.namespaces') as $ns) {
+            $class = $ns . '\\' . join('\\', array_map('ucfirst', $names)) . 'Controller';
+            if (class_exists($class)) {
+                $controller = new $class();
+                $controller->setContainer($this->getContainer());
+                $this->getContainer()->injectDependency($controller);
+                $controller->setName($name);
+                return $controller;
+            }
         }
 
         // not found.

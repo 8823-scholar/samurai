@@ -62,7 +62,6 @@ class Finder
     /**
      * find target paths.
      *
-     * @access  public
      * @var     string  $path
      */
     public $paths = [];
@@ -70,15 +69,13 @@ class Finder
     /**
      * find recursive ?
      *
-     * @access  public
      * @var     boolean
      */
-    public $recursive = true;
+    public $recursive = false;
 
     /**
      * only files ?
      *
-     * @access  public
      * @var     boolean
      */
     public $file_only = false;
@@ -86,7 +83,6 @@ class Finder
     /**
      * only directories ?
      *
-     * @access  public
      * @var     boolean
      */
     public $directory_only = false;
@@ -94,7 +90,6 @@ class Finder
     /**
      * name patterns
      *
-     * @access  public
      * @var     array
      */
     public $names = [];
@@ -103,7 +98,6 @@ class Finder
     /**
      * create new instance.
      *
-     * @access  public
      * @return  Samurai\Samurai\Component\FileSystem\Finder\Finder
      */
     public function create()
@@ -116,7 +110,6 @@ class Finder
     /**
      * find trigger.
      *
-     * @access  public
      * @param   string|array    $paths
      */
     public function find($paths = null)
@@ -131,6 +124,9 @@ class Finder
             $this->searchInPath($iterator, $path);
         }
 
+        // clear
+        $this->clear();
+
         return $iterator;
     }
 
@@ -138,7 +134,6 @@ class Finder
     /**
      * search files in target path.
      *
-     * @access  private
      * @param   Samurai\Samurai\Component\FileSystem\Iterator\IteratorAggregate $iterator
      * @param   string  $path
      * @param   Samurai\Samurai\Component\FileSystem\Directory  $parent
@@ -174,7 +169,6 @@ class Finder
     /**
      * validate file.
      *
-     * @access  private
      * @param   Samurai\Samurai\Component\FileSystem\File   $file
      * @return  boolean
      */
@@ -192,7 +186,6 @@ class Finder
     /**
      * build filters for validate.
      *
-     * @access  private
      * @return  array
      */
     private function buildFilters()
@@ -216,7 +209,6 @@ class Finder
     /**
      * set find target path.
      *
-     * @access  public
      * @param   string  $path
      * @return  Samurai\Samurai\Component\FileSystem\Finder\Finder
      */
@@ -230,7 +222,6 @@ class Finder
     /**
      * set recursive flag is true.
      *
-     * @access  public
      * @return  Samurai\Samurai\Component\FileSystem\Finder\Finder
      */
     public function recursive()
@@ -242,7 +233,6 @@ class Finder
     /**
      * set recursive flag is false.
      *
-     * @access  public
      * @return  Samurai\Samurai\Component\FileSystem\Finder\Finder
      */
     public function notRecursive()
@@ -255,7 +245,6 @@ class Finder
     /**
      * set file only flag is true
      *
-     * @access  public
      * @return  Samurai\Samurai\Component\FileSystem\Finder\Finder
      */
     public function fileOnly($flag = true)
@@ -268,7 +257,6 @@ class Finder
     /**
      * set directory only is true.
      *
-     * @access  public
      * @param   boolean $flag
      * @return  Samurai\Samurai\Component\FileSystem\Finder\Finder
      */
@@ -283,8 +271,6 @@ class Finder
     /**
      * add rule of name.
      *
-     * @access  public
-     * @param   string  $pattern
      * @return  Samurai\Samurai\Component\FileSystem\Finder\Finder
      */
     public function name($pattern)
@@ -294,13 +280,22 @@ class Finder
     }
 
 
-
+    /**
+     * clear conditions
+     */
+    public function clear()
+    {
+        $this->paths = [];
+        $this->names = [];
+        $this->recursive = false;
+        $this->file_only = false;
+        $this->directory_only = false;
+    }
 
 
     /**
      * get iterator.
      *
-     * @access  private
      * @return  Samurai\Samurai\Component\FileSystem\Finder\Iterator\Iterator
      */
     private function getIterator()

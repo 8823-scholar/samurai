@@ -27,6 +27,14 @@ class ApplicationSpec extends PHPSpecContext
         $this->config('directory.somes')->shouldReturn(['/path/some1', '/path/some2']);
     }
 
+    public function it_removes_config()
+    {
+        $this->config('some', 1);
+        $this->config('some')->shouldBe(1);
+        $this->removeConfig('some');
+        $this->config('some')->shouldBe(null);
+    }
+
     public function it_gets_config_as_array()
     {
         $this->config('directory.foo', '/path/to/foo');

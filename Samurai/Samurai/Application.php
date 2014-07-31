@@ -190,6 +190,9 @@ class Application
         $this->config('directory.skeleton', 'Skeleton');
         $this->config('directory.log', 'Log');
         $this->config('directory.temp', 'Temp');
+
+        // controllers
+        $this->config('controller.namespaces', ['Samurai\Samurai']);
         
         // main dicon
         $this->config('container.dicon.', 'Config/Samurai/samurai.dicon');
@@ -390,11 +393,22 @@ class Application
         return $config;
     }
 
+    /**
+     * remove config.
+     *
+     * @param   string  $key
+     */
+    public function removeConfig($key)
+    {
+        if (array_key_exists($key, $this->config)) {
+            unset($this->config[$key]);
+        }
+    }
+
 
     /**
      * add application path.
      *
-     * @access  public
      * @param   string  $path
      * @param   string  $namespace
      * @param   string  $priority
@@ -419,6 +433,21 @@ class Application
 
         // register namespacer
         Namespacer::register($namespace, $path);
+    }
+
+    /**
+     * get controller dirs
+     *
+     * @return  array
+     */
+    public function getControllerDirectories()
+    {
+        $dirs = [];
+        $controller_ns = $this->config('controller.namespaces');
+        foreach ($this->config('directory.apps') as $dir) {
+            if (in_array($dir['namespace'], $controller_ns)) $dirs[] = $dir['dir'] . DS . 'Controller';
+        }
+        return $dirs;
     }
 
 
