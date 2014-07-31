@@ -34,9 +34,9 @@ class CriteriaSpec extends PHPSpecContext
 
     public function it_is_where_multiple_conditions()
     {
-        $this->where('id = ?', 1)->andAdd('name = :name1 OR name = :name2', [':name1' => 'kaneda', ':name2' => 'tetsuo']);
-        $this->toSQL()->shouldBe('SELECT * FROM foo WHERE (id = ?) AND (name = :name1 OR name = :name2)');
-        $this->getParams()->shouldBe([1, ':name1' => 'kaneda', ':name2' => 'tetsuo']);
+        $this->where('id = ? or id = ?', 1, 2)->andAdd('name = :name1 OR name = :name2', [':name1' => 'kaneda', ':name2' => 'tetsuo']);
+        $this->toSQL()->shouldBe('SELECT * FROM foo WHERE (id = ? or id = ?) AND (name = :name1 OR name = :name2)');
+        $this->getParams()->shouldBe([1, 2, ':name1' => 'kaneda', ':name2' => 'tetsuo']);
     }
 
     public function it_is_where_or_condition()

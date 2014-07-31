@@ -61,7 +61,8 @@ class WhereCondition extends BaseCondition
      *
      * 1. $cond->where->add('foo = ?', $foo);
      * 2. $cond->where->add('foo = ? AND bar = ?', [$foo, $bar]);
-     * 3. $cond->where->add('foo = :foo AND bar = :bar', [':foo' => $foo, ':bar' => $bar]);
+     * 3. $cond->where->add('foo = ? AND bar = ?', $foo, $bar);
+     * 4. $cond->where->add('foo = :foo AND bar = :bar', [':foo' => $foo, ':bar' => $bar]);
      *
      * @return  Samurai\Onikiri\Criteria\WhereCondition
      */
@@ -69,9 +70,15 @@ class WhereCondition extends BaseCondition
     {
         $args = func_get_args();
         $value = array_shift($args);
-        $params = array_shift($args);
-        if ($params === null) $params = [];
-        if ($params && ! is_array($params)) $params = [$params];
+
+        $params = [];
+        while ($param = array_shift($args)) {
+            if (is_array($param)) {
+                $params = array_merge($params, $param);
+            } else {
+                $params[] = $param;
+            }
+        }
 
         $value = new WhereConditionValue($this, $value, $params);
         $this->add($value);
@@ -105,9 +112,15 @@ class WhereCondition extends BaseCondition
     {
         $args = func_get_args();
         $value = array_shift($args);
-        $params = array_shift($args);
-        if ($params === null) $params = [];
-        if ($params && ! is_array($params)) $params = [$params];
+        
+        $params = [];
+        while ($param = array_shift($args)) {
+            if (is_array($param)) {
+                $params = array_merge($params, $param);
+            } else {
+                $params[] = $param;
+            }
+        }
 
         $value = new WhereConditionValue($this, $value, $params);
         $value->chain_by = WhereCondition::CHAIN_BY_OR;
