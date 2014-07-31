@@ -51,7 +51,7 @@ class Spec extends Initializer
     {
         $app->config('spec.mysql.database.defined', false);
         $app->config('spec.initializers.mysql', function($app) {
-            $request = $app->getRaikiri()->get('request');
+            $request = $app->raikiri()->get('request');
 
             $user = $request->getEnv('ONIKIRI_SPEC_MYSQL_USER');
             $pass = $request->getEnv('ONIKIRI_SPEC_MYSQL_PASS', '');
@@ -70,7 +70,7 @@ class Spec extends Initializer
         
         $app->config('spec.pgsql.database.defined', false);
         $app->config('spec.initializers.pgsql', function($app) {
-            $request = $app->getRaikiri()->get('request');
+            $request = $app->raikiri()->get('request');
 
             $user = $request->getEnv('ONIKIRI_SPEC_PGSQL_USER');
             $pass = $request->getEnv('ONIKIRI_SPEC_PGSQL_PASS', '');

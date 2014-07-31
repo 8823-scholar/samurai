@@ -72,7 +72,7 @@ trait DependencyInjectable
      *
      * @return  Samurai\Raikiri\Container
      */
-    public function getRaikiri()
+    public function raikiri()
     {
         return $this->getContainer();
     }
