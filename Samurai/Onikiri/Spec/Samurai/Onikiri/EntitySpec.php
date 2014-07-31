@@ -35,6 +35,14 @@ class EntitySpec extends PHPSpecContext
         $this->getSomeKey()->shouldBe('foobarzoo');
     }
 
+    public function it_gets_each_attributes_by_name_method()
+    {
+        $this->id()->shouldBe(11);
+        $this->name()->shouldBe('KIUCHI Satoshinosuke');
+        $this->gender()->shouldBe('male');
+        $this->some_key()->shouldBe('foobarzoo');
+    }
+
     public function it_sets_each_attributes_by_property()
     {
         $this->name = 'Nanashi no Gonbe';

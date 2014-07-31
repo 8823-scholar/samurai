@@ -229,6 +229,11 @@ class Entity
             array_shift($names);
             $key = strtolower(join('_', $names));
             return $this->$key = array_shift($args);
+
+        // when attribute key
+        } elseif (array_key_exists($method, $this->attributes)) {
+            $method = 'get' . join('', array_map('ucfirst', explode('_', $method)));
+            return $this->$method();
         }
 
         $class = get_class($this);
