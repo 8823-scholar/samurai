@@ -131,7 +131,6 @@ class ViewFilter extends Filter
     /**
      * Get action result.
      *
-     * @access  private
      * @return  string
      * @throw   Samurai\Samurai\Exception\Exception
      */
@@ -139,11 +138,11 @@ class ViewFilter extends Filter
     {
         $def = $this->actionChain->getCurrentAction();
         $result = $def['result'];
-        if ( ! $result ) {
+        if (! $result) {
             return null;
-        } elseif ( is_string($result) ) {
-            return $result;
-        } elseif ( is_array($result) ) {
+        } elseif (is_string($result)) {
+            return trim(explode(':', $result)[0]);
+        } elseif (is_array($result)) {
             return array_shift($result);
         } else {
             throw new Exception('invalid action result.');
@@ -160,9 +159,10 @@ class ViewFilter extends Filter
     {
         $def = $this->actionChain->getCurrentAction();
         $result = $def['result'];
-        if ( is_string($result) ) {
-            return null;
-        } elseif ( is_array($result) ) {
+        if (is_string($result)) {
+            $splited = explode(':', $result);
+            return isset($splited[1]) ? $splited[1] : null;
+        } elseif (is_array($result)) {
             return array_pop($result);
         } else {
             return null;
