@@ -80,7 +80,7 @@ class AddTask extends Task
 
             $skeleton->assign('namespace', $namespace ? $namespace . '\\' : '');
             $skeleton->assign('class', $class_name);
-            $skeleton->assign('spec_namespace', $spec_dir->getClassName() . ($namespace ? '\\' . $namespace : ''));
+            $skeleton->assign('spec_namespace', $spec_dir->getNameSpace() . ($namespace ? '\\' . $namespace : ''));
             $skeleton->assign('spec_class', $class_name . 'Spec');
 
             $spec_file = $spec_dir->getRealPath() . DS . ($dir ? $dir . DS : '') . $class_name . 'Spec.php';

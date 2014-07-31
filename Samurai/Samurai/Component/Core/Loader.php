@@ -137,7 +137,7 @@ class Loader
         if ($glob[0] === '/') {
             $matches = glob($glob);
             foreach ($matches as $path) {
-                $file = new FileSystem\File($path);
+                $file = $this->pathToEntity($path);
                 $files->add($file);
             }
 
@@ -154,7 +154,7 @@ class Loader
 
             $matches = glob($app['dir'] . DS . $glob);
             foreach ($matches as $path) {
-                $file = new FileSystem\File($path);
+                $file = $this->pathToEntity($path);
                 $files->add($file);
             }
         }
@@ -178,6 +178,18 @@ class Loader
     {
         $files = $this->find($glob, $not_exists);
         return $files->first();
+    }
+
+
+    /**
+     * path convert to file entity.
+     *
+     * @param   string  $path
+     * @return  Samurai\Samurai\Component\FileSystem\File
+     */
+    public function pathToEntity($path)
+    {
+        return is_dir($path) ? new FileSystem\Directory($path) : new FileSystem\File($path);
     }
 
 }

@@ -51,5 +51,24 @@ class Directory extends File
     {
         parent::__construct($file_name);
     }
+    
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getClassName()
+    {
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getNameSpace()
+    {
+        $namespace = parent::getNameSpace();
+        $class_name = $this->getBasename(".{$this->getExtension()}");
+        return "${namespace}\\{$class_name}";
+    }
 }
 

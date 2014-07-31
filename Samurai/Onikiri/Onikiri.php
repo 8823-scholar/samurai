@@ -135,10 +135,8 @@ class Onikiri
 
         $class_name = $this->config->getNamingStrategy()->aliasToTableClassName($alias);
         foreach ($this->config->getModelDirs() as $dir) {
-            $file_name = sprintf('%s/%s.php', $dir['dir'], $class_name);
             $class_full_name  = sprintf('%s\\%s', $dir['namespace'], $class_name);
-            if (file_exists($file_name)) {
-                require_once $file_name;
+            if (class_exists($class_full_name)) {
                 $table = new $class_full_name($this);
                 $this->_table_factory[$alias] = $table;
                 return $table;
