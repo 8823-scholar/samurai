@@ -115,7 +115,7 @@ class SamuraiController
      */
     public function getFilters()
     {
-        $filters = array();
+        $filters = [];
 
         $names = explode('_', $this->name);
         $base = 'Controller';
@@ -161,22 +161,45 @@ class SamuraiController
 
 
     /**
-     * Get base dir.
+     * get onikiri entity table.
      *
-     * @return  string
+     * @param   string  $name
+     * @return  Samurai\Onikiri\EntityTable
      */
-    public function getBaseDir()
+    public function getTable($name)
     {
-        $class = get_class($this);
-        $path = str_replace('\\', DS, $class) . '.php';
+        return $this->onikiri()->getTable($name);
+    }
 
-        // APP
-        $app_dir = dirname(Config\APP_DIR);
-        if ($app_dir . DS . $path) {
-            return $app_dir;
-        }
+    /**
+     * get model instance.
+     *
+     * @param   string  $name
+     * @return  object
+     */
+    public function getModel($name)
+    {
+    }
 
-        return Config\ROOT_DIR;
+
+    /**
+     * get raikiri container.
+     *
+     * @return  Samurai\Raikiri\Container
+     */
+    public function raikiri()
+    {
+        return $this->getContainer();
+    }
+
+    /**
+     * get onikiri
+     *
+     * @return  Samurai\Onikiri\Onikiri
+     */
+    public function onikiri()
+    {
+        return $this->raikiri()->get('onikiri');
     }
 
 
