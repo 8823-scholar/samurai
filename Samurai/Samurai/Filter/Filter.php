@@ -44,6 +44,13 @@ use Samurai\Raikiri\DependencyInjectable;
 class Filter
 {
     /**
+     * attributes
+     *
+     * @var     array
+     */
+    public $attributes = [];
+
+    /**
      * @traits
      */
     use DependencyInjectable;
@@ -139,6 +146,7 @@ class Filter
      */
     public function getAttribute($key, $default = null)
     {
+        return array_key_exists($key, $this->attributes) ? $this->attributes[$key] : $default;
     }
 
 
