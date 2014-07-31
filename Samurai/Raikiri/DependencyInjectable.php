@@ -77,6 +77,16 @@ trait DependencyInjectable
         return $this->getContainer();
     }
 
+    /**
+     * onikiri bredge.
+     *
+     * @return  Samurai\Onikiri\Onikiri
+     */
+    public function onikiri()
+    {
+        return $this->raikiri()->get('onikiri');
+    }
+
 
     /**
      * auto injection resolve.
