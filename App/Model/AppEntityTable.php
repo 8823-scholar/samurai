@@ -30,8 +30,10 @@
 
 namespace App\Model;
 
+use Samurai\Onikiri\EntityTable;
+
 /**
- * User Model.
+ * App base model.
  *
  * @package     Samurai
  * @subpackage  Model
@@ -39,7 +41,7 @@ namespace App\Model;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class UserModel extends AppModel
+class AppEntityTable extends EntityTable
 {
 }
 

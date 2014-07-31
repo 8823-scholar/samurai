@@ -30,7 +30,7 @@
 
 namespace App\Model;
 
-use Samurai\Onikiri;
+use Samurai\Onikiri\Entity;
 
 /**
  * App base entity.
@@ -41,7 +41,7 @@ use Samurai\Onikiri;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class AppEntity extends Onikiri\Entity
+class AppEntity extends Entity
 {
 }
 
