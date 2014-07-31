@@ -56,5 +56,19 @@ abstract class Request extends Parameters
      * @access  public
      */
     abstract public function init();
+
+
+    /**
+     * Get environment variable.
+     *
+     * @access  public
+     * @param   string  $key
+     * @param   string  $default
+     */
+    public function getEnv($key, $default = null)
+    {
+        $value = getenv($key);
+        return $value === false ? $default : $value;
+    }
 }
 
