@@ -32,6 +32,7 @@ namespace Samurai\Samurai\Component\Core;
 
 use App\Application;
 use Samurai\Samurai\Samurai;
+use Samurai\Samurai\Component\Core\ErrorList;
 use Samurai\Samurai\Exception\NotFoundException;
 use Samurai\Raikiri\DependencyInjectable;
 
@@ -49,18 +50,30 @@ class ActionChain
     /**
      * stacked actions
      *
-     * @access  public
      * @var     array
      */
-    public $actions = array();
+    public $actions = [];
+
+    /**
+     * stacked errors
+     *
+     * @var     array
+     */
+    public $errors = [];
 
     /**
      * position of action
      *
-     * @access  public
      * @var     int
      */
     public $position = 0;
+
+    /**
+     * action names
+     *
+     * @var     array
+     */
+    public $action_names = [];
 
     /**
      * @traits
@@ -71,13 +84,12 @@ class ActionChain
     /**
      * Add action
      *
-     * @access  public
      * @param   string  $controller
      * @param   string  $action
      */
     public function addAction($controller, $action = null)
     {
-        if ( $action === null ) {
+        if ($action === null) {
             list($controller, $action) = explode('.', $controller);
         }
         $this->actions[] = array(
@@ -86,13 +98,28 @@ class ActionChain
             'action' => $action,
             'result' => null,
         );
+        $this->action_names[] = "{$controller}.{$action}";
+    }
+
+    /**
+     * has action ?
+     *
+     * @param   string  $controller
+     * @param   string  $action
+     * @return  boolean
+     */
+    public function hasAction($controller, $action = null)
+    {
+        if ($action === null) {
+            list($controller, $action) = explode('.', $controller);
+        }
+        return in_array("{$controller}.{$action}", $this->action_names);
     }
 
 
     /**
      * Get current action instance.
      *
-     * @access  public
      * @return  array   controller:Controller, action:string
      */
     public function getCurrentAction()
@@ -108,6 +135,16 @@ class ActionChain
         $this->actions[$this->position] = $define;
 
         return $define;
+    }
+
+    /**
+     * get current action name
+     *
+     * @return  string
+     */
+    public function getCurrentActionName()
+    {
+        return isset($this->action_names[$this->position]) ? $this->action_names[$this->position] : null;
     }
 
 
@@ -171,6 +208,49 @@ class ActionChain
     public function setCurrentResult($result)
     {
         $this->actions[$this->position]['result'] = $result;
+    }
+
+
+    /**
+     * get error list by name
+     *
+     * @param   string  $controller
+     * @param   string  $action
+     * @return  Samurai\Samurai\Component\Core\ErrorList
+     */
+    public function getErrorListByName($controller, $action = null)
+    {
+        $position = $this->getPositionByName($controller, $action);
+        if (is_integer($position)) {
+            if (! isset($this->errors[$position])) $this->errors[$position] = new ErrorList();
+            return $this->errors[$position];
+        }
+    }
+
+    /**
+     * get current error list
+     *
+     * @return  Samurai\Samurai\Component\Core\ErrorList
+     */
+    public function getCurrentErrorList()
+    {
+        $name = $this->getCurrentActionName();
+        return $this->getErrorListByName($name);
+    }
+    
+    /**
+     * get position by name
+     *
+     * @param   string  $controller
+     * @param   string  $action
+     * @return  int
+     */
+    public function getPositionByName($controller, $action = null)
+    {
+        if ($action === null) {
+            list($controller, $action) = explode('.', $controller);
+        }
+        return array_search("{$controller}.{$action}", $this->action_names);
     }
 
 

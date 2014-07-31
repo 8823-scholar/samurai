@@ -67,5 +67,22 @@ class ActionChainSpec extends PHPSpecContext
             $this->next();
         }
     }
+
+
+    public function it_gets_error_list_by_action_name()
+    {
+        $this->addAction('utility.execute');
+        $this->getErrorListByName('utility.execute')->shouldHaveType('Samurai\Samurai\Component\Core\ErrorList');
+    }
+    
+    public function it_gets_error_list_by_current_action()
+    {
+        $this->addAction('utility.execute');
+        $this->addAction('spec.execute');
+
+        $error1 = $this->getCurrentErrorList();
+        $error2 = $this->getErrorListByName('utility.execute');
+        $error1->shouldBe($error2);
+    }
 }
 
