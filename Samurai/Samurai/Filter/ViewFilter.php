@@ -74,13 +74,27 @@ class ViewFilter extends Filter
         $data = $this->_getResultData();
         if (! $result) return;
 
-        // what do ?
+        $this->_doByResult($result, $data);
+    }
+
+
+    private function _doByResult($result, $data)
+    {
         switch ($result) {
             case self::VIEW_TEMPLATE:
                 $this->_renderTemplate($data);
                 break;
             case self::FORWARD_ACTION:
                 $this->_forwardAction($data);
+                break;
+            default:
+                if (is_string($data)) {
+                    $datas = explode(':', $data);
+                    $datas = array_map('trim', $datas);
+                } else {
+                    $datas = $data;
+                }
+                $this->_doByResult($datas[0], isset($datas[1]) ? $datas[1] : null);
                 break;
         }
     }
@@ -141,7 +155,7 @@ class ViewFilter extends Filter
         if (! $result) {
             return null;
         } elseif (is_string($result)) {
-            return trim(explode(':', $result)[0]);
+            return $result;
         } elseif (is_array($result)) {
             return array_shift($result);
         } else {
@@ -160,8 +174,7 @@ class ViewFilter extends Filter
         $def = $this->actionChain->getCurrentAction();
         $result = $def['result'];
         if (is_string($result)) {
-            $splited = explode(':', $result);
-            return isset($splited[1]) ? $splited[1] : null;
+            return $this->getAttribute($result);
         } elseif (is_array($result)) {
             return array_pop($result);
         } else {

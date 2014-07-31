@@ -177,13 +177,11 @@ class FilterChain
         $defines = YAML::load($file);
 
         // when global, load "*"
-        $filters = isset($defines['*']) && $defines['*'] ? $defines['*'] : array();
+        $filters = isset($defines['*']) && $defines['*'] ? $defines['*'] : [];
 
         // when local, load "*" and "controller.action"
-        if (! $is_global) {
-            $key = $this->controller->getFilterKey($this->action);
-            $filters = array_merge($filters, isset($defines[$key]) && $defines[$key] ? (array)$defines[$key] : array());
-        }
+        $key = $this->controller->getFilterKey($this->action);
+        $filters = array_merge($filters, isset($defines[$key]) && $defines[$key] ? (array)$defines[$key] : []);
 
         foreach ($filters as $name => $attributes) {
             $this->addFilter($name, $attributes);
@@ -261,19 +259,19 @@ class FilterChain
     {
         $alias = $this->filter_names[$this->position];
         $define = $this->filters[$alias];
-        $filter = $this->getFilterByName($define['name']);
+        $filter = $this->getFilterByName($define['name'], $define['attributes']);
         return $filter;
     }
-
 
     /**
      * Get filter by name.
      *
      * @access  public
      * @param   string  $name
+     * @param   array   $attributes
      * @return  Samurai\Samurai\Filter\Filter
      */
-    public function getFilterByName($name)
+    public function getFilterByName($name, $attributes = [])
     {
         // APP ?
         // TODO: serach by loader
@@ -295,6 +293,7 @@ class FilterChain
             throw new Exception\NotFoundException('No such filter. -> ' . $name);
         }
         
+        $filter->setAttributes($attributes);
         $filter->setContainer($this->container);
         $this->container->injectDependency($filter);
         return $filter;
