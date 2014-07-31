@@ -46,7 +46,7 @@ class RootController extends AppController
      *
      * @access  public
      */
-    public function index()
+    public function indexAction()
     {
         return self::VIEW_TEMPLATE;
     }

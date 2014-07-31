@@ -44,10 +44,8 @@ class TaskController extends ConsoleController
 {
     /**
      * execute action.
-     *
-     * @access  public
      */
-    public function execute()
+    public function executeAction()
     {
         $request = $this->request->getAll();
         $task = $this->pickTaskName($request);

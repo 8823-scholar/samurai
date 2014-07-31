@@ -62,7 +62,7 @@ class SpecController extends ConsoleController
      *
      * @access  public
      */
-    public function execute()
+    public function executeAction()
     {
         if ($this->isUsage()) return [self::FORWARD_ACTION, 'spec.usage'];
 
@@ -76,7 +76,7 @@ class SpecController extends ConsoleController
      *
      * @access  public
      */
-    public function usage()
+    public function usageAction()
     {
         $this->assign('script', './app');   // TODO: $this->request->getScript()
         return self::VIEW_TEMPLATE;

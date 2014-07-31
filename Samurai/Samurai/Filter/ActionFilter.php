@@ -30,6 +30,8 @@
 
 namespace Samurai\Samurai\Filter;
 
+use Samurai\Samurai\Controller\SamuraiController;
+
 /**
  * Action filter.
  *
@@ -54,8 +56,22 @@ class ActionFilter extends Filter
         // TODO: When has error, execute
         $controller = $actionDef['controller'];
         $action = $actionDef['action'];
-        $result = $controller->$action();
+        $result = $this->_callAction($controller, $action);
         $this->actionChain->setCurrentResult($result);
+    }
+
+
+    /**
+     * call action
+     *
+     * @param   Samurai\Samurai\Controller\SamuraiController    $controller
+     * @param   string  $action
+     * @return  mixed
+     */
+    private function _callAction(SamuraiController $controller, $action)
+    {
+        $method = $action . 'Action';
+        return $controller->$method();
     }
 }
 

@@ -44,7 +44,7 @@ class ErrorController extends AppController
     /**
      * not found handeler
      */
-    public function notFound()
+    public function notFoundAction()
     {
         $this->response->setStatus(404);
         return self::VIEW_TEMPLATE;

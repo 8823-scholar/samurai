@@ -46,10 +46,8 @@ class UtilityController extends ConsoleController
 {
     /**
      * action locator action.
-     *
-     * @access  public
      */
-    public function locator()
+    public function locatorAction()
     {
         $arg = $this->request->get('args');
 
@@ -85,10 +83,8 @@ class UtilityController extends ConsoleController
 
     /**
      * show version action.
-     *
-     * @access  public
      */
-    public function version()
+    public function versionAction()
     {
         $this->assign('version', Samurai::getVersion());
         $this->assign('state', Samurai::getState());
@@ -98,10 +94,8 @@ class UtilityController extends ConsoleController
 
     /**
      * show usage action.
-     *
-     * @access  public
      */
-    public function usage()
+    public function usageAction()
     {
         $this->assign('version', Samurai::getVersion());
         $this->assign('state', Samurai::getState());
@@ -113,7 +107,7 @@ class UtilityController extends ConsoleController
     /**
      * start server action.
      */
-    public function server()
+    public function serverAction()
     {
         chdir($this->application->config('directory.document_root'));
         $host = $this->request->get('host', 'localhost');
