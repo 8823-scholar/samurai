@@ -155,7 +155,7 @@ class ActionChain
         if ($file) {
             $class = $file->getClassName();
             if (! $action && class_exists($class)) return true;
-            if (method_exists($class, $action)) return true;
+            if (method_exists($class, $action . 'Action')) return true;
         }
 
         return false;
