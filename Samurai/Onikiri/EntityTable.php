@@ -426,7 +426,6 @@ class EntityTable
             }
             $sth->bindValue($key, $value, $type);
         }
-        var_dump($sql, $params);
 
         $result = $sth->execute();
         return $sth;
@@ -458,11 +457,12 @@ class EntityTable
     /**
      * get criteria instance.
      *
+     * @param   Samurai\Onikiri\Criteria\Criteria   $cri
      * @return  Samurai\Onikiri\Criteria\Criteria
      */
-    public function criteria()
+    public function criteria(Criteria\Criteria $cri = null)
     {
-        $cri = new Criteria\Criteria($this);
+        if (! $cri) $cri = new Criteria\Criteria($this);
         $cri->setTable($this);
         return $cri;
     }

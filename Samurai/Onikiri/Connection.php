@@ -50,6 +50,13 @@ class Connection extends PDO
      */
     private $count_numbered = 0;
 
+    /**
+     * in transaction ?
+     *
+     * @var     boolean
+     */
+    private $_begin = false;
+
 
     /**
      * @override
@@ -92,6 +99,45 @@ class Connection extends PDO
         $holder = ':numbered_holder_' . $this->count_numbered;
         $this->count_numbered ++;
         return (isset($matches[1]) ? $matches[1] : '') . $holder . (isset($matches[2]) ? $matches[2] : '');
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function beginTransaction()
+    {
+        $this->_begin = true;
+        parent::beginTransaction();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function commit()
+    {
+        $this->_begin = false;
+        parent::commit();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rollback()
+    {
+        $this->_begin = false;
+        parent::rollback();
+    }
+
+
+    /**
+     * in tx ?
+     *
+     * @return  boolean
+     */
+    public function inTx()
+    {
+        return $this->_begin;
     }
 }
 

@@ -50,28 +50,21 @@ class Transaction
     protected $_valid = true;
 
     /**
-     * begin ?
-     *
-     * @var     boolean
-     */
-    protected $_begin = false;
-
-    /**
      * connection
      *
-     * @var     Samurai\Onikiri\Connection
+     * @var     array(Samurai\Onikiri\Connection)
      */
-    protected $_connection;
+    protected $_connections = [];
 
 
     /**
-     * get connection
+     * get connections
      *
      * @return  Samurai\Onikiri\Connection
      */
-    public function getConnection()
+    public function getConnections()
     {
-        return $this->_connection;
+        return $this->_connections;
     }
 
     /**
@@ -81,7 +74,9 @@ class Transaction
      */
     public function setConnection(Connection $connection)
     {
-        $this->_connection = $connection;
+        if (! in_array($connection, $this->_connections, true)) {
+            $this->_connections[] = $connection;
+        }
     }
 
 
@@ -90,11 +85,9 @@ class Transaction
      */
     public function begin()
     {
-        if ($this->_begin) return;
-
-        $connection = $this->getConnection();
-        $connection->beginTransaction();
-        $this->_begin = true;
+        foreach ($this->getConnections() as $connection) {
+            if (! $connection->inTx()) $connection->beginTransaction();
+        }
     }
 
     /**
@@ -102,10 +95,9 @@ class Transaction
      */
     public function commit()
     {
-        if (! $this->_begin) throw new TransactionFailedException('not began transaction.');
-
-        $connection = $this->getConnection();
-        $connection->commit();
+        foreach ($this->getConnections() as $connection) {
+            $connection->commit();
+        }
 
         $this->_valid = false;
     }
@@ -117,8 +109,9 @@ class Transaction
      */
     public function rollback($message = null)
     {
-        $connection = $this->getConnection();
-        $connection->rollback();
+        foreach ($this->getConnections() as $connection) {
+            $connection->rollback();
+        }
 
         $this->_valid = false;
         throw new TransactionFailedException($message ? $message : 'failed to transaction.');
@@ -133,6 +126,21 @@ class Transaction
     public function isValid()
     {
         return $this->_valid;
+    }
+
+
+    /**
+     * in transaction ?
+     *
+     * @return  boolean
+     */
+    public function inTx()
+    {
+        if (! $connections = $this->getConnections()) return false;
+        foreach ($connections as $connection) {
+            if (! $connection->inTx()) return false;
+        }
+        return true;
     }
 }
 

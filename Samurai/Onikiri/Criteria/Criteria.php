@@ -32,6 +32,7 @@ namespace Samurai\Onikiri\Criteria;
 
 use Samurai\Onikiri\Onikiri;
 use Samurai\Onikiri\EntityTable;
+use Samurai\Onikiri\Transaction;
 
 /**
  * Onikiri criteria class.
@@ -321,6 +322,19 @@ class Criteria
     public function lock($mode = Onikiri::LOCK_FOR_UPDATE)
     {
         $this->lock_mode = $mode;
+        return $this;
+    }
+
+
+    /**
+     * set tx
+     *
+     * @param   Samurai\Onikiri\Transaction
+     */
+    public function setTx(Transaction $tx)
+    {
+        $this->getTable()->setTx($tx);
+        return $this;
     }
 
 
