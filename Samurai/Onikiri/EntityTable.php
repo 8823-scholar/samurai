@@ -426,6 +426,7 @@ class EntityTable
             }
             $sth->bindValue($key, $value, $type);
         }
+        var_dump($sql, $params);
 
         $result = $sth->execute();
         return $sth;

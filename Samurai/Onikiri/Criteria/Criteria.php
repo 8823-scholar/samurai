@@ -30,6 +30,7 @@
 
 namespace Samurai\Onikiri\Criteria;
 
+use Samurai\Onikiri\Onikiri;
 use Samurai\Onikiri\EntityTable;
 
 /**
@@ -110,6 +111,13 @@ class Criteria
      * @var     int
      */
     public $offset;
+
+    /**
+     * lock mode
+     *
+     * @var     int
+     */
+    public $lock_mode;
 
 
     /**
@@ -266,6 +274,55 @@ class Criteria
         call_user_func_array(array($this->having, 'andAdd'), func_get_args());
         return $this;
     }
+    
+    /**
+     * Set limit.
+     *
+     * @param   int     $limit
+     * @return  Samurai\Onikiri\Criteria\Criteria
+     */
+    public function limit($limit)
+    {
+        $this->limit = $limit;
+        return $this;
+    }
+
+    /**
+     * Set offset.
+     *
+     * @param   int     $offset
+     * @return  Samurai\Onikiri\Criteria\Criteria
+     */
+    public function offset($offset)
+    {
+        $this->offset = $offset;
+        return $this;
+    }
+
+    /**
+     * Set page.
+     *
+     * @param   int     $page
+     */
+    public function page($page)
+    {
+        if (! $this->limit) return;
+        $offset = $this->limit * ($page - 1);
+        $this->offset($offset);
+        return $this;
+    }
+
+
+    /**
+     * lock
+     *
+     * @param   int     $mode
+     */
+    public function lock($mode = Onikiri::LOCK_FOR_UPDATE)
+    {
+        $this->lock_mode = $mode;
+    }
+
 
     /**
      * bind params
@@ -306,43 +363,6 @@ class Criteria
         return $this->params;
     }
 
-    
-    /**
-     * Set limit.
-     *
-     * @param   int     $limit
-     * @return  Samurai\Onikiri\Criteria\Criteria
-     */
-    public function limit($limit)
-    {
-        $this->limit = $limit;
-        return $this;
-    }
-
-    /**
-     * Set offset.
-     *
-     * @param   int     $offset
-     * @return  Samurai\Onikiri\Criteria\Criteria
-     */
-    public function offset($offset)
-    {
-        $this->offset = $offset;
-        return $this;
-    }
-
-    /**
-     * Set page.
-     *
-     * @param   int     $page
-     */
-    public function page($page)
-    {
-        if (! $this->limit) return;
-        $offset = $this->limit * ($page - 1);
-        $this->offset($offset);
-        return $this;
-    }
     
     
     /**
@@ -444,6 +464,11 @@ class Criteria
         if ($this->offset !== null) {
             $sql[] = 'OFFSET ?';
             $this->params[] = $this->offset;
+        }
+        if ($this->lock_mode === Onikiri::LOCK_FOR_UPDATE) {
+            $sql[] = 'FOR UPDATE';
+        } elseif($this->lock_mode === Onikiri::LOCK_IN_SHARED) {
+            $sql[] = 'LOCK IN SHARE MODE';
         }
 
         return join(' ', $sql);

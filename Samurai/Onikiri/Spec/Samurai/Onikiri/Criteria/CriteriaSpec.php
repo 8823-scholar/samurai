@@ -3,6 +3,7 @@
 namespace Samurai\Onikiri\Spec\Samurai\Onikiri\Criteria;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
+use Samurai\Onikiri\Onikiri;
 use Samurai\Onikiri\EntityTable;
 
 class CriteriaSpec extends PHPSpecContext
@@ -144,6 +145,17 @@ class CriteriaSpec extends PHPSpecContext
         $this->limit(10)->page(4);
         $this->toSQL()->shouldBe('SELECT * FROM foo WHERE 1 LIMIT ? OFFSET ?');
         $this->getParams()->shouldBe([10, 30]);
+    }
+
+    public function it_is_lock_condition()
+    {
+        $this->lock();
+        $this->toSQL()->shouldBe('SELECT * FROM foo WHERE 1 FOR UPDATE');
+    }
+    public function it_is_lock_shared_condition()
+    {
+        $this->lock(Onikiri::LOCK_IN_SHARED);
+        $this->toSQL()->shouldBe('SELECT * FROM foo WHERE 1 LOCK IN SHARE MODE');
     }
 
 

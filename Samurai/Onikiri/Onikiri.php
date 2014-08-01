@@ -71,6 +71,14 @@ class Onikiri
     private $_tx;
 
     /**
+     * lock modes
+     *
+     * @const   int
+     */
+    const LOCK_FOR_UPDATE = 1;
+    const LOCK_IN_SHARED = 2;
+
+    /**
      * @traits
      */
     use DependencyInjectable;
