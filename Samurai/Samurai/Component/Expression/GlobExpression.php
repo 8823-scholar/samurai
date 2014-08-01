@@ -72,7 +72,7 @@ class GlobExpression extends Expression
         $regex = preg_quote($this->value, '/');
         $regex = substr($regex, -1) !== '*' ? $regex . '$' : $regex;
         $regex = preg_replace('/\\\\\\*/', '.*?', $regex);
-        return "/{$regex}/";
+        return "/^{$regex}/";
     }
 }
 

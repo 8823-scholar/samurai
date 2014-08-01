@@ -44,7 +44,6 @@ abstract class Expression
     /**
      * value
      *
-     * @access  public
      * @var     string
      */
     public $value;
@@ -52,7 +51,6 @@ abstract class Expression
     /**
      * create expression instance(glob or regex).
      *
-     * @access  public
      * @param   string  $value
      * @return  Samurai\Samurai\Component\Expression\Expression
      */
