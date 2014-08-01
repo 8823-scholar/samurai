@@ -30,6 +30,8 @@
 
 namespace Samurai\Onikiri;
 
+use Samurai\Raikiri\DependencyInjectable;
+
 /**
  * entity repository table.
  *
@@ -81,6 +83,7 @@ class EntityTable
      * @traits
      */
     use TransactionHolder;
+    use DependencyInjectable;
 
 
     /**

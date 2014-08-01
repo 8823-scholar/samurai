@@ -31,6 +31,7 @@
 namespace Samurai\Onikiri;
 
 use Samurai\Samurai\Component\Core\YAML;
+use Samurai\Raikiri\DependencyInjectable;
 
 /**
  *
@@ -68,6 +69,11 @@ class Onikiri
      * @var     Samurai\Onikiri\Transaction
      */
     private $_tx;
+
+    /**
+     * @traits
+     */
+    use DependencyInjectable;
 
 
     /**
@@ -138,6 +144,9 @@ class Onikiri
             $class_full_name  = sprintf('%s\\%s', $dir['namespace'], $class_name);
             if (class_exists($class_full_name)) {
                 $table = new $class_full_name($this);
+                if ($container = $this->raikiri()) {
+                    $table->setContainer($container);
+                }
                 $this->_table_factory[$alias] = $table;
                 return $table;
             }

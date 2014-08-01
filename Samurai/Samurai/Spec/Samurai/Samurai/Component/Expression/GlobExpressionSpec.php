@@ -54,16 +54,16 @@ class GlobExpressionSpec extends PHPSpecContext
     public function it_gets_regex_pattern()
     {
         $this->beConstructedWith('*');
-        $this->getRegexPattern()->shouldBe('/.*?/');
+        $this->getRegexPattern()->shouldBe('/^.*?/');
 
         $this->beConstructedWith('foo.bar.*');
-        $this->getRegexPattern()->shouldBe('/foo\\.bar\\..*?/');
+        $this->getRegexPattern()->shouldBe('/^foo\\.bar\\..*?/');
         
         $this->beConstructedWith('foo.*.zoo');
-        $this->getRegexPattern()->shouldBe('/foo\\..*?\\.zoo$/');
+        $this->getRegexPattern()->shouldBe('/^foo\\..*?\\.zoo$/');
         
         $this->beConstructedWith('*.bar.zoo');
-        $this->getRegexPattern()->shouldBe('/.*?\\.bar\\.zoo$/');
+        $this->getRegexPattern()->shouldBe('/^.*?\\.bar\\.zoo$/');
     }
 }
 
