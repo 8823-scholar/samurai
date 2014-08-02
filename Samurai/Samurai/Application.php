@@ -92,24 +92,12 @@ class Application
     use DependencyInjectable;
 
     /**
-     * ENV: development
+     * ENV
      *
      * @const   string
      */
     const ENV_DEVELOPMENT = 'development';
-
-    /**
-     * ENV: staging
-     *
-     * @const   string
-     */
     const ENV_STAGING = 'staging';
-
-    /**
-     * ENV: production
-     *
-     * @const   string
-     */
     const ENV_PRODUCTION = 'production';
 
     /**
@@ -262,8 +250,6 @@ class Application
     }
 
 
-
-
     /**
      * set env.
      *
@@ -278,7 +264,6 @@ class Application
         return $this->getEnv();
     }
 
-
     /**
      * get env
      *
@@ -289,11 +274,10 @@ class Application
         return $this->env;
     }
 
-
     /**
      * get env from environment variables.
      *
-     * return   string
+     * @return   string
      */
     protected function getEnvFromEnvironmentVariables()
     {
@@ -303,6 +287,36 @@ class Application
         }
 
         return self::ENV_DEVELOPMENT;
+    }
+
+    /**
+     * is production ?
+     *
+     * @return  boolean
+     */
+    public function isProduction()
+    {
+        return $this->env === self::ENV_PRODUCTION;
+    }
+
+    /**
+     * is development ?
+     *
+     * @return  boolean
+     */
+    public function isDevelopment()
+    {
+        return $this->env === self::ENV_DEVELOPMENT;
+    }
+
+    /**
+     * is staging ?
+     *
+     * @return  boolean
+     */
+    public function isStaging()
+    {
+        return $this->env === self::ENV_STAGING;
     }
     
 

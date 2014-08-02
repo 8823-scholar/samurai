@@ -107,5 +107,15 @@ class ApplicationSpec extends PHPSpecContext
         $this->bootstrap();
         $this->getLoader()->shouldHaveType('Samurai\Samurai\Component\Core\Loader');
     }
+
+
+    public function it_is_production()
+    {
+        $this->setEnv('production');
+        $this->isProduction()->shouldBe(true);
+        
+        $this->setEnv('development');
+        $this->isProduction()->shouldBe(false);
+    }
 }
 
