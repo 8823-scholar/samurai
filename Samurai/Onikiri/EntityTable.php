@@ -107,6 +107,22 @@ class EntityTable
         return $this->onikiri;
     }
 
+    /**
+     * alias of getOnikiri
+     *
+     * @return  Samurai\Onikiri\Onikiri
+     */
+    public function onikiri()
+    {
+        return $this->getOnikiri();
+    }
+
+
+    public function getTable($name)
+    {
+        return $this->onikiri()->getTable($name);
+    }
+
 
     /**
      * get table name.

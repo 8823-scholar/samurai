@@ -3,14 +3,18 @@
 namespace Samurai\Onikiri\Spec\Samurai\Onikiri;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
+use Samurai\Onikiri\Onikiri;
 use Samurai\Onikiri\EntityTable;
 
 class EntitySpec extends PHPSpecContext
 {
-    public function let(EntityTable $t)
+    public function let(EntityTable $t, Onikiri $o)
     {
         $t->getPrimaryKey()->willReturn('id');
         $this->beConstructedWith($t, ['id' => 11, 'name' => 'KIUCHI Satoshinosuke', 'gender' => 'male', 'some_key' => 'foobarzoo']);
+
+        $t->onikiri()->willReturn($o);
+        $o->getTable('User')->willReturn(new Fixtures\UserTable($o->getWrappedObject()));
     }
 
     public function it_is_initializable()
@@ -112,6 +116,17 @@ class EntitySpec extends PHPSpecContext
     public function it_calls_no_exists_method()
     {
         $this->shouldThrow('LogicException')->duringDoSomething();
+    }
+
+
+    public function it_gets_table()
+    {
+        $this->getTable()->shouldHaveType('Samurai\Onikiri\EntityTable');
+    }
+
+    public function it_gets_table_tagetted_name()
+    {
+        $this->getTable('User')->shouldHaveType('Samurai\Onikiri\Spec\Samurai\Onikiri\Fixtures\UserTable');
     }
 }
 

@@ -88,11 +88,26 @@ class Entity
     /**
      * set table
      *
-     * @param   EntityTable $table
+     * @param   Samurai\Onikiri\EntityTable $table
      */
     public function setTable(EntityTable $table)
     {
         $this->table = $table;
+    }
+
+    /**
+     * get table
+     *
+     * @param   string  $name
+     * @return  Samurai\Onikiri\EntityTable
+     */
+    public function getTable($name = null)
+    {
+        if (! $name) {
+            return $this->table;
+        } else {
+            return $this->table->onikiri()->getTable($name);
+        }
     }
 
 

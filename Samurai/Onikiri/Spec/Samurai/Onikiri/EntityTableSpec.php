@@ -15,11 +15,18 @@ class EntityTableSpec extends PHPSpecContext
     {
         $this->beConstructedWith($oni);
         $oni->establishConnection($this->getDatabase(), Database::TARGET_MASTER)->willReturn($con);
+
+        $oni->getTable('User')->willReturn(new Fixtures\UserTable($oni->getWrappedObject()));
     }
 
     public function it_gets_onikiri_instance()
     {
         $this->getOnikiri()->shouldHaveType('Samurai\Onikiri\Onikiri');
+    }
+
+    public function it_gets_table()
+    {
+        $this->getTable('User')->shouldHaveType('Samurai\Onikiri\Spec\Samurai\Onikiri\Fixtures\UserTable');
     }
 
     public function it_is_initializable()
