@@ -28,63 +28,18 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\Driver;
-
-use Samurai\Onikiri\Database;
-use Samurai\Onikiri\Connection;
+namespace Samurai\Onikiri\Schema;
 
 /**
- * Driver for postgres.
+ * base  schema
  *
- * @package     Onikiri
- * @subpackage  Driver
+ * @package     Samurai.Onikiri
+ * @subpackage  Schema
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class PgsqlDriver extends Driver
+class Schema
 {
-    /**
-     * @implements
-     */
-    public function connect(Database $database)
-    {
-        $dsn = $this->makeDsn($database);
-        $con = new Connection($dsn, $database->getUser(), $database->getPassword(), $database->getOptions());
-        return $con;
-    }
-    
-    
-    /**
-     * @implements
-     */
-    public function makeDsn(Database $database)
-    {
-        $dsn = 'pgsql:';
-        $info = array();
-
-        // database name
-        $info[] = 'dbname=' . $database->getDatabaseName();
-
-        // host name
-        $info[] = 'host=' . $database->getHostName();
-
-        // port
-        if ($port = $database->getPort()) {
-            $info[] = 'port=' . $port;
-        }
-
-        $dsn = $dsn . join(';', $info);
-        return $dsn;
-    }
-
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getTableDescribe(Connection $connction, $table)
-    {
-        // TODO: implements
-    }
 }
 

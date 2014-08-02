@@ -30,6 +30,7 @@
 
 namespace Samurai\Onikiri;
 
+use Samurai\Onikiri\Schema\TableSchema;
 use Samurai\Samurai\Component\Core\YAML;
 use Samurai\Raikiri\DependencyInjectable;
 
@@ -131,6 +132,17 @@ class Onikiri
         return $database;
     }
 
+    /**
+     * set database.
+     *
+     * @param   string  $alias
+     * @param   Samurai\Onikiri\Database    $database
+     */
+    public function setDatabase($alias, Database $database)
+    {
+        $this->_databases[$alias] = $database;
+    }
+
 
     /**
      * get model instance
@@ -160,6 +172,24 @@ class Onikiri
             }
         }
         throw new Exception\EntityTableNotFoundException();
+    }
+
+
+    /**
+     * get table schema instance
+     *
+     * @param   string  $table
+     * @param   string  $database
+     * @return  Samurai\Onikiri\Schema\TableSchema
+     */
+    public function getTableSchema($table, $database = 'base')
+    {
+        $driver = $this->getDatabase($database)->getDriver();
+        $connection = $this->establishConnection($database, Database::TARGET_SLAVE);
+        $describe = $driver->getTableDescribe($connection, $table);
+
+        $schema = new TableSchema($table, $describe);
+        return $schema;
     }
     
     

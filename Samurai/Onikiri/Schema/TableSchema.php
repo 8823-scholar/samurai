@@ -28,63 +28,82 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Onikiri\Driver;
-
-use Samurai\Onikiri\Database;
-use Samurai\Onikiri\Connection;
+namespace Samurai\Onikiri\Schema;
 
 /**
- * Driver for postgres.
+ * table schema
  *
- * @package     Onikiri
- * @subpackage  Driver
+ * @package     Samurai.Onikiri
+ * @subpackage  Schema
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class PgsqlDriver extends Driver
+class TableSchema extends Schema
 {
     /**
-     * @implements
+     * name
+     *
+     * @var     string
      */
-    public function connect(Database $database)
-    {
-        $dsn = $this->makeDsn($database);
-        $con = new Connection($dsn, $database->getUser(), $database->getPassword(), $database->getOptions());
-        return $con;
-    }
-    
-    
+    public $name;
+
     /**
-     * @implements
+     * columns
+     *
+     * @var     array
      */
-    public function makeDsn(Database $database)
+    public $columns = [];
+
+
+    /**
+     * constructor
+     *
+     * @param   string  $name
+     * @param   array   $describe
+     */
+    public function __construct($name, array $describe)
     {
-        $dsn = 'pgsql:';
-        $info = array();
-
-        // database name
-        $info[] = 'dbname=' . $database->getDatabaseName();
-
-        // host name
-        $info[] = 'host=' . $database->getHostName();
-
-        // port
-        if ($port = $database->getPort()) {
-            $info[] = 'port=' . $port;
+        $this->name($name);
+        foreach ($describe as $column => $desc) {
+            $column = $this->column($desc['name']);
+            if (array_key_exists('default', $desc)) $column->defaultValue($desc['default']);
         }
-
-        $dsn = $dsn . join(';', $info);
-        return $dsn;
     }
 
 
     /**
-     * {@inheritdoc}
+     * set name
+     *
+     * @param   string  $name
      */
-    public function getTableDescribe(Connection $connction, $table)
+    public function name($name)
     {
-        // TODO: implements
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * add column
+     *
+     * @param   string  $name
+     */
+    public function column($name)
+    {
+        $column = new ColumnSchema($this, $name);
+        $this->columns[$name] = $column;
+        return $column;
+    }
+
+
+    /**
+     * get column names
+     *
+     * @return  array
+     */
+    public function getColumns()
+    {
+        return $this->columns;
     }
 }
 

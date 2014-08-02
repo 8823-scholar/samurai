@@ -78,5 +78,63 @@ class MysqlDriver extends Driver
         $dsn = $dsn . join(';', $info);
         return $dsn;
     }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTableDescribe(Connection $connection, $table)
+    {
+        $info = [];
+        
+        $sql = "DESCRIBE {$table}";
+        $stmt = $connection->query($sql);
+        $describes = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        foreach($describes as $describe){
+            // column name
+            $column = $describe['Field'];
+            
+            // column type
+            $attribute = null;
+            if(preg_match('/^(.+?)\((.+?)\)(.*)?/', $describe['Type'], $matches)){
+                $type = $matches[1];
+                $length = $matches[2];
+                $attribute = isset($matches[3]) ? trim($matches[3]) : null;
+            } else {
+                $matches = preg_split('/\s+/', $describe['Type']);
+                $type = $matches[0];
+                $length = null;
+            }
+            
+            // null accepted ?
+            $nullable = $describe['Null'] === 'YES' ? true : false;
+            
+            // keys
+            $is_primary_key = preg_match('/PRI/', $describe['Key']) ? true : false;
+            
+            // default value
+            $default = $describe['Default'];
+            
+            // others
+            $extras = [];
+            if(preg_match('/auto_increment/', $describe['Extra'])) $extras[] = 'auto_increment';
+            
+            //値の生成
+            $info[$column] = [
+                'table'       => $table,
+                'name'        => $column,
+                'type'        => $type,
+                'length'      => $length,
+                'attribute'   => $attribute ? $attribute : null,
+                'null'        => $nullable,
+                'primary_key' => $is_primary_key,
+                'default'     => $default,
+                'extras'      => $extras,
+            ];
+        }
+        
+        return $info;
+    }
 }
 

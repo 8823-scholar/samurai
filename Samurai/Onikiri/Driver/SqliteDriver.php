@@ -69,5 +69,14 @@ class SqliteDriver extends Driver
         $dsn = $dsn . join(';', $info);
         return $dsn;
     }
+    
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getTableDescribe(Connection $connction, $table)
+    {
+        // TODO: implements
+    }
 }
 

@@ -76,13 +76,26 @@ class PHPSpecContext extends SamuraiPHPSpecContext
 
     protected function _setMySQLDefinitionFromEnv(Database $d)
     {
-        $difinition = $this->_getMySQLDefinition();
+        $definition = $this->_getMySQLDefinition();
 
-        $d->setUser($difinition['user']);
-        $d->setPassword($difinition['pass']);
-        $d->setHostName($difinition['host']);
-        $d->setPort($difinition['port']);
-        $d->setDatabaseName($difinition['database']);
+        $d->setUser($definition['user']);
+        $d->setPassword($definition['pass']);
+        $d->setHostName($definition['host']);
+        $d->setPort($definition['port']);
+        $d->setDatabaseName($definition['database']);
+    }
+    
+    
+    protected function _attachMySQLDefinitionFromEnv(Database $d)
+    {
+        $definition = $this->_getMySQLDefinition();
+
+        $d->getUser()->willReturn($definition['user']);
+        $d->getPassword()->willReturn($definition['pass']);
+        $d->getHostName()->willReturn($definition['host']);
+        $d->getPort()->willReturn($definition['port']);
+        $d->getDatabaseName()->willReturn($definition['database']);
+        $d->getOptions()->willReturn([]);
     }
 }
 

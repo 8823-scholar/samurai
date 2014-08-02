@@ -31,6 +31,7 @@
 namespace Samurai\Onikiri\Driver;
 
 use Samurai\Onikiri\Database;
+use Samurai\Onikiri\Connection;
 
 /**
  * base driver class.
@@ -46,10 +47,19 @@ abstract class Driver
     /**
      * connect to backend.
      *
-     * @access  public
      * @param   Samurai\Onikiri\Database    $database
      * @return  Samurai\Onikiri\Connection
      */
     abstract public function connect(Database $database);
+
+
+    /**
+     * get table info
+     *
+     * @param   Samurai\Onikiri\Connection  $connection
+     * @param   string                      $table
+     * @return  array
+     */
+    abstract public function getTableDescribe(Connection $connection, $table);
 }
 

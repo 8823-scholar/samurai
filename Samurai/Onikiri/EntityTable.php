@@ -174,6 +174,18 @@ class EntityTable
     {
         $this->primary_key = $key;
     }
+
+
+    /**
+     * get schema
+     *
+     * @return  Samurai\Onikiri\Schema\TableSchema
+     */
+    public function getSchema()
+    {
+        $schema = $this->onikiri()->getTableSchema($this->getDatabase(), $this->getTableName());
+        return $schema;
+    }
     
     
     /**

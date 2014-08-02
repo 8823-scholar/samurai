@@ -2,7 +2,10 @@
 
 namespace Samurai\Onikiri\Spec\Samurai\Onikiri;
 
-use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
+use Samurai\Onikiri\Spec\PHPSpecContext;
+use Samurai\Onikiri\Database;
+use Samurai\Onikiri\Connection;
+use Samurai\Onikiri\Driver\MysqlDriver;
 
 class OnikiriSpec extends PHPSpecContext
 {
@@ -72,6 +75,48 @@ class OnikiriSpec extends PHPSpecContext
     public function it_gets_transaction()
     {
         $this->getTx()->shouldHaveType('Samurai\Onikiri\Transaction');
+    }
+
+
+    public function it_gets_table_schema(Database $d, Connection $c, MysqlDriver $md)
+    {
+        $this->_attachMySQLDefinitionFromEnv($d);
+        $this->setDatabase('sandbox', $d);
+        $d->connect()->willReturn($c);
+        $d->getDriver()->willReturn($md);
+        $d->pickSlave()->willReturn($d);
+        $md->getTableDescribe($c, 'user')->willReturn([
+            'id' => [
+                'table' => 'user',
+                'name' => 'id',
+                'type' => 'int',
+                'length' => '11',
+                'attribute' => 'unsigned',
+                'null' => false,
+                'primary_key' => true,
+                'default' => null,
+                'extras' => ['auto_increment'],
+            ],
+            'name' => [
+                'table' => 'user',
+                'name' => 'name',
+                'type' => 'varchar',
+                'length' => '255',
+                'attribute' => null,
+                'null' => false,
+                'primary_key' => false,
+                'default' => 'who',
+                'extras' => [],
+            ],
+        ]);
+
+        $schema = $this->getTableSchema('user', 'sandbox');
+        $schema->shouldHaveType('Samurai\Onikiri\Schema\TableSchema');
+        $columns = $schema->getColumns();
+        $columns['id']->getName()->shouldBe('id');
+        $columns['id']->getDefaultValue()->shouldBe(null);
+        $columns['name']->getName()->shouldBe('name');
+        $columns['name']->getDefaultValue()->shouldBe('who');
     }
 }
 

@@ -362,5 +362,26 @@ class EntityTableSpec extends PHPSpecContext
         }
         unset($con);
     }
+
+
+    /*
+    public function it_gets_schema()
+    {
+        $this->_setMySQLDatabase();
+        $con = new Connection(
+            $this->_spec_driver->makeDsn($this->_spec_database),
+            $this->_spec_database->getUser(),
+            $this->_spec_database->getPassword()
+        );
+        $oni->establishConnection($this->getDatabase(), Database::TARGET_MASTER)->willReturn($con);
+
+        $sql = file_get_contents(__DIR__ . '/Fixtures/create.tables.entitytable.sql');
+        $result = $con->query($sql);
+        unset($result);
+
+        $schema = $this->getSchema();
+        $schema->shouldHaveType('Samurai\Onikiri\Schema\TableSchema');
+    }
+     */
 }
 
