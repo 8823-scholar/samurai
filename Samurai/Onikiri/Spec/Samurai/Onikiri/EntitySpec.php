@@ -65,6 +65,12 @@ class EntitySpec extends PHPSpecContext
         $this->getGender()->shouldBe('female');
     }
 
+    public function it_has_attribute()
+    {
+        $this->hasAttribute('name')->shouldBe(true);
+        $this->hasAttribute('aaaaaaa')->shouldBe(false);
+    }
+
 
     public function it_gets_primary_value()
     {

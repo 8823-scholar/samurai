@@ -149,6 +149,17 @@ class Entity
         return $attributes;
     }
 
+    /**
+     * has attribute
+     *
+     * @param   string  $key
+     * @return  boolean
+     */
+    public function hasAttribute($key)
+    {
+        return array_key_exists($key, $this->attributes);
+    }
+
 
     /**
      * Get primary value.

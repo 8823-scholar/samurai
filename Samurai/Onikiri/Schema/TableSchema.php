@@ -62,7 +62,7 @@ class TableSchema extends Schema
      * @param   string  $name
      * @param   array   $describe
      */
-    public function __construct($name, array $describe)
+    public function __construct($name, array $describe = [])
     {
         $this->name($name);
         foreach ($describe as $column => $desc) {
@@ -84,6 +84,16 @@ class TableSchema extends Schema
     }
 
     /**
+     * get name.
+     *
+     * @return  string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
      * add column
      *
      * @param   string  $name
@@ -95,15 +105,51 @@ class TableSchema extends Schema
         return $column;
     }
 
+    /**
+     * get column
+     *
+     * @param   string  $name
+     * @return  Samurai\Onikiri\Schema\ColumnSchema
+     */
+    public function getColumn($name)
+    {
+        return isset($this->columns[$name]) ? $this->columns[$name] : null;
+    }
 
     /**
-     * get column names
+     * get columns
      *
      * @return  array
      */
     public function getColumns()
     {
         return $this->columns;
+    }
+
+    /**
+     * has column ?
+     *
+     * @param   string  $name
+     * @return  boolean
+     */
+    public function hasColumn($name)
+    {
+        return isset($this->columns[$name]);
+    }
+
+
+    /**
+     * get column default values
+     *
+     * @return  array
+     */
+    public function getDefaultValues()
+    {
+        $values = [];
+        foreach ($this->getColumns() as $column) {
+            $values[$column->getName()] = $column->getDefaultValue();
+        }
+        return $values;
     }
 }
 

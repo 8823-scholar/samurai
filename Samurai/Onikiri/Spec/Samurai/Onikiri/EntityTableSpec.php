@@ -8,6 +8,7 @@ use Samurai\Onikiri\Database;
 use Samurai\Onikiri\Connection;
 use Samurai\Onikiri\Statement;
 use Samurai\Onikiri\Transaction;
+use Samurai\Onikiri\Schema\TableSchema;
 
 class EntityTableSpec extends PHPSpecContext
 {
@@ -79,16 +80,22 @@ class EntityTableSpec extends PHPSpecContext
     }
 
 
-    public function it_gets_criteria()
+    public function it_gets_criteria(Onikiri $oni, TableSchema $t)
     {
+        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $t->hasColumn('active')->willReturn(false);
+
         $criteria = $this->criteria();
         $criteria->shouldHaveType('Samurai\Onikiri\Criteria\Criteria');
         $criteria->getTable()->shouldBe($this);
     }
 
 
-    public function it_builds_blank_entity()
+    public function it_builds_blank_entity(Onikiri $oni, TableSchema $t)
     {
+        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $t->getDefaultValues()->willReturn([]);
+
         $entity = $this->build();
         $entity->shouldHaveType('Samurai\Onikiri\Entity');
         
@@ -129,8 +136,12 @@ class EntityTableSpec extends PHPSpecContext
     }
     
     
-    public function it_finds_first_record(Connection $con, Statement $stm)
+    public function it_finds_first_record(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
+        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $t->getDefaultValues()->willReturn([]);
+        $t->hasColumn('active')->willReturn(false);
+
         $con->prepare('SELECT * FROM entity WHERE (id = ?) LIMIT ?')->willReturn($stm);
         $stm->execute()->shouldBeCalled();
         $stm->bindValue(0, 1, Connection::PARAM_INT)->shouldBeCalled();
@@ -144,8 +155,12 @@ class EntityTableSpec extends PHPSpecContext
         $entity->getName()->shouldBe('kaneda');
     }
 
-    public function it_finds_first_record_by_magicmethod(Connection $con, Statement $stm)
+    public function it_finds_first_record_by_magicmethod(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
+        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $t->getDefaultValues()->willReturn([]);
+        $t->hasColumn('active')->willReturn(false);
+
         $con->prepare('SELECT * FROM entity WHERE (name = ?) LIMIT ?')->willReturn($stm);
         $stm->execute()->shouldBeCalled();
         $stm->bindValue(0, 'kaneda', Connection::PARAM_STR)->shouldBeCalled();
@@ -159,8 +174,12 @@ class EntityTableSpec extends PHPSpecContext
         $entity->getName()->shouldBe('kaneda');
     }
 
-    public function it_finds_all_records(Connection $con, Statement $stm)
+    public function it_finds_all_records(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
+        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $t->getDefaultValues()->willReturn([]);
+        $t->hasColumn('active')->willReturn(false);
+
         $con->prepare('SELECT * FROM entity WHERE 1')->willReturn($stm);
         $stm->execute()->shouldBeCalled();
         $stm->fetchAll(Connection::FETCH_ASSOC)->willReturn([
@@ -178,8 +197,12 @@ class EntityTableSpec extends PHPSpecContext
         $entity->getName()->shouldBe('tetsuo');
     }
     
-    public function it_finds_all_records_by_magicmethod(Connection $con, Statement $stm)
+    public function it_finds_all_records_by_magicmethod(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
+        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $t->getDefaultValues()->willReturn([]);
+        $t->hasColumn('active')->willReturn(false);
+
         $con->prepare('SELECT * FROM entity WHERE (name = ?)')->willReturn($stm);
         $stm->execute()->shouldBeCalled();
         $stm->bindValue(0, 'kaneda', Connection::PARAM_STR)->shouldBeCalled();
@@ -199,8 +222,12 @@ class EntityTableSpec extends PHPSpecContext
     }
 
 
-    public function it_is_scope_method(Connection $con, Statement $stm)
+    public function it_is_scope_method(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
+        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $t->getDefaultValues()->willReturn([]);
+        $t->hasColumn('active')->willReturn(false);
+
         $con->prepare('SELECT * FROM entity WHERE (category = ?) ORDER BY created_at DESC LIMIT ?')->willReturn($stm);
         $stm->execute()->shouldBeCalled();
         $stm->bindValue(0, 'book', Connection::PARAM_STR)->shouldBeCalled();
@@ -242,8 +269,12 @@ class EntityTableSpec extends PHPSpecContext
      */
 
 
-    public function it_saves_exists_entity(Connection $con, Statement $stm)
+    public function it_saves_exists_entity(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
+        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $t->getDefaultValues()->willReturn([]);
+        $t->hasColumn('active')->willReturn(false);
+
         $con->prepare('SELECT * FROM entity WHERE (id = ?) LIMIT ?')->willReturn($stm);
         $stm->execute()->shouldBeCalled();
         $stm->bindValue(0, 1, Connection::PARAM_INT)->shouldBeCalled();
@@ -264,8 +295,12 @@ class EntityTableSpec extends PHPSpecContext
         $entity->getName()->shouldBe('kaneda shotaro');
     }
     
-    public function it_saves_notexists_entity(Connection $con, Statement $stm)
+    public function it_saves_notexists_entity(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
+        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $t->getDefaultValues()->willReturn([]);
+        $t->hasColumn('active')->willReturn(false);
+
         $entity = $this->build(['name' => 'kaneda', 'mail' => 'kaneda@akira.jp']);
         $entity->getName()->shouldBe('kaneda');
 
@@ -280,8 +315,12 @@ class EntityTableSpec extends PHPSpecContext
     }
     
 
-    public function it_deletes_entity(Connection $con, Statement $stm)
+    public function it_deletes_entity(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
+        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $t->getDefaultValues()->willReturn([]);
+        $t->hasColumn('active')->willReturn(false);
+
         $con->prepare('SELECT * FROM entity WHERE (id = ?) LIMIT ?')->willReturn($stm);
         $stm->execute()->shouldBeCalled();
         $stm->bindValue(0, 1, Connection::PARAM_INT)->shouldBeCalled();

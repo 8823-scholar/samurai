@@ -307,9 +307,15 @@ class EntityTable
      * @param   boolean $exists
      * @return  Entity
      */
-    public function build($attributes = array(), $exists = false)
+    public function build($attributes = [], $exists = false)
     {
         $class = $this->getEntityClass();
+
+        // default values
+        $schema = $this->getSchema();
+        $defaults = $schema->getDefaultValues();
+        $attributes = array_merge($defaults, $attributes);
+
         $entity = new $class($this, $attributes, $exists);
         return $entity;
     }
@@ -330,6 +336,8 @@ class EntityTable
         // when new record.
         if (! $entity->isExists()) {
             // TODO: custom primary value handler.
+            if ($entity->hasAttribute('created_at')) $entity->created_at = time();
+            if ($entity->hasAttribute('updated_at')) $entity->updated_at = time();
             $new = $this->create($entity->toArray());
             $entity->exists = true;
             $entity->setPrimaryValue($new->getPrimaryValue());
@@ -340,6 +348,10 @@ class EntityTable
             $attributes = $entity->getAttributes(true);
             if (! $attributes) return;
 
+            if ($entity->hasAttribute('updated_at')) {
+                $attributes['updated_at'] = time();
+                $entity->updated_at = $attributes['updated_at'];
+            }
             return $this->update($attributes, $entity->getPrimaryValue());
         }
     }
@@ -353,7 +365,16 @@ class EntityTable
     public function destroy(Entity $entity)
     {
         if ($entity->isExists()) {
-            $this->delete($entity->getPrimaryValue());
+
+            // enable logical delete ?
+            if ($entity->hasAttribute('active')) {
+                $attributes = [];
+                $attributes['active'] = 0;
+                if ($entity->hasAttribute('deleted_at')) $attributes['deleted_at'] = time();
+                $this->update($attributes, $entity->getPrimaryValue());
+            } else {
+                $this->delete($entity->getPrimaryValue());
+            }
         }
     }
     
@@ -492,6 +513,13 @@ class EntityTable
     {
         if (! $cri) $cri = new Criteria\Criteria($this);
         $cri->setTable($this);
+
+        // logical delete ?
+        $schema = $this->getSchema();
+        if ($schema->hasColumn('active')) {
+            $cri->where('active = ?', 1);
+        }
+
         return $cri;
     }
     
