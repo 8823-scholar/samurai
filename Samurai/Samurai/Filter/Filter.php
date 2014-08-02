@@ -149,6 +149,16 @@ class Filter
         return array_key_exists($key, $this->attributes) ? $this->attributes[$key] : $default;
     }
 
+    /**
+     * get all attributes
+     *
+     * @return  array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
+    }
+
 
     /**
      * get self name.

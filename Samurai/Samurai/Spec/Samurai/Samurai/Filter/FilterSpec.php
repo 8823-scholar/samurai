@@ -29,5 +29,17 @@ class FilterSpec extends PHPSpecContext
         $this->getAttribute('attribute2')->shouldBe(null);
         $this->getAttribute('attribute3', 'bar')->shouldBe('bar');
     }
+
+    public function it_gets_attributes()
+    {
+        $this->setAttribute('attribute1', 'foo');
+        $this->setAttribute('attribute2', 'bar');
+        $this->setAttribute('attribute3', 'zoo');
+        $this->getAttributes()->shouldBe([
+            'attribute1' => 'foo',
+            'attribute2' => 'bar',
+            'attribute3' => 'zoo',
+        ]);
+    }
 }
 
