@@ -183,7 +183,7 @@ class EntityTable
      */
     public function getSchema()
     {
-        $schema = $this->onikiri()->getTableSchema($this->getDatabase(), $this->getTableName());
+        $schema = $this->onikiri()->getTableSchema($this->getTableName(), $this->getDatabase());
         return $schema;
     }
     
