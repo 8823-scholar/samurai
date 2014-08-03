@@ -42,11 +42,19 @@ namespace Samurai\Samurai\Component\Cache;
 class ApcCache extends ArrayCache
 {
     /**
+     * prefix
+     *
+     * @var     string
+     */
+    protected $_prefix = '';
+
+
+    /**
      * {@inheritdoc}
      */
     public function cache($key, $value, $expire = null)
     {
-        return apc_store($key, $value, $expire ? $expire : 0);
+        return apc_store($this->makeKey($key), $value, $expire ? $expire : 0);
     }
 
     /**
@@ -55,7 +63,7 @@ class ApcCache extends ArrayCache
     public function uncache($key)
     {
         parent::uncache($key);
-        return apc_delete($key);
+        return apc_delete($this->makeKey($key));
     }
 
     /**
@@ -73,7 +81,7 @@ class ApcCache extends ArrayCache
     {
         if (parent::has($key)) return true;
 
-        $value = apc_fetch($key, $success);
+        $value = apc_fetch($this->makeKey($key), $success);
         if ($success === true) {
             parent::cache($key, $value);
             return true;
@@ -88,6 +96,29 @@ class ApcCache extends ArrayCache
     public function isSupported()
     {
         return extension_loaded('apc');
+    }
+
+
+    /**
+     * set prefix
+     *
+     * @param   string  $prefix
+     */
+    public function setPrefix($prefix)
+    {
+        if (! is_string($prefix)) throw new \InvalidArgumentException('prefix needs string.');
+        $this->prefix = $prefix;
+    }
+
+    /**
+     * make cache key
+     *
+     * @param   string  $key
+     * @return  string
+     */
+    public function makeKey($key)
+    {
+        return $this->_prefix ? $this->_prefix . '.' . $key : $key;
     }
 }
 

@@ -110,6 +110,7 @@ class OnikiriSpec extends PHPSpecContext
             ],
         ]);
 
+        $this->configure();
         $schema = $this->getTableSchema('user', 'sandbox');
         $schema->shouldHaveType('Samurai\Onikiri\Schema\TableSchema');
         $columns = $schema->getColumns();

@@ -82,7 +82,7 @@ class EntityTableSpec extends PHPSpecContext
 
     public function it_gets_criteria(Onikiri $oni, TableSchema $t)
     {
-        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $oni->getTableSchema('entity', 'base')->willReturn($t);
         $t->hasColumn('active')->willReturn(false);
 
         $criteria = $this->criteria();
@@ -93,7 +93,7 @@ class EntityTableSpec extends PHPSpecContext
 
     public function it_builds_blank_entity(Onikiri $oni, TableSchema $t)
     {
-        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $oni->getTableSchema('entity', 'base')->willReturn($t);
         $t->getDefaultValues()->willReturn([]);
 
         $entity = $this->build();
@@ -138,7 +138,7 @@ class EntityTableSpec extends PHPSpecContext
     
     public function it_finds_first_record(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
-        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $oni->getTableSchema('entity', 'base')->willReturn($t);
         $t->getDefaultValues()->willReturn([]);
         $t->hasColumn('active')->willReturn(false);
 
@@ -157,7 +157,7 @@ class EntityTableSpec extends PHPSpecContext
 
     public function it_finds_first_record_by_magicmethod(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
-        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $oni->getTableSchema('entity', 'base')->willReturn($t);
         $t->getDefaultValues()->willReturn([]);
         $t->hasColumn('active')->willReturn(false);
 
@@ -176,7 +176,7 @@ class EntityTableSpec extends PHPSpecContext
 
     public function it_finds_all_records(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
-        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $oni->getTableSchema('entity', 'base')->willReturn($t);
         $t->getDefaultValues()->willReturn([]);
         $t->hasColumn('active')->willReturn(false);
 
@@ -199,7 +199,7 @@ class EntityTableSpec extends PHPSpecContext
     
     public function it_finds_all_records_by_magicmethod(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
-        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $oni->getTableSchema('entity', 'base')->willReturn($t);
         $t->getDefaultValues()->willReturn([]);
         $t->hasColumn('active')->willReturn(false);
 
@@ -224,7 +224,7 @@ class EntityTableSpec extends PHPSpecContext
 
     public function it_is_scope_method(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
-        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $oni->getTableSchema('entity', 'base')->willReturn($t);
         $t->getDefaultValues()->willReturn([]);
         $t->hasColumn('active')->willReturn(false);
 
@@ -271,7 +271,7 @@ class EntityTableSpec extends PHPSpecContext
 
     public function it_saves_exists_entity(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
-        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $oni->getTableSchema('entity', 'base')->willReturn($t);
         $t->getDefaultValues()->willReturn([]);
         $t->hasColumn('active')->willReturn(false);
 
@@ -297,7 +297,7 @@ class EntityTableSpec extends PHPSpecContext
     
     public function it_saves_notexists_entity(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
-        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $oni->getTableSchema('entity', 'base')->willReturn($t);
         $t->getDefaultValues()->willReturn([]);
         $t->hasColumn('active')->willReturn(false);
 
@@ -317,7 +317,7 @@ class EntityTableSpec extends PHPSpecContext
 
     public function it_deletes_entity(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
-        $oni->getTableSchema('base', 'entity')->willReturn($t);
+        $oni->getTableSchema('entity', 'base')->willReturn($t);
         $t->getDefaultValues()->willReturn([]);
         $t->hasColumn('active')->willReturn(false);
 

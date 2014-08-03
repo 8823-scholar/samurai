@@ -31,8 +31,10 @@
 namespace Samurai\Onikiri;
 
 use Samurai\Onikiri\Schema\TableSchema;
-use Samurai\Samurai\Component\Core\YAML;
 use Samurai\Raikiri\DependencyInjectable;
+use Samurai\Samurai\Component\Core\YAML;
+use Samurai\Samurai\Component\Cache\ApcCache;
+use Samurai\Samurai\Component\Cache\ArrayCache;
 
 /**
  *
@@ -95,6 +97,14 @@ class Onikiri
         $this->config = new Configuration();
 
         $this->config->setNamingStrategy(new Mapping\DefaultNamingStrategy());
+
+        $cache = new ApcCache();
+        if ($cache->isSupported()) {
+            $cache->setPrefix('samurai.onikiri.table.schema');
+        } else {
+            $cache = new ArrayCache();
+        }
+        $this->config->setSchemaCacher($cache);
 
         return $this->config;
     }
@@ -184,11 +194,15 @@ class Onikiri
      */
     public function getTableSchema($table, $database = 'base')
     {
+        $cacher = $this->config->getSchemaCacher();
+        if ($cacher->has($table)) return $cacher->get($table);
+
         $driver = $this->getDatabase($database)->getDriver();
         $connection = $this->establishConnection($database, Database::TARGET_SLAVE);
         $describe = $driver->getTableDescribe($connection, $table);
 
         $schema = new TableSchema($table, $describe);
+        $cacher->cache($table, $schema);
         return $schema;
     }
     

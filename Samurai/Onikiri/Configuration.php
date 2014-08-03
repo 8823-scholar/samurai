@@ -30,6 +30,8 @@
 
 namespace Samurai\Onikiri;
 
+use Samurai\Samurai\Component\Cache\Cache;
+
 /**
  * Onikiri configurations.
  *
@@ -53,6 +55,13 @@ class Configuration
      * @var     Samurai\Onikiri\Mapping\NamingStrategy
      */
     public $naming_strategy;
+
+    /**
+     * schema cacher
+     *
+     * @var     Samurai\Samurai\Component\Cache\Cache
+     */
+    public $schema_cacher;
 
 
     /**
@@ -100,6 +109,26 @@ class Configuration
     public function getNamingStrategy()
     {
         return $this->naming_strategy;
+    }
+
+    /**
+     * set schema cacher
+     *
+     * @param   $cacher     Samurai\Samurai\Component\Cache\Cache
+     */
+    public function setSchemaCacher(Cache $cacher)
+    {
+        $this->schema_cacher = $cacher;
+    }
+
+    /**
+     * get schema cacher
+     *
+     * @return  Samurai\Samurai\Component\Cache\Cache
+     */
+    public function getSchemaCacher()
+    {
+        return $this->schema_cacher;
     }
 }
 
