@@ -86,6 +86,14 @@ class Entity
 
 
     /**
+     * initialization
+     */
+    public function initialize()
+    {
+    }
+
+
+    /**
      * set table
      *
      * @param   Samurai\Onikiri\EntityTable $table

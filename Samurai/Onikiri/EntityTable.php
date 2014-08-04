@@ -317,6 +317,7 @@ class EntityTable
         $attributes = array_merge($defaults, $attributes);
 
         $entity = new $class($this, $attributes, $exists);
+        $entity->initialize();
         return $entity;
     }
     
