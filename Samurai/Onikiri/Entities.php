@@ -92,6 +92,23 @@ class Entities implements Iterator
 
 
     /**
+     * reverse sorted.
+     *
+     * @return  Samurai\Onikiri\Entities
+     */
+    public function reverse()
+    {
+        $entities = new Entities();
+
+        foreach (array_reverse($this->_entities) as $entity) {
+            $entities->add($entity);
+        }
+
+        return $entities;
+    }
+
+
+    /**
      * get by position.
      *
      * @param   int     $position
