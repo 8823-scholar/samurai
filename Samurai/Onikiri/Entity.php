@@ -30,6 +30,8 @@
 
 namespace Samurai\Onikiri;
 
+use Samurai\Raikiri\DependencyInjectable;
+
 /**
  * Entity class.
  *
@@ -67,6 +69,13 @@ class Entity
      * @var     boolean
      */
     public $exists = false;
+
+    /**
+     * @traits
+     */
+    use DependencyInjectable {
+        DependencyInjectable::__get as __di_get;
+    }
 
     
     /**
@@ -232,7 +241,7 @@ class Entity
             return $this->attributes[$key];
         }
 
-        return null;
+        return $this->__di_get($key);
     }
 
     /**

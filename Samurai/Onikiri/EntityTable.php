@@ -324,6 +324,8 @@ class EntityTable
 
         $entity = new $class($this, $attributes, $exists);
         $entity->initialize();
+        $entity->setContainer($this->raikiri());
+
         return $entity;
     }
     
