@@ -267,14 +267,14 @@ class Entity
     {
         // when getter.
         if (preg_match('/^get([A-Z]\w+)$/', $method, $matches)) {
-            $names = preg_split('/(?=[A-Z0-9])/', $matches[1]);
+            $names = preg_split('/(?=[A-Z])/', $matches[1]);
             array_shift($names);
             $key = strtolower(join('_', $names));
             return $this->$key;
             
         // when setter.
         } elseif (preg_match('/^set([A-Z]\w+)$/', $method, $matches)) {
-            $names = preg_split('/(?=[A-Z0-9])/', $matches[1]);
+            $names = preg_split('/(?=[A-Z])/', $matches[1]);
             array_shift($names);
             $key = strtolower(join('_', $names));
             return $this->$key = array_shift($args);

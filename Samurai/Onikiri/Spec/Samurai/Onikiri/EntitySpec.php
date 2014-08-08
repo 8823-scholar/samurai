@@ -12,7 +12,7 @@ class EntitySpec extends PHPSpecContext
     {
         $t->getPrimaryKey()->willReturn('id');
         $this->beConstructedWith($t, ['id' => 11, 'name' => 'KIUCHI Satoshinosuke', 'gender' => 'male',
-                                        'some_key' => 'foobarzoo', 'address_1_name' => 'Meguroku']);
+                                        'some_key' => 'foobarzoo', 'address1_name' => 'Meguroku']);
 
         $t->onikiri()->willReturn($o);
         $o->getTable('User')->willReturn(new Fixtures\UserTable($o->getWrappedObject()));
@@ -30,7 +30,7 @@ class EntitySpec extends PHPSpecContext
         $this->name->shouldBe('KIUCHI Satoshinosuke');
         $this->gender->shouldBe('male');
         $this->some_key->shouldBe('foobarzoo');
-        $this->address_1_name->shouldBe('Meguroku');
+        $this->address1_name->shouldBe('Meguroku');
     }
 
     public function it_gets_each_attributes_by_getter()
@@ -48,18 +48,18 @@ class EntitySpec extends PHPSpecContext
         $this->name()->shouldBe('KIUCHI Satoshinosuke');
         $this->gender()->shouldBe('male');
         $this->some_key()->shouldBe('foobarzoo');
-        $this->address_1_name()->shouldBe('Meguroku');
+        $this->address1_name()->shouldBe('Meguroku');
     }
 
     public function it_sets_each_attributes_by_property()
     {
         $this->name = 'Nanashi no Gonbe';
         $this->birthday = '1983-09-07';
-        $this->address_1_name = 'Suginamiku';
+        $this->address1_name = 'Suginamiku';
 
         $this->name->shouldBe('Nanashi no Gonbe');
         $this->birthday->shouldBe('1983-09-07');
-        $this->address_1_name->shouldBe('Suginamiku');
+        $this->address1_name->shouldBe('Suginamiku');
     }
 
     public function it_sets_each_attributes_by_setter()
@@ -76,7 +76,7 @@ class EntitySpec extends PHPSpecContext
     public function it_has_attribute()
     {
         $this->hasAttribute('name')->shouldBe(true);
-        $this->hasAttribute('address_1_name')->shouldBe(true);
+        $this->hasAttribute('address1_name')->shouldBe(true);
         $this->hasAttribute('aaaaaaa')->shouldBe(false);
     }
 
