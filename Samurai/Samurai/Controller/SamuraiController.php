@@ -208,7 +208,8 @@ class SamuraiController
      */
     public function beforeRenderer()
     {
-        $this->renderer->set('now', time());
+        $this->assign('now', time());
+        $this->assign('request', $this->request->getAll());
     }
 
 
