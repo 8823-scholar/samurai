@@ -30,6 +30,8 @@
 
 namespace Samurai\Raikiri;
 
+use Samurai\Onikiri\Exception\EntityTableNotFoundException;
+
 /**
  * Support dependency injection methods.
  *
@@ -93,10 +95,18 @@ trait DependencyInjectable
      */
     public function __get($name)
     {
+        // has container
         $container = $this->getContainer();
-        if (! $container || ! $container->has($name)) return null;
+        if ($container && $container->has($name)) return $container->get($name);
 
-        return $container->get($name);
+        // has model table.
+        try {
+            $onikiri = $this->onikiri();
+            $name = ucfirst(preg_replace('/Table$/', '', $name));
+            if ($onikiri && $table = $onikiri->getTable($name)) return $table;
+        } catch (EntityTableNotFoundException $e) {
+            return null;
+        }
     }
 }
 
