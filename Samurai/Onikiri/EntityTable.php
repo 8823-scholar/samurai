@@ -542,6 +542,8 @@ class EntityTable
         // already converted.
         if ($first instanceof Criteria\Criteria) {
             return $first;
+        } elseif ($first instanceof Criteria\BaseCondition) {
+            return $first->getCriteria();
         }
 
         // first argument is int ? then it's id.

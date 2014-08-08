@@ -221,6 +221,53 @@ class EntityTableSpec extends PHPSpecContext
         $entity->getMail()->shouldBe('kaneda2@akira.jp');
     }
 
+    public function it_finds_all_by_criteria(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
+    {
+        $oni->getTableSchema('entity', 'base')->willReturn($t);
+        $t->getDefaultValues()->willReturn([]);
+        $t->hasColumn('active')->willReturn(false);
+
+        $criteria = $this->criteria();
+        $criteria->where('mail = ?', 'kaneda@akira.jp');
+
+        $con->prepare('SELECT * FROM entity WHERE (mail = ?)')->willReturn($stm);
+        $stm->execute()->shouldBeCalled();
+        $stm->bindValue(0, "kaneda@akira.jp", \PDO::PARAM_STR)->shouldBeCalled();
+        $stm->fetchAll(Connection::FETCH_ASSOC)->willReturn([
+            ['name' => 'kaneda', 'mail' => 'kaneda@akira.jp'],
+        ]);
+
+        $entities = $this->findAll($criteria);
+        $entities->shouldHaveType('Samurai\Onikiri\Entities');
+        $entities->size()->shouldBe(1);
+
+        $entity = $entities->fetch();
+        $entity->getName()->shouldBe('kaneda');
+    }
+    
+    public function it_finds_all_by_criteria_chained(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
+    {
+        $oni->getTableSchema('entity', 'base')->willReturn($t);
+        $t->getDefaultValues()->willReturn([]);
+        $t->hasColumn('active')->willReturn(false);
+
+        $criteria = $this->criteria()->where('mail = ?', 'kaneda@akira.jp');
+
+        $con->prepare('SELECT * FROM entity WHERE (mail = ?)')->willReturn($stm);
+        $stm->execute()->shouldBeCalled();
+        $stm->bindValue(0, "kaneda@akira.jp", \PDO::PARAM_STR)->shouldBeCalled();
+        $stm->fetchAll(Connection::FETCH_ASSOC)->willReturn([
+            ['name' => 'kaneda', 'mail' => 'kaneda@akira.jp'],
+        ]);
+
+        $entities = $this->findAll($criteria);
+        $entities->shouldHaveType('Samurai\Onikiri\Entities');
+        $entities->size()->shouldBe(1);
+
+        $entity = $entities->fetch();
+        $entity->getName()->shouldBe('kaneda');
+    }
+
 
     public function it_is_scope_method(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {

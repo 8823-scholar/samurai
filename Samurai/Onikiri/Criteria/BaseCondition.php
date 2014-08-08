@@ -148,6 +148,21 @@ abstract class BaseCondition
 
 
     /**
+     * get parent criteria
+     *
+     * @return  Samurai\Onikiri\Criteria\Criteria
+     */
+    public function getCriteria()
+    {
+        if ($this->parent instanceof Criteria) {
+            return $this->parent;
+        } else {
+            return $this->parent->getCriteria();
+        }
+    }
+
+
+    /**
      * has conditions ?
      *
      * @access  public
