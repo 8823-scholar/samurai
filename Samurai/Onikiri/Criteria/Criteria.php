@@ -391,7 +391,10 @@ class Criteria
         }
         if ($criteria instanceof Criteria) {
             if ($criteria->where->has()) {
-                $this->where->conditions = array_merge($this->where->conditions, $criteria->where->conditions);
+                foreach ($criteria->where->conditions as $condition) {
+                    $condition->parent = $this->where;
+                    $this->where->conditions[] = $condition;
+                }
             }
             if ($criteria->order->has()) {
                 $this->order->conditions = $criteria->order->conditions;

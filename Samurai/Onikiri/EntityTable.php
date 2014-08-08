@@ -283,6 +283,12 @@ class EntityTable
     {
         // convert to criteria.
         $criteria = call_user_func_array(array($this, 'argsToCriteria'), func_get_args());
+        
+        // logical delete ?
+        $schema = $this->getSchema();
+        if ($schema->hasColumn('active')) {
+            $criteria->where('active = ?', 1);
+        }
 
         // to SQL.
         $sql = $criteria->toSQL();
@@ -514,12 +520,6 @@ class EntityTable
     {
         if (! $cri) $cri = new Criteria\Criteria($this);
         $cri->setTable($this);
-
-        // logical delete ?
-        $schema = $this->getSchema();
-        if ($schema->hasColumn('active')) {
-            $cri->where('active = ?', 1);
-        }
 
         return $cri;
     }
