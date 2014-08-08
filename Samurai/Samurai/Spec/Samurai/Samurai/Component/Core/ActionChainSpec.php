@@ -84,5 +84,12 @@ class ActionChainSpec extends PHPSpecContext
         $error2 = $this->getErrorListByName('utility.execute');
         $error1->shouldBe($error2);
     }
+
+
+    public function it_is_action_name_strategy()
+    {
+        $this->actionNameStrategy('index')->shouldBe('index');
+        $this->actionNameStrategy('foo_bar')->shouldBe('fooBar');
+    }
 }
 

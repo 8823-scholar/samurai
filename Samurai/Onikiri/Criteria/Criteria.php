@@ -558,7 +558,6 @@ class Criteria
 
     /**
      * bridge to EntityTable
-     * (scopes)
      *
      * @param   string  $method
      * @param   array   $args

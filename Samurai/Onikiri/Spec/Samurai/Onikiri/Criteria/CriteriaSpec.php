@@ -139,6 +139,13 @@ class CriteriaSpec extends PHPSpecContext
         $this->toSQL()->shouldBe('SELECT * FROM foo WHERE 1 LIMIT ? OFFSET ?');
         $this->getParams()->shouldBe([10, 20]);
     }
+    
+    public function it_is_limit_condition_with_offset_and_where()
+    {
+        $this->where('type = ?', 'foo')->limit(10)->offset(20);
+        $this->toSQL()->shouldBe('SELECT * FROM foo WHERE (type = ?) LIMIT ? OFFSET ?');
+        $this->getParams()->shouldBe(['foo', 10, 20]);
+    }
 
     public function it_is_limit_condition_by_page()
     {

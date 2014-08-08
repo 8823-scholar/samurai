@@ -566,7 +566,7 @@ class EntityTable
      * @param   array   $args
      * @return  mixed
      */
-    public function __call($method, array $args = array())
+    public function __call($method, array $args = [])
     {
         $scopes = $this->scopes();
         if (array_key_exists($method, $scopes)) {

@@ -92,6 +92,7 @@ class ActionChain
         if ($action === null) {
             list($controller, $action) = explode('.', $controller);
         }
+        $action = $this->actionNameStrategy($action);
         $this->actions[] = array(
             'controller' => null,
             'controller_name' => $controller,
@@ -113,6 +114,7 @@ class ActionChain
         if ($action === null) {
             list($controller, $action) = explode('.', $controller);
         }
+        $action = $this->actionNameStrategy($action);
         return in_array("{$controller}.{$action}", $this->action_names);
     }
 
@@ -192,6 +194,8 @@ class ActionChain
         if ($file) {
             $class = $file->getClassName();
             if (! $action && class_exists($class)) return true;
+            
+            $action = $this->actionNameStrategy($action);
             if (method_exists($class, $action . 'Action')) return true;
         }
 
@@ -254,6 +258,18 @@ class ActionChain
     }
 
 
+    /**
+     * action name strategy
+     *
+     * @param   string  $name
+     * @return  string
+     */
+    public function actionNameStrategy($name)
+    {
+        $names = explode('_', $name);
+        $names = array_map('ucfirst', $names);
+        return lcfirst(join('', $names));
+    }
 
 
     /**
