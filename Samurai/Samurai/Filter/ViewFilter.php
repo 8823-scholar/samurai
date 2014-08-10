@@ -62,6 +62,13 @@ class ViewFilter extends Filter
      */
     const FORWARD_ACTION = SamuraiController::FORWARD_ACTION;
 
+    /**
+     * output json data.
+     *
+     * @const   string
+     */
+    const OUTPUT_JSON = SamuraiController::OUTPUT_JSON;
+
 
     /**
      * @override
@@ -87,6 +94,9 @@ class ViewFilter extends Filter
             case self::FORWARD_ACTION:
                 $this->_forwardAction($data);
                 break;
+            case self::OUTPUT_JSON:
+                $this->_outputJson($data);
+                break;
             default:
                 if (is_string($data)) {
                     $datas = explode(':', $data);
@@ -103,7 +113,6 @@ class ViewFilter extends Filter
     /**
      * rendering template.
      *
-     * @access  private
      * @param   string  $template
      */
     private function _renderTemplate($template = null)
@@ -127,16 +136,27 @@ class ViewFilter extends Filter
     }
 
 
-
     /**
      * forward action.
      *
-     * @access  private
      * @param   string  $action
      */
     private function _forwardAction($action)
     {
         $this->actionChain->addAction($action);
+    }
+
+
+    /**
+     * output json
+     *
+     * @param   mixed   $data
+     */
+    private function _outputJson($data)
+    {
+        $data = json_encode($data);
+        $this->response->setBody($data);
+        $this->response->setHeader('content-type', sprintf('application/json; charset=%s', $this->application->config('encoding.output')));
     }
 
 

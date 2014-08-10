@@ -55,24 +55,16 @@ class SamuraiController
 
 
     /**
-     * View template.
+     * view.
      *
      * @const   string
      */
     const VIEW_TEMPLATE = 'template';
-
-    /**
-     * Forward action.
-     *
-     * @const   string
-     */
+    const TEMPLATE = self::VIEW_TEMPLATE;
     const FORWARD_ACTION = 'action';
-
-    /**
-     * Location.
-     *
-     * @const   string
-     */
+    const ACTION = self::FORWARD_ACTION;
+    const OUTPUT_JSON = 'json';
+    const JSON = self::OUTPUT_JSON;
     const LOCATION = 'location';
 
     /**
