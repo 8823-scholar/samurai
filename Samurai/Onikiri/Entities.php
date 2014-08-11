@@ -196,5 +196,16 @@ class Entities implements Iterator
     {
         return isset($this->_entities[$this->_position]);
     }
+
+
+    /**
+     * bredge to each entity
+     */
+    public function __call($method, $args)
+    {
+        foreach ($this->_entities as $entity) {
+            call_user_func_array([$entity, $method], $args);
+        }
+    }
 }
 

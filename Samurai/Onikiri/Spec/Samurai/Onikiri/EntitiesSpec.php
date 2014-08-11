@@ -63,5 +63,15 @@ class EntitiesSpec extends PHPSpecContext
         $current = $this->current();
         $current->shouldHaveType('Samurai\Onikiri\Entity');
     }
+
+
+    public function it_is_enable_to_access_entity_method(Entity $e1, Entity $e2)
+    {
+        $e1->save()->shouldBeCalled();
+        $e2->save()->shouldBeCalled();
+        $this->add($e1);
+        $this->add($e2);
+        $this->save();
+    }
 }
 
