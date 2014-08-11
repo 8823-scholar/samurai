@@ -427,6 +427,16 @@ class Criteria
     }
 
     /**
+     * bridge to table count.
+     *
+     * @return  int
+     */
+    public function count()
+    {
+        return $this->table->count($this);
+    }
+
+    /**
      * bridge to table update
      *
      * @param   array   $attributes

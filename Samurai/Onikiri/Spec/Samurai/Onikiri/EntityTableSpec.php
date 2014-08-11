@@ -268,6 +268,23 @@ class EntityTableSpec extends PHPSpecContext
         $entity->getName()->shouldBe('kaneda');
     }
 
+    public function it_gets_count(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
+    {
+        $oni->getTableSchema('entity', 'base')->willReturn($t);
+        $t->getDefaultValues()->willReturn([]);
+        $t->hasColumn('active')->willReturn(false);
+
+        $criteria = $this->criteria()->where('mail = ?', 'kaneda@akira.jp');
+
+        $con->prepare('SELECT count(1) as c FROM entity WHERE (mail = ?)')->willReturn($stm);
+        $stm->execute()->shouldBeCalled();
+        $stm->closeCursor()->shouldBeCalled();
+        $stm->bindValue(0, "kaneda@akira.jp", \PDO::PARAM_STR)->shouldBeCalled();
+        $stm->fetch(Connection::FETCH_NUM)->willReturn([10]);
+
+        $this->count($criteria)->shouldBe(10);
+    }
+
 
     public function it_is_scope_method(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {

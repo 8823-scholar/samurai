@@ -304,6 +304,33 @@ class EntityTable
 
         return $entities;
     }
+
+
+    /**
+     * count.
+     *
+     * @param   Samurai\Onikiri\Criteria\Criteria   $criteria
+     * @return  int
+     */
+    public function count()
+    {
+        // convert to criteria.
+        $criteria = call_user_func_array(array($this, 'argsToCriteria'), func_get_args());
+
+        $criteria->columns('count(1) as c');
+        
+        // logical delete ?
+        $schema = $this->getSchema();
+        if ($schema->hasColumn('active')) {
+            $criteria->where('active = ?', 1);
+        }
+
+        // to SQL.
+        $sql = $criteria->toSQL();
+
+        // query
+        return $this->getOne($sql, $criteria->getParams());
+    }
     
     
     /**
@@ -487,6 +514,37 @@ class EntityTable
 
         $result = $sth->execute();
         return $sth;
+    }
+
+
+    /**
+     * get one
+     *
+     * @param   string  $sql
+     * @param   array   $params
+     * @return  mixed
+     */
+    public function getOne($sql, $params = [])
+    {
+        $sth = $this->query($sql, $params);
+        $row = $sth->fetch(Connection::FETCH_NUM);
+        $sth->closeCursor();
+        return $row[0];
+    }
+    
+    /**
+     * get row
+     *
+     * @param   string  $sql
+     * @param   array   $params
+     * @return  object
+     */
+    public function getRow($sql, $params = [])
+    {
+        $sth = $this->query($sql, $params);
+        $row = $sth->fetch(Connection::FETCH_OBJ);
+        $sth->closeCursor();
+        return $row;
     }
     
     
