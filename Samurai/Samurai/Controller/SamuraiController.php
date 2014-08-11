@@ -65,7 +65,8 @@ class SamuraiController
     const ACTION = self::FORWARD_ACTION;
     const OUTPUT_JSON = 'json';
     const JSON = self::OUTPUT_JSON;
-    const LOCATION = 'location';
+    const LOCATION_URL = 'location';
+    const LOCATION = self::LOCATION_URL;
 
     /**
      * @traits

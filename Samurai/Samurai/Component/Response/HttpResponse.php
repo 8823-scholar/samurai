@@ -139,7 +139,6 @@ class HttpResponse extends Response
     /**
      * Set status code.
      *
-     * @access  public
      * @param   int     $code
      */
     public function setStatus($code)
@@ -150,7 +149,6 @@ class HttpResponse extends Response
     /**
      * get status code.
      *
-     * @access  public
      * @return  int
      */
     public function getStatus()
@@ -161,7 +159,6 @@ class HttpResponse extends Response
     /**
      * get status message.
      *
-     * @access  public
      * @param   int|null    $status
      * @return  string
      */
@@ -194,7 +191,6 @@ class HttpResponse extends Response
     /**
      * get body instance.
      *
-     * @access  public
      * @return  Samurai\Samurai\Component\Response\HttpBody
      */
     public function getBody()
@@ -206,7 +202,6 @@ class HttpResponse extends Response
     /**
      * Set header.
      *
-     * @access  public
      * @param   string  $key
      * @param   string  $value
      */
@@ -216,11 +211,23 @@ class HttpResponse extends Response
     }
 
 
+    /**
+     * location
+     *
+     * @param   string  $url
+     * @param   int     $status
+     */
+    public function location($url, $status = 303)
+    {
+        $this->setStatus($status);
+        $this->setHeader('location', $url);
+    }
+
+
 
     /**
      * output contents
      *
-     * @access  public
      */
     public function execute()
     {

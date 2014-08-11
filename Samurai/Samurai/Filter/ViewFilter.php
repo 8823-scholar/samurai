@@ -61,6 +61,13 @@ class ViewFilter extends Filter
      * @const   string
      */
     const FORWARD_ACTION = SamuraiController::FORWARD_ACTION;
+    
+    /**
+     * location.
+     *
+     * @const   string
+     */
+    const LOCATION_URL = SamuraiController::LOCATION_URL;
 
     /**
      * output json data.
@@ -93,6 +100,9 @@ class ViewFilter extends Filter
                 break;
             case self::FORWARD_ACTION:
                 $this->_forwardAction($data);
+                break;
+            case self::LOCATION_URL:
+                $this->_locationURL($data);
                 break;
             case self::OUTPUT_JSON:
                 $this->_outputJson($data);
@@ -144,6 +154,17 @@ class ViewFilter extends Filter
     private function _forwardAction($action)
     {
         $this->actionChain->addAction($action);
+    }
+
+
+    /**
+     * location url.
+     *
+     * @param   string  $url
+     */
+    public function _locationURL($url)
+    {
+        $this->response->location($url);
     }
 
 
