@@ -52,6 +52,8 @@ class Database extends Initializer
     {
         $app->config('container.callback.initialized.', function($c) use ($app) {
             $onikiri = new Onikiri();
+            $c->register('onikiri', $onikiri);
+
             $config = $onikiri->configure();
 
             // register model directory.
@@ -64,8 +66,6 @@ class Database extends Initializer
             // App/Config/Database/[env].yml
             $file = $loader->find($app->config('directory.config.database') . DS . $app->getEnv() . '.yml')->first();
             if ($file) $onikiri->import($file);
-
-            $c->register('onikiri', $onikiri);
         });
     }
 }
