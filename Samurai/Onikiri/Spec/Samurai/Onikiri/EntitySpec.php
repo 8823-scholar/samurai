@@ -5,6 +5,7 @@ namespace Samurai\Onikiri\Spec\Samurai\Onikiri;
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 use Samurai\Onikiri\Onikiri;
 use Samurai\Onikiri\EntityTable;
+use Samurai\Onikiri\Transaction;
 
 class EntitySpec extends PHPSpecContext
 {
@@ -142,6 +143,16 @@ class EntitySpec extends PHPSpecContext
     public function it_gets_table_tagetted_name()
     {
         $this->getTable('User')->shouldHaveType('Samurai\Onikiri\Spec\Samurai\Onikiri\Fixtures\UserTable');
+    }
+
+
+    public function it_gets_and_sets_transaction(EntityTable $t, Transaction $tx)
+    {
+        $t->setTx($tx)->shouldBeCalled();
+        $t->getTx()->willReturn($tx);
+
+        $this->setTx($tx);
+        $this->getTx()->shouldBe($tx);
     }
 }
 

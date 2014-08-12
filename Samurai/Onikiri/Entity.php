@@ -127,6 +127,26 @@ class Entity
         }
     }
 
+    /**
+     * set transaction
+     *
+     * @param   Samurai\Onikiri\Transaction $tx
+     */
+    public function setTx(Transaction $tx)
+    {
+        $this->getTable()->setTx($tx);
+    }
+
+    /**
+     * get transaction
+     *
+     * @return  Samurai\Onikiri\Transaction
+     */
+    public function getTx()
+    {
+        return $this->getTable()->getTx();
+    }
+
 
     /**
      * save entity.
