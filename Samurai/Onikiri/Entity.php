@@ -169,6 +169,27 @@ class Entity
 
 
     /**
+     * set attribute
+     *
+     * @param   string  $key
+     * @param   mixed   $value
+     */
+    public function set($key, $value)
+    {
+        $this->attributes[$key] = $value;
+    }
+
+    /**
+     * get attribute
+     *
+     * @param   string  $key
+     */
+    public function get($key)
+    {
+        return array_key_exists($key, $this->attributes) ? $this->attributes[$key] : null;
+    }
+
+    /**
      * get attributes.
      *
      * @return  array
