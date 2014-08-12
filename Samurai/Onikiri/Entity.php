@@ -277,7 +277,7 @@ class Entity
         $names = explode('_', $key);
         $setter = 'set' . join('', array_map('ucfirst', $names));
         if (method_exists($this, $setter)) {
-            return $this->$setter();
+            return $this->$setter($value);
         }
 
         // has attributes ?
