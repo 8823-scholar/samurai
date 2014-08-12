@@ -32,7 +32,6 @@ namespace Samurai\Onikiri;
 
 use Samurai\Onikiri\Schema\TableSchema;
 use Samurai\Raikiri\DependencyInjectable;
-use Samurai\Samurai\Component\Core\YAML;
 use Samurai\Samurai\Component\Cache\ApcCache;
 use Samurai\Samurai\Component\Cache\ArrayCache;
 
@@ -119,7 +118,7 @@ class Onikiri
     {
         if (! file_exists($file)) return;
 
-        $settings = YAML::load($file);
+        $settings = $this->yaml->load($file);
         foreach ($settings as $alias => $setting) {
             $this->_databases[$alias] = new Database($setting);
         }

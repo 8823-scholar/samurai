@@ -31,7 +31,6 @@
 namespace Samurai\Samurai\Component\Spec\Runner;
 
 use Samurai\Samurai\Component\FileSystem\Iterator\SimpleListIterator;
-use Samurai\Samurai\Component\Core\YAML;
 use Samurai\Samurai\Component\Spec\PHPSpec\Input;
 use Samurai\Samurai\Component\Spec\PHPSpec\ApplicationMaintainer;
 use Samurai\Samurai\Component\Spec\PHPSpec\DIContainerMaintainer;

@@ -30,7 +30,7 @@
 
 namespace Samurai\Raikiri;
 
-use Samurai\Samurai\Component\Core\YAML;
+use Samurai\Samurai\Component\DataSource\YAML;
 
 /**
  * Container class.
@@ -46,7 +46,6 @@ class Container
     /**
      * name.
      *
-     * @access  public
      * @var     string
      */
     public $name;
@@ -54,7 +53,6 @@ class Container
     /**
      * components
      *
-     * @access  private
      * @var     array
      */
     private $components = array();
@@ -63,19 +61,18 @@ class Container
     /**
      * construct
      *
-     * @access  public
      * @param   string  $name
      */
     public function __construct($name)
     {
         $this->name = $name;
+        $this->register('yaml', new YAML());
     }
 
 
     /**
      * Get name.
      *
-     * @access  public
      * @return  string
      */
     public function getName()
@@ -87,12 +84,11 @@ class Container
     /**
      * import dicon file.
      *
-     * @access  public
      * @param   string  $dicon
      */
     public function import($dicon)
     {
-        $defines = YAML::load($dicon);
+        $defines = $this->get('yaml')->load($dicon);
         foreach ($defines as $name => $def) {
             $define = $this->getComponentDefine($def);
             $this->register($name, $define);
@@ -100,12 +96,11 @@ class Container
     }
 
 
-
     /**
      * has component ?
      *
-     * @access  public
      * @param   string  $name
+     * @return  boolean
      */
     public function has($name)
     {
@@ -116,7 +111,6 @@ class Container
     /**
      * register component to container.
      *
-     * @access  public
      * @param   string  $name
      * @param   object  $component
      */
@@ -141,7 +135,6 @@ class Container
     /**
      * get component
      *
-     * @access  public
      * @param   string  $name
      * @return  object
      */
@@ -161,12 +154,9 @@ class Container
     }
 
 
-
-
     /**
      * get define instance
      *
-     * @access  public
      * @param   mixed   $setting
      * @return  Samurai\Raikiri\ComponentDefine
      */
@@ -180,12 +170,9 @@ class Container
     }
 
 
-
-
     /**
      * Inject dependency to component
      *
-     * @access  public
      * @param   object  $component
      */
     public function injectDependency($component)

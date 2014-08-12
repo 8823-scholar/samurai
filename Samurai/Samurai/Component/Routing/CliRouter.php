@@ -30,8 +30,6 @@
 
 namespace Samurai\Samurai\Component\Routing;
 
-use Samurai\Samurai\Component\Core\YAML;
-
 /**
  * Routing class for cli.
  *

@@ -49,7 +49,7 @@ class Config extends Parameters
      */
     public function import($file)
     {
-        $data = YAML::load($file);
+        $data = $this->yaml->load($file);
         parent::import($data);
     }
 }

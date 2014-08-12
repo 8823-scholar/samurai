@@ -31,7 +31,6 @@
 namespace Samurai\Samurai\Component\Routing;
 
 use Samurai\Raikiri\DependencyInjectable;
-use Samurai\Samurai\Component\Core\YAML;
 
 /**
  * Routing class.
@@ -96,7 +95,7 @@ class Router
      */
     public function import($file)
     {
-        $rules = YAML::load($file);
+        $rules = $this->yaml->load($file);
 
         foreach ($rules as $rule) {
             list($key, $value) = each($rule);

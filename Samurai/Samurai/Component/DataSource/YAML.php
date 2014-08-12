@@ -28,15 +28,15 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace Samurai\Samurai\Component\Core;
+namespace Samurai\Samurai\Component\DataSource;
 
-use Samurai\Samurai\Exception;
+use Samurai\Samurai\Exception\NotFoundException;
 
 /**
- * YAML Loader/Dumper.
+ * YAML data source.
  *
  * @package     Samurai
- * @subpackage  Core
+ * @subpackage  Component.DataSource
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
@@ -44,19 +44,48 @@ use Samurai\Samurai\Exception;
 class YAML
 {
     /**
-     * load YAML file.
+     * load YAML file or string.
      *
-     * @access  public
+     * @param   string  $source
+     * @return  array
+     */
+    public function load($source)
+    {
+        if ($this->isFile($source)) {
+            return $this->loadFile($source);
+        } else {
+            return $this->loadString($source);
+        }
+    }
+
+    /**
+     * load by file.
+     *
      * @param   string  $file
      * @return  array
-     * @throw   Samurai\Exception\NotFoundException
      */
-    public static function load($file)
+    public function loadFile($file)
     {
-        if ( self::enableSpyc() ) {
-            return self::loadBySpyc($file);
+        if ($this->enableSpyc()) {
+            if (! file_exists($file)) return [];
+            return $this->loadBySpyc($file);
         } else {
-            throw new Exception\NotFoundException('Not found YAML parser.');
+            throw new NotFoundException('Not found YAML parser.');
+        }
+    }
+
+    /**
+     * load by string
+     *
+     * @param   string  $string
+     * @return  array
+     */
+    public function loadString($string)
+    {
+        if ($this->enableSpyc()) {
+            return $this->loadBySpyc($string);
+        } else {
+            throw new NotFoundException('Not found YAML parser.');
         }
     }
     
@@ -64,60 +93,66 @@ class YAML
     /**
      * dump YAML formatted.
      *
-     * @access  public
-     * @param   array   $array
+     * @param   array   $data
      * @return  string
      * @throw   Samurai\Exception\NotFoundException
      */
-    public static function dump($array)
+    public function dump($data)
     {
-        if (self::enableSpyc()) {
-            return self::dumpBySpyc($array);
+        if ($this->enableSpyc()) {
+            return $this->dumpBySpyc($data);
         } else {
-            throw new Exception\NotFoundException('Not found YAML parser.');
+            throw new NotFoundException('Not found YAML parser.');
         }
     }
-
 
 
     /**
      * has Spyc YAML parser ?
      *
-     * @access  public
      * @return  boolean
      */
-    public static function enableSpyc()
+    public function enableSpyc()
     {
         return class_exists('Spyc');
     }
 
 
+
     /**
      * load YAML file by Spyc
      *
-     * @access  public
-     * @param   string  $file
+     * @param   string  $source
      * @return  array
      */
-    public static function loadBySpyc($file)
+    public function loadBySpyc($source)
     {
-        if (! file_exists($file)) return array();
-
-        $data = \Spyc::YAMLLoad($file);
+        $data = \Spyc::YAMLLoad($source);
         return $data;
     }
     
     /**
      * dump YAML formatted by Spyc
      *
-     * @access  public
-     * @param   array   $array
+     * @param   array   $data
      * @return  string
      */
-    public static function dumpBySpyc($array)
+    public function dumpBySpyc($data)
     {
-        $data = \Spyc::YAMLDump($array);
+        $data = \Spyc::YAMLDump($data);
         return $data;
+    }
+
+
+    /**
+     * is file ?
+     *
+     * @param   string  $source
+     * @return  boolean
+     */
+    public function isFile($source)
+    {
+        return strpos($source, '---') === false && strpos($source, "\n") === false;
     }
 }
 

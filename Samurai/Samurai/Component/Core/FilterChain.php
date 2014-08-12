@@ -30,7 +30,6 @@
 
 namespace Samurai\Samurai\Component\Core;
 
-use Samurai\Samurai\Component\Core\YAML;
 use Samurai\Samurai\Controller\SamuraiController;
 use Samurai\Samurai\Exception;
 use Samurai\Raikiri\DependencyInjectable;
@@ -174,7 +173,7 @@ class FilterChain
      */
     public function loadFilter($file, $is_global = false)
     {
-        $defines = YAML::load($file);
+        $defines = $this->yaml->load($file);
 
         // when global, load "*"
         $filters = isset($defines['*']) && $defines['*'] ? $defines['*'] : [];

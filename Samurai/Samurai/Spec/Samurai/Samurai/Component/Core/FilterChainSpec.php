@@ -4,7 +4,6 @@ namespace Samurai\Samurai\Spec\Samurai\Samurai\Component\Core;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 use Samurai\Samurai\Controller\SamuraiController;
-use Samurai\Samurai\Component\Core\YAML;
 
 class FilterChainSpec extends PHPSpecContext
 {
@@ -12,6 +11,7 @@ class FilterChainSpec extends PHPSpecContext
      * @dependencies
      */
     public $loader;
+    public $yaml;
 
 
     public function it_is_initializable()
@@ -65,7 +65,7 @@ class FilterChainSpec extends PHPSpecContext
         $this->setAction($c, 'execute');
         $this->loadFilter($filter);
         
-        foreach (YAML::load($filter) as $values) {
+        foreach ($this->yaml->load($filter) as $values) {
             foreach ($values as $key => $value) {
                 $this->getFilters()->shouldHaveKey($key);
             }
@@ -86,7 +86,7 @@ class FilterChainSpec extends PHPSpecContext
         $current = $this->getCurrentFilter();
         $current->shouldHaveType('Samurai\Samurai\Filter\Filter');
 
-        $filters = YAML::load($filter);
+        $filters = $this->yaml->load($filter);
         $filter_names = array_keys($filters['*']);
         $current->getName()->shouldBe(array_shift($filter_names));
 
