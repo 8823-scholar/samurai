@@ -350,8 +350,8 @@ class EntityTable
         $attributes = array_merge($defaults, $attributes);
 
         $entity = new $class($this, $attributes, $exists);
-        $entity->initialize();
         $entity->setContainer($this->raikiri());
+        $entity->initialize();
 
         return $entity;
     }
