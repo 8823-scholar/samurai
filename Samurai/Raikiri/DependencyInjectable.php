@@ -30,6 +30,7 @@
 
 namespace Samurai\Raikiri;
 
+use Samurai\Samurai\Exception\MemberNotFoundException;
 use Samurai\Onikiri\Exception\EntityTableNotFoundException;
 
 /**
@@ -105,8 +106,9 @@ trait DependencyInjectable
             $name = ucfirst(preg_replace('/Table$/', '', $name));
             if ($onikiri && $table = $onikiri->getTable($name)) return $table;
         } catch (EntityTableNotFoundException $e) {
-            return null;
         }
+
+        throw new MemberNotFoundException(sprintf('member not found. -> %s::$%s', get_class($this), $name));
     }
 }
 

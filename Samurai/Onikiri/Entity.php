@@ -31,6 +31,7 @@
 namespace Samurai\Onikiri;
 
 use Samurai\Raikiri\DependencyInjectable;
+use Samurai\Samurai\Exception\MemberNotFoundException;
 
 /**
  * Entity class.
@@ -336,7 +337,7 @@ class Entity
         }
 
         $class = get_class($this);
-        throw new \LogicException("No such method. -> {$class}::{$method}");
+        throw new MemberNotFoundException("No such method. -> {$class}::{$method}");
     }
 }
 
