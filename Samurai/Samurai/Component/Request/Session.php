@@ -146,17 +146,6 @@ class Session extends Request
         $params = session_get_cookie_params();
         session_set_cookie_params($params['lifetime'], $params['path'], $domain, $params['secure']);
     }
-    
-    /**
-     * set cookie domain
-     *
-     * @param   string  $domain
-     */
-    public function setCookieDomain($domain)
-    {
-        $params = session_get_cookie_params();
-        session_set_cookie_params($params['lifetime'], $params['path'], $domain, $params['secure']);
-    }
 
 
     /**
