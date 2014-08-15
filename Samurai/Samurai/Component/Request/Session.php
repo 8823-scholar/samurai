@@ -171,5 +171,14 @@ class Session extends Request
         $this->handler = $handler;
         session_set_save_handler($this->handler);
     }
+
+
+    /**
+     * save data to session
+     */
+    public function save()
+    {
+        $_SESSION = $this->_params;
+    }
 }
 

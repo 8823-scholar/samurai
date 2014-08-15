@@ -114,5 +114,14 @@ class SessionFilter extends Filter
         }
         return $handler;
     }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function postfilter()
+    {
+        $this->session->save();
+    }
 }
 
