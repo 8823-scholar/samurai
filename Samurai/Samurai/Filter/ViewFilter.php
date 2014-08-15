@@ -108,9 +108,11 @@ class ViewFilter extends Filter
                 $this->_outputJson($data);
                 break;
             default:
-                if (is_string($data)) {
+                if (is_string($data) && strpos($data, ':')) {
                     $datas = explode(':', $data);
                     $datas = array_map('trim', $datas);
+                } elseif (is_string($data)) {
+                    $datas = [self::VIEW_TEMPLATE, $data];
                 } else {
                     $datas = $data;
                 }
