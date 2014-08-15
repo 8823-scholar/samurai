@@ -121,7 +121,9 @@ class SessionFilter extends Filter
      */
     public function postfilter()
     {
+        $this->eventDispatcher->dispatch('session.close');
         $this->session->save();
+        $this->session->close();
     }
 }
 

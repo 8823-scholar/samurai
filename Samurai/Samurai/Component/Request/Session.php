@@ -180,5 +180,13 @@ class Session extends Request
     {
         $_SESSION = $this->_params;
     }
+
+    /**
+     * write close
+     */
+    public function close()
+    {
+        session_write_close();
+    }
 }
 
