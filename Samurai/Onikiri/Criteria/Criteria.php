@@ -437,6 +437,39 @@ class Criteria
     }
 
     /**
+     * bridge to getOne.
+     *
+     * @return  mixed
+     */
+    public function getOne()
+    {
+        $sql = $this->toSQL();
+        return $this->table->getOne($sql, $this->getParams());
+    }
+    
+    /**
+     * bridge to getRow.
+     *
+     * @return  Object
+     */
+    public function getRow()
+    {
+        $sql = $this->toSQL();
+        return $this->table->getRow($sql, $this->getParams());
+    }
+    
+    /**
+     * bridge to getCol.
+     *
+     * @return  array
+     */
+    public function getCol($column = 0)
+    {
+        $sql = $this->toSQL();
+        return $this->table->getCol($sql, $this->getParams(), $column);
+    }
+
+    /**
      * bridge to table update
      *
      * @param   array   $attributes

@@ -547,6 +547,23 @@ class EntityTable
         return $row;
     }
     
+    /**
+     * get cols
+     *
+     * @param   string  $sql
+     * @param   array   $params
+     * @return  array
+     */
+    public function getCol($sql, $params = [], $column = 0)
+    {
+        $sth = $this->query($sql, $params);
+        $col = [];
+        foreach ($sth->fetchAll(Connection::FETCH_BOTH) as $row) {
+            $col[] = array_key_exists($column, $row) ? $row[$column] : null;
+        }
+        return $col;
+    }
+    
     
     /**
      * connect to backend.

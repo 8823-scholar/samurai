@@ -131,7 +131,7 @@ class EntitySpec extends PHPSpecContext
 
     public function it_calls_no_exists_method()
     {
-        $this->shouldThrow('LogicException')->duringDoSomething();
+        $this->shouldThrow('Samurai\Samurai\Exception\MemberNotFoundException')->duringDoSomething();
     }
 
 

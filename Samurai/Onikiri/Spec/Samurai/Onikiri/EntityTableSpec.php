@@ -285,6 +285,23 @@ class EntityTableSpec extends PHPSpecContext
         $this->count($criteria)->shouldBe(10);
     }
 
+    public function it_gets_col(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
+    {
+        $sql = "SELECT * FROM entity";
+        $con->prepare('SELECT * FROM entity')->willReturn($stm);
+        $stm->execute()->shouldBeCalled();
+        $stm->fetchAll(Connection::FETCH_BOTH)->willReturn([
+            [0 => 1, 'id' => 1,
+                1 => 'kiuchi', 'name' => 'kiuchi'],
+            [0 => 2, 'id' => 2,
+                1 => 'Minka', 'name' => 'Minka'],
+        ]);
+
+        $this->getCol($sql)->shouldBe([1, 2]);
+        $this->getCol($sql, [], 1)->shouldBe(['kiuchi', 'Minka']);
+        $this->getCol($sql, [], 'name')->shouldBe(['kiuchi', 'Minka']);
+    }
+
 
     public function it_is_scope_method(Connection $con, Statement $stm, Onikiri $oni, TableSchema $t)
     {
