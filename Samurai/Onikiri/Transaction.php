@@ -117,6 +117,17 @@ class Transaction
         throw new TransactionFailedException($message ? $message : 'failed to transaction.');
     }
 
+    /**
+     * rollback transaction without throw
+     */
+    public function rollbackWithoutThrow()
+    {
+        try {
+            $this->rollback();
+        } catch (TransactionFailedException $e) {
+        }
+    }
+
 
     /**
      * is valid ?
