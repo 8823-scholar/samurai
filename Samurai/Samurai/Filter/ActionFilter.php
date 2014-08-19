@@ -44,7 +44,14 @@ use Samurai\Samurai\Controller\SamuraiController;
 class ActionFilter extends Filter
 {
     /**
-     * @override
+     * controller
+     *
+     * @var     Samurai\Samurai\Controller\SamuraiController
+     */
+    public $controller;
+
+    /**
+     * {@inheritdoc}
      */
     public function prefilter()
     {
@@ -54,9 +61,12 @@ class ActionFilter extends Filter
         $errorList = $this->actionChain->getCurrentErrorList();
 
         // TODO: When has error, execute
-        $controller = $actionDef['controller'];
+        $this->controller = $actionDef['controller'];
         $action = $actionDef['action'];
-        $result = $this->_callAction($controller, $action, $errorList->getType());
+        
+        $this->controller->prefilter();
+        
+        $result = $this->_callAction($this->controller, $action, $errorList->getType());
         $this->actionChain->setCurrentResult($result);
     }
 
@@ -80,6 +90,15 @@ class ActionFilter extends Filter
         } else {
             return $error;
         }
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function postfilter()
+    {
+        $this->controller->postfilter();
     }
 }
 

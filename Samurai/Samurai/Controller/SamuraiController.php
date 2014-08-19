@@ -205,6 +205,20 @@ class SamuraiController
         $this->assign('request', $this->request->getAll());
     }
 
+    /**
+     * prefilter
+     */
+    public function prefilter()
+    {
+    }
+
+    /**
+     * postfilter
+     */
+    public function postfilter()
+    {
+    }
+
 
     /**
      * search in controller dirs
