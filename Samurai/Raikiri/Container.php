@@ -55,7 +55,7 @@ class Container
      *
      * @var     array
      */
-    private $components = array();
+    private $components = [];
 
 
     /**

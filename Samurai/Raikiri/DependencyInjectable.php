@@ -92,6 +92,14 @@ trait DependencyInjectable
 
 
     /**
+     * initialize method
+     */
+    public function initialize()
+    {
+    }
+
+
+    /**
      * auto injection resolve.
      */
     public function __get($name)

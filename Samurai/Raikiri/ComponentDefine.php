@@ -226,6 +226,8 @@ class ComponentDefine
         // init method
         if ($this->hasInitMethod()) {
             $this->callInitMethod($instance);
+        } elseif($this->hasInitializeMethod($instance)) {
+            $instance->initialize();
         }
 
         return $instance;
@@ -321,12 +323,22 @@ class ComponentDefine
     /**
      * has init method ?
      *
-     * @access  public
      * @return  boolean
      */
     public function hasInitMethod()
     {
         return $this->init_method_name !== null;
+    }
+
+    /**
+     * has initialize method ?
+     *
+     * @param   mixed   $instance
+     * @return  boolean
+     */
+    public function hasInitializeMethod($instance)
+    {
+        return is_object($instance) && in_array('Samurai\Raikiri\Dependencynjectable', class_uses($instance));
     }
 }
 
