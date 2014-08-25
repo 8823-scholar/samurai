@@ -248,7 +248,18 @@ class Entity
      */
     public function toArray()
     {
-        return $this->attributes;
+        $args = func_get_args();
+        if ($args) {
+            $attributes = [];
+            foreach ($args as $key) {
+                if ($this->hasAttribute($key)) {
+                    $attributes[$key] = $this->get($key);
+                }
+            }
+            return $attributes;
+        } else {
+            return $this->attributes;
+        }
     }
 
 

@@ -109,6 +109,11 @@ class EntitySpec extends PHPSpecContext
         $this->toArray()->shouldBe($this->getAttributes());
     }
 
+    public function it_converts_to_array_target_attributes()
+    {
+        $this->toArray('id', 'name', 'gender')->shouldBe(['id' => 11, 'name' => 'KIUCHI Satoshinosuke', 'gender' => 'male']);
+    }
+
     public function it_saves(EntityTable $t)
     {
         $t->save($this, [])->shouldBeCalled();
