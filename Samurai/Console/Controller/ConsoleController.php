@@ -64,8 +64,10 @@ class ConsoleController extends SamuraiController
      *
      * @access  public
      */
-    public function send($message)
+    public function send()
     {
+        $args = func_get_args();
+        $message = call_user_func_array('sprintf', $args);
         $this->response->send($message);
     }
 
