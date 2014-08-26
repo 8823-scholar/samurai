@@ -97,6 +97,7 @@ class Framework
 
             // clear.
             $this->filterChain->clear();
+            $this->container->register('errorList', $this->actionChain->getCurrentErrorList());
 
             $this->filterChain->setAction($action['controller'], $action['action']);
             $this->filterChain->build();
