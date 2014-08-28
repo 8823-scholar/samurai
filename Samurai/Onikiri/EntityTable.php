@@ -526,6 +526,8 @@ class EntityTable
      */
     public function getOne($sql, $params = [])
     {
+        if ($sql instanceof Criteria\Criteria) return $this->getOne($sql->toSQL(), $sql->getParams());
+
         $sth = $this->query($sql, $params);
         $row = $sth->fetch(Connection::FETCH_NUM);
         $sth->closeCursor();
@@ -541,6 +543,8 @@ class EntityTable
      */
     public function getRow($sql, $params = [])
     {
+        if ($sql instanceof Criteria\Criteria) return $this->getRow($sql->toSQL(), $sql->getParams());
+
         $sth = $this->query($sql, $params);
         $row = $sth->fetch(Connection::FETCH_OBJ);
         $sth->closeCursor();
@@ -556,6 +560,8 @@ class EntityTable
      */
     public function getCol($sql, $params = [], $column = 0)
     {
+        if ($sql instanceof Criteria\Criteria) return $this->getCol($sql->toSQL(), $sql->getParams(), $column);
+
         $sth = $this->query($sql, $params);
         $col = [];
         foreach ($sth->fetchAll(Connection::FETCH_BOTH) as $row) {
