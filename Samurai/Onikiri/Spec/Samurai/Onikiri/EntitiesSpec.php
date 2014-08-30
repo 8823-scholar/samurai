@@ -73,5 +73,11 @@ class EntitiesSpec extends PHPSpecContext
         $this->add($e2);
         $this->save();
     }
+
+
+    public function it_gets_col()
+    {
+        $this->col('id')->shouldBe([1,2,3,4,5]);
+    }
 }
 

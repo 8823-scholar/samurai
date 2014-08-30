@@ -92,6 +92,21 @@ class Entities implements Iterator
 
 
     /**
+     * get cols
+     *
+     * @return array
+     */
+    public function col($column)
+    {
+        $values = [];
+        foreach ($this->_entities as $entity) {
+            if ($entity->hasAttribute($column)) $values[] = $entity->$column;
+        }
+        return $values;
+    }
+
+
+    /**
      * reverse sorted.
      *
      * @return  Samurai\Onikiri\Entities
