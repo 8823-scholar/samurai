@@ -84,12 +84,12 @@ trait Accessor
                 // 1. simple bredge
                 $name1 = lcfirst($name);
                 if ($this->hasProperty($name1)) {
-                    return $this->$name1 = $value;
+                    return $this->setProperty($name1, $value);
                 }
                 // 2. camelCase to underbar
                 $name2 = join('_', array_map('lcfirst', preg_split('/(?=[A-Z])/', $name1)));
                 if ($this->hasProperty($name2)) {
-                    return $this->$name2 = $value;
+                    return $this->setProperty($name2, $value);
                 }
             }
         }
