@@ -19,15 +19,10 @@ class DefaultNamingStrategySpec extends PHPSpecContext
     public function it_convert_alias_to_table_class_name()
     {
         $this->aliasToTableClassName('User')->shouldBe('UserTable');
-
-        // lowercase
         $this->aliasToTableClassName('user')->shouldBe('UserTable');
-
-        // Uppercase
-        $this->aliasToTableClassName('USER')->shouldBe('UserTable');
-
-        // Snakecase
-        $this->aliasToTableClassName('user_posts')->shouldBe('UserPostsTable');
+        
+        $this->aliasToTableClassName('UserPost')->shouldBe('UserPostTable');
+        $this->aliasToTableClassName('user_post')->shouldBe('UserPostTable');
     }
 }
 

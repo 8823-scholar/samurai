@@ -42,15 +42,16 @@ namespace Samurai\Onikiri\Mapping;
 class DefaultNamingStrategy implements NamingStrategy
 {
     /**
+     * User -> UserTable
      * user -> UserTable
-     * USER -> UserTable
-     * user_posts -> UserPostsTable
+     * UserPost -> UserPostTable
+     * user_post -> UserPostTable
      *
      * {@inheritdoc}
      */
     public function aliasToTableClassName($alias)
     {
-        return join('', array_map('ucfirst', array_map('strtolower', explode('_', $alias)))) . 'Table';
+        return join('', array_map('ucfirst', explode('_', $alias))) . 'Table';
     }
 }
 
