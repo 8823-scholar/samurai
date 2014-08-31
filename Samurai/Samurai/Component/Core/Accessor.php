@@ -115,6 +115,7 @@ trait Accessor
     public function setProperty($key, $value)
     {
         $this->$key = $value;
+        return $this;
     }
 
 
