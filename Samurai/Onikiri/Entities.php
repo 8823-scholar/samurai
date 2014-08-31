@@ -173,6 +173,33 @@ class Entities implements Iterator
 
 
     /**
+     * filtering results
+     *
+     * @param   string|closure  $key
+     * @param   mixed           $value
+     * @return  Samurai\Onikiri\Entities
+     */
+    public function filter($key, $value = null)
+    {
+        if (! $key instanceof \Closure) {
+            $closure = function($entity) use ($key, $value) {
+                if ($entity->$key == $value) return $entity;
+            };
+        } else {
+            $closure = $key;
+        }
+        
+        $filtered = new Entities();
+        foreach ($this->_entities as $entity) {
+            if ($entity = $closure($entity)) {
+                $filtered->add($entity);
+            }
+        }
+        return $filtered;
+    }
+
+
+    /**
      * @implements
      */
     public function current()

@@ -17,6 +17,7 @@ class EntitiesSpec extends PHPSpecContext
             ['id' => 3, 'name' => 'HUKADA Kyoko'],
             ['id' => 4, 'name' => 'HINAMI Kyoko'],
             ['id' => 5, 'name' => 'HATSUNE Miku'],
+            ['id' => 6, 'name' => 'Minka Lee'],
         ];
         foreach ($fixtures as $position => $fixture) {
             $this->add(new Entity($e->getWrappedObject(), $fixture, true));
@@ -77,7 +78,23 @@ class EntitiesSpec extends PHPSpecContext
 
     public function it_gets_col()
     {
-        $this->col('id')->shouldBe([1,2,3,4,5]);
+        $this->col('id')->shouldBe([1,2,3,4,5, 6]);
+    }
+
+
+    public function it_is_filtering_to_result()
+    {
+        $this->filter('name', 'Minka Lee')->col('id')->shouldBe([2, 6]);
+    }
+    
+    public function it_is_filtering_to_result_using_closure()
+    {
+        $filtered = $this->filter(function($entity){
+            if (preg_match('/Kyoko$/', $entity->name)) {
+                return $entity;
+            }
+        });
+        $filtered->col('id')->shouldBe([3, 4]);
     }
 }
 
