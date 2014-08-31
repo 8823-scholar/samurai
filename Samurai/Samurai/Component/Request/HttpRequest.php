@@ -109,6 +109,9 @@ class HttpRequest extends Request
             $this->parent_path = dirname($_SERVER['SCRIPT_NAME']) == '/' ? '' : dirname($_SERVER['SCRIPT_NAME']);
             $this->path = preg_replace('|^' . preg_quote($this->parent_path, '|') . '|', '', array_shift($temp));
         }
+        if ($path = $this->get('_q')) {
+            $this->path = $path;
+        }
 
         // base url
         if (isset($_SERVER['HTTP_HOST'])) {
