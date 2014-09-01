@@ -179,6 +179,9 @@ class FilterChain
         $filters = isset($defines['*']) && $defines['*'] ? $defines['*'] : [];
 
         // when local, load "*" and "controller.action"
+        $key = $this->controller->getFilterKey();
+        $filters = array_merge($filters, isset($defines[$key]) && $defines[$key] ? (array)$defines[$key] : []);
+
         $key = $this->controller->getFilterKey($this->action);
         $filters = array_merge($filters, isset($defines[$key]) && $defines[$key] ? (array)$defines[$key] : []);
 

@@ -138,7 +138,7 @@ class SamuraiController
      * @param   string  $action
      * @return  string
      */
-    public function getFilterKey($action)
+    public function getFilterKey($action = null)
     {
         $class = get_class($this);
         $names = explode('\\', $class);
@@ -149,7 +149,7 @@ class SamuraiController
 
         // controller.action
         $controller = preg_replace('/controller$/', '', strtolower(join('_', $names)));
-        return $controller . '.' . $action;
+        return $action ? $controller . '.' . $action : $controller;
     }
 
 
