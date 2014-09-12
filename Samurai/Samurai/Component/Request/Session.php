@@ -83,6 +83,17 @@ class Session extends Request
 
 
     /**
+     * get id
+     *
+     * @return  string
+     */
+    public function getId()
+    {
+        return session_id();
+    }
+
+
+    /**
      * set cache_limiter
      *
      * @param   string  $limiter
