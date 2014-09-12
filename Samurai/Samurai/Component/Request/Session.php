@@ -123,7 +123,7 @@ class Session extends Request
     public function setUseCookies($flag = true)
     {
         $this->setConfig('use_cookies', $flag ? 1 : 0);
-        $this->setConfig('use_only_cookies', $flag ? 0 : 1);
+        $this->setConfig('use_only_cookies', $flag ? 1 : 0);
     }
 
     /**
