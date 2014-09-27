@@ -58,6 +58,13 @@ class Event
     public $dispatcher;
 
     /**
+     * context
+     *
+     * @var     mixed
+     */
+    public $context;
+
+    /**
      * stop
      *
      * @var     boolean
