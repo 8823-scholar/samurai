@@ -111,6 +111,7 @@ class HttpRequest extends Request
         }
         if ($path = $this->get('_q')) {
             $this->path = $path;
+            unset($_GET['_q']);
         }
 
         // base url
