@@ -112,6 +112,7 @@ class HttpRequest extends Request
         if ($path = $this->get('_q')) {
             $this->path = $path;
             unset($_GET['_q']);
+            $_SERVER['QUERY_STRING'] = http_build_query($_GET);
         }
 
         // base url
