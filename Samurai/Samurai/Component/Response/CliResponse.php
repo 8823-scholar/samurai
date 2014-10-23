@@ -81,9 +81,9 @@ class CliResponse extends HttpResponse
      * @access  public
      * @param   string  $line
      */
-    public function send($line)
+    public function send($line, $eol = PHP_EOL)
     {
-        echo $line . PHP_EOL;
+        echo $line . $eol;
     }
 
 
