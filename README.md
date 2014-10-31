@@ -23,15 +23,9 @@ Easily resolve dependencies of any objects.
 
 ### via Composer.
 
-```json
-"require": {
-    "samurai/samurai": "dev-3.0"
-}
+```sh
+composer require samurai/samurai
 ```
-```bash
-$ composer.phar install
-```
-
 
 ## Some links
 
