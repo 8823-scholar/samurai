@@ -174,6 +174,7 @@ class Application
         $this->config('directory.layout', 'View/Layout');
         $this->config('directory.template', 'View/Content');
         $this->config('directory.locale', 'Locale');
+        $this->config('directory.task', 'Task');
         $this->config('directory.spec', 'Spec');
         $this->config('directory.skeleton', 'Skeleton');
         $this->config('directory.log', 'Log');

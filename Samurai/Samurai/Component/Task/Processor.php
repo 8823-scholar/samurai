@@ -32,6 +32,7 @@ namespace Samurai\Samurai\Component\Task;
 
 use Samurai\Samurai\Component\Core\Accessor;
 use Samurai\Samurai\Exception\NotFoundException;
+use Samurai\Samurai\Exception\NotImplementsException;
 use Samurai\Raikiri\DependencyInjectable;
 
 /**
@@ -80,7 +81,11 @@ class Processor
     {
         $names = explode(self::SEPARATOR, $name);
         $method = array_pop($names);
-        $class_name = 'Task\\' . join('\\', array_map('ucfirst', $names)) . 'Task';
+        if ($names) {
+            $class_name = 'Task\\' . join('\\', array_map('ucfirst', $names)) . 'TaskList';
+        } else {
+            $class_name = 'Task\\TaskList';
+        }
         $class_path = $this->loader->getPathByClass($class_name, false);
         if ($class_path === null || ! $class_path->isExists()) throw new NotFoundException("No such task. -> {$name}");
 
@@ -90,7 +95,7 @@ class Processor
         if (! $task->has($method)) throw new NotImplementsException("No such task. -> {$name}");
         $task->setDo($method);
         $task->setOutput($this->output);
-        $this->container->injectDependency($task);
+        $task->setContainer($this->raikiri());
 
         return $task;
     }

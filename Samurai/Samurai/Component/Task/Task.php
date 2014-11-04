@@ -31,6 +31,7 @@
 namespace Samurai\Samurai\Component\Task;
 
 use Samurai\Samurai\Component\Core\Accessor;
+use Samurai\Raikiri\DependencyInjectable;
 use Samurai\Samurai\Component\Request\Request;
 use Samurai\Samurai\Exception\NotImplementsException;
 
@@ -49,6 +50,7 @@ class Task
      * @traits
      */
     use Accessor;
+    use DependencyInjectable;
 
     /**
      * args
@@ -78,11 +80,6 @@ class Task
      */
     public $output;
 
-    /**
-     * @dependencies
-     */
-    public $taskProcessor;
-
 
     /**
      * execute this task pre setted.
@@ -104,7 +101,7 @@ class Task
      * @param   string  $name
      * @param   array   $options
      */
-    public function task($name, array $options = [])
+    public function callTask($name, array $options = [])
     {
         $this->taskProcessor->execute($name, $options);
     }
@@ -192,10 +189,10 @@ class Task
         $comment = $method->getDocComment();
         $lines = [];
         foreach (preg_split('/\r\n|\n|\r/', $comment) as $line) {
-            $line = preg_replace('/^\s*?\*\s?/', '', $line);
-
             // /** or */ is skip.
-            if (in_array($line, ['/**', '*/', '**/'])) continue;
+            if (in_array(trim($line), ['/**', '*/', '**/'])) continue;
+
+            $line = preg_replace('/^\s*?\*\s?/', '', $line);
 
             // start char is "@" that is doc comment end signal.
             if (preg_match('/^@\w+/', $line)) break;

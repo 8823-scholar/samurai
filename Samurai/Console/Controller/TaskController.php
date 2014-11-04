@@ -31,6 +31,8 @@
 
 namespace Samurai\Console\Controller;
 
+use Samurai\Samurai\Exception\NotFoundException;
+
 /**
  * Task controller.
  *
@@ -51,11 +53,15 @@ class TaskController extends ConsoleController
         $task = $this->pickTaskName($request);
         $options = $this->pickTaskOptions($request);
 
-        if ($this->isUsage()) {
-            $task = $this->taskProcessor->get($task);
-            $this->response->send($task->getUsage());
-        } else {
-            $this->task($task, $options);
+        try {
+            if ($this->isUsage()) {
+                $task = $this->taskProcessor->get($task);
+                $this->response->send($task->getUsage());
+            } else {
+                $this->task($task, $options);
+            }
+        } catch (NotFoundException $e) {
+            return [self::FORWARD_ACTION, 'task.notfound'];
         }
     }
 
@@ -95,6 +101,18 @@ class TaskController extends ConsoleController
         }
 
         return $options;
+    }
+
+
+    /**
+     * not found action
+     */
+    public function notfoundAction()
+    {
+        $request = $this->request->getAll();
+        $task = $this->pickTaskName($request);
+
+        $this->send('task "%s" is not found.', $task);
     }
 }
 

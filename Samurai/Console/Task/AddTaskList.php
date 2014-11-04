@@ -31,7 +31,10 @@
 namespace Samurai\Console\Task;
 
 use Samurai\Samurai\Component\Task\Task;
+use Samurai\Samurai\Component\Task\Processor;
 use Samurai\Samurai\Component\Core\Skeleton;
+use Samurai\Samurai\Exception\NotFoundException;
+use Samurai\Samurai\Exception\NotImplementsException;
 
 /**
  * Add task.
@@ -44,23 +47,13 @@ use Samurai\Samurai\Component\Core\Skeleton;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class AddTask extends Task
+class AddTaskList extends Task
 {
-    /**
-     * @dependencies
-     */
-    public $fileUtil;
-    public $application;
-    public $loader;
-
-
     /**
      * add a spec.
      *
      * [usage]
      *   $ ./app add:spec Foo/Bar/Zoo
-     *
-     * @access  public
      */
     public function spec()
     {
@@ -68,7 +61,7 @@ class AddTask extends Task
         $spec_dir = $this->loader->find($current . DS . $this->application->config('directory.spec'))->first();
         $spec_dir->absolutize();
 
-        foreach ($this->args as $arg) {
+        foreach ($this->getArgs() as $arg) {
             $path = $arg;
             $dir = dirname($path);
             if ($dir == '.') $dir = '';
@@ -92,16 +85,87 @@ class AddTask extends Task
     }
 
 
+    /**
+     * add a task
+     *
+     * [usage]
+     *   $ ./app add:task foo:bar:zoo
+     */
+    public function task()
+    {
+        $current = $this->getCurrentAppDir();
+        $dir = $this->getOption('dir', $this->application->config('directory.task'));
+        $task_dir = $this->loader->find($current . DS . $dir)->first();
+        $task_dir->absolutize();
+
+        foreach ($this->getArgs() as $arg) {
+
+            try {
+                $task = $this->taskProcessor->get($arg);
+
+                // aldeady defined.
+                $this->sendMessage('already defined. -> %s', $arg);
+            }
+            
+            // TaskList not found.
+            catch (NotFoundException $e) {
+                $skeleton = $this->getSkeleton('TaskList');
+                
+                $names = explode(Processor::SEPARATOR, $arg);
+                $method = array_pop($names);
+                $class_name = $names ? ucfirst(array_pop($names)) . 'TaskList' : 'TaskList';
+
+                $dir = $names ? join(DS, array_map('ucfirst', $names)) : '';
+                $namespace = $task_dir->getNameSpace() . ($dir ? '\\' . str_replace(DS, '\\', $dir) : '');
+                
+                $skeleton->assign('namespace', $namespace);
+                $skeleton->assign('class', $class_name);
+                $skeleton->assign('method', $method);
+                
+                $task_file = $task_dir->getRealPath() . ($dir ? DS . $dir : '') . DS . $class_name . '.php';
+                $this->fileUtil->mkdirP(dirname($task_file));
+                $this->fileUtil->putContents($task_file, $skeleton->render());
+                
+                $this->sendMessage('created task file. -> %s (%s)', $arg, $task_file);
+            }
+
+            // Task method not found.
+            catch (NotImplementsException $e) {
+                $names = explode(Processor::SEPARATOR, $arg);
+                $method = array_pop($names);
+                $class_name = $names ? ucfirst(array_pop($names)) . 'TaskList' : 'TaskList';
+                $dir = $names ? join(DS, array_map('ucfirst', $names)) : '';
+                
+                $task_file = $task_dir->getRealPath() . ($dir ? DS . $dir : '') . DS . $class_name . '.php';
+                $contents = file_get_contents($task_file);
+                $code = <<<EOL
+
+    /**
+     * [description]
+     */
+    public function $method()
+    {
+        // some implements
+    }
+EOL;
+                $contents = preg_replace('/}[ \n]*$/', $code . "\n}\n", $contents);
+                $this->fileUtil->putContents($task_file, $contents);
+                
+                $this->sendMessage('created task method. -> %s (%s)', $arg, $task_file);
+            }
+        }
+    }
+
+
 
 
     /**
      * get skeleton.
      *
-     * @access  public
      * @param   string  $name
      * @return  Samurai\Samurai\Component\Core\Skeleton
      */
-    public function getSkeleton($name)
+    private function getSkeleton($name)
     {
         $file = $this->loader->find($this->application->config('directory.skeleton') . DS . $name . 'Skeleton.php.twig')->first();
         $skeleton = new Skeleton($file);
