@@ -69,7 +69,7 @@ class AddTaskList extends Task
 
             $skeleton = $this->getSkeleton('Spec');
             $base_dir = clone $spec_dir;
-            $class_name = basename($path);
+            $class_name = basename($path, '.php');
             $namespace = str_replace(DS, '\\', $dir);
 
             $skeleton->assign('namespace', $namespace ? $namespace . '\\' : '');

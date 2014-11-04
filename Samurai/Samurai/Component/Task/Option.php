@@ -57,6 +57,13 @@ class Option
      */
     public $options = [];
 
+    /**
+     * definitions
+     *
+     * @var     array
+     */
+    public $definition = [];
+
 
     /**
      * construct
@@ -124,6 +131,27 @@ class Option
     public function get($key, $default = null)
     {
         return array_key_exists($key, $this->options) ? $this->options[$key] : $default;
+    }
+
+
+    /**
+     * add definition
+     *
+     * @param   Samurai\Samurai\Component\Task\OptionDefine $define
+     */
+    public function addDefinition(OptionDefine $define)
+    {
+        $this->definitions[] = $define;
+    }
+
+    /**
+     * get definitions
+     *
+     * @return  array
+     */
+    public function getDefinitions()
+    {
+        return $this->definitions;
     }
 }
 

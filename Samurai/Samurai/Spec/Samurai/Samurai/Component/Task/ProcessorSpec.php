@@ -15,7 +15,7 @@ class ProcessorSpec extends PHPSpecContext
     public function it_gets_a_task()
     {
         $task = $this->get('add:spec');
-        $task->shouldHaveType('Samurai\Console\Task\AddTask');
+        $task->shouldHaveType('Samurai\Console\Task\AddTaskList');
     }
 }
 

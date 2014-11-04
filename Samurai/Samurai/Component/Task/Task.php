@@ -134,17 +134,30 @@ class Task
 
         $method = $reflection->getMethod($name);
         $comment = $method->getDocComment();
+        $parser = new OptionParser();
+        $option = new Option();
         $lines = [];
+        $options = [];
         foreach (preg_split('/\r\n|\n|\r/', $comment) as $line) {
             // /** or */ is skip.
             if (in_array(trim($line), ['/**', '*/', '**/'])) continue;
 
             $line = preg_replace('/^\s*?\*\s?/', '', $line);
 
+            // options
+            if($parser->isSupports($line)) {
+                $option->addDefinition($parser->parse($line));
+                continue;
+            }
+
             // start char is "@" that is doc comment end signal.
-            if (preg_match('/^@\w+/', $line)) break;
+            if (preg_match('/^@\w+/', $line)) continue;
 
             $lines[] = $line;
+        }
+
+        if ($options = $option->getDefinitions()) {
+            $lines[] = $parser->formatter($option);
         }
 
         return join(PHP_EOL, $lines);
