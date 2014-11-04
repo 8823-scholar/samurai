@@ -32,7 +32,6 @@ namespace Samurai\Samurai\Component\Task;
 
 use Samurai\Samurai\Component\Core\Accessor;
 use Samurai\Raikiri\DependencyInjectable;
-use Samurai\Samurai\Component\Request\Request;
 use Samurai\Samurai\Exception\NotImplementsException;
 
 /**
@@ -79,29 +78,28 @@ class Task
      * @access  public
      */
     public $output;
-
-
+    
+    
     /**
      * execute this task pre setted.
      *
-     * @access  public
+     * @param   Samurai\Samurai\Component\Task\Option   $option
      */
-    public function execute()
+    public function execute(Option $option)
     {
         if (!$this->do) throw new \Samurai\Samurai\Exception\LogicException('preset task something do.');
 
-        $this->{$this->do}();
+        $this->{$this->do . 'Task'}($option);
     }
 
 
     /**
      * call other task
      *
-     * @access  public
      * @param   string  $name
      * @param   array   $options
      */
-    public function callTask($name, array $options = [])
+    public function task($name, array $options = [])
     {
         $this->taskProcessor->execute($name, $options);
     }
@@ -110,7 +108,6 @@ class Task
     /**
      * send message to client.
      *
-     * @access  public
      * @param   string  $message
      */
     public function sendMessage()
@@ -123,66 +120,16 @@ class Task
     }
 
 
-
-    /**
-     * array to options and args.
-     *
-     * @access  public
-     * @param   array   $array
-     */
-    public function array2Options(array $array)
-    {
-        foreach ($array as $key => $value) {
-            switch (true) {
-                case $key === 'args':
-                    $this->args = array_merge($this->args, $value);
-                    break;
-                case is_integer($key):
-                    $this->args[] = $value;
-                    break;
-                default:
-                    $this->options[$key] = $value;
-                    break;
-            }
-        }
-    }
-
-    /**
-     * Request component to options
-     *
-     * @access  public
-     * @param   Samurai\Samurai\Component\Request\Request   $request
-     * @return  Samurai\Samurai\Component\Task\Task
-     */
-    public function request2Options(Request $request)
-    {
-        $args = $request->getAll();
-        $this->array2Options($args);
-    }
-
-    /**
-     * get a option.
-     *
-     * @access  public
-     * @param   string  $key
-     * @return  mixed
-     */
-    public function getOption($key, $default = null)
-    {
-        return array_key_exists($key, $this->options) ? $this->options[$key] : $default;
-    }
-
-
     /**
      * get usage from doc comment.
      *
-     * @access  public
      * @return  string
      */
     public function getUsage($name = null)
     {
         $reflection = $this->getReflection();
         if (! $name) $name = $this->do;
+        $name = $name . 'Task';
         if (! $name || ! $reflection->hasMethod($name)) return '';
 
         $method = $reflection->getMethod($name);
@@ -207,7 +154,6 @@ class Task
     /**
      * get reflection instance.
      *
-     * @access  public
      * @return  Reflection
      */
     public function getReflection()
@@ -220,13 +166,12 @@ class Task
     /**
      * has task method ?
      *
-     * @access  public
      * @param   string  $do
      * @return  boolean
      */
     public function has($do)
     {
-        return method_exists($this, $do);
+        return method_exists($this, $do . 'Task');
     }
 }
 

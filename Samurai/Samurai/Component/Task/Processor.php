@@ -115,8 +115,8 @@ class Processor
             $task = $this->get($name);
         }
 
-        $task->array2Options($options);
-        $task->$method();
+        $option = new Option($options);
+        $task->execute($option);
     }
 }
 

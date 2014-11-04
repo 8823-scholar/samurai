@@ -31,6 +31,7 @@
 namespace Samurai\Console\Task;
 
 use Samurai\Samurai\Component\Task\Task;
+use Samurai\Samurai\Component\Task\Option;
 use Samurai\Samurai\Component\Task\Processor;
 use Samurai\Samurai\Component\Core\Skeleton;
 use Samurai\Samurai\Exception\NotFoundException;
@@ -55,13 +56,13 @@ class AddTaskList extends Task
      * [usage]
      *   $ ./app add:spec Foo/Bar/Zoo
      */
-    public function spec()
+    public function specTask(Option $option)
     {
-        $current = $this->getCurrentAppDir();
+        $current = $this->getCurrentAppDir($option);
         $spec_dir = $this->loader->find($current . DS . $this->application->config('directory.spec'))->first();
         $spec_dir->absolutize();
 
-        foreach ($this->getArgs() as $arg) {
+        foreach ($option->getArgs() as $arg) {
             $path = $arg;
             $dir = dirname($path);
             if ($dir == '.') $dir = '';
@@ -91,14 +92,14 @@ class AddTaskList extends Task
      * [usage]
      *   $ ./app add:task foo:bar:zoo
      */
-    public function task()
+    public function taskTask(Option $option)
     {
-        $current = $this->getCurrentAppDir();
-        $dir = $this->getOption('dir', $this->application->config('directory.task'));
+        $current = $this->getCurrentAppDir($option);
+        $dir = $option->get('dir', $this->application->config('directory.task'));
         $task_dir = $this->loader->find($current . DS . $dir)->first();
         $task_dir->absolutize();
 
-        foreach ($this->getArgs() as $arg) {
+        foreach ($option->getArgs() as $arg) {
 
             try {
                 $task = $this->taskProcessor->get($arg);
@@ -112,7 +113,7 @@ class AddTaskList extends Task
                 $skeleton = $this->getSkeleton('TaskList');
                 
                 $names = explode(Processor::SEPARATOR, $arg);
-                $method = array_pop($names);
+                $method = array_pop($names) . 'Task';
                 $class_name = $names ? ucfirst(array_pop($names)) . 'TaskList' : 'TaskList';
 
                 $dir = $names ? join(DS, array_map('ucfirst', $names)) : '';
@@ -132,7 +133,7 @@ class AddTaskList extends Task
             // Task method not found.
             catch (NotImplementsException $e) {
                 $names = explode(Processor::SEPARATOR, $arg);
-                $method = array_pop($names);
+                $method = array_pop($names) . 'Task';
                 $class_name = $names ? ucfirst(array_pop($names)) . 'TaskList' : 'TaskList';
                 $dir = $names ? join(DS, array_map('ucfirst', $names)) : '';
                 
@@ -143,7 +144,7 @@ class AddTaskList extends Task
     /**
      * [description]
      */
-    public function $method()
+    public function $method(Option \$option)
     {
         // some implements
     }
@@ -180,10 +181,10 @@ EOL;
      * @access  public
      * @return  string
      */
-    public function getCurrentAppDir()
+    public function getCurrentAppDir(Option $option)
     {
         // has targeted.
-        if ($dir = $this->getOption('app-dir')) {
+        if ($dir = $option->get('app-dir')) {
             return $dir[0] === '/' ? $dir : getcwd() . DS . $dir;
         }
         // or current dir.
