@@ -39,6 +39,16 @@ class OptionSpec extends PHPSpecContext
     }
 
 
+    public function it_gets_default_value()
+    {
+        $def = new OptionDefine();
+        $def->name = 'foo';
+        $def->default = 'zoooo';
+        $this->addDefinition($def);
+
+        $this->get('foo')->shouldBe('zoooo');
+    }
+
     public function it_bredge_long_from_short_option()
     {
         $def = new OptionDefine();

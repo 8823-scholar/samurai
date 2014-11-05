@@ -153,10 +153,12 @@ class Option
             // when short option
             if ($key === $define->getShortName()) {
                 if (array_key_exists($define->getName(), $this->options)) return $this->options[$define->getName()];
+                return $define->getDefault();
             }
             // when long option
             if ($key === $define->getName()) {
                 if (array_key_exists($define->getShortName(), $this->options)) return $this->options[$define->getShortName()];
+                return $define->getDefault();
             }
         }
 
