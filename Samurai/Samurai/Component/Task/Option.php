@@ -134,7 +134,7 @@ class Option
      * @param   int     $index
      * @return  mixed
      */
-    public function getArg($index = 0, $defalt = null)
+    public function getArg($index = 0, $default = null)
     {
         return isset($this->args[$index]) ? $this->args[$index] : $default;
     }
