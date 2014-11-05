@@ -52,7 +52,14 @@ class OptionParser
      *
      * @var     string
      */
-    private $regexp_option = '/^@(option|require)\s+([\w\-,=]+)(\s+(.*))?/';
+    private $regexp_option = '/^@(option|require)\s+([\w\-,=.]+)(\s+(.*))?$/u';
+
+    /**
+     * encoding
+     *
+     * @var     string
+     */
+    public $encoding = 'UTF-8';
 
 
     /**
@@ -173,11 +180,12 @@ class OptionParser
                 '(required) ' . $define->getDescription() : $define->getDescription();
 
             // compare key length.
-            if (strlen($key) > $span) $span = strlen($key);
+            if (mb_strwidth($key) > $span) $span = mb_strwidth($key);
         }
 
         foreach ($options as $key => $value) {
-            $lines[] = sprintf("%-{$span}s  %s", $key, $value);
+            $diff = strlen($key) - mb_strwidth($key, $this->encoding);
+            $lines[] = sprintf("%s  %s", str_pad($key, $span + $diff), $value);
         }
 
         return join(PHP_EOL, $lines);
