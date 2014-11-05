@@ -68,6 +68,8 @@ class TaskController extends ConsoleController
             $this->send('%s is required.', $e->define->getName());
             $this->send('');
             $this->send($task->getOption()->usage());
+        } catch (\Exception $e) {
+            $this->send($e->getMessage());
         }
     }
 
