@@ -83,12 +83,15 @@ class Task
     /**
      * execute this task pre setted.
      *
-     * @param   Samurai\Samurai\Component\Task\Option   $option
+     * @param   array   $options
      */
-    public function execute(Option $option)
+    public function execute(array $options = [])
     {
-        if (!$this->do) throw new \Samurai\Samurai\Exception\LogicException('preset task something do.');
+        if (! $this->do) throw new \Samurai\Samurai\Exception\LogicException('preset task something do.');
 
+        $option = $this->getOption();
+        $option->importFromArray($options);
+        $option->validate();
         $this->{$this->do . 'Task'}($option);
     }
 
@@ -121,23 +124,22 @@ class Task
 
 
     /**
-     * get usage from doc comment.
+     * get option
      *
-     * @return  string
+     * @return  Samurai\Samurai\Component\Task\Option
      */
-    public function getUsage($name = null)
+    public function getOption($name = null)
     {
+        $option = new Option();
         $reflection = $this->getReflection();
         if (! $name) $name = $this->do;
         $name = $name . 'Task';
-        if (! $name || ! $reflection->hasMethod($name)) return '';
+        if (! $name || ! $reflection->hasMethod($name)) return $option;
 
         $method = $reflection->getMethod($name);
         $comment = $method->getDocComment();
         $parser = new OptionParser();
-        $option = new Option();
         $lines = [];
-        $options = [];
         foreach (preg_split('/\r\n|\n|\r/', $comment) as $line) {
             // /** or */ is skip.
             if (in_array(trim($line), ['/**', '*/', '**/'])) continue;
@@ -160,7 +162,9 @@ class Task
             $lines[] = $parser->formatter($option);
         }
 
-        return join(PHP_EOL, $lines);
+        $option->setDescription(join(PHP_EOL, $lines));
+
+        return $option;
     }
 
 

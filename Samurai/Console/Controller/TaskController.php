@@ -32,6 +32,7 @@
 namespace Samurai\Console\Controller;
 
 use Samurai\Samurai\Exception\NotFoundException;
+use Samurai\Samurai\Component\Task\OptionRequiredException;
 
 /**
  * Task controller.
@@ -56,12 +57,17 @@ class TaskController extends ConsoleController
         try {
             if ($this->isUsage()) {
                 $task = $this->taskProcessor->get($task);
-                $this->response->send($task->getUsage());
+                $this->send($task->getOption()->usage());
             } else {
                 $this->task($task, $options);
             }
         } catch (NotFoundException $e) {
             return [self::FORWARD_ACTION, 'task.notfound'];
+        } catch (OptionRequiredException $e) {
+            $task = $this->taskProcessor->get($task);
+            $this->send('%s is required.', $e->define->getName());
+            $this->send('');
+            $this->send($task->getOption()->usage());
         }
     }
 
@@ -95,7 +101,14 @@ class TaskController extends ConsoleController
 
         // array to string.
         foreach ($options as $key => $value) {
-            if (is_array($value) && $key !== 'args') {
+            if ($key === 'args') continue;
+
+            if ($key === 'option') {
+                foreach ($value as $k => $v) {
+                    $options[$k] = $v;
+                }
+                unset($options[$key]);
+            } else {
                 $options[$key] = array_pop($value);
             }
         }

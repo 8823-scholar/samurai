@@ -79,7 +79,7 @@ class OptionParser
         $define->setShortName($this->pickShortName($matches[2]));
 
         // defalt value
-        $define->setDefault($this->pickValue($matches[2]));
+        $define->setDefault($this->pickValue($define, $matches[2]));
         
         // description
         $define->setDescription($this->pickDescription($matches));
@@ -117,12 +117,13 @@ class OptionParser
     /**
      * pick value
      *
+     * @param   Samurai\Samurai\Component\Task\OptionDefine $define
      * @param   string  $syntax
      * @return  string
      */
-    private function pickValue($syntax)
+    private function pickValue(OptionDefine $define, $syntax)
     {
-        $value = true;
+        $value = $define->isRequired() ? null : true;
         if (preg_match('/=(.+)/', $syntax, $matches)) {
             $value = $matches[1];
         }

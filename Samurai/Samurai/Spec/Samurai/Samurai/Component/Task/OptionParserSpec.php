@@ -55,6 +55,7 @@ class OptionParserSpec extends PHPSpecContext
     {
         $def = $this->parse('@require long-name description');
         $def->isRequired()->shouldBe(true);
+        $def->getDefault()->shouldBe(null);
     }
 
 

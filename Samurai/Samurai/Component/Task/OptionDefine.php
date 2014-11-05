@@ -31,12 +31,9 @@
 namespace Samurai\Samurai\Component\Task;
 
 use Samurai\Samurai\Component\Core\Accessor;
-use Samurai\Samurai\Exception\NotFoundException;
-use Samurai\Samurai\Exception\NotImplementsException;
-use Samurai\Raikiri\DependencyInjectable;
 
 /**
- * task processor.
+ * task option defeinition.
  *
  * @package     Samurai
  * @subpackage  Component.Task
@@ -44,78 +41,95 @@ use Samurai\Raikiri\DependencyInjectable;
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Processor
+class OptionDefine
 {
     /**
-     * task name separator
+     * long name
      *
-     * @const   string
+     * @var     string
      */
-    const SEPARATOR = ':';
-    
+    public $name;
+
+    /**
+     * short name
+     *
+     * @var     string
+     */
+    public $short_name;
+
+    /**
+     * required
+     *
+     * @var     boolean
+     */
+    public $required = false;
+
+    /**
+     * value
+     *
+     * @var     mixed
+     */
+    public $value = null;
+
+    /**
+     * default
+     *
+     * @var     mixed
+     */
+    public $default = null;
+
+    /**
+     * description
+     *
+     * @var     string
+     */
+    public $description;
+
+
     /**
      * @traits
      */
     use Accessor;
-    use DependencyInjectable;
-
-    /**
-     * outputter.
-     *
-     * @var     Object
-     */
-    public $output;
 
 
     /**
-     * get task.
-     *
-     * format:
-     *   namespace:some:do
-     *
-     * @access  public
-     * @param   string  $name
-     * @return  Task
+     * required
      */
-    public function get($name)
+    public function required()
     {
-        $names = explode(self::SEPARATOR, $name);
-        $method = array_pop($names);
-        if ($names) {
-            $class_name = 'Task\\' . join('\\', array_map('ucfirst', $names)) . 'TaskList';
-        } else {
-            $class_name = 'Task\\TaskList';
-        }
-        $class_path = $this->loader->getPathByClass($class_name, false);
-        if ($class_path === null || ! $class_path->isExists()) throw new NotFoundException("No such task. -> {$name}");
+        $this->required = true;
+    }
 
-        require_once $class_path;
-        $class_name = $class_path->getClassName();
-        $task = new $class_name();
-        if (! $task->has($method)) throw new NotImplementsException("No such task. -> {$name}");
-        $task->setDo($method);
-        $task->setOutput($this->output);
-        $task->setContainer($this->raikiri());
-
-        return $task;
+    /**
+     * is required ?
+     *
+     * @return  boolean
+     */
+    public function isRequired()
+    {
+        return $this->required;
     }
 
 
     /**
-     * call task.
+     * has short name ?
      *
-     * @access  public
-     * @param   mixed   $name
+     * @return  boolean
      */
-    public function execute($name, array $options = [])
+    public function hasShortName()
     {
-        if (is_string($name)) {
-            $names = explode(self::SEPARATOR, $name);
-            $method = array_pop($names);
-            $task = $this->get($name);
-        }
+        return $this->getShortName() !== null;
+    }
 
-        $task->execute($options);
+
+    /**
+     * has default ?
+     *
+     * @return  boolean
+     */
+    public function hasDefault()
+    {
+        return $this->default !== null && $this->default !== true;
     }
 }
 

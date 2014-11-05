@@ -64,6 +64,13 @@ class Option
      */
     public $definition = [];
 
+    /**
+     * description
+     *
+     * @var     string
+     */
+    public $description = '';
+
 
     /**
      * construct
@@ -130,7 +137,32 @@ class Option
      */
     public function get($key, $default = null)
     {
-        return array_key_exists($key, $this->options) ? $this->options[$key] : $default;
+        if (array_key_exists($key, $this->options)) return $this->options[$key];
+
+        foreach ($this->getDefinitions() as $define) {
+            // when short option
+            if ($key === $define->getShortName()) {
+                if (array_key_exists($define->getName(), $this->options)) return $this->options[$define->getName()];
+            }
+            // when long option
+            if ($key === $define->getName()) {
+                if (array_key_exists($define->getShortName(), $this->options)) return $this->options[$define->getShortName()];
+            }
+        }
+
+        return $default;
+    }
+
+
+    /**
+     * has option ?
+     *
+     * @param   string  $key
+     * @return  boolean
+     */
+    public function has($key)
+    {
+        return array_key_exists($key, $this->options);
     }
 
 
@@ -152,6 +184,53 @@ class Option
     public function getDefinitions()
     {
         return $this->definitions;
+    }
+
+
+    /**
+     * usage
+     *
+     * @return  string
+     */
+    public function usage()
+    {
+        return $this->getDescription();
+    }
+
+    /**
+     * set description
+     *
+     * @param   string  $text
+     */
+    public function setDescription($text)
+    {
+        $this->description = $text;
+    }
+
+    /**
+     * get description
+     *
+     * @return  string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+
+    /**
+     * validation
+     */
+    public function validate()
+    {
+        foreach ($this->getDefinitions() as $define) {
+            if ($define->isRequired() &&
+                ! $this->has($define->getName()) && ! $this->has($define->getShortName())) {
+                $e = new OptionRequiredException();
+                $e->define = $define;
+                throw $e;
+            }
+        }
     }
 }
 
