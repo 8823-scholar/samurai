@@ -29,6 +29,15 @@ class OptionSpec extends PHPSpecContext
         $this->get('foo')->shouldBe('bar');
     }
 
+    public function it_get_args()
+    {
+        $option = ['help' => true, 'foo' => 'bar', 'arg1', 'arg2'];
+        $this->importFromArray($option);
+
+        $this->getArgs()->shouldBeLike(['arg1', 'arg2']);
+        $this->getArg(0)->shouldBe('arg1');
+    }
+
 
     public function it_bredge_long_from_short_option()
     {

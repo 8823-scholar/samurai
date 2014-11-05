@@ -127,7 +127,17 @@ class Option
     {
         return $this->args;
     }
-    
+
+    /**
+     * get arg
+     *
+     * @param   int     $index
+     * @return  mixed
+     */
+    public function getArg($index = 0, $defalt = null)
+    {
+        return isset($this->args[$index]) ? $this->args[$index] : $default;
+    }
     
     /**
      * get a option.
@@ -232,5 +242,5 @@ class Option
             }
         }
     }
-}
 
+}
