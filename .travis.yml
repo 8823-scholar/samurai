@@ -21,7 +21,7 @@ branches:
 before_script:
     - phpenv config-add .travis/php.ini
     - composer self-update
-    - composer install
+    - php -d apc.enable_cli=0 `which composer` install
     - mysql -e 'CREATE DATABASE app'
     - psql -c 'CREATE DATABASE app;' -U postgres
 
