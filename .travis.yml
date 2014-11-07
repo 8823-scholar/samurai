@@ -19,11 +19,11 @@ branches:
         - feature/3.0
 
 before_script:
-    - phpenv config-add .travis/php.ini
     - composer self-update
-    - php -d apc.enable_cli=0 `which composer` install
+    - composer install
     - mysql -e 'CREATE DATABASE app'
     - psql -c 'CREATE DATABASE app;' -U postgres
+    - phpenv config-add .travis/php.ini
 
 script:
     - Samurai/Console/app spec
