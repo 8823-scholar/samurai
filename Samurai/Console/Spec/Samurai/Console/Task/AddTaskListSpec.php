@@ -3,9 +3,11 @@
 namespace Samurai\Console\Spec\Samurai\Console\Task;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
+use Samurai\Samurai\Component\FileSystem\Utility as FileUtility;
+use Samurai\Samurai\Component\Task\Option;
 use Prophecy\Argument;
 
-class AddTaskSpec extends PHPSpecContext
+class AddTaskListSpec extends PHPSpecContext
 {
     /**
      * @dependencies
@@ -16,11 +18,11 @@ class AddTaskSpec extends PHPSpecContext
 
     public function it_is_initializable()
     {
-        $this->shouldHaveType('Samurai\Console\Task\AddTask');
+        $this->shouldHaveType('Samurai\Console\Task\AddTaskList');
     }
 
 
-    public function it_adds_spec_file(\Samurai\Samurai\Component\FileSystem\Utility $fileUtil)
+    public function it_adds_spec_file(FileUtility $fileUtil)
     {
         $contents = <<<'EOL'
 <?php
@@ -39,17 +41,17 @@ class SampleSpec extends PHPSpecContext
 
 
 EOL;
-        $current = $this->getCurrentAppDir()->getWrappedObject();
+        $option = new Option();
+        $option->importFromArray(['Samurai/Samurai/Sample']);
+        $current = $this->getCurrentAppDir($option)->getWrappedObject();
         $spec_dir = $this->loader->find($current . DS . $this->application->config('directory.spec'))->first();
         $fileUtil->mkdirP($spec_dir . '/Samurai/Samurai')->willReturn(null);
         $fileUtil->putContents($spec_dir . '/Samurai/Samurai/SampleSpec.php', $contents)->willReturn(null);
         $this->setProperty('fileUtil', $fileUtil);
-        
-        $this->array2Options(['Samurai/Samurai/Sample']);
-        $this->spec();
+        $this->specTask($option);
     }
     
-    public function it_adds_spec_file_top_layer_class(\Samurai\Samurai\Component\FileSystem\Utility $fileUtil)
+    public function it_adds_spec_file_top_layer_class(FileUtility $fileUtil)
     {
         $contents = <<<'EOL'
 <?php
@@ -68,14 +70,14 @@ class SampleSpec extends PHPSpecContext
 
 
 EOL;
-        $current = $this->getCurrentAppDir()->getWrappedObject();
+        $option = new Option();
+        $option->importFromArray(['Sample']);
+        $current = $this->getCurrentAppDir($option)->getWrappedObject();
         $spec_dir = $this->loader->find($current . DS . $this->application->config('directory.spec'))->first();
         $fileUtil->mkdirP($spec_dir->toString())->willReturn(null);
         $fileUtil->putContents($spec_dir . '/SampleSpec.php', $contents)->willReturn(null);
         $this->setProperty('fileUtil', $fileUtil);
-        
-        $this->array2Options(['Sample']);
-        $this->spec();
+        $this->specTask($option);
     }
 }
 

@@ -62,7 +62,7 @@ class Option
      *
      * @var     array
      */
-    public $definition = [];
+    public $definitions = [];
 
     /**
      * description

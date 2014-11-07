@@ -4,11 +4,11 @@ namespace Samurai\Samurai\Spec\Samurai\Samurai\Task;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
 
-class SampleTaskSpec extends PHPSpecContext
+class SampleTaskListSpec extends PHPSpecContext
 {
     public function it_is_initializable()
     {
-        $this->shouldHaveType('Samurai\Samurai\Task\SampleTask');
+        $this->shouldHaveType('Samurai\Samurai\Task\SampleTaskList');
     }
 
 
@@ -24,7 +24,7 @@ something do.
     --usage          show help.
 
 EOL;
-        $this->getUsage('some')->shouldBe($usage);
+        $this->getOption('some')->usage()->shouldBe($usage);
     }
 }
 
@@ -36,7 +36,7 @@ namespace Samurai\Samurai\Task;
 
 use Samurai\Samurai\Component\Task\Task;
 
-class SampleTask extends Task
+class SampleTaskList extends Task
 {
     /**
      * something do.
@@ -49,7 +49,7 @@ class SampleTask extends Task
      *
      * @access  public
      */
-    public function some()
+    public function someTask()
     {
     }
 }

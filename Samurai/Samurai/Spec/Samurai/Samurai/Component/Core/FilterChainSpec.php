@@ -45,6 +45,7 @@ class FilterChainSpec extends PHPSpecContext
             $filters[] = $filter;
         }
         $c->getFilters()->willReturn($filters);
+        $c->getFilterKey()->willReturn('foo');
         $c->getFilterKey('execute')->willReturn('foo.execute');
 
         $this->setAction($c, 'execute');
@@ -60,6 +61,7 @@ class FilterChainSpec extends PHPSpecContext
         $filter = $this->loader->findFirst('Controller/filter.yml');
         if (is_null($filter)) throw new \Exception('Not found filter.');
 
+        $c->getFilterKey()->willReturn('foo');
         $c->getFilterKey('execute')->willReturn('foo.execute');
 
         $this->setAction($c, 'execute');
@@ -78,6 +80,7 @@ class FilterChainSpec extends PHPSpecContext
         $filter = $this->loader->findFirst('Controller/filter.yml');
         if (is_null($filter)) throw new \Exception('Not found filter.');
 
+        $c->getFilterKey()->willReturn('foo');
         $c->getFilterKey('execute')->willReturn('foo.execute');
 
         $this->setAction($c, 'execute');
@@ -102,6 +105,7 @@ class FilterChainSpec extends PHPSpecContext
         $filter = $this->loader->findFirst('Controller/filter.yml');
         if (is_null($filter)) throw new \Exception('Not found filter.');
 
+        $c->getFilterKey()->willReturn('foo');
         $c->getFilterKey('execute')->willReturn('foo.execute');
 
         $this->setAction($c, 'execute');
