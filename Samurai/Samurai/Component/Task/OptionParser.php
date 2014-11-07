@@ -130,7 +130,7 @@ class OptionParser
      */
     private function pickValue(OptionDefine $define, $syntax)
     {
-        $value = $define->isRequired() ? null : true;
+        $value = $define->isRequired() ? null : false;
         if (preg_match('/=(.+)/', $syntax, $matches)) {
             $value = $matches[1];
         }
@@ -166,12 +166,13 @@ class OptionParser
                 $key .= ',-' . $define->getShortName();
             }
             if ($define->hasDefault()) {
-                switch ($define->getDefault()) {
-                    case false:
-                        $value = '=false';
+                $default = $define->getDefault();
+                switch (true) {
+                    case is_bool($default):
+                        $value = '';
                         break;
                     default:
-                        $value = '=' . $define->getDefault();
+                        $value = '=' . $default;
                         break;
                 }
                 $key .= $value;

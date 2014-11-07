@@ -29,7 +29,7 @@ class OptionParserSpec extends PHPSpecContext
         $def->shouldHaveType('Samurai\Samurai\Component\Task\OptionDefine');
         $def->isRequired()->shouldBe(false);
         $def->getName()->shouldBe('long-name');
-        $def->getDefault()->shouldBe(true);
+        $def->getDefault()->shouldBe(false);
         $def->getDescription()->shouldBe('description');
     }
 

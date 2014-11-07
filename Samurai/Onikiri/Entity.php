@@ -55,14 +55,14 @@ class Entity
      *
      * @var     array
      */
-    public $attributes = array();
+    public $attributes = [];
 
     /**
      * original attributes.
      *
      * @var     array
      */
-    protected $o_attributes = array();
+    protected $o_attributes = [];
 
     /**
      * exists in backend ?
@@ -181,6 +181,27 @@ class Entity
     }
 
     /**
+     * set attributes
+     *
+     * @param   array   $attributes
+     * @param   boolean $force
+     * @return  array   original attributes
+     */
+    public function setAttributes($attributes, $force = false)
+    {
+        $original = $this->attributes;
+
+        if ($force) {
+            $this->attributes = $attributes;
+        } else {
+            foreach ($attributes as $key => $value) {
+                $this->set($key, $value);
+            }
+        }
+        return $original;
+    }
+
+    /**
      * get attribute
      *
      * @param   string  $key
@@ -201,11 +222,21 @@ class Entity
 
         $attributes = array();
         foreach ($this->attributes as $key => $value) {
-            if (! array_key_exists($key, $this->o_attributes) || $value !== $this->o_attributes[$key]) {
+            if (! array_key_exists($key, $this->o_attributes) || $value != $this->o_attributes[$key]) {
                 $attributes[$key] = $value;
             }
         }
         return $attributes;
+    }
+
+    /**
+     * get original attributes
+     *
+     * @return  array
+     */
+    public function getOriginalAttributes()
+    {
+        return $this->o_attributes;
     }
 
     /**
