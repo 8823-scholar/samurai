@@ -118,8 +118,7 @@ class Task
         if (! $this->output) return;
 
         $args = func_get_args();
-        $message = call_user_func_array('sprintf', $args);
-        $this->output->send($message);
+        call_user_func_array([$this->output, 'send'], $args);
     }
 
 
