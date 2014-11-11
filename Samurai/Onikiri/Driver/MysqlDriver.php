@@ -75,6 +75,11 @@ class MysqlDriver extends Driver
             $info[] = 'port=' . $port;
         }
 
+        // charset
+        if ($charset = $database->getCharset()) {
+            $info[] = 'charset=' . $charset;
+        }
+
         $dsn = $dsn . join(';', $info);
         return $dsn;
     }
