@@ -81,6 +81,14 @@ class Database
     public $port;
 
     /**
+     * charset
+     *
+     * @access  public
+     * @var     string
+     */
+    public $charset;
+
+    /**
      * database name
      *
      * @access  public
@@ -157,6 +165,9 @@ class Database
                     break;
                 case 'port':
                     $this->setPort($value);
+                    break;
+                case 'charset':
+                    $this->setCharset($value);
                     break;
                 case 'slaves':
                     foreach ($value as $slave) {
@@ -322,6 +333,29 @@ class Database
             return $this->_master->getDatabaseName();
         }
         return $this->database_name;
+    }
+
+
+    /**
+     * Set charset.
+     *
+     * @access  public
+     * @param   string  $charset
+     */
+    public function setCharset($charset)
+    {
+        $this->charset = $charset;
+    }
+
+    /**
+     * Get charset.
+     *
+     * @access  public
+     * @return  string
+     */
+    public function getCharset()
+    {
+        return $this->charset;
     }
 
 

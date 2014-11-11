@@ -16,6 +16,7 @@ class DatabaseSpec extends PHPSpecContext
             'host' => 'localhost.localdomain',
             'database' => 'bar',
             'port' => 3306,
+            'charset' => 'utf8',
             'slaves' => [
                 [
                     'host' => 'slave1.localdomain',
@@ -102,6 +103,17 @@ class DatabaseSpec extends PHPSpecContext
     {
         $this->setPort(3307);
         $this->getPort()->shouldBe(3307);
+    }
+
+    public function it_gets_charset()
+    {
+        $this->getCharset()->shouldBe('utf8');
+    }
+
+    public function it_sets_charset()
+    {
+        $this->setCharset('sjis');
+        $this->getCharset()->shouldBe('sjis');
     }
 
     public function it_gets_database_name()
