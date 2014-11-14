@@ -200,6 +200,19 @@ class Entities implements Iterator
 
 
     /**
+     * each attach closure
+     *
+     * @param   Closure     $closure
+     */
+    public function each(\Closure $closure)
+    {
+        foreach ($this as $entity) {
+            $closure($entity);
+        }
+    }
+
+
+    /**
      * @implements
      */
     public function current()
