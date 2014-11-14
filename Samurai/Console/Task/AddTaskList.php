@@ -51,6 +51,45 @@ use Samurai\Samurai\Exception\NotImplementsException;
 class AddTaskList extends Task
 {
     /**
+     * add a class.
+     *
+     * [usage]
+     *   $ ./app add:class Foo\Bar\Zoo
+     *
+     * @option  extands,e               extends class.
+     * @option  use-raikiri,r=true      use raikiri(di container).
+     * @option  use-accessor,a          use accessor trait.
+     */
+    public function classTask(Option $option)
+    {
+        $current = $this->getRootAppDir($option);
+        $base_dir = $current;
+
+        foreach ($option->getArgs() as $arg) {
+            $path = str_replace('\\', DS, $arg);
+            $dir = dirname($path);
+            if ($dir == '.') $dir = '';
+
+            $skeleton = $this->getSkeleton('class');
+            $class_name = basename($path, '.php');
+            $namespace = str_replace(DS, '\\', $dir);
+
+            $skeleton->assign('namespace', $namespace);
+            $skeleton->assign('class', $class_name);
+            $skeleton->assign('extends', $option->get('extends'));
+            $skeleton->assign('use-raikiri', $option->get('use-raikiri'));
+            $skeleton->assign('use-accessor', $option->get('use-accessor'));
+
+            $file = $base_dir . DS . ($dir ? $dir . DS : '') . $class_name . '.php';
+            $this->fileUtil->mkdirP(dirname($file));
+            $this->fileUtil->putContents($file, $skeleton->render());
+
+            $this->sendMessage('created class file. -> %s', $file);
+        }
+    }
+
+
+    /**
      * add a spec.
      *
      * [usage]
@@ -168,7 +207,7 @@ EOL;
      */
     private function getSkeleton($name)
     {
-        $file = $this->loader->find($this->application->config('directory.skeleton') . DS . $name . 'Skeleton.php.twig')->first();
+        $file = $this->loader->find($this->application->config('directory.skeleton') . DS . ucfirst($name) . 'Skeleton.php.twig')->first();
         $skeleton = new Skeleton($file);
         return $skeleton;
     }
@@ -178,7 +217,6 @@ EOL;
     /**
      * get current dir in application.
      *
-     * @access  public
      * @return  string
      */
     public function getCurrentAppDir(Option $option)
@@ -194,6 +232,29 @@ EOL;
             foreach ($this->application->config('directory.apps') as $app) {
                 if (strpos($current, $app['dir']) === 0) return $app['dir'];
                 if (! $default) $default = $app['dir'];
+            }
+            return $default;
+        }
+    }
+    
+    /**
+     * get root dir in application.
+     *
+     * @return  string
+     */
+    public function getRootAppDir(Option $option)
+    {
+        // has targeted.
+        if ($dir = $option->get('root-dir')) {
+            return $dir[0] === '/' ? $dir : getcwd() . DS . $dir;
+        }
+        // or current dir.
+        else {
+            $root = getcwd();
+            $default = null;
+            foreach ($this->application->config('directory.apps') as $app) {
+                if (strpos($root, $app['dir']) === 0) return $app['root'];
+                if (! $default) $default = $app['root'];
             }
             return $default;
         }

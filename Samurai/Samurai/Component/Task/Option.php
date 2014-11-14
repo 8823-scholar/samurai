@@ -147,22 +147,22 @@ class Option
      */
     public function get($key, $default = null)
     {
-        if (array_key_exists($key, $this->options)) return $this->options[$key];
+        if (array_key_exists($key, $this->options)) return $this->valuelize($this->options[$key]);
 
         foreach ($this->getDefinitions() as $define) {
             // when short option
             if ($key === $define->getShortName()) {
-                if (array_key_exists($define->getName(), $this->options)) return $this->options[$define->getName()];
-                return $define->getDefault();
+                if (array_key_exists($define->getName(), $this->options)) return $this->valuelize($this->options[$define->getName()]);
+                return $this->valuelize($define->getDefault());
             }
             // when long option
             if ($key === $define->getName()) {
-                if (array_key_exists($define->getShortName(), $this->options)) return $this->options[$define->getShortName()];
-                return $define->getDefault();
+                if (array_key_exists($define->getShortName(), $this->options)) return $this->valuelize($this->options[$define->getShortName()]);
+                return $this->valuelize($define->getDefault());
             }
         }
 
-        return $default;
+        return $this->valuelize($default);
     }
 
 
@@ -229,6 +229,29 @@ class Option
         return $this->description;
     }
 
+
+
+    /**
+     * valuelize
+     *
+     * @param   mixed   $value
+     * @return  mixed
+     */
+    private function valuelize($value)
+    {
+        switch (true) {
+            case $value === 'true':
+                $value = true;
+                break;
+            case $value === 'false':
+                $value = false;
+                break;
+            case strtolower($value) === 'null':
+                $value = null;
+                break;
+        }
+        return $value;
+    }
 
     /**
      * validation

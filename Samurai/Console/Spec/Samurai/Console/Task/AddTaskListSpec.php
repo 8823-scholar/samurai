@@ -22,6 +22,36 @@ class AddTaskListSpec extends PHPSpecContext
     }
 
 
+    public function it_adds_class_file(FileUtility $fileUtil)
+    {
+        $contents = <<<'EOL'
+<?php
+
+namespace Samurai\Samurai;
+
+class Sample
+{
+    /**
+     * construct
+     */
+    public function __construct()
+    {
+    }
+}
+
+
+EOL;
+        $option = new Option();
+        $option->importFromArray(['Samurai\\Samurai\\Sample']);
+        $current = $this->getRootAppDir($option)->getWrappedObject();
+        $base_dir = $current;
+        $fileUtil->mkdirP($base_dir . '/Samurai/Samurai')->shouldBeCalled();
+        $fileUtil->putContents($base_dir . '/Samurai/Samurai/Sample.php', $contents)->shouldBeCalled();
+        $this->setProperty('fileUtil', $fileUtil);
+        $this->classTask($option);
+    }
+
+
     public function it_adds_spec_file(FileUtility $fileUtil)
     {
         $contents = <<<'EOL'

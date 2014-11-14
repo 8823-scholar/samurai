@@ -133,6 +133,8 @@ class OptionParser
         $value = $define->isRequired() ? null : false;
         if (preg_match('/=(.+)/', $syntax, $matches)) {
             $value = $matches[1];
+            if ($value === 'true') $value = true;
+            if ($value === 'false') $value = false;
         }
         return $value;
     }
