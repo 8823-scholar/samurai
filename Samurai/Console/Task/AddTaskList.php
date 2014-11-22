@@ -101,7 +101,11 @@ class AddTaskList extends Task
      */
     public function componentTask(Option $option)
     {
-        $option->setArg(0, 'Component/' . $option->getArg(0));
+        $root = $this->getRootAppDir($option);
+        $current = $this->getCurrentAppDir($option);
+        $prefix = trim(preg_replace('/^' . preg_quote($root, '/') . '/', '', $current), DS);
+
+        $option->setArg(0, $prefix . DS . 'Component' . DS . $option->getArg(0));
         $this->task('add:class', $option);
     }
 
