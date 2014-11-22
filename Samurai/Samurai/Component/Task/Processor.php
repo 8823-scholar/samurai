@@ -106,8 +106,9 @@ class Processor
      *
      * @access  public
      * @param   mixed   $name
+     * @param   array|Samurai\Samurai\Component\Task\Option $option
      */
-    public function execute($name, array $options = [])
+    public function execute($name, $option = [])
     {
         if (is_string($name)) {
             $names = explode(self::SEPARATOR, $name);
@@ -115,7 +116,7 @@ class Processor
             $task = $this->get($name);
         }
 
-        $task->execute($options);
+        $task->execute($option);
     }
 }
 

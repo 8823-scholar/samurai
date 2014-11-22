@@ -29,6 +29,13 @@ class AddTaskListSpec extends PHPSpecContext
 
 namespace Samurai\Samurai;
 
+/**
+ * [class description]
+ *
+ * @package     package
+ * @subpackage  subpackage
+ * @author      name <foo@example.jp>
+ */
 class Sample
 {
     /**

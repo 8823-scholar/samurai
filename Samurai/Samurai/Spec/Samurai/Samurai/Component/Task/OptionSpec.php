@@ -38,6 +38,13 @@ class OptionSpec extends PHPSpecContext
         $this->getArg(0)->shouldBe('arg1');
     }
 
+    public function it_set_arg()
+    {
+        $this->getArg(0)->shouldBe(null);
+        $this->setArg(0, 'arg1');
+        $this->getArg(0)->shouldBe('arg1');
+    }
+
 
     public function it_gets_default_value()
     {

@@ -83,14 +83,19 @@ class Task
     /**
      * execute this task pre setted.
      *
-     * @param   array   $options
+     * @param   array|Samurai\Samurai\Component\Task\Option $option
      */
-    public function execute(array $options = [])
+    public function execute($options = [])
     {
+        if (! is_array($options) && ! $options instanceof Option) throw new \InvalidArgumentException('invalid option');
         if (! $this->do) throw new \Samurai\Samurai\Exception\LogicException('preset task something do.');
 
-        $option = $this->getOption();
-        $option->importFromArray($options);
+        if (is_array($options)) {
+            $option = $this->getOption($this->do);
+            $option->importFromArray($options);
+        } else {
+            $option = $options;
+        }
         $option->validate();
         $this->{$this->do . 'Task'}($option);
     }
@@ -100,11 +105,11 @@ class Task
      * call other task
      *
      * @param   string  $name
-     * @param   array   $options
+     * @param   array|Samurai\Samurai\Component\Task\Option $option
      */
-    public function task($name, array $options = [])
+    public function task($name, $option = [])
     {
-        $this->taskProcessor->execute($name, $options);
+        $this->taskProcessor->execute($name, $option);
     }
 
 

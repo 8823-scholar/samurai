@@ -138,6 +138,17 @@ class Option
     {
         return isset($this->args[$index]) ? $this->args[$index] : $default;
     }
+
+    /**
+     * set arg
+     *
+     * @param   int     $index
+     * @param   mixed   $value
+     */
+    public function setArg($index, $value)
+    {
+        $this->args[$index] = $value;
+    }
     
     /**
      * get a option.

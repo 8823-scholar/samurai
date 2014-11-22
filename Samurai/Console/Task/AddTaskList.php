@@ -87,6 +87,23 @@ class AddTaskList extends Task
             $this->sendMessage('created class file. -> %s', $file);
         }
     }
+    
+    
+    /**
+     * add a component.
+     *
+     * [usage]
+     *   $ ./app add:component Foo\Bar\Zoo
+     *
+     * @option  extands,e               extends class.
+     * @option  use-raikiri,r=true      use raikiri(di container).
+     * @option  use-accessor,a          use accessor trait.
+     */
+    public function componentTask(Option $option)
+    {
+        $option->setArg(0, 'Component/' . $option->getArg(0));
+        $this->task('add:class', $option);
+    }
 
 
     /**
