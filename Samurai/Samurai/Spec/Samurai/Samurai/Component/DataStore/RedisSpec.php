@@ -92,6 +92,9 @@ class RedisSpec extends PHPSpecContext
 
         // same score
         $this->getSortedRank('samurai.spec.foo', 'user3')->shouldBe($this->getSortedRank('samurai.spec.foo', 'user4'));
+
+        // not entried
+        $this->getSortedRank('samurai.spec.foo', 'user99')->shouldBe(null);
     }
 
 
