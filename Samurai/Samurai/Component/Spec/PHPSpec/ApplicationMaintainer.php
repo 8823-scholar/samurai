@@ -34,6 +34,7 @@ class ApplicationMaintainer implements MaintainerInterface
         // di container injection.
         if ($context instanceof \Samurai\Samurai\Component\Spec\Context\PHPSpecContext) {
             $context->__setContainer($this->Container);
+            $this->Container->injectDependency($context);
         }
     }
 
