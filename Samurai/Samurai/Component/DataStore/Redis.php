@@ -20,6 +20,20 @@ class Redis
      */
     public $driver;
 
+    /**
+     * host
+     *
+     * @var     string
+     */
+    public $host;
+
+    /**
+     * port
+     *
+     * @var     int
+     */
+    public $port = 6379;
+
 
     /**
      * construct
@@ -29,6 +43,19 @@ class Redis
         if (! $this->isSupports()) throw new \Exception('install redis, please.  http://pecl.php.net/package/redis');
         $this->driver = new ExtRedis();
     }
+
+
+    /**
+     * set server
+     *
+     * @param   string  $host
+     * @param   int     $port
+     */
+    public function setServer($host, $port = 6379)
+    {
+        $this->host = $host;
+        $this->port = $port ? $port : $this->port;
+    }
     
     
     /**
@@ -37,9 +64,12 @@ class Redis
      * @param   string  $host
      * @param   int     $port
      */
-    public function connect($host, $port = 6379)
+    public function connect($host = null, $port = null)
     {
-        return $this->driver->connect($host, $port);
+        return $this->driver->connect(
+            $host ? $host : $this->host,
+            $port ? $port : $this->port
+        );
     }
 
 
