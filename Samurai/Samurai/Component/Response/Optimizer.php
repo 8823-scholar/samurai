@@ -28,47 +28,24 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace App\Config\Initializer;
-
-use Samurai\Samurai\Application as SamuraiApplication;
-use Samurai\Samurai\Component\Core\Initializer;
-use Samurai\Samurai\Component\Console\Client\MultipleClient;
-use Samurai\Samurai\Component\Console\Client\BrowserClient;
-use Samurai\Samurai\Component\Console\Client\BuiltinServerClient;
-use Samurai\Samurai\Component\Console\Client\IgnoreClient;
+namespace Samurai\Samurai\Component\Response;
 
 /**
- * console initializer.
+ * response optimizer interface
  *
  * @package     Samurai
- * @subpackage  Config.Initializer
+ * @subpackage  Component.Response
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Console extends Initializer
+interface Optimizer
 {
     /**
-     * {@inheritdoc}
+     * prepare
+     *
+     * @param   Samurai\Samurai\Component\Response\Response
      */
-    public function configure(SamuraiApplication $app)
-    {
-        $app->config('container.callback.initialized.', function($c) {
-            switch (php_sapi_name()) {
-                case 'cli':
-                    $console = new IgnoreClient();
-                    break;
-                case 'cli-server':
-                    $console = new MultipleClient();
-                    $console->add(new BuiltinServerClient());
-                    $console->add(new BrowserClient());
-                    break;
-                default:
-                    $console = new BrowserClient();
-                    break;
-            }
-            $c->register('console', $console);
-        });
-    }
+    public function prepare(Response $response);
 }
 

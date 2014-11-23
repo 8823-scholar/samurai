@@ -28,47 +28,59 @@
  * @license     http://opensource.org/licenses/MIT
  */
 
-namespace App\Config\Initializer;
+namespace Samurai\Samurai\Component\Console\Client;
 
-use Samurai\Samurai\Application as SamuraiApplication;
-use Samurai\Samurai\Component\Core\Initializer;
-use Samurai\Samurai\Component\Console\Client\MultipleClient;
-use Samurai\Samurai\Component\Console\Client\BrowserClient;
-use Samurai\Samurai\Component\Console\Client\BuiltinServerClient;
-use Samurai\Samurai\Component\Console\Client\IgnoreClient;
+use Samurai\Raikiri\Container;
 
 /**
- * console initializer.
+ * console multiple client
  *
  * @package     Samurai
- * @subpackage  Config.Initializer
+ * @subpackage  Component.Console
  * @copyright   2007-2013, Samurai Framework Project
  * @author      KIUCHI Satoshinosuke <scholar@hayabusa-lab.jp>
  * @license     http://opensource.org/licenses/MIT
  */
-class Console extends Initializer
+class MultipleClient extends Client
 {
+    /**
+     * clients
+     *
+     * @var     array
+     */
+    private $_clients = [];
+
+
+    /**
+     * add client
+     *
+     * @param   Samurai\Samurai\Component\Console\Client
+     */
+    public function add(Client $client)
+    {
+        $this->_clients[] = $client;
+    }
+
+
     /**
      * {@inheritdoc}
      */
-    public function configure(SamuraiApplication $app)
+    public function send($message)
     {
-        $app->config('container.callback.initialized.', function($c) {
-            switch (php_sapi_name()) {
-                case 'cli':
-                    $console = new IgnoreClient();
-                    break;
-                case 'cli-server':
-                    $console = new MultipleClient();
-                    $console->add(new BuiltinServerClient());
-                    $console->add(new BrowserClient());
-                    break;
-                default:
-                    $console = new BrowserClient();
-                    break;
-            }
-            $c->register('console', $console);
-        });
+        foreach ($this->_clients as $client) {
+            $client->send($message);
+        }
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setContainer(Container $container)
+    {
+        foreach ($this->_clients as $client) {
+            $client->setContainer($container);
+        }
     }
 }
 

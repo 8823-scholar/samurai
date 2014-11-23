@@ -46,7 +46,6 @@ class BuiltinServerClient extends Client
      */
     public function send($message)
     {
-        // 192.168.10.5:64314 [200]: /images/app/global/menu/gacha.png
         $message = sprintf('%s:%d %s', $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'], $message);
         error_log($message, 4);
     }

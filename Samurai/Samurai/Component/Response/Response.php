@@ -42,6 +42,14 @@ namespace Samurai\Samurai\Component\Response;
 abstract class Response
 {
     /**
+     * optimizers
+     *
+     * @var     array
+     */
+    protected $_optimizers = [];
+
+
+    /**
      * Set body.
      *
      * @access  public
@@ -56,5 +64,29 @@ abstract class Response
      * @access  public
      */
     abstract public function execute();
+
+
+    /**
+     * add optimizer
+     *
+     * @param   string  $name
+     * @param   Samurai\Samurai\Component\Response\Optimizer    $optimizer
+     */
+    public function addOptimizer($name, Optimizer $optimizer)
+    {
+        $this->_optimizers[$name] = $optimizer;
+    }
+
+    /**
+     * call optimizers
+     *
+     * @param   string  $event
+     */
+    public function optimize($event)
+    {
+        foreach ($this->_optimizers as $optimizer) {
+            $optimizer->$event($this);
+        }
+    }
 }
 

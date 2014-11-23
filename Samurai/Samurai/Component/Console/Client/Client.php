@@ -30,6 +30,8 @@
 
 namespace Samurai\Samurai\Component\Console\Client;
 
+use Samurai\Raikiri\DependencyInjectable;
+
 /**
  * console base client
  *
@@ -49,6 +51,11 @@ abstract class Client
     const LOG_LEVEL_WARN = 3;
     const LOG_LEVEL_ERROR = 4;
     const LOG_LEVEL_FATAL = 5;
+
+    /**
+     * @traits
+     */
+    use DependencyInjectable;
 
 
     /**

@@ -235,6 +235,8 @@ class HttpResponse extends Response
         $this->setHeader('date', date('r'));
         $this->setHeader('x-php-framework', 'Samurai Framework/' . Samurai::getVersion());
 
+        $this->optimize('prepare');
+
         // send headers.
         $this->sendStatus();
         $this->sendHeaders();
