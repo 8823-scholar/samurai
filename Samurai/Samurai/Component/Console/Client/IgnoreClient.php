@@ -44,7 +44,7 @@ class IgnoreClient extends Client
     /**
      * {@inheritdoc}
      */
-    public function send($message)
+    public function send($level, $message)
     {
         // ignore
     }

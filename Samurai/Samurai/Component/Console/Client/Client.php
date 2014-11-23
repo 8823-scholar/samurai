@@ -30,7 +30,9 @@
 
 namespace Samurai\Samurai\Component\Console\Client;
 
+use ReflectionObject;
 use Samurai\Raikiri\DependencyInjectable;
+use Samurai\Onikiri\EntityTable;
 
 /**
  * console base client
@@ -130,9 +132,9 @@ abstract class Client
      */
     protected function _log($level, $args)
     {
-        $message = call_user_func_array('sprintf', $args);
-        $message = sprintf('[%s]: %s', $this->levelToString($level), $message);
-        $this->send($message);
+        foreach ($args as $message) {
+            $this->send($level, $message);
+        }
     }
 
 
@@ -158,8 +160,73 @@ abstract class Client
     /**
      * send message to display
      *
+     * @param   int     $level
      * @param   string  $message
      */
-    abstract public function send($message);
+    abstract public function send($level, $message);
+    
+    
+    /**
+     * var wrapping
+     *
+     * @param   mixed   $var
+     * @return  mixed
+     */
+    public function wrapping($var, array $references = [])
+    {
+        switch (true) {
+            case is_object($var):
+
+                // is recruision ?
+                if (in_array($var, $references, true)) return '** recursion **';
+                $references[] = $var;
+
+                $ref = new ReflectionObject($var);
+                $values = [];
+                foreach ($ref->getProperties() as $property) {
+
+                    // simplize
+                    $property->setAccessible(true);
+                    $v = $property->getValue($var);
+                    if (array_key_exists('Samurai\Raikiri\DependencyInjectable', $this->class_uses_deep($ref->getName()))
+                        && $property->getName() === 'container') $v = '** raikiri **';
+                    if ($var instanceof EntityTable && $property->getName() === 'onikiri') $v = '** onikiri **';
+
+                    $values[] = sprintf('%s: %s', $property->getName(), $this->wrapping($v, $references));
+                }
+                $value = sprintf('%s {%s}', $ref->getName(), join(', ', $values));
+                break;
+            case is_array($var):
+                $values = [];
+                foreach ($var as $key => $value) {
+                    $values[] = sprintf('%s: %s', $key, $this->wrapping($value, $references));
+                }
+                $value = sprintf('[%s]', join(', ', $values));
+                break;
+            default:
+                $value = $var;
+                break;
+        }
+        return $value;
+    }
+
+
+    /**
+     * get use traits deep
+     *
+     * @param   string  $class
+     * @return  array
+     */
+    public function class_uses_deep($class)
+    {
+        $traits = [];
+        do {
+            $traits = array_merge($traits, class_uses($class, false));
+        } while ($class = get_parent_class($class));
+        foreach ($traits as $trait) {
+            $traits = array_merge($traits, class_uses($trait, false));
+        }
+        return array_unique($traits);
+    }
 }
 

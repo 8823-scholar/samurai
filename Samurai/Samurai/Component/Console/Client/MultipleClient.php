@@ -65,10 +65,10 @@ class MultipleClient extends Client
     /**
      * {@inheritdoc}
      */
-    public function send($message)
+    public function send($level, $message)
     {
         foreach ($this->_clients as $client) {
-            $client->send($message);
+            $client->send($level, $message);
         }
     }
 

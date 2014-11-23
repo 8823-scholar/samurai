@@ -44,8 +44,9 @@ class BuiltinServerClient extends Client
     /**
      * {@inheritdoc}
      */
-    public function send($message)
+    public function send($level, $message)
     {
+        $message = sprintf('[%s]: %s', $this->levelToString($level), $this->wrapping($message));
         $message = sprintf('%s:%d %s', $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_PORT'], $message);
         error_log($message, 4);
     }
