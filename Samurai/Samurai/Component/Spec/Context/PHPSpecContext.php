@@ -31,6 +31,8 @@
 namespace Samurai\Samurai\Component\Spec\Context;
 
 use PhpSpec\ObjectBehavior;
+use Samurai\Raikiri\Container;
+use Samurai\Raikiri\DependencyInjectable;
 
 /**
  * PHPSpec text cace context.
@@ -68,6 +70,85 @@ class PHPSpecContext extends ObjectBehavior
     public function __getContainer()
     {
         return $this->__container;
+    }
+
+
+    /**
+     * useable raikiri ?
+     *
+     * @param   object  $object
+     * @return  boolean
+     */
+    public function isUseableRaikiri($object)
+    {
+        if (! is_object($object)) return false;
+
+        $traits = [];
+        $class = get_class($object);
+        do {
+            $traits = array_merge($traits, class_uses($class, false));
+        } while ($class = get_parent_class($class));
+        foreach ($traits as $trait) {
+            $traits = array_merge($traits, class_uses($trait, false));
+        }
+
+        return in_array('Samurai\\Raikiri\\DependencyInjectable', $traits);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getWrappedObject()
+    {
+        $object = $this->object->getWrappedObject();
+        if ($this->isUseableRaikiri($object) && ! $object->getContainer()) {
+            $object->setContainer(new Container('spec'));
+            //$object->setContainer($this->__getContainer());
+        }
+        return $object;
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function __call($method, array $arguments = array())
+    {
+        if (! in_array(strtolower($method), ['beconstructedwith', 'beconstructedthrough'])) {
+            try {
+                $this->getWrappedObject();
+            } catch (\Exception $e) {
+                //var_dump($e->getMessage());
+            }
+        }
+        return parent::__call($method, $arguments);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __set($property, $value)
+    {
+        $this->getWrappedObject();
+        parent::__set($property, $value);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __get($property)
+    {
+        $this->getWrappedObject();
+        return parent::__get($property);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function __invoke()
+    {
+        $this->getWrappedObject();
+        return call_user_func_array('parent::__invoke', func_get_args());
     }
 }
 

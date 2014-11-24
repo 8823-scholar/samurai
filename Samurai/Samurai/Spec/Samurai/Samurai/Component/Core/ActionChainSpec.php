@@ -3,6 +3,7 @@
 namespace Samurai\Samurai\Spec\Samurai\Samurai\Component\Core;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
+use Samurai\Samurai\Application;
 
 class ActionChainSpec extends PHPSpecContext
 {
@@ -28,8 +29,11 @@ class ActionChainSpec extends PHPSpecContext
         ));
     }
 
-    public function it_gets_controller()
+    public function it_gets_controller(Application $a)
     {
+        $a->config('controller.namespaces')->willReturn(['Samurai\\Console', 'Samurai\\Samurai']);
+        $this->getContainer()->register('application', $a);
+
         $controller = $this->getController('spec');
         $controller->shouldHaveType('Samurai\Console\Controller\SpecController');
     }
@@ -40,8 +44,11 @@ class ActionChainSpec extends PHPSpecContext
     }
 
 
-    public function it_gets_current_action()
+    public function it_gets_current_action(Application $a)
     {
+        $a->config('controller.namespaces')->willReturn(['Samurai\\Console', 'Samurai\\Samurai']);
+        $this->getContainer()->register('application', $a);
+
         $this->addAction('spec.execute');
         $this->getCurrentAction()->shouldBe(
             ['controller' => $this->actions[0]['controller'], 'controller_name' => 'spec', 'action' => 'execute', 'result' => null]
@@ -59,8 +66,11 @@ class ActionChainSpec extends PHPSpecContext
     }
 
 
-    public function it_loops_action_chain()
+    public function it_loops_action_chain(Application $a)
     {
+        $a->config('controller.namespaces')->willReturn(['Samurai\\Console', 'Samurai\\Samurai']);
+        $this->getContainer()->register('application', $a);
+
         $this->addAction('utility.execute');
         $this->addAction('spec.execute');
         while (($action = $this->getCurrentAction()) && $action->getWrappedObject()) {

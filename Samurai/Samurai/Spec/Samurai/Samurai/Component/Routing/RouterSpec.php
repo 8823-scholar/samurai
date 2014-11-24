@@ -9,15 +9,13 @@ use Samurai\Samurai\Component\Core\ActionChain;
 
 class RouterSpec extends PHPSpecContext
 {
-    public function let(Container $c, HttpRequest $r, ActionChain $a)
+    public function let(HttpRequest $r, ActionChain $a)
     {
         $this->setRoot('default.index');
 
-        $this->setContainer($c);
-        $c->has('request')->willReturn(true);
-        $c->get('request')->willReturn($r);
-        $c->has('actionChain')->willReturn(true);
-        $c->get('actionChain')->willReturn($a);
+        $c = $this->getContainer();
+        $c->register('request', $r);
+        $c->register('actionChain', $a);
 
         $r->getAll()->willReturn([]);    
     }

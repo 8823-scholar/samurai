@@ -3,6 +3,7 @@
 namespace Samurai\Samurai\Spec\Samurai\Samurai\Component\Request;
 
 use Samurai\Samurai\Component\Spec\Context\PHPSpecContext;
+use Samurai\Samurai\Component\Utility\ArrayUtility;
 
 class HttpRequestSpec extends PHPSpecContext
 {
@@ -11,8 +12,10 @@ class HttpRequestSpec extends PHPSpecContext
         $this->shouldHaveType('Samurai\Samurai\Component\Request\HttpRequest');
     }
 
-    public function it_initialize_get_and_post_to_params()
+    public function it_initialize_get_and_post_to_params(ArrayUtility $u)
     {
+        $this->raikiri()->register('arrayUtil', $u);
+
         // backup.
         $get = $_GET;
         $post = $_POST;
@@ -22,6 +25,9 @@ class HttpRequestSpec extends PHPSpecContext
         $_GET = ['key1' => 'value1', 'key2' => 'value2', 'array' => [1,2,3,'hoge' => 'hoge']];
         $_POST = ['post_key1' => 'post_value1', 'post_key2' => 'post_value2'];
         $_COOKIE = ['cookie_key1' => 'cookie_value1'];
+
+        $request = array_merge($_GET, $_POST);
+        $u->merge([], $request)->willReturn($request);
 
         $this->init();
 
@@ -74,8 +80,11 @@ class HttpRequestSpec extends PHPSpecContext
     /**
      * path is "/foo/bar/zoo" of "http://example.jp/foo/bar/zoo?a=b&c=d"
      */
-    public function it_get_path()
+    public function it_get_path(ArrayUtility $u)
     {
+        $this->raikiri()->register('arrayUtil', $u);
+        $u->merge([], [])->willReturn([]);
+
         // backup
         $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
 

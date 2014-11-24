@@ -90,11 +90,6 @@ class ApplicationSpec extends PHPSpecContext
         $this->config('date.timezone')->shouldReturn(date_default_timezone_get());
     }
 
-    public function it_sets_container(Container $c)
-    {
-        $this->setContainer($c);
-        $this->getContainer()->shouldBe($c);
-    }
 
     public function it_enable_bootstrap()
     {

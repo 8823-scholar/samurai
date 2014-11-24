@@ -30,6 +30,8 @@
 
 namespace Samurai\Samurai\Component\Spec;
 
+use Samurai\Raikiri\DependencyInjectable;
+
 /**
  * spec supporter.
  *
@@ -42,9 +44,9 @@ namespace Samurai\Samurai\Component\Spec;
 class Helper
 {
     /**
-     * @dependencies
+     * @traits
      */
-    public $application;
+    use DependencyInjectable;
 
 
     /**

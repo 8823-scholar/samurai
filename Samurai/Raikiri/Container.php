@@ -31,6 +31,7 @@
 namespace Samurai\Raikiri;
 
 use Samurai\Samurai\Component\DataSource\YAML;
+use Prophecy\Prophecy\ProphecySubjectInterface;
 
 /**
  * Container class.
@@ -124,7 +125,7 @@ class Container
         if ($component instanceof ComponentDefine) {
             $component->setContainer($this);
         }
-        elseif (method_exists($component, 'raikiri')) {
+        elseif (method_exists($component, 'raikiri') && ! $component instanceof ProphecySubjectInterface) {
             $component->setContainer($this);
         }
 

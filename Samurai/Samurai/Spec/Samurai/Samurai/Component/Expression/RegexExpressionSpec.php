@@ -25,12 +25,16 @@ class RegexExpressionSpec extends PHPSpecContext
         $this->isMatch('foo.bar.zoo')->shouldBe(true);
         $this->isMatch('bar.zoo.foo')->shouldBe(false);
         $this->isMatch('FOO.BAR.ZOO')->shouldBe(false);
-
+    }
+    public function it_is_regular_expressions2()
+    {
         $this->beConstructedWith('/.*\\.zoo$/i');
         $this->isMatch('foo.bar.zoo')->shouldBe(true);
         $this->isMatch('FOO.BAR.ZOO')->shouldBe(true);
         $this->isMatch('foo.zoo.bar')->shouldBe(false);
-        
+    }
+    public function it_is_regular_expressions3()
+    {
         $this->beConstructedWith('/^foo\\.[0-9]+\\.zoo$/');
         $this->isMatch('foo.bar.zoo')->shouldBe(false);
         $this->isMatch('foo.8823.zoo')->shouldBe(true);

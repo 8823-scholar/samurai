@@ -22,7 +22,12 @@ class RedisSpec extends PHPSpecContext
     public function it_connects()
     {
         $host = $this->request->getEnv('SAMURAI_SPEC_REDIS_HOST');
-        $this->connect($host)->shouldBe(true);
+        if (! $host) throw new SkippingException('Set env "SAMURAI_SPEC_REDIS_HOST".');
+        
+        $port = $this->request->getEnv('SAMURAI_SPEC_REDIS_PORT', 6379);
+        if (! $port) throw new SkippingException('Set env "SAMURAI_SPEC_REDIS_PORT".');
+
+        $this->connect($host, $port)->shouldBe(true);
     }
 
 
